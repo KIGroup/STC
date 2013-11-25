@@ -3,6 +3,7 @@ do ##class(Stc.Utils.Init.BaseInit).Init()
 
 2. Создать два веб-приложения для (указать Dispatch Class):
   1) Stc.Web.BrokerAdmin - закрытые REST запросы для администратора
+
   2) Stc.Web.BrokerUser - открытые REST запросы для пользователей, нет авторизации
 
 3. У приложения области указать таймаут = 0
