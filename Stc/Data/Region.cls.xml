@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.Region">
+<Description>
+Страна, край/область или город</Description>
+<Super>%Persistent,%XML.Adaptor</Super>
+<TimeCreated>63098,13287.083739</TimeCreated>
+
+<Property name="Guid">
+<Description>
+Guid = id</Description>
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Name">
+<Description>
+Название</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+<Parameter name="XMLREFERENCE" value="ID"/>
+</Property>
+
+<Property name="ParentRegion">
+<Description>
+Родитель</Description>
+<Type>Region</Type>
+<Parameter name="XMLREFERENCE" value="ID"/>
+</Property>
+
+<Property name="HLevel">
+<Description>
+Уровень иерархии, 0 - Страна, 1 - край/обл, 2 - населенный пункт</Description>
+<Type>%Integer</Type>
+</Property>
+
+<Index name="GuidIdx">
+<IdKey>1</IdKey>
+<Properties>Guid</Properties>
+<Unique>1</Unique>
+</Index>
+
+<Index name="NameIdx">
+<Properties>Name</Properties>
+</Index>
+
+<Method name="ConvertToProxyObject">
+<Description>
+Конвертация в proxyObject для JSON </Description>
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	set proxy.id = ..%Id()
+	set proxy.name = ..Name.Value
+	set proxy.parentName = ..ParentRegion.Name.Value
+	set proxy.greatParentName = ..ParentRegion.ParentRegion.Name.Value
+	
+	quit proxy
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.RegionD</DataLocation>
+<DefaultData>RegionDefaultData</DefaultData>
+<IdLocation>^Stc.Data.RegionD</IdLocation>
+<IndexLocation>^Stc.Data.RegionI</IndexLocation>
+<StreamLocation>^Stc.Data.RegionS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="RegionDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Name</Value>
+</Value>
+<Value name="3">
+<Value>ParentRegion</Value>
+</Value>
+<Value name="4">
+<Value>HLevel</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

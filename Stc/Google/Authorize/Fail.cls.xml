@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Google.Authorize.Fail">
+<Super>%CSP.Page</Super>
+<TimeCreated>63150,55388.703754</TimeCreated>
+
+<Method name="OnPage">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	&html<<html>
+<head><title>Fail..</title>
+</head>
+<body>>
+	w "Error is """_$Get(%request.Data("error",1))_"""",!
+	&html<</body>
+</html>>
+	Quit $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Web.JsonUser">
+<Description>
+Обработка - BrokerUser</Description>
+<Super>Json</Super>
+<TimeCreated>63098,81469.21022</TimeCreated>
+
+<UDLText name="T">
+<Content><![CDATA[
+// ==================================== КУРСЫ ==================================== 
+
+]]></Content>
+</UDLText>
+
+<Method name="GetCoursesShortInfo">
+<Description>
+Получить все курсы, коротко</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>isInUse:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set isInUseCondition = ""
+	if (isInUse = 1) || (isInUse = 0) set isInUseCondition = "WHERE IsInUse = "_isInUse
+	
+	set sql = "SELECT ID As id, Name->Value as name, IsInUse As isInUse FROM Stc_Data.Course "_isInUseCondition_" ORDER BY name"
+    
+    quit ..WriteJsonFromSql(sql)
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[
+// ==================================== ЗАЯВКИ ==================================== 
+
+]]></Content>
+</UDLText>
+
+<Method name="CreateOrder">
+<Description>
+Создать заявку</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+    try{
+	    TSTART
+	    
+	   	$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.order,1))
+       
+       	do ##class(Stc.Data.OrderDirty).Create(order, .status)
+       	if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createDirtyOrder", "| "_status))
+       	
+       	TCOMMIT
+   	}
+   	catch ex {
+	   	TROLLBACK
+	   	set status = ex.AsStatus()
+	}
+	
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="GetApprovedOrderInfo">
+<Description>
+Получить информацию о заявке по коду доступа</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>code:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+	
+	try{
+		set order = ##class(Stc.Data.OrderApproved).AccessCodeIdxOpen(code,,.status)
+		
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("wrongOrderAccessCode", "| "_status))
+		
+		set proxy = order.ConvertToProxyObject()
+		set proxy.code = code
+		set proxy.contact.company = order.Company.ConvertToProxyObject()
+		do proxy.%ToJSON()
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+	
+   quit status
+]]></Implementation>
+</Method>
+
+<Method name="FinishEditingOrder">
+<Description>
+Завершить редактирование заявки; смена статуса заявки и кода доступа</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+	
+	try{
+		TSTART
+		
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+	
+		set order = ##class(Stc.Data.OrderApproved).AccessCodeIdxOpen(data.code,,.status)
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("wrongOrderAccessCode"))
+		
+		set order.OrderStatus = ##class(Stc.Data.OrderStatus).CodeIdxOpen("Completed")
+		set order.AccessCode = $SYSTEM.Util.CreateGUID()
+		
+		set status = order.%Save()
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveApprovedOrder", "| "_status))
+		
+		TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
+		set status = ex.AsStatus()
+	}
+	
+    quit status
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[
+// ==================================== КОМАПНИИ ==================================== 
+
+]]></Content>
+</UDLText>
+
+<Method name="GetCompaniesShortInfo">
+<Description>
+Получить все компании, коротко</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[    quit ..WriteJsonFromSql("SELECT ID As id, ShortName->Value as name FROM Stc_Data.Company ORDER BY name")
+]]></Implementation>
+</Method>
+
+<Method name="SaveCompany">
+<Description>
+Сохранение данных компании из заявки после проверки кода доступа к заявке</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+	
+	try{
+		TSTART
+		
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+	
+		if (##class(Stc.Data.OrderApproved).AccessCodeIdxExists(data.order.code) = 0){
+			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("wrongOrderAccessCode"))
+		}
+		
+		do ##class(Stc.Data.Company).Save(data.company, .status)
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveCompany"))
+		
+		TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
+		set status = ex.AsStatus()
+	}
+	
+    quit status
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[
+// ==================================== ПЕРСОНЫ ==================================== 
+
+]]></Content>
+</UDLText>
+
+<Method name="GetApprovedOrderStudents">
+<Description>
+Получить студентов заявки по коду доступа</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+	
+	try{
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
+		
+		set order = ##class(Stc.Data.OrderApproved).AccessCodeIdxOpen(params.code,,.status)
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("wrongOrderAccessCode"))
+		
+		$$$THROWONERROR(status, ..WriteJsonForGrid("SELECT Students FROM Stc_Data.OrderApproved_Students", "Stc.Data.Person", params, "OrderApproved = "_order.%Id()))
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+	
+    quit status
+]]></Implementation>
+</Method>
+
+<Method name="GetOrderStudent">
+<Description>
+Получить слушателя из заявки по коду доступа</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+	
+	try{
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		
+		set order = ##class(Stc.Data.OrderApproved).AccessCodeIdxOpen(data.order.code,,.status)
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("wrongOrderAccessCode"))
+		
+		set student = order.Students.GetAt(data.student.id)
+		set proxy = student.ConvertToProxyObject()
+		do proxy.%ToJSON()
+ 	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+	
+    quit status
+]]></Implementation>
+</Method>
+
+<Method name="SaveOrderStudent">
+<Description>
+Создать слушателя для заявки. При совпадении email связать слушателя и заявку</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+	set result = ##class(%ZEN.proxyObject).%New()
+	try{
+		TSTART
+		
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		
+		set order = ##class(Stc.Data.OrderApproved).AccessCodeIdxOpen(data.order.code,,.status)
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("wrongOrderAccessCode"))
+		
+		set student = order.Students.GetAt(data.student.id)
+		
+		if (student){
+			// Редактирование
+			if (##class(Stc.Data.Person).IsEditable(data.student.id)){
+				do ##class(Stc.Data.Person).Save(data.student, .status)
+				if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveOrderStudent", " | "_status))
+				
+				set result.result = 1
+			}
+			else{
+				$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("doNotHaveAccessToEditOrderStudent"))	
+			}
+		}
+		elseif (##class(Stc.Data.Person).EmailIdxExists(data.student.email) = 0){
+			// Создание
+			set student = ##class(Stc.Data.Person).Save(data.student, .status)
+			if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createOrderStudent", " | "_status))
+			
+			do order.Students.SetAt(student, student.%Id())
+			set result.result = 2
+		}
+		else{
+			// Добавление уже существующего
+			set student = ##class(Stc.Data.Person).EmailIdxOpen(data.student.email)
+			do order.Students.SetAt(student, student.%Id())
+			set result.result = 3
+		}
+		
+		
+		set status = order.%Save()
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveApprovedOrder", " | "_status))
+		
+		do result.%ToJSON()	
+		
+		TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
+		set status = ex.AsStatus()
+	}
+	
+    quit status
+]]></Implementation>
+</Method>
+
+<Method name="DeleteOrderStudent">
+<Description>
+Удалить слушателя из заявки и из базы(если удаление возможно)</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+	
+	try{
+		TSTART
+		
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		
+		set order = ##class(Stc.Data.OrderApproved).AccessCodeIdxOpen(data.order.code, , .status)
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("openOrder"))
+		
+		do order.Students.RemoveAt(data.student.id)
+		
+		if (##class(Stc.Data.Person).IsEditable(data.student.id)) set status = ##class(Stc.Data.Person).Delete(data.student.id)
+		
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("deletePerson"))
+		
+		$$$THROWONERROR(status, order.%Save())
+	
+		TCOMMIT
+ 	}
+	catch ex {
+		TROLLBACK
+		set status = ex.AsStatus()
+	}
+	
+    quit status
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[
+// ==================================== ДРУГОЕ ==================================== 
+
+]]></Content>
+</UDLText>
+
+<Method name="GetCitiesStartsWith">
+<Description>
+Получить все города, поиск совпадения</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>word:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	if $L(word) < 2 quit $$$OK
+	
+	set proxyItems = ##class(%ListOfObjects).%New()	
+	set lang = $$$SessionLanguage
+	set word = word_"%"
+	
+	&sql(DECLARE RegionCurr CURSOR FOR 
+		 	 SELECT TOP 500 reg.ID As id, ltV.Value As name, reg.ParentRegion->Name->Value as parentName, reg.ParentRegion->ParentRegion->Name->Value
+		 	 FROM Stc_Data_Localization.LTextValue as ltV
+		 	 INNER JOIN 
+		 	 Stc_Data.Region as reg ON reg.Name = ltV.LText
+			 WHERE reg.HLevel = 2 AND ltV.Lang = :lang AND ltV.Value LIKE :word
+			 ORDER BY name, parentName)	
+		
+	&sql(OPEN RegionCurr)
+	for  
+	{	
+		&sql(FETCH RegionCurr INTO :id, :name, :parent, :greatParent) 
+		quit:(SQLCODE '= 0)
+		set proxyItem = ##class(%ZEN.proxyObject).%New()
+		set proxyItem.id = id
+		set proxyItem.name = name
+		set proxyItem.parentName = parent
+		set proxyItem.greatParentName = greatParent
+		do proxyItems.Insert(proxyItem)
+	}
+		
+	&sql(CLOSE RegionCurr)
+	
+	set proxyResult = ##class(%ZEN.proxyObject).%New()
+	set proxyResult.children = proxyItems
+	do proxyResult.%ToJSON()
+	    
+	q $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

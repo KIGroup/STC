@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.Certificate">
+<Description>
+Сертификат слушателя</Description>
+<Super>%Persistent</Super>
+<TimeCreated>63098,13360.224443</TimeCreated>
+
+<Property name="Number">
+<Description>
+Уникальный номер сертификата</Description>
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Training">
+<Description>
+Обучение</Description>
+<Type>Training</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Student">
+<Description>
+Слушатель</Description>
+<Type>Person</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="CreatedDate">
+<Description>
+Дата создания сертификата</Description>
+<Type>%Date</Type>
+<Required>1</Required>
+<Parameter name="FORMAT" value="3"/>
+</Property>
+
+<Property name="IsPrinted">
+<Description>
+Сертификат был распечатан</Description>
+<Type>%Boolean</Type>
+<InitialExpression>0</InitialExpression>
+<Required>1</Required>
+</Property>
+
+<Index name="NumberIdx">
+<Properties>Number</Properties>
+<Unique>1</Unique>
+</Index>
+
+<Method name="ConvertToProxyObject">
+<Description>
+Конвертация в proxyObject для JSON </Description>
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	set proxy.id = ..%Id()
+	set proxy.number = ..Number
+	set proxy.training = ..Training.ConvertToProxyObject(1)
+	set proxy.student = ..Student.ConvertToProxyObject()
+	set proxy.date = $ZDATE(..CreatedDate, 3)
+	set proxy.isPrinted = ..IsPrinted
+	
+	quit proxy
+]]></Implementation>
+</Method>
+
+<Method name="Create">
+<Description>
+Создание сертификата для студента из обучения</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[student:Person,training:Training,&status]]></FormalSpec>
+<ReturnType>Certificate</ReturnType>
+<Implementation><![CDATA[
+	set cert = ..%New()
+	set cert.Training = training
+	set cert.Student = student
+	set cert.CreatedDate = training.DateFinish
+	set cert.Number = ..GenerateNumber(training.DateFinish)
+	set status = cert.%Save()
+	
+	quit cert
+]]></Implementation>
+</Method>
+
+<Method name="GenerateNumber">
+<Description>
+Генерация номера для сертификата: тип ДДММГГ-Порядковый номер сертификата в этот день</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>date:%Date</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set ddmmyy = $REPLACE($ZDATE(date, 4), "/", "")
+	set $EXTRACT(ddmmyy, 5, 6) = ""
+	
+	set maxNumber = 0
+	
+	&sql(SELECT MAX(CONVERT(INTEGER, $PIECE(Number, '-', 2))) INTO :maxNumber
+		 FROM Stc_Data.Certificate
+		 WHERE $PIECE(Number, '-', 1) = :ddmmyy)
+	
+	set maxNumber = maxNumber + 1
+	
+	if (maxNumber < 10) set maxNumber = "0"_maxNumber	 
+	
+	quit ddmmyy_"-"_maxNumber
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.CertificateD</DataLocation>
+<DefaultData>CertificateDefaultData</DefaultData>
+<IdLocation>^Stc.Data.CertificateD</IdLocation>
+<IndexLocation>^Stc.Data.CertificateI</IndexLocation>
+<StreamLocation>^Stc.Data.CertificateS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="CertificateDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Number</Value>
+</Value>
+<Value name="3">
+<Value>Training</Value>
+</Value>
+<Value name="4">
+<Value>Student</Value>
+</Value>
+<Value name="5">
+<Value>CreatedDate</Value>
+</Value>
+<Value name="6">
+<Value>IsPrinted</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

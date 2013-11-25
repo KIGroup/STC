@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/controllers/MainCtrl.js" application="/csp/four/" default="1"><![CDATA[
+'use strict';
+//dddddddd
+
+/*===========================================================================================
+Главный контроллер, работа с языком и меню
+===========================================================================================*/
+
+controllersModule.controller('MainCtrl', function($scope, $window, $location, $cookies, DALSrvc, $filter, UtilsSrvc){
+
+    $scope.menu = {admin: ($cookies.admin === 'true'),
+    			   loginCaption: ($cookies.admin === 'true' ? 'Выход' : 'Вход'),
+    			   languages: [{id: 'ru-RU', name: 'Русский'}, 
+                               {id: 'en-US', name: 'English'}]};
+
+    var idx = UtilsSrvc.getIndexes($scope.menu.languages, 'id', StcAppSetting.lang ? StcAppSetting.lang : 'ru-RU');
+    if (idx.length != 0) 
+    	$scope.menu.lang = $scope.menu.languages[idx[0]];
+
+    $scope.pageStore = {};
+
+    $scope.menu.init = function(){
+        $scope.menu.createOrder  = {id: 'createOrder',  name: 'Создать заявку'};
+        $scope.menu.orders       = {id: 'orders',       name: 'Заявки'};
+        $scope.menu.trainings    = {id: 'trainings',    name: 'Обучения'};
+        $scope.menu.companies    = {id: 'companies',    name: 'Компании'};
+        $scope.menu.courses      = {id: 'courses',      name: 'Курсы'};
+        $scope.menu.persons      = {id: 'persons',      name: 'Сотрудники'};
+        $scope.menu.certificates = {id: 'certificates', name: 'Сертификаты'};
+    };
+
+    // Выбор меню - сделать активным пункт
+    $scope.menu.selectMenu = function(menuId){
+        if (!$scope.menu.active || $scope.menu.active.id == menuId){
+            $scope.menu.active = $scope.menu[menuId];
+            $scope.menu.active.css = 'active';
+        }
+        else{
+            $scope.menu[menuId].css = 'active';
+            $scope.menu.active.css = '';
+            $scope.menu.active = $scope.menu[menuId];
+        }
+    };
+
+    // Сменить язык - перезагрузить приложение
+    $scope.menu.switchLang = function(lang){
+        if ($cookies.lang == lang)
+        	return;
+        	
+        $cookies['lang'] = lang;
+        $window.location.reload();
+    };
+
+    // Вход - выход
+    $scope.menu.login = function(){
+        $scope.menu.admin = ($cookies.admin === 'true');
+        
+        DALSrvc.getPromise('get', '/stcapp/admin/json/checkAdmin/' + ($scope.menu.admin === true ? 0: 1), null).then(
+            function(data){
+                $scope.menu.admin = true;
+                $scope.menu.loginCaption = 'Выход';
+                $cookies['admin'] = 'true';
+                $location.path('/orders');
+            },
+            function(response){
+                $scope.menu.admin = false;
+                $cookies['admin'] = 'false';
+                $scope.menu.loginCaption = 'Вход';
+                $location.path('/createorder');
+            });
+    }
+    
+    $scope.menu.init();
+});
+
+]]></CSP>
+</Export>

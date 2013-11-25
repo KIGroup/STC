@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/index.csp" application="/csp/four/" default="1"><![CDATA[
+<!doctype html>
+
+<html ng-app="mainModule" ng-controller="MainCtrl">
+  <head>
+    <title ng-bind="'Система учета курсов'|localize"></title>
+    <link rel="shortcut icon" href="img/icon.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/custom.css">
+  
+    <script language="javascript"  src="lib/bootstrap.min.js"></script>
+    <script language="javascript"  src="lib/jquery-1.7.2.min.js"></script>
+    
+    <script language="javascript"  src="lib/angular/angular.min.js"></script>
+    <script language="javascript"  src="lib/angular/angular-resource.min.js"></script>
+    <script language="javascript"  src="lib/angular/angular-cookies.min.js"></script>
+    
+    <script language="javascript"  src="js/app.js"></script>  
+    
+   	<script>
+       	function getLocale() {
+      			if (navigator) {
+          			if (navigator.language) {
+              			return navigator.language;
+          			}
+          			else if (navigator.browserLanguage) {
+              			return navigator.browserLanguage;
+          			}
+          			else if (navigator.systemLanguage) {
+              			return navigator.systemLanguage;
+         	    	}
+          			else if (navigator.userLanguage) {
+              		    return navigator.userLanguage;
+          			}
+      			}
+    		}
+
+      	function getCookie(name) {
+  	    	  var matches = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"))
+  	    	  return matches ? decodeURIComponent(matches[1]) : undefined
+  		  }
+  		
+  	    function getLang(){
+            var lang = getCookie('lang');
+            
+            if (lang) 
+              return lang;
+
+			      switch(getLocale()){
+              case 'en-US':
+              case 'en':
+                return 'en-US';
+            }
+            
+            return 'ru-RU';
+        }
+
+
+        // Настройки приложения. Имена веб-приложений для REST, google календарь, язык
+        var StcAppSetting = {admin: '#($GET(^Settings("Stc", "WebAppAdmin")))#',
+                             user:  '#($GET(^Settings("Stc", "WebAppUser")))#',
+                             lang: getLang()};
+
+        document.write('<script language="javascript" src="js/localization/locale_' + StcAppSetting.lang + '.js"><\/script>'); 
+
+    </script>
+  </head>
+  <body>
+    <div class="container-fluid">
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="container">
+              <a class="brand" href="" ng-bind="'Система учета курсов'|localize"></a>
+              
+              <div class="nav-responsive-collapse">
+
+                <ul class="nav">
+                  <li ng-show="menu.admin" ng-class="menu.createOrder.css" ><a href="#/createorder"  ng-bind="menu.createOrder.name|localize"></a></li>
+                  <li ng-show="menu.admin" ng-class="menu.orders.css"      ><a href="#/orders"       ng-bind="menu.orders.name|localize"></a></li>
+                  <li ng-show="menu.admin" ng-class="menu.trainings.css"   ><a href="#/trainings"    ng-bind="menu.trainings.name|localize"></a></li>
+                  <li ng-show="menu.admin" ng-class="menu.certificates.css"><a href="#/certificates" ng-bind="menu.certificates.name|localize"></a></li>
+                  <li ng-show="menu.admin" ng-class="menu.companies.css"   ><a href="#/companies"    ng-bind="menu.companies.name|localize"></a></li>
+                  <li ng-show="menu.admin" ng-class="menu.persons.css"     ><a href="#/persons"      ng-bind="menu.persons.name|localize"></a></li>
+                  <li ng-show="menu.admin" ng-class="menu.courses.css"     ><a href="#/courses"      ng-bind="menu.courses.name|localize"></a></li>
+                </ul>
+
+                 <ul class="nav pull-right">
+                  <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" title="{{'Язык системы'|localize}} " href=""><span ng-bind="menu.lang.name + ' '"></span><b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                      <li ng-repeat="lang in menu.languages"><a ng-class="{aSelected: menu.lang==lang}" ng-click="menu.switchLang(lang.id)" href="" ng-bind="lang.name"></a></li>
+                    </ul>
+                  </li>
+                  <li><a ng-click="menu.login()" href="" ng-bind="menu.loginCaption|localize"></a></li>   
+                 </ul>    
+              </div>
+
+            </div>
+          </div>
+        </div>
+       
+      <div ng-view>
+      </div>
+
+    
+    </div>
+
+    <script language="javascript"  src="js/controllers/MainCtrl.js"></script>
+    <script language="javascript"  src="js/controllers/TrainingCtrl.js"></script>
+    <script language="javascript"  src="js/controllers/AllTrainingsCtrl.js"></script>
+    <script language="javascript"  src="js/controllers/UpdateOrderCtrl.js"></script>
+    <script language="javascript"  src="js/controllers/CreateOrderCtrl.js"></script>
+    <script language="javascript"  src="js/controllers/AllOrdersCtrl.js"></script>
+    <script language="javascript"  src="js/controllers/AllCompaniesCtrl.js"></script>
+	  <script language="javascript"  src="js/controllers/CompanyCtrl.js"></script>
+    <script language="javascript"  src="js/controllers/AllCertificatesCtrl.js"></script>
+	  <script language="javascript"  src="js/controllers/PersonCtrl.js"></script>
+	  <script language="javascript"  src="js/controllers/AllPersonsCtrl.js"></script>
+    <script language="javascript"  src="js/controllers/AllCoursesCtrl.js"></script>    
+    <script language="javascript"  src="js/controllers/CourseCtrl.js"></script>
+
+    <script language="javascript"  src="js/services/DALSrvc.js"></script>
+    <script language="javascript"  src="js/services/YandexSrvc.js"></script>
+    <script language="javascript"  src="js/services/TrainingSrvc.js"></script>
+    <script language="javascript"  src="js/services/OrderSrvc.js"></script>
+    <script language="javascript"  src="js/services/CourseTeacherSrvc.js"></script>
+    <script language="javascript"  src="js/services/RegionSrvc.js"></script>
+    <script language="javascript"  src="js/services/CompanySrvc.js"></script>
+    <script language="javascript"  src="js/services/CertificateSrvc.js"></script>
+    <script language="javascript"  src="js/services/PersonSrvc.js"></script>
+    <script language="javascript"  src="js/services/UtilsSrvc.js"></script>
+    <script language="javascript"  src="js/services/ReportSrvc.js"></script>
+	
+	  <script language="javascript"  src="js/directives/stcalert.js"></script> 
+    <script language="javascript"  src="js/directives/stctraining.js"></script> 
+    <script language="javascript"  src="js/directives/stcgrid.js"></script> 
+    <script language="javascript"  src="js/directives/stcperson.js"></script> 
+    <script language="javascript"  src="js/directives/stccompany.js"></script> 
+    
+    <script language="javascript"  src="js/localization/filter.js"></script>
+
+    <script language="javascript"  src="js/filters/cacheDate.js"></script>
+
+    <script language="javascript"  src="lib/ui-bootstrap-tpls-0.5.0.js"></script>
+    <script language="javascript"  src="lib/bootstrap-modal.js"></script>
+  </body>
+</html>
+]]></CSP>
+</Export>

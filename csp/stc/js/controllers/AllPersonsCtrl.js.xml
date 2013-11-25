@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/controllers/AllPersonsCtrl.js" application="/csp/four/" default="1"><![CDATA[
+'use strict';
+//dd
+
+/*===========================================================================================
+Все сотрудники
+===========================================================================================*/
+
+controllersModule.controller('AllPersonsCtrl', function($scope, $location, $routeParams, $filter, OrderSrvc, PersonSrvc, CertificateSrvc, UtilsSrvc){
+    $scope.menu.selectMenu('persons');
+    
+    if (!$scope.pageStore.persons)
+        $scope.pageStore.persons = {grid:{}};
+
+    $scope.personTable = {items:[]};
+    $scope.orderTable = {items:[], active: true};
+    $scope.trainingTable = {items:[]};
+    $scope.certificateTable = {items:[]};
+    $scope.courseTable = {items:[]};
+    $scope.companyTable = {items:[]};
+    $scope.other = {allEmpty: true};
+
+    // Инициализация всех таблиц
+    $scope.personTable.init = function(){
+        // ORDER --------------------------
+        $scope.orderTable.columns = [
+                          {name: 'Курс'}, 
+                          {name: 'Город'}, 
+                          {name: 'Дата обучения'}, 
+                          {name: 'Компания'}, 
+                          {name: 'Дата создания'}];
+       
+        $scope.orderTable.properties = [
+                          {name:'course'}, 
+                          {name:'city'}, 
+                          {name:'trainingDate', filter: 'date', filterParam: $filter('localize')('d MMMM y', $scope.menu.lang)}, 
+                          {name:'company'}, 
+                          {name:'createdTS', filter: 'date', filterParam: $filter('localize')('d MMMM y, HH:mm:ss', $scope.menu.lang)}];
+        
+        // CERTIFICATES --------------------------
+        $scope.certificateTable.columns = [
+                          {name: 'Курс'}, 
+                          {name: 'Номер'}, 
+                          {name: 'Дата создания'}, 
+                          {name: 'Статус'}];
+        
+        $scope.certificateTable.properties = [
+                          {name:'course'}, 
+                          {name:'number'}, 
+                          {name:'createdDate', filter: 'date', filterParam: $filter('localize')('d MMMM y', $scope.menu.lang)}, 
+                          {name:'status', 
+                          getCssClass: function(item){
+                                          return 'label ' + (item.isPrinted == 0 ? 'label-important' : 'label-success');             
+                                        }, 
+                          calculate: function(item){
+                                          item.status = item.isPrinted == 1 ? $filter('localize')('Распечатан') : $filter('localize')('Не распечатан');
+                                        }}];
+        
+        // TRAINING --------------------------
+        $scope.trainingTable.columns = [
+                          {name: 'Курс'}, 
+                          {name: 'Город'}, 
+                          {name: 'Дата начала'}, 
+                          {name: 'Дата окончания'}, 
+                          {name: 'Время начала'}, 
+                          {name: 'Время окончания'}, 
+                          {name: 'Статус'}];
+        
+        $scope.trainingTable.properties = [
+                          {name: 'course'}, 
+                          {name: 'city'}, 
+                          {name: 'dateStart', filter: 'date', filterParam: $filter('localize')('d MMMM y', $scope.menu.lang)}, 
+                          {name: 'dateFinish', filter: 'date', filterParam: $filter('localize')('d MMMM y', $scope.menu.lang)}, 
+                          {name: 'timeStart', filter: 'time'},
+                          {name: 'timeFinish', filter: 'time'}, 
+                          {name: 'status', 
+                          getCssClass: function(item){
+                                            return 'label ' + (item.isCompleted == 0 ? 'label-info' : 'label-success');
+                          },
+                          calculate: function(item){
+                                            item.status = item.isCompleted == 1 ? $filter('localize')('Завершено') : $filter('localize')('Не завершено');
+                                        }}];
+        
+        // COURSES --------------------------
+        $scope.courseTable.columns = [
+                          {name: 'Название'}, 
+                          {name: 'Часы'}, 
+                          {name: 'Дни'}];
+        
+        $scope.courseTable.properties = [
+                          {name:'name'}, 
+                          {name:'hours'},
+                          {name:'days'}];
+        
+        // COMPANIES --------------------------
+        $scope.companyTable.columns = [
+                          {name: 'Название'}, 
+                          {name: 'Юридический адрес'}];
+        
+        $scope.companyTable.properties = [
+                          {name:'shortName'}, 
+                          {name:'legalAddress'}];
+        // PERSONS --------------------------
+        $scope.personTable.columns = [
+                          {name: 'Фамилия',  sqlName: 'LastName->Value',           isSorted: true,  isSortable: true, isDown: true, isSearched: true,  isSearchable: true},
+                          {name: 'Имя',      sqlName: 'FirstName->Value',          isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Отчество', sqlName: 'MiddleName->Value',         isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Компания', sqlName: 'Company->ShortName->Value', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Email',    sqlName: 'Email',              isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Телефон',  sqlName: 'Phone',              isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Skype',    sqlName: 'Skype',              isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true}];
+        $scope.personTable.properties = [{name:'lastName'}, {name:'firstName'}, {name:'middleName'}, {name:'company.shortName'}, {name:'email'}, {name:'phone'}, {name:'skype'}];
+        $scope.personTable.pageSize = parseInt(UtilsSrvc.getPropertyValue($scope.pageStore, 'persons.grid.pageSize', 10));
+        $scope.personTable.pageCurr = parseInt(UtilsSrvc.getPropertyValue($scope.pageStore, 'persons.grid.pageCurr', 1));
+        $scope.personTable.itemsTotal = 0;
+        $scope.personTable.selectedItems = [];
+        $scope.personTable.multiSelectMode = false;
+		    $scope.personTable.forciblyUpdate = 0;
+		
+        $scope.personTable.loadItems($scope.personTable.pageCurr, $scope.personTable.pageSize, "LastName->Value", true, "", ""); 
+    };
+
+    // Загрузить сотрудников
+    $scope.personTable.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
+        PersonSrvc.getAllPersons(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText).then(
+            function(data){
+                $scope.personTable.pageTotal = Math.ceil(data.itemsTotal / pageSize);
+                $scope.personTable.itemsTotal = data.itemsTotal;
+                $scope.personTable.items = data.items;
+
+                                
+                if ($scope.personTable.selectedItems && $scope.personTable.items && $scope.personTable.selectedItems.length == 0 && $scope.personTable.items.length != 0){
+                    $scope.personTable.selectedItems[0] = $scope.personTable.items[0];
+                    $scope.personTable.selectedItems[0].rowClass = 'info';
+                }
+            },
+            function(response){
+                $scope.personTable.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    // При выборе сотрудника подгрузить все его связи
+    $scope.$watch('personTable.selectedItems[0]', function(){
+        if (!$scope.personTable.selectedItems || $scope.personTable.selectedItems.length == 0)
+          return;
+        
+        $scope.other.loads = 0; 
+        $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'companyTable', 'getPersonCompanies');
+        $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'courseTable', 'getPersonCourses');
+        $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'certificateTable', 'getPersonCertificates');
+        $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'trainingTable', 'getPersonTrainings');
+        $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'orderTable', 'getPersonOrders');
+    });
+
+    // Загрузка связи сотрудника
+    $scope.other.loadItems = function(id, tableName, funcName){
+        /*
+        if ($scope.personTable.selectedItems[0][tableName]){
+            $scope[tableName].items = $scope.personTable.selectedItems[0][tableName];
+
+            $scope.other.loads++;
+            return;          
+        }
+        */
+        $scope[tableName].items = [];
+        PersonSrvc[funcName](id).then(
+            function(data){
+                $scope[tableName].items = data;
+                //$scope.personTable.selectedItems[0][tableName] = data;
+
+                $scope.other.loads++;
+            },
+            function(response){
+                $scope.personTable.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                $scope.other.loads++;
+            });
+    };
+
+    // Определить какая связь есть, ту  вкладку и сделать активной
+    $scope.$watch('other.loads', function(){
+        if ($scope.other.loads != 5){
+            return;
+        }
+        
+        var flag = false;
+
+        if ($scope.orderTable.items.length > 0){
+            $scope.orderTable.active = true;
+            flag = true;
+        }
+        else if ($scope.trainingTable.items.length > 0){
+            $scope.trainingTable.active = true;
+            flag = true;
+        }
+        else if ($scope.certificateTable.items.length > 0){
+            $scope.certificateTable.active = true;
+            flag = true;
+        }
+        else if ($scope.courseTable.items.length > 0){
+            $scope.courseTable.active = true;
+            flag = true;
+        }
+        else if ($scope.companyTable.items.length > 0){
+            $scope.companyTable.active = true;
+            flag = true;
+        }
+
+        $scope.other.allEmpty = !flag;
+
+        $scope.other.loads = null;
+    }, true);
+
+    // Добавить сотрудника
+    $scope.personTable.add = function(){
+        $location.path('/person').search({type:'empl'});
+    };
+
+    // Ред. сотрудника
+    $scope.personTable.edit = function(item){
+        $location.path('/person').search({type:'empl', id: item.id});
+    };
+
+    // Удалить сотрудника
+    $scope.personTable.delete = function(item){
+        function del(){
+            PersonSrvc.deletePerson($scope.personTable.selectedItems[0].id).then(
+                function(data){
+                    $scope.personTable.alert = UtilsSrvc.getAlert('Готово!', 'Сотрудник удален.', 'success', true);
+                    $scope.personTable.forciblyUpdate++;
+                },
+                function(response){
+                    $scope.personTable.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });
+        }
+
+        UtilsSrvc.openMessageBox($filter('localize')('Удалить сотрудника') + " '" + item.lastName + "'", "Удалить сотрудника из базы данных?", del);
+
+    };
+
+    // Открыть заявку, в которой есть сотрудник
+    $scope.orderTable.open = function(item){
+        $location.path('/updateorder').search({code:item.code});
+    };
+
+    // Открыть обучение, в котором есть сотрудник
+    $scope.trainingTable.open = function(item){
+        $location.path('/training').search({id:item.id});
+    };
+    
+    // Открыть компанию, контактом которой является сотрудник
+    $scope.companyTable.edit = function(item){
+        $location.path('/company').search({id:item.id});
+    };
+
+    // Изменить статус сертификата сотрудника
+    $scope.certificateTable.print = function(item){
+        CertificateSrvc.print(item.number).then(
+            function(data){
+                //$scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Статус сертификата изменен.', 'success', true);
+                //item.certificateTable = null;
+                $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'certificateTable', 'getPersonCertificates');
+                $scope.other.loads--;
+            },
+            function(response){
+                $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };    
+
+    $scope.personTable.init();
+});
+
+]]></CSP>
+</Export>

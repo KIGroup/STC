@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/controllers/AllOrdersCtrl.js" application="/csp/four/" default="1"><![CDATA[
+'use strict';
+//ddddddd
+
+/*===========================================================================================
+Все заявки
+===========================================================================================*/
+
+controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $location, $routeParams, $filter, OrderSrvc, UtilsSrvc, RegionSrvc, CourseTeacherSrvc, TrainingSrvc, CompanySrvc, PersonSrvc){
+    $scope.menu.selectMenu('orders');
+    if (!$scope.pageStore.orders)
+        $scope.pageStore.orders = {grid:{}};
+
+    $scope.order = {};
+
+   
+    $scope.order.init = function(){
+        $scope.order.columns = [
+                          {name: 'Курс',          sqlName: 'Course->Name->Value',       isSorted: false, isSortable: true, isDown: true,  isSearched: true,  isSearchable: true},
+                          {name: 'Город',         sqlName: 'City->Name->Value',         isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
+                          {name: 'Дата обучения', sqlName: 'TrainingDate',       isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false},
+                          {name: 'Слушатели',     sqlName: 'StudentsNumber',     isSorted: false, isSortable: false,isDown: true,  isSearched: false, isSearchable: false},
+                          {name: 'Компания',      sqlName: 'Company->ShortName->Value', isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
+                          {name: 'Дата создания', sqlName: 'CreatedTS',          isSorted: true,  isSortable: true, isDown: false, isSearched: false, isSearchable: false, filter: 'date'},
+                          {name: 'Статус',        sqlName: 'OrderStatus',        isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false}];
+        
+        $scope.order.properties = [{name:'course.name'}, 
+                                   {name:'city.name'}, 
+                                   {name:'date', filter: 'date', filterParam: $filter('localize')('d MMMM y')}, 
+                                   {name:'studentsNumber'}, 
+                                   {name:'contact.company.shortName'}, 
+                                   {name:'createdTS', filter: 'date', filterParam: $filter('localize')('d MMMM y, HH:mm:ss')}, 
+                                   {name:'status.name', getCssClass: function(item){
+                                        var code = UtilsSrvc.getPropertyValue(item, 'status.code');
+                                        
+                                        var css = 'label';
+
+                                        if (code == 'New')
+                                            css += ' label-important';
+                                        if (code == 'Approved')
+                                            css += ' label-info';
+                                        if (code == 'Completed')
+                                            css += ' label-success';
+                                        if (code == 'Closed')
+                                            css += ' label-inverse';
+
+                                        return css;
+                                        }}];
+        $scope.order.status = UtilsSrvc.getPropertyValue($scope.pageStore, 'orders.status', 'All');
+        $scope.order.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'orders.grid.pageSize', 10);
+        $scope.order.pageCurr = UtilsSrvc.getPropertyValue($scope.pageStore, 'orders.grid.pageCurr', 1);
+        $scope.order.itemsTotal = 0;
+        $scope.order.selectedItems = [];
+        $scope.order.multiSelectMode = false;
+        $scope.order.forciblyUpdate = 0;
+        $scope.order.actionColumnVisible = true;
+    };
+
+    // order
+    // Загрузка заявок
+    $scope.order.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
+        OrderSrvc.getOrders(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $scope.order.status).then(
+            function(data){
+                $scope.order.pageTotal = Math.ceil(data.itemsTotal / pageSize);
+                $scope.order.itemsTotal = data.itemsTotal;
+                $scope.order.items = data.items;
+
+                if ($scope.order.selectedItems && $scope.order.items && $scope.order.selectedItems.length == 0 && $scope.order.items.length != 0){
+                    $scope.order.selectedItems[0] = $scope.order.items[0];
+                    $scope.order.selectedItems[0].rowClass = 'info';
+                }
+
+                $scope.order.contactType='order';
+            },
+            function(response){
+                $scope.order.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    $scope.$watch('order.status', function(){
+	    $scope.order.forciblyUpdate++;
+        $scope.pageStore.orders.status = $scope.order.status;
+    });
+
+    // Открыть заявку
+    $scope.order.open = function(item){
+        if (item.status.code == 'New'){
+       		UtilsSrvc.openCustomMessageBox('Открыть заявку', "'Новые' заявки нельзя открывать для просмотра и редактирования.", [{result: '1', label: 'Ок', cssClass: 'btn-primary btn-small'}]);
+            return;
+        }
+        
+        $location.path('/updateorder').search({code: item.code});
+    };
+
+    $scope.order.accept = function(){
+        function acceptOrder(sendEmail){
+            OrderSrvc.createApprovedOrder($scope.order.selectedItems[0].id, sendEmail).then(
+                function(data){
+                    $scope.order.selectedItems = [];
+                    $scope.order.forciblyUpdate++;
+                },
+                function(response){
+                    $scope.order.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });
+        };
+
+        function createCompany(){
+            $location.path('/company').search({order: $scope.order.selectedItems[0].id});
+        };
+
+        if ($scope.order.selectedItems[0].contact.company.id){
+            var btns = [{result: '1',   label: $filter('localize')('Отправить'),   cssClass: 'btn-success btn-small', func: function(){acceptOrder(1)}}, 
+                        {result: '2',   label: $filter('localize')('Не отправлять'),   cssClass: 'btn-primary btn-small', func: function(){acceptOrder(0)}},
+                        {result: false, label: $filter('localize')('Отмена'), cssClass: 'btn-small'}]
+            
+            UtilsSrvc.openCustomMessageBox('Принять заявку', 'Отправить контактному лицу на email код доступа к заявке для полного заполнения?', btns);
+        }
+        else {
+            UtilsSrvc.openMessageBox('Принять заявку', 'Компания, указанная в заявке, не существует. Создать ее?', createCompany);
+        }
+    };
+
+    // order
+    // Отправить код доступа
+    $scope.order.sendEmail = function(){
+        function sendEmail(){
+            OrderSrvc.sendEmail($scope.order.selectedItems[0].code).then(
+                function(data){
+                    $scope.order.alert = UtilsSrvc.getAlert('Готово!', 'Контакту на почту был выслан код доступа к заявке.', 'success', true);
+                },
+                function(response){
+                    $scope.order.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });
+        };
+
+        UtilsSrvc.openMessageBox('Отправить письмо', "Отправить контактному лицу на email код доступа к заявке для полного заполнения?", sendEmail);    
+    };
+
+    // 
+    $scope.order.delete = function(item){
+        function deleteOrder(){
+            OrderSrvc.deleteOrder(item.id).then(
+                function(data){
+                    $scope.order.alert = UtilsSrvc.getAlert('Готово!', 'Заявка удалена.', 'success', true);
+                    $scope.order.selectedItems = [];
+                    $scope.order.forciblyUpdate++;
+                },
+                function(response){
+                    $scope.order.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });  
+        };
+
+        UtilsSrvc.openMessageBox('Удалить заявку', $filter('localize')("Удалить заявку от компании") + ' ' + item.contact.company.shortName + "'?", deleteOrder);    
+    };
+
+        // Обновить или заменить контакт компании 
+    $scope.order.changeCompanyContact = function(isReplace){
+        var msgSuccess = 'Контакт заменен.';
+        var msgWindow = ['Заменить контакт', 'Заменить контакт компании контактом из заявки? Старый контакт компании не будет удален.'];
+
+        if (!isReplace){
+            msgSuccess = 'Контакт обновлен.';
+            msgWindow = ['Обновить контакт', 'Заменить данные контакта компании данными контакта из заявки?'];
+        }
+        
+        function resolve(){
+            PersonSrvc.changeCompanyContact({contact: $scope.order.selectedItems[0].contact, 
+            								 companyId: $scope.order.selectedItems[0].contact.company.id, 
+            								 isReplace: isReplace, 
+            								 orderId: $scope.order.selectedItems[0].id}).then(
+                function(data){
+                    $scope.order.alert = UtilsSrvc.getAlert('Готово!', msgSuccess, 'success', true);
+                    $scope.order.forciblyUpdate++;
+                },
+                function(response){
+                    $scope.order.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });
+        };
+
+        UtilsSrvc.openMessageBox(msgWindow[0], msgWindow[1], resolve);
+    };
+
+    $scope.order.openChangeCompanyDialog = function(){
+        if (!$scope.order.companies || $scope.order.companies.length==0){
+            CompanySrvc.getAllCompaniesShortInfo().then(
+                function(data){
+                    $scope.order.companies = data;
+                },
+                function(response){
+                    $scope.order.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });
+        }
+		
+        $('#ChangeCompanyModal').modal('show');
+        $scope.order.modalChangeCompanyVisible = true;
+    };
+
+    $scope.order.changeCompany = function(){
+        $scope.order.modalChangeCompanyVisible = false;
+        if (!$scope.order.newOrderCompany || !$scope.order.newOrderCompany.id)
+            return;
+        
+        OrderSrvc.changeOrderCompany($scope.order.selectedItems[0].id, $scope.order.newOrderCompany.id).then(
+                function(data){
+                    $scope.order.alert = UtilsSrvc.getAlert('Готово!', 'Произошла смена компании в заявке.', 'success', true);
+                    //$scope.order.selectedItems = [];
+                    $scope.order.forciblyUpdate++;
+                },
+                function(response){
+                    $scope.order.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });
+    };
+
+      //===================================================================================================================================================
+    $scope.training = {data :{timeStart: '10:00', timeFinish: '14:00', course:{}}};
+    // TRAINING
+    // Инициализация таблицы для обучения 
+    $scope.training.init = function(){
+        $scope.training.orderColumns   = [{name: 'Курс'}, {name: 'Город'}, {name: 'Дата обучения'}, {name: 'Слушатели'}, {name: 'Компания'}, {name: 'Дата создания'}, {name: 'Статус'}];
+        $scope.training.studentColumns = [{name: 'Фамилия'}, {name: 'Имя'}, {name: 'Отчество'}, {name: 'Компания'}, {name: 'Email'}, {name: 'Телефон'}, {name: 'Skype'}];
+        $scope.training.studentProperties = [{name:'lastName'}, {name:'firstName'}, {name:'middleName'}, {name:'company'}, {name:'email'}, {name:'phone'}, {name:'skype'}];
+        $scope.training.studentItems = [];
+
+        $scope.training.columns = [
+                          {name: 'Курс',              sqlName: 'Course->Name->Value',    isSorted: true,  isSortable: true,  isDown: false, isSearched: false, isSearchable: true},
+                          {name: 'Город',             sqlName: 'City->Name->Value',      isSorted: false, isSortable: true,  isDown: true,  isSearched: false, isSearchable: true},
+                          {name: 'Дата начала',       sqlName: 'DateStart',       isSorted: false, isSortable: true,  isDown: true,  isSearched: false, isSearchable: false},
+                          {name: 'Дата окончания',    sqlName: 'DateFinish',      isSorted: false, isSortable: true,  isDown: true,  isSearched: false, isSearchable: false},
+                          {name: 'Время',             sqlName: '',                isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false},
+                          {name: 'Оплачено подгрупп', sqlName: '',                isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false},
+                          {name: 'Статус',            sqlName: 'IsCompleted',     isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false}];
+        
+        $scope.training.properties = [{name: 'course.name'}, {name:'city.name'}, {name: 'dateStart', filter: 'date', filterParam: $filter('localize')('d MMMM y')}, {name: 'dateFinish', filter: 'date', filterParam: $filter('localize')('d MMMM y')}, {name:'timeStartFinish'}, {name: 'isPaidProgress', getCssClass: function(item){
+                                        var css = 'label';
+
+                                        if (item.isPaid == 0)
+                                            css += ' label-important';
+                                        else if (item.isPaid == 1)
+                                            css += ' label-success';
+
+                                        return css;
+                                        }},
+                                      {name: 'status', getCssClass: function(item){
+                                        var css = 'label';
+
+                                        if (item.isCompleted == 0)
+                                            css += ' label-info';
+                                        else if (item.isCompleted == 1)
+                                            css += ' label-success';
+
+                                        return css;
+                                        },calculate: function(item){
+                                            item.status = item.isCompleted == 1 ? $filter('localize')('Завершено') : $filter('localize')('Не завершено');
+                                        }}];
+        $scope.training.pageSize = 10;
+        $scope.training.pageCurr = 1;
+        $scope.training.items = [];
+        $scope.training.itemsTotal = 0;
+        $scope.training.selectedItems = [];
+        $scope.training.multiSelectMode = false;
+        $scope.training.orders = [];
+        //$scope.training.loadItems($scope.training.pageCurr, $scope.training.pageSize, "Course->Name", false, "", "");  
+    };
+
+    $scope.training.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
+        TrainingSrvc.getTrainings(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, 0).then(
+            function(data){
+                $scope.training.pageTotal = Math.ceil(data.itemsTotal / pageSize);
+                $scope.training.itemsTotal = data.itemsTotal;
+                $scope.training.items = data.items;
+            },
+            function(response){
+                $scope.order.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    // TRAINING
+    // Добовлять автоматом обработанные заявки
+    $scope.$watch('order.selectedItems', function(){
+        if (!$scope.order.selectedItems || $scope.order.selectedItems.length == 0 || $scope.order.selectedItems[0].status.code != 'Completed'){
+            $scope.training.tabInfo = true;
+            return;
+        }
+         
+        var orderIdString = '';
+        $scope.training.orders = [];
+        $scope.training.studentItems = [];
+        for (var i = 0; i < $scope.order.selectedItems.length; i++){
+            if ($scope.order.selectedItems[i].status.code != 'Completed'){
+                //$scope.order.selectedItems[i].rowClass = '';        
+                continue;
+            }
+            
+            orderIdString += $scope.order.selectedItems[i].id + ',';
+            $scope.training.orders.push($scope.order.selectedItems[i]);
+        }
+
+
+        orderIdString = orderIdString.substring(0, orderIdString.length-1);
+
+        $scope.training.data.city = $scope.order.selectedItems[0].city;
+        $scope.training.data.course.id = $scope.order.selectedItems[0].course.id;
+        $scope.training.data.orders = orderIdString.split(',');
+
+        $scope.training.dateStart = $scope.order.selectedItems[0].date;            
+
+        OrderSrvc.getStudentsFromOrders(orderIdString).then(
+            function(data){
+               $scope.training.studentItems = data; 
+            },
+            function(response){
+                $scope.order.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    }, true);
+
+    // TRAINING
+    // Создание обучения для студентов из выбранных заявок 
+    $scope.training.create = function(){
+        TrainingSrvc.saveTraining($scope.training.data).then(
+            function(data){
+                $scope.order.alert = UtilsSrvc.getAlert('Готово!', 'Обучение создано.', 'success', true);
+                $scope.training.data = {timeStart: '10:00', timeFinish: '14:00', course:{}};
+                $scope.training.dateStart = '';
+                $scope.training.dateFinish = '';
+                $scope.training.accordionCreate = false;
+                $scope.order.selectedItems = [];
+                $scope.order.forciblyUpdate++;
+            },
+            function(response){
+                $scope.order.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            }); 
+    };
+
+    $scope.training.add = function(){
+      $scope.training.data.trainingId = $scope.training.selectedItems[0].id;
+        
+        TrainingSrvc.createSubGroupsForTraining( $scope.training.data).then(
+            function(data){
+                $scope.order.alert = UtilsSrvc.getAlert('Готово!', 'Слушатели распределены на подгруппы и добавлены в существующее обучение.', 'success', true);
+                $scope.training.data = {timeStart: '10:00', timeFinish: '14:00', course:{}};
+                $scope.training.dateStart = '';
+                $scope.training.dateFinish = '';
+                $scope.training.accordionAdd = false;
+                $scope.order.init();
+            },
+            function(response){
+                $scope.order.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            }); 
+    };
+
+    $scope.$watch('training.accordionAdd', function(){
+        if ($scope.training.accordionAdd && $scope.training.items.length == 0)
+            $scope.training.loadItems($scope.training.pageCurr, $scope.training.pageSize, "Course->Name->Value", false, "", "");
+    });
+
+
+    // При активации вкладки выключать мультиселект
+    $scope.$watch('training.tabOrders', function(){
+        if ($scope.training.tabOrders == false){
+            $scope.order.multiSelectMode = false;
+        }
+        else{
+            $scope.order.multiSelectMode = true;   
+        }
+    });
+
+    $scope.order.init();
+    $scope.training.init();
+  });
+
+]]></CSP>
+</Export>

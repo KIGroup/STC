@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/directives/stcalert.js" application="/csp/four/" default="1"><![CDATA[
+'use strict';
+//sdddddd
+
+directivesModule.directive('stcalert', function(){
+    return {
+        replace: true,
+        restrict: 'E',
+        templateUrl: 'components/stcalert.csp',
+        
+        scope: {
+            data: '=',
+            spanRight: '@',
+            spanMiddle: '@',
+            spanLeft: '@'
+        },
+        controller: function($scope){
+           $scope.close = function(){
+	           $scope.data.visible = false;
+               if ($scope.data.closeMethod) {
+                    $scope.data.closeMethod();
+               }
+	       };
+	   	}
+    }
+});
+]]></CSP>
+</Export>

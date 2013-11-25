@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/services/ReportSrvc.js" application="/csp/four/" default="1"><![CDATA[
+'use strict';
+//ddвddddв
+
+/*===========================================================================================
+Отчеты
+===========================================================================================*/
+
+servicesModule.factory('ReportSrvc', function($cookies, $window) {
+	
+	return {
+		certificates: function(trainingId){
+    		var lang = $cookies.lang ? $cookies.lang.substring(0,2) : 'ru';
+            $window.open(StcAppSetting.admin + '/text/' + lang + '/certificates/'+trainingId,'_blank');
+    	}
+    }
+});
+  
+]]></CSP>
+</Export>

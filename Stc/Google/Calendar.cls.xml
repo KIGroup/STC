@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Google.Calendar">
+<Abstract>1</Abstract>
+<IncludeCode>%occStatus</IncludeCode>
+<TimeCreated>63145,80659.367405</TimeCreated>
+
+<Method name="CreateEvent">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>pCalendarId:%String,pEventObject:%ZEN.proxyObject,pToken:%String,pSslConfig:%String,*pEventId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+ if pCalendarId = ""
+ {
+  q $$$OK
+ }
+ set sc = $$$OK
+ try
+ {
+  $$$TOE(sc,##class(Stc.Google.API).Call("/calendar/v3/calendars/"_pCalendarId_"/events","POST",pToken,pSslConfig,pEventObject,.response))
+  if (response.id="")
+  {
+   $$$ThrowStatus($$$ERROR(5001,"Event from Google has no 'id' field on creation, error is "_response.error.message))
+  }
+  set pEventId = response.id
+ }
+ catch ex
+ {
+  set sc = ex.AsStatus()
+ }
+ quit sc
+]]></Implementation>
+</Method>
+
+<Method name="ModifyEvent">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>pCalendarId:%String,pEventId:%String,pEventObject:%ZEN.proxyObject,pToken:%String,pSslConfig:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+ set sc = $$$OK
+ try
+ {
+  $$$TOE(sc,##class(Stc.Google.API).Call("/calendar/v3/calendars/"_pCalendarId_"/events/"_pEventId,"PATCH",pToken,pSslConfig,pEventObject,.response))
+  if (response.id="")
+  {
+   $$$ThrowStatus($$$ERROR(5001,"Event from Google has no 'id' field on modifying"))
+  }
+  set pEventId = response.id
+ }
+ catch ex
+ {
+  set sc = ex.AsStatus()
+ }
+ quit sc
+]]></Implementation>
+</Method>
+</Class>
+</Export>

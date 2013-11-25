@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/controllers/PersonCtrl.js" application="/csp/four/" default="1"><![CDATA[
+'use strict';
+//dddddddddddвddd
+
+/*===========================================================================================
+Персона: сотрудник, преподаватель, слушатель...
+===========================================================================================*/
+
+controllersModule.controller('PersonCtrl', function($scope, $location, $filter, $routeParams, PersonSrvc, OrderSrvc, CompanySrvc, UtilsSrvc){
+    $scope.personForm = {visible: true, person:{company:{exist:{id: parseInt($routeParams.comp)}}}, actionName: "Добавить"};
+    $scope.searchForm = {visible: true, persons: [], person:''};
+    $scope.other = {};
+
+    // Инит, определение типа персоны
+    $scope.personForm.init = function(){
+        if ($routeParams.id) 
+            $scope.personForm.actionName = "Сохранить";
+
+        switch($routeParams.type){
+            /* Работа со слушателем из заявки */
+            case 'ordstud':
+            {
+				$scope.personForm.companyDisabled = true;
+                $scope.personForm.submit = $scope.other.saveOrderStudent;
+
+                $scope.personForm.back = function(){
+                   $location.path('/updateorder').search({code: $routeParams.order, stud: 1});
+                };
+
+                if ($routeParams.id){
+                    $scope.personForm.caption = "Редактирование слушателя из заявки";
+                    $scope.other.loadOrderStudent();
+                    $scope.searchForm.visible = false;
+                }
+                else{
+                    $scope.personForm.caption = "Добавление слушателя в заявку";
+                    $scope.searchForm.visible = $scope.menu.admin;
+                }
+                break;
+            }
+            /* Работа со слушателем из подгруппы */
+            case 'sgstud':
+            {
+                $scope.personForm.back = function(){
+                     $location.path('/training').search({id: $routeParams.training});
+                };
+
+                if ($routeParams.id){
+                    $scope.personForm.caption = "Редактирование слушателя из подгруппы";
+                    $scope.personForm.submit = $scope.other.updatePerson;
+                    $scope.other.loadPerson($routeParams.id);
+                    $scope.searchForm.visible = false;
+                }
+                else{
+                    $scope.personForm.caption = "Дабавление слушателя в подгруппу";
+                    $scope.personForm.submit = $scope.other.createSubGroupStudent;
+                }
+                break;
+            }
+            /* Работа с преподавателем*/
+            case 'teach':
+            {
+                $scope.personForm.back = function(){
+                     $location.path('/courses');
+                };
+
+                if ($routeParams.id){
+                    $scope.personForm.caption = "Редактирование преподавателя";
+                    $scope.personForm.submit = $scope.other.updatePerson;
+                    $scope.other.loadPerson($routeParams.id);
+                    $scope.searchForm.visible = false;
+                }
+                else{
+                    $scope.personForm.caption = "Добавление преподавателя";
+                    $scope.personForm.submit = $scope.other.createCourseTeacher;
+                }
+                break;
+            }
+            /* Работа с контактом компании */
+            case 'cont':
+            {
+                $scope.personForm.back = function(){
+                    if ($scope.personForm.person.company && $scope.personForm.person.company.exist.id)
+                        $location.path('/company').search({id: $scope.personForm.person.company.exist.id});
+                    else
+                        $location.path('/companies');
+                };
+
+                if ($routeParams.id){
+                    $scope.personForm.caption = "Редактирование контакта";
+                    $scope.other.loadPerson($routeParams.id);
+                    $scope.personForm.submit = $scope.other.updatePerson;
+                    $scope.searchForm.visible = false;
+                }
+                else{
+                    $scope.personForm.caption = "Добавление контакта";
+                    $scope.personForm.submit = $scope.other.changeCompanyContact;
+                }
+                break;
+            }
+            /* Работа с сотрудником */
+            case 'empl':
+            {
+                $scope.personForm.back = function(){
+                   $location.path('/persons');
+                };
+                
+                $scope.searchForm.visible = false;
+                
+                if ($routeParams.id){
+                    $scope.personForm.caption = "Редактирование сотрудника";
+                    $scope.other.loadPerson($routeParams.id);
+                    $scope.personForm.submit = $scope.other.updatePerson;
+                }
+                else{
+                    $scope.personForm.caption = "Добавление сотрудника";
+                    $scope.personForm.submit = $scope.other.createPerson;
+                }
+                break;
+            }
+        }
+
+    };
+
+    // Очистить найденную персону, чтобы можно было добавить
+    $scope.personForm.clear = function(){
+        $scope.personForm.person = {company:{exist:{}}};
+        $scope.personForm.disabled = false;
+        $scope.searchForm.person = '';
+        $scope.personForm.showClear = false;
+    };
+
+    // Поиск персоны
+    $scope.searchForm.search = function(startsWith){
+        if(!startsWith || startsWith.length == 0)
+            $scope.searchForm.persons = [];
+        
+        if (!startsWith || startsWith.length != 2)
+            return;  
+        
+        var promise;
+
+        switch($routeParams.type){
+            case 'sgstud':
+                promise = PersonSrvc.getFreeStudents($routeParams.sgroup + ";" + startsWith);
+                break;
+            case 'teach':
+                promise = PersonSrvc.getFreeTeachers($routeParams.course + ";" + startsWith);
+                break;
+            default:
+                promise = PersonSrvc.getPersonByLastNameOrEmailStartsWith(startsWith);
+        }
+        
+        promise.then(
+            function(data){
+                $scope.searchForm.persons = data;
+            },
+            function(response){
+                $scope.searchForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            }); 
+    };
+    
+    // При выборе из найденного подгрузить 
+    $scope.$watch('searchForm.person', function(){
+        if ($scope.searchForm.person && $scope.searchForm.person.id){
+            $scope.other.loadPerson($scope.searchForm.person.id);
+            $scope.personForm.disabled = true;
+            $scope.personForm.showClear = true;
+        }
+    }, true);
+
+    // Создать/обновить/добавить студента в заявку
+    $scope.other.saveOrderStudent = function(){
+        if ($scope.menu.admin && $scope.personForm.person.id && $routeParams.id){
+            $scope.other.updatePerson();
+            return;
+        }
+        
+        PersonSrvc.saveOrderStudent($routeParams.order, $scope.personForm.person).then(
+            function(data){
+                if (data.result == 1){
+                    // Сохранение 
+                    $scope.personForm.alert = UtilsSrvc.getAlert('Готово!', 'Изменения сохранены.', 'success', true);
+                }
+                else if (data.result == 2 || (data.result == 3 && $scope.menu.admin)){
+                    // Создание или добавление существующего админом
+                    $scope.personForm.alert = UtilsSrvc.getAlert('Готово!', 'Слушатель добавлен в заявку.', 'success', true);
+                }
+                else{
+                    // При создании совпала почта и в заявку добаился слушатель
+                    $scope.personForm.alert = UtilsSrvc.getAlert('Внимание!', 'Email: ' + $scope.personForm.person.email + '. ' + $filter('localize')('Был найден другой слушатель с этим email, он добавлен в вашу заявку. Вы не имеете прав для его изменения или удаления из базы данных, но можете удалить из заявки. Для разрешения конфликта свяжитесь с администратором.'), 'info', true);           
+                }
+
+                $scope.personForm.person = {company:{exist:{id: parseInt($routeParams.comp)}}}; 
+            },
+            function(response){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    // Подгрузить студента из заявки
+    $scope.other.loadOrderStudent = function(){
+        PersonSrvc.getOrderStudent($routeParams.order, $routeParams.id).then(
+            function(data){
+                $scope.personForm.person = data;
+                $scope.personForm.person.company = {exist: {id: data.company.id}};
+            },
+            function(response){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            }); 
+    };
+
+    // Добавить существующего человека в курс
+    $scope.other.addExistPersonInCourse = function(justAdd){
+        PersonSrvc.addExistPersonInCourse($routeParams.course, $scope.personForm.person.id, justAdd).then(
+            function(data){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Готово!', 'Преподаватель добавлен в курс.', 'success', true);
+            },
+            function(response){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    // Добавить существующего человека в подгруппу
+    $scope.other.addExistPersonInSubGroup = function(justAdd){
+        PersonSrvc.addExistPersonInSubGroup($routeParams.sgroup, $scope.personForm.person.id, justAdd).then(
+            function(data){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Готово!', 'Слушатель добавлен в подгруппу.', 'success', true);
+            },
+            function(response){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });  
+    };
+
+    // Создать и добавить препода в курс
+    $scope.other.createCourseTeacher = function(){
+        PersonSrvc.createCourseTeacher($routeParams.course, $scope.personForm.person).then(
+            function(data){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Готово!', 'Сотрудник назначен преподавателем.', 'success', true);
+                $scope.personForm.person = {};   
+                $scope.searchForm.person = '';
+                $scope.searchForm.persons = [];
+                $scope.personForm.disabled = false;
+                $scope.personForm.showClear = false;    
+            },
+            function(response){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });  
+    };
+
+    // Создать и добавить слушателя в подгруппу
+    $scope.other.createSubGroupStudent = function(){
+        PersonSrvc.createSubGroupStudent($routeParams.sgroup, $scope.personForm.person).then(
+            function(data){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Готово!', 'Слушатель добавлен в подгруппу.', 'success', true);
+                $scope.personForm.alert.closeMethod = $scope.personForm.back;
+                //$scope.personForm.visible = false;
+                $scope.personForm.person = {};   
+                $scope.searchForm.person = '';
+                $scope.personForm.disabled = false;
+                $scope.personForm.showClear = false;   
+            },
+            function(response){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });  
+    };
+
+    // Подгрузить любую персону
+    $scope.other.loadPerson = function(id){
+        PersonSrvc.getPerson(id).then(
+            function(data){
+                $scope.personForm.person = data;
+                $scope.personForm.person.company = {exist: {id: data.company.id}};
+            },
+            function(response){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });  
+    };
+
+    // Обновить любую персону
+    $scope.other.updatePerson = function(){
+        PersonSrvc.updatePerson($scope.personForm.person).then(
+            function(data){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Готово!', 'Изменения сохранены.', 'success', true);
+            },
+            function(response){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });  
+    };
+
+
+    // Создать сотрудника 
+    $scope.other.createPerson = function(){
+        PersonSrvc.createPerson($scope.personForm.person).then(
+            function(data){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Готово!', 'Сотрудник добавлен.', 'success', true);
+            },
+            function(response){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });  
+    };
+
+    // Обновить любую персону
+    $scope.other.changeCompanyContact = function(){
+        PersonSrvc.changeCompanyContact({contact: $scope.personForm.person, companyId: $routeParams.comp, isReplace: 1}).then(
+            function(data){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Готово!', 'Контакт компании изменен.', 'success', true);
+            },
+            function(response){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });  
+    };
+
+    // Компании для комбобокаса
+    $scope.other.loadCompanies = function(){
+        CompanySrvc.getAllCompaniesShortInfo().then(
+            function(data){
+                $scope.personForm.companies = data;
+            },
+            function(response){
+                $scope.personForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            }); 
+    };
+
+    $scope.other.loadCompanies();    
+    $scope.personForm.init();   
+});
+
+]]></CSP>
+</Export>

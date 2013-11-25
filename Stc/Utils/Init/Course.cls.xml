@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Utils.Init.Course">
+<Super>BaseInit</Super>
+<TimeCreated>63143,85810.973847</TimeCreated>
+
+<Parameter name="PClassName">
+<Default>Course</Default>
+</Parameter>
+
+<Method name="Import">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	w !,"=== "_..#PClassName_" ==="
+	do ..ImportXData("Stc.Utils.Init."_..#PClassName, "Stc.Data.Localization.LText", "LTextXData")
+	do ..ImportXData("Stc.Utils.Init."_..#PClassName, "Stc.Data.Localization.LTextValue", "LTextValueXData")
+	do ..ImportXData("Stc.Utils.Init."_..#PClassName, "Stc.Data."_..#PClassName, "ClassXData")
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<XData name="ClassXData">
+<Data><![CDATA[
+<ClassXData>
+<Course><Name>8DB0DA1D-CEA2-4AF1-A76D-4D43B3E85D8C</Name><Hours>2</Hours><Days>2</Days><IsInUse>1</IsInUse><ProgramUrl>www.google.com</ProgramUrl></Course>
+<Course><Name>8755EEEA-7CD3-4A38-AFB5-4C2B3BACB5A2</Name><Hours>3</Hours><Days>3</Days><IsInUse>1</IsInUse><ProgramUrl>www.ya.ru</ProgramUrl></Course>
+<Course><Name>DA1F3202-AF35-48C2-9607-3037ACCE95FE</Name><Hours>4</Hours><Days>4</Days><IsInUse>1</IsInUse><ProgramUrl>www.mail.ru</ProgramUrl></Course>
+<Course><Name>C8557895-60FE-4DF8-9121-30ED714E88FE</Name><Hours>5</Hours><Days>3</Days><IsInUse>0</IsInUse><ProgramUrl>www.sql.ru</ProgramUrl></Course>
+</ClassXData>
+]]></Data>
+</XData>
+
+<XData name="LTextXData">
+<Data><![CDATA[
+<LTextOrderStatusXData>
+<LText><Guid>8DB0DA1D-CEA2-4AF1-A76D-4D43B3E85D8C</Guid></LText>
+<LText><Guid>8755EEEA-7CD3-4A38-AFB5-4C2B3BACB5A2</Guid></LText>
+<LText><Guid>DA1F3202-AF35-48C2-9607-3037ACCE95FE</Guid></LText>
+<LText><Guid>C8557895-60FE-4DF8-9121-30ED714E88FE</Guid></LText>
+</LTextOrderStatusXData>
+]]></Data>
+</XData>
+
+<XData name="LTextValueXData">
+<Data><![CDATA[
+<LTextValueXData>
+<LTextValue><LText>8DB0DA1D-CEA2-4AF1-A76D-4D43B3E85D8C</LText><Value>Администрирование СУБД Caché</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>8755EEEA-7CD3-4A38-AFB5-4C2B3BACB5A2</LText><Value>Основы InterSystems DeepSee</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>DA1F3202-AF35-48C2-9607-3037ACCE95FE</LText><Value>Основы InterSystems Ensemble</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>C8557895-60FE-4DF8-9121-30ED714E88FE</LText><Value>Основы InterSystems HealthShare</Value><Lang>ru</Lang></LTextValue>
+
+<LTextValue><LText>8DB0DA1D-CEA2-4AF1-A76D-4D43B3E85D8C</LText><Value>Caché Database Administration</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>8755EEEA-7CD3-4A38-AFB5-4C2B3BACB5A2</LText><Value>Fundamentals of InterSystems DeepSee</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>DA1F3202-AF35-48C2-9607-3037ACCE95FE</LText><Value>Fundamentals of InterSystems Ensemble</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>C8557895-60FE-4DF8-9121-30ED714E88FE</LText><Value>Fundamentals of InterSystems HealthShare</Value><Lang>en</Lang></LTextValue>
+</LTextValueXData>
+]]></Data>
+</XData>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Utils.Init.CourseD</DataLocation>
+<DefaultData>CourseDefaultData</DefaultData>
+<IdLocation>^Stc.Utils.Init.CourseD</IdLocation>
+<IndexLocation>^Stc.Utils.Init.CourseI</IndexLocation>
+<StreamLocation>^Stc.Utils.Init.CourseS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="CourseDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

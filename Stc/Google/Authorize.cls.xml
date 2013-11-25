@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Google.Authorize">
+<Super>%CSP.Page</Super>
+<TimeCreated>63150,76166.869516</TimeCreated>
+
+<Parameter name="ClientId">
+<Default>987216819052.apps.googleusercontent.com</Default>
+</Parameter>
+
+<Parameter name="ClientSecret">
+<Default>03MDei0TZgQK0E1S1bQ9o2jE</Default>
+</Parameter>
+
+<Parameter name="FailRedirect">
+<Default>Stc.Google.Authorize.Fail.cls</Default>
+</Parameter>
+
+<Parameter name="WinRedirect">
+<Default>Stc.Google.Authorize.Win.cls</Default>
+</Parameter>
+
+<Parameter name="RedirectUri">
+<Default>http://somesite.com:57772/csp/training/Stc.Google.Authorize.cls</Default>
+</Parameter>
+
+<Method name="GetLoginUrl">
+<ClassMethod>1</ClassMethod>
+<Private>1</Private>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+		
+	s url = "https://accounts.google.com/o/oauth2/auth"
+	s url = url_"?response_type=code"
+	s url = url_"&client_id="_$$$URLENCODE(..#ClientId)
+	s url = url_"&redirect_uri="_$$$URLENCODE(..#RedirectUri)
+	s url = url_"&scope="_$$$URLENCODE("https://www.googleapis.com/auth/calendar")
+	s url = url_"&state=code"
+	s url = url_"&access_type=offline"
+	s url = url_"&approval_prompt=force"
+	q url
+]]></Implementation>
+</Method>
+
+<Method name="ParseCode">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>*status:%String,*code:%String,*state:%String</FormalSpec>
+<Private>1</Private>
+<Implementation><![CDATA[
+	s status = $Get(%request.Data("error",1),"success")
+	s code = $Get(%request.Data("code",1))
+	s state = $Get(%request.Data("state",1))
+]]></Implementation>
+</Method>
+
+<Method name="ExchangeCode">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>code:%String,*status:%String,*rtoken:%String,*atoken:%String</FormalSpec>
+<Private>1</Private>
+<Implementation><![CDATA[
+	s q = ##class(%Net.HttpRequest).%New()
+	s q.SSLConfiguration=$g(^Settings("Google", "SslConfig"))
+	s q.Server="accounts.google.com"
+	s q.Https=1
+#;	s q.Port=443
+	d q.InsertFormData("code", code)
+	d q.InsertFormData("client_id", ..#ClientId)
+	d q.InsertFormData("client_secret", ..#ClientSecret)
+	d q.InsertFormData("redirect_uri", ..#RedirectUri)
+	d q.InsertFormData("grant_type","authorization_code")
+	s sc = q.Post("/o/oauth2/token")
+	if ('sc)
+	{
+		s status = $System.Status.GetErrorText(sc)
+		q
+	}
+	
+	if q.HttpResponse.StatusCode'=200
+	{
+		s status = q.HttpResponse.StatusLine
+		q
+	}
+	
+	s json = q.HttpResponse.Data.Read()
+	d ##class(%ZEN.Auxiliary.jsonProvider).%ParseJSON(json,,.obj)
+	s atoken = obj."access_token"
+	s rtoken = obj."refresh_token"
+	s status = "success"
+]]></Implementation>
+</Method>
+
+<Method name="ExchangeToken">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>rtoken:%String,*status:%String,*atoken:%String</FormalSpec>
+<Implementation><![CDATA[
+	s q = ##class(%Net.HttpRequest).%New()
+	s q.SSLConfiguration=$g(^Settings("Google", "SslConfig"))
+	s q.Server="accounts.google.com"
+	s q.Https=1
+	d q.InsertFormData("refresh_token", rtoken)
+	d q.InsertFormData("client_id", ..#ClientId)
+	d q.InsertFormData("client_secret", ..#ClientSecret)
+	d q.InsertFormData("grant_type", "refresh_token")
+	s sc = q.Post("/o/oauth2/token")
+	if ('sc)
+	{
+		s status = $System.Status.GetErrorText(sc)
+		q
+	}
+	
+	i q.HttpResponse.StatusCode'=200
+	{
+		s status = q.HttpResponse.StatusLine
+		q
+	}
+	
+	s json=q.HttpResponse.Data.Read()
+	d ##class(%ZEN.Auxiliary.jsonProvider).%ParseJSON(json,,.obj)
+	s atoken = obj."access_token"
+	s status = "success"
+]]></Implementation>
+</Method>
+
+<Method name="GetWinRedirect">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>rtoken:%String,atoken:%String</FormalSpec>
+<Private>1</Private>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	q ..#WinRedirect_"?refresh_token="_$$$URLENCODE(rtoken)_"&access_token="_$$$URLENCODE(atoken)
+]]></Implementation>
+</Method>
+
+<Method name="GetFailRedirect">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>status:%String</FormalSpec>
+<Private>1</Private>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	q ..#FailRedirect_"?error="_$$$URLENCODE(status)
+]]></Implementation>
+</Method>
+
+<Method name="OnPreHTTP">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Boolean</ReturnType>
+<ServerOnly>1</ServerOnly>
+<Implementation><![CDATA[
+	s state = $Get(%request.Data("state",1))
+	i state = ""
+	{
+		s url = ..GetLoginUrl()
+	}
+	elseif state = "code"
+	{
+		d ..ParseCode(.st, .code, .state)
+		if st '= "success"
+		{
+			s url = ..GetFailRedirect(st)
+		}
+		else
+		{
+			d ..ExchangeCode(code, .st, .rtoken, .atoken)
+			if st '= "success"
+			{
+				s url = ..GetFailRedirect(st)
+			}
+			else
+			{
+				s url = ..GetWinRedirect(rtoken, atoken)
+			}
+		}
+	}
+	
+	s %response.Redirect = url
+	Quit 1
+]]></Implementation>
+</Method>
+</Class>
+</Export>

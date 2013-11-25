@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.Order">
+<Description>
+Заявка на обучение</Description>
+<Super>%Persistent</Super>
+<TimeCreated>63098,13893.822559</TimeCreated>
+
+<Property name="City">
+<Description>
+Город обучения</Description>
+<Type>Region</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Course">
+<Description>
+Курс обучения</Description>
+<Type>Course</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Company">
+<Description>
+Компания</Description>
+<Type>Company</Type>
+</Property>
+
+<Property name="TrainingDate">
+<Description>
+Дата обучения</Description>
+<Type>%Date</Type>
+<Parameter name="FORMAT" value="3"/>
+</Property>
+
+<Property name="CreatedTS">
+<Description>
+Дата и время создания заявки</Description>
+<Type>%TimeStamp</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="OrderStatus">
+<Description>
+Статус заявки</Description>
+<Type>OrderStatus</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Latitude">
+<Description>
+Широта</Description>
+<Type>%Float</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Longitude">
+<Description>
+Долгота</Description>
+<Type>%Float</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Partner">
+<Description>
+Партнер</Description>
+<Type>%String</Type>
+</Property>
+
+<Method name="Delete">
+<Description>
+Удаление любой заявки. Удалются все студенты из заявки и локализация для заявки</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	if (##class(OrderApproved).%ExistsId(id) = $$$OK){
+		set order = ..%OpenId(id,4)
+		set key = ""
+		for i=1:1:order.Students.Count(){
+			set key = order.Students.Next(key)
+			do order.Students.RemoveAt(key)
+			
+			set st = ##class(Person).Delete(key)
+			if $$$ISERR(st) RETURN st
+		}
+	}
+	elseif (##class(OrderDirty).%ExistsId(id) = $$$OK){
+		set order = ..%OpenId(id,4)
+		
+		set st = ##class(Stc.Data.Localization.LText).Delete(order.LastName.%Id())
+		quit:$$$ISERR(st) st
+		
+		set st = ##class(Stc.Data.Localization.LText).Delete(order.FirstName.%Id())
+		quit:$$$ISERR(st) st
+		
+		set st = ##class(Stc.Data.Localization.LText).Delete(order.MiddleName.%Id())
+		quit:$$$ISERR(st) st
+	}
+	
+	quit ..%DeleteId(id,4)
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.OrderD</DataLocation>
+<DefaultData>OrderDefaultData</DefaultData>
+<IdLocation>^Stc.Data.OrderD</IdLocation>
+<IndexLocation>^Stc.Data.OrderI</IndexLocation>
+<StreamLocation>^Stc.Data.OrderS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="OrderDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>City</Value>
+</Value>
+<Value name="3">
+<Value>Course</Value>
+</Value>
+<Value name="4">
+<Value>TrainingDate</Value>
+</Value>
+<Value name="5">
+<Value>CreatedTS</Value>
+</Value>
+<Value name="6">
+<Value>Company</Value>
+</Value>
+<Value name="7">
+<Value>OrderStatus</Value>
+</Value>
+<Value name="8">
+<Value>Partner</Value>
+</Value>
+<Value name="9">
+<Value>Latitude</Value>
+</Value>
+<Value name="10">
+<Value>Longitude</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

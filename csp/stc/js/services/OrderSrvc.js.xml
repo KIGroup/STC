@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/services/OrderSrvc.js" application="/csp/four/" default="1"><![CDATA[
+'use strict';
+//dвdddв
+
+/*===========================================================================================
+Заявки
+===========================================================================================*/
+
+servicesModule.factory('OrderSrvc', function(DALSrvc) {
+	return {
+	      /* Создание грязной заявки */
+        createOrder: function(order){
+            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/createOrder', order);
+        },
+        /* Удаление любой заявки */
+        deleteOrder: function(id){
+            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/deleteOrder/' + id, null);
+        },
+        /* Создание чистой заявки из грязной */
+        createApprovedOrder: function(orderId, sendEmail){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/createApprovedOrder', {id: orderId, sendEmail: sendEmail});
+        },
+                /* */
+        getOrders: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, status){
+            var first = pageSize * (pageCurr - 1) + 1;
+            var obj = {sqlName: sqlName, 
+                       isDown: isDown, 
+                       first: first, 
+                       last: first + pageSize - 1,
+                       searchSqlName: searchSqlName, 
+                       searchText: searchText,
+                       status: status};
+
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/orders', obj);
+        },
+        /* Получить грязные заявки для таблицы */
+        getDirtyOrders: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, status){
+            var first = pageSize * (pageCurr - 1) + 1;
+            var obj = {sqlName: sqlName, 
+                       isDown: isDown, 
+                       first: first, 
+                       last: first + pageSize - 1,
+                       searchSqlName: searchSqlName, 
+                       searchText: searchText};
+
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/allDirtyOrders', obj);
+        },
+        /* Получить чистые заявки для таблицы */
+        getApprovedOrders: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, status){
+            var first = pageSize * (pageCurr - 1) + 1;
+            var obj = {sqlName: sqlName, 
+                       isDown: isDown, 
+                       first: first, 
+                       last: first + pageSize - 1,
+                       searchSqlName: searchSqlName, 
+                       searchText: searchText,
+                       status: parseInt(status)};
+
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/allApprovedOrders', obj);
+        },
+        /* Получить 1 новую заявку */
+        getDirtyOrder: function(id){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/dirtyOrder/' + id, null);
+        },
+        /* Получить чистую заявку по коду доступа */
+        getApprovedOrderByCode: function(code){
+            return DALSrvc.getPromise('get', StcAppSetting.user + '/json/approvedOrderInfo/' + code, null);
+        },
+        /* Получить студентов чистой заявки по коду доступа к заявке */
+        getApprovedOrderStudentsByCode: function(code, pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
+            var first = pageSize * (pageCurr - 1) + 1;
+            var obj = {sqlName: sqlName, 
+                       isDown: isDown, 
+                       first: first, 
+                       last: first + pageSize - 1,
+                       searchSqlName: searchSqlName, 
+                       searchText: searchText,
+                       code: code};
+            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/approvedOrderStudents', obj);
+        },
+        /* Завершить редактирование чистой заявки */
+        finishEditingOrder: function(accessCode){
+            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/finishEditingOrder', {code: accessCode});
+        },
+        /* Изменение статуса чистой заявки */
+        changeOrderApprovedStatus: function(accessCode, status){
+             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/changeOrderApprovedStatus', {code: accessCode, status: status});
+        },
+        /* Получить всех студентов из нескольких заявок*/
+        getStudentsFromOrders: function(orderIdString){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/getStudentsFromOrders/' + orderIdString, null);
+        },
+        /* Обновть данные в контакте или заменить контакт компании */
+        changeOrderCompany: function(orderId, companyId){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/changeOrderCompany', {orderId: orderId, companyId: companyId});
+        },
+        /* Отправить повторно контакту письмо */
+        sendEmail: function(orderCode){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/sendEmailToCompanyContactForApprovedOrder', {code: orderCode});
+        }
+    }
+});
+]]></CSP>
+</Export>

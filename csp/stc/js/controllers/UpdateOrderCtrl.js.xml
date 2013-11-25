@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/controllers/UpdateOrderCtrl.js" application="/csp/four/" default="1"><![CDATA[
+'use strict';
+//ddd
+
+/*===========================================================================================
+Обновление заявки; заказчик или админ. 
+===========================================================================================*/
+
+controllersModule.controller('UpdateOrderCtrl', function($scope, $location, $filter, $routeParams, OrderSrvc, CompanySrvc, PersonSrvc, UtilsSrvc){
+    if ($scope.menu.active) $scope.menu.active.css = "menuAfterActive";
+    
+    $scope.ordForm = {order: {}, studTable: {}, visible: false};
+
+    // Инит
+    $scope.ordForm.init = function(){
+        $scope.ordForm.studTable.columns = [
+                          {name: 'Фамилия',  sqlName: 'Students->LastName->Value',           isSorted: true,  isSortable: true, isDown: true, isSearched: true,  isSearchable: true},
+                          {name: 'Имя',      sqlName: 'Students->FirstName->Value',          isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Отчество', sqlName: 'Students->MiddleName->Value',         isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: false},
+                          {name: 'Компания', sqlName: 'Students->Company->ShortName->Value', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: false},
+                          {name: 'Email',    sqlName: 'Students->Email',                     isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Телефон',  sqlName: 'Students->Phone',                     isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Skype',    sqlName: 'Students->Skype',                     isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true}];
+        
+        $scope.ordForm.studTable.properties = [{name:'lastName'}, {name:'firstName'}, {name:'middleName'}, {name:'company.shortName'}, {name:'email'}, {name:'phone'}, {name:'skype'}];
+        $scope.ordForm.studTable.pageSize = 15;
+        $scope.ordForm.studTable.pageCurr = 1;
+        $scope.ordForm.studTable.itemsTotal = 0;
+        $scope.ordForm.studTable.selectedItems = [];
+        $scope.ordForm.studTable.multiSelectMode = false;
+        $scope.ordForm.studTable.active = $routeParams.stud == 1 ? true : false;
+		$scope.ordForm.studTable.forciblyUpdate = 0;
+
+        $scope.ordForm.admin = $routeParams.pageCurr ? true: false;
+        
+		if ($routeParams.code){
+  			$scope.ordForm.loadOrderData();
+        }
+    };
+
+    // Подгрузить заявку по коду доступа
+    $scope.ordForm.loadOrderData = function(){
+        OrderSrvc.getApprovedOrderByCode($routeParams.code).then(
+            function(data){
+	            $scope.ordForm.visible = true;
+                $scope.ordForm.order = data;
+    
+                $scope.ordForm.studTable.loadItems($scope.ordForm.studTable.pageCurr, $scope.ordForm.studTable.pageSize, "Students->LastName->Value", true, "", ""); 
+            },
+            function(response){
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                $scope.ordForm.visible = false;
+            });
+    };
+
+    // Обновить данные компании
+    $scope.ordForm.saveCompany = function(){
+        CompanySrvc.saveCompanyByCode($scope.ordForm.order.contact.company, $routeParams.code).then(
+            function(data){
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Готово!', 'Изменения сохранены.', 'success', true);
+                $scope.formCompany.$setPristine();
+            },
+            function(response){
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    // Завершить редактирование
+    $scope.ordForm.finishEditing = function(){
+        OrderSrvc.finishEditingOrder($routeParams.code).then(
+            function(data){
+                if ($scope.menu.admin){
+                    $location.path('/orders');
+                }
+                else{
+                    $scope.ordForm.alert = UtilsSrvc.getAlert('Готово!', 'Ваша заявка отправлена на рассмотрение.', 'success', true);
+                    $scope.ordForm.visible = false;
+                }
+            },
+            function(response){
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    // Подгрузить всех студентов в заявке
+    $scope.ordForm.studTable.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
+        OrderSrvc.getApprovedOrderStudentsByCode($routeParams.code, pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText).then(
+            function(data){
+                $scope.ordForm.studTable.pageTotal = Math.ceil(data.itemsTotal / pageSize);
+                $scope.ordForm.studTable.itemsTotal = data.itemsTotal;
+                $scope.ordForm.studTable.items = data.items;
+            },
+            function(response){
+                $scope.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+    
+    // Добавить студента, переход на страницу
+    $scope.ordForm.studTable.add = function(){
+         $location.path('/person').search({type: "ordstud", order: $routeParams.code, comp: $scope.ordForm.order.contact.company.id});
+    };
+
+    // Редактировать студента, переход на страницу
+    $scope.ordForm.studTable.edit = function(item){
+         $location.path('/person').search({type:'ordstud', order: $routeParams.code, id: item.id});
+    };
+
+    // Удалить студента из заявки
+    $scope.ordForm.studTable.delete = function(item){
+        function deleteStudent(){
+            PersonSrvc.deleteOrderStudent($routeParams.code, item.id).then(
+                function(data){
+                    $scope.ordForm.alert = UtilsSrvc.getAlert('Готово!', 'Слушатель удален из заявки.', 'success', true);
+                    $scope.ordForm.studTable.forciblyUpdate++;
+                },
+                function(response){
+                    $scope.ordForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });
+        }
+
+         UtilsSrvc.openMessageBox($filter('localize')('Удалить слушателя') + " '" + item.lastName + "'", "Удалить слушателя из списка?", deleteStudent);
+    };
+
+    $scope.ordForm.init();
+  });
+
+]]></CSP>
+</Export>

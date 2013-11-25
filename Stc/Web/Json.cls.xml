@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Web.Json">
+<Description>
+Базовый класс для работы с json, общие методы</Description>
+<TimeCreated>63099,7625.766078</TimeCreated>
+
+<Method name="GetProxyObject">
+<Description>
+Получить proxyObject объекта по ИД и классу</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>className:%String,id:%String</FormalSpec>
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ""
+	
+	try{
+		set obj = $CLASSMETHOD(className, "%OpenId", id)
+		set proxy = obj.ConvertToProxyObject()
+	}
+	catch (ex){
+		set proxy = ##class(%ZEN.proxyObject).%New()
+	}
+	
+	quit proxy
+]]></Implementation>
+</Method>
+
+<Method name="WriteJsonFromSql">
+<Description>
+Преобразовать запрос в json</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>sql:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+  	set status = $$$OK
+  	
+   	try{
+	   	do ##class(%ZEN.Auxiliary.jsonSQLProvider).%WriteJSONFromSQL(,sql)
+	}
+	catch ex{
+		set status = ex.AsStatus()
+	}
+	
+  	quit status
+]]></Implementation>
+</Method>
+
+<Method name="WriteJsonForGrid">
+<Description>
+Постраничный вывод таблицы, для любого класса с заданными параметрами: сортировка, поиск</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>sql:%String,className:%String,params:%RegisteredObject,whereRequired:%String=""</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try{
+		// Определяем что находится в WHERE.
+		if (whereRequired = "") && (params.searchText '= ""){
+			// Одно условие - поиск
+			set sql = sql_" WHERE "_..ParseParameter(params.searchSqlName)_" LIKE '%"_..ParseParameter($ZCONVERT(params.searchText, "I","UTF8"))_"%'"
+		}
+		elseif (whereRequired '= "") && (params.searchText = ""){
+			// Одно условие - заданное, например - выборка по статусу
+			set sql = sql_" WHERE "_whereRequired
+		}
+		elseif (whereRequired '= "") && (params.searchText '= ""){
+			// Два(+) условия = поиск и дополнительные
+			set sql = sql_" WHERE "_whereRequired_" AND "_..ParseParameter(params.searchSqlName)_" LIKE '%"_..ParseParameter($ZCONVERT(params.searchText, "I","UTF8"))_"%'"
+		}
+		
+		// Сортировка
+		set isDown = "ASC"
+		if (params.isDown '= 1) set isDown = "DESC"
+		
+		set sql = sql_" ORDER BY "_..ParseParameter(params.sqlName)_" "_isDown
+		
+			
+		set statement = ##class(%SQL.Statement).%New()	
+		$$$THROWONERROR(status, statement.%Prepare(sql))		
+		set rs = statement.%Execute()
+
+		set proxyItems = ##class(%ListOfObjects).%New()			
+		
+		// Все элементы, попавшие в заданный диапазон конвертируются в proxy и помещаются в результирующий список
+		while (rs.%Next() '= 0){
+			if (rs.%ROWCOUNT >= params.first) && (rs.%ROWCOUNT <= params.last){
+				do proxyItems.Insert(..GetProxyObject(className, rs.%GetData(1)))
+			}
+		}
+		// Общее число элементов с заданными параметрами в WHERE
+		set itemsTotal = rs.%ROWCOUNT
+		
+		do rs.%Close()						
+		do statement.%Close()
+		
+		set proxyResult = ##class(%ZEN.proxyObject).%New()
+		set proxyResult.children = ##class(%ZEN.proxyObject).%New()
+		set proxyResult.children.items = proxyItems
+	    set proxyResult.children.itemsTotal = itemsTotal
+	    do proxyResult.%ToJSON()
+	}
+	catch ex{
+		set status = ex.AsStatus()	
+	}
+	
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="ParseParameter">
+<Description>
+Удаление "мусора" из входных параметров</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>parameter:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set parameter = $ZCONVERT(parameter, "U")
+	
+	quit $REPLACE(
+		 $REPLACE(
+		 $REPLACE(
+		 $REPLACE(
+		 $REPLACE(
+		 $REPLACE(parameter, "SELECT",""), "DELETE", ""), "UNION", ""), "FROM",""), "INSERT", ""), "'", "")
+]]></Implementation>
+</Method>
+</Class>
+</Export>

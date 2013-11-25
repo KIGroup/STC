@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Utils.Init.LTextLanguage">
+<Super>BaseInit</Super>
+<TimeCreated>63144,8337.614555</TimeCreated>
+
+<Parameter name="PClassName">
+<Default>LTextLanguage</Default>
+</Parameter>
+
+<Method name="Import">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	w !,"=== "_..#PClassName_" ==="
+	do ..ImportXData("Stc.Utils.Init."_..#PClassName, "Stc.Data.Localization."_..#PClassName, "ClassXData")
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<XData name="ClassXData">
+<Data><![CDATA[
+<ClassXData>
+<LTextLanguage><Name>Русский</Name><Code>ru</Code></LTextLanguage>
+<LTextLanguage><Name>English</Name><Code>en</Code></LTextLanguage>
+</ClassXData>
+]]></Data>
+</XData>
+</Class>
+</Export>

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.Training">
+<Description>
+Обучение</Description>
+<Super>%Persistent</Super>
+<TimeCreated>63098,13359.879291</TimeCreated>
+
+<Property name="Teacher">
+<Description>
+Преподаватель</Description>
+<Type>Person</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Course">
+<Description>
+Курс </Description>
+<Type>Course</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="SubGroups">
+<Description>
+Подгруппы со студентами</Description>
+<Type>SubGroup</Type>
+<Collection>array</Collection>
+</Property>
+
+<Property name="City">
+<Description>
+Город обучения</Description>
+<Type>Region</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Street">
+<Description>
+Адрес</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Room">
+<Description>
+Аудитория</Description>
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Latitude">
+<Description>
+Широта</Description>
+<Type>%Float</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Longitude">
+<Description>
+Долгота</Description>
+<Type>%Float</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="DateStart">
+<Description>
+Дата начала обучения</Description>
+<Type>%Date</Type>
+<Required>1</Required>
+<Parameter name="FORMAT" value="3"/>
+</Property>
+
+<Property name="DateFinish">
+<Description>
+Дата окончания обучения</Description>
+<Type>%Date</Type>
+<Required>1</Required>
+<Parameter name="FORMAT" value="3"/>
+</Property>
+
+<Property name="TimeStart">
+<Description>
+Время начала обучения</Description>
+<Type>%Time</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="TimeFinish">
+<Description>
+Время окончания обучения</Description>
+<Type>%Time</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="IsCompleted">
+<Description>
+Завершено</Description>
+<Type>%Boolean</Type>
+<InitialExpression>0</InitialExpression>
+<Required>1</Required>
+</Property>
+
+<Property name="OtherInfo">
+<Description>
+Другая информация</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
+<Method name="ConvertToProxyObject">
+<Description>
+Конвертация в proxyObject для JSON </Description>
+<FormalSpec>shortInfo:%Boolean=0</FormalSpec>
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	set proxy.id = ..%Id()
+	set proxy.city = ..City.ConvertToProxyObject()
+	set proxy.course = ..Course.ConvertToProxyObject(1)
+	set proxy.teacher = ..Teacher.ConvertToProxyObject()
+	set proxy.dateStart = $ZDATE(..DateStart, 3)
+	set proxy.dateFinish = $ZDATE(..DateFinish, 3)
+	set proxy.isCompleted = ..IsCompleted	
+	
+	set proxy.timeStart = $e(##class(%Library.Time).LogicalToDisplay(..TimeStart), 1, 5)
+	set proxy.timeFinish = $e(##class(%Library.Time).LogicalToDisplay(..TimeFinish), 1, 5)
+	set proxy.timeStartFinish = proxy.timeStart_" - "_proxy.timeFinish
+	
+	set proxy.otherInfo = ..OtherInfo.Value
+	set proxy.room = ..Room
+	set proxy.address = ##class(%ZEN.proxyObject).%New()
+	set proxy.address.title = ..Street.Value
+	set proxy.address.point = ..Latitude_" "_..Longitude
+	
+	if (shortInfo = 1) quit proxy
+	
+	set paidsNumber = 0
+	set proxy.isPaid = 0
+	
+	set key = ""
+	for i=1:1:..SubGroups.Count(){
+		set key = ..SubGroups.Next(key)
+		set sgroup = ..SubGroups.GetAt(key)
+		if (sgroup.Amount > 0){
+			set paidsNumber = paidsNumber + 1
+		}
+	}
+	// Оплачено: 2/3, т.е. две подгруппы оплатили
+	set proxy.isPaidProgress = paidsNumber_" / "_..SubGroups.Count()
+	
+	if (paidsNumber = ..SubGroups.Count()) set proxy.isPaid = 1
+	
+	quit proxy
+]]></Implementation>
+</Method>
+
+<Method name="Save">
+<Description>
+Сохранить / создать обучение</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
+<ReturnType>Training</ReturnType>
+<Implementation><![CDATA[
+	if (data.id = ""){
+		set tr = ..%New()
+		set tr.Street = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.address.title, "I","UTF8"))
+		set tr.OtherInfo = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.otherInfo, "I","UTF8"))
+		set status = tr.AddSubGroupsFromOrders(data.orders)
+		quit:$$$ISERR(status) tr
+	}
+	else{
+		set tr = ..%OpenId(data.id)
+		set tr.Street.Value = $ZCONVERT(data.address.title, "I","UTF8")
+		set tr.OtherInfo.Value = $ZCONVERT(data.otherInfo, "I","UTF8")
+	}
+	
+	set tr.DateFinish = $ZDATEH(data.dateFinish, 15)
+	set tr.DateStart = $ZDATEH(data.dateStart, 15)
+	set tr.TimeFinish = ##class(%Library.Time).DisplayToLogical(data.timeFinish)
+	set tr.TimeStart = ##class(%Library.Time).DisplayToLogical(data.timeStart)
+	set tr.Room = $ZCONVERT(data.room, "I","UTF8")
+	set tr.Latitude = $p(data.address.point, " ", 2)
+	set tr.Longitude = $p(data.address.point, " ", 1)
+	
+	set tr.Course = ##class(Course).%OpenId(data.course.id)
+	set tr.Teacher = ##class(Person).%OpenId(data.teacher.id)
+	set tr.City = ##class(Region).%OpenId(data.city.id)
+	
+	set status = tr.%Save()
+	quit tr
+]]></Implementation>
+</Method>
+
+<Method name="AddSubGroupsFromOrders">
+<Description>
+Добавить новые подгруппы в обучение из заявок</Description>
+<FormalSpec>orders:%ListOfObjects</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	for i=1:1:orders.Count(){
+		set order = ##class(OrderApproved).%OpenId(orders.GetAt(i))
+		set sub = ##class(SubGroup).Create(order.Company, order.Students, .status)
+		if $$$ISERR(status) RETURN ##class(Stc.Utils.Msg).GetErrorStatus("createSubGroup" ," | "_status) 	
+			
+		do ..SubGroups.SetAt(sub, sub.%Id())
+		
+		// Закрыть заявку, т.к. все слушатели вошли в обучение	
+		set order.OrderStatus = ##class(OrderStatus).CodeIdxOpen("Closed")
+		set status = order.%Save()
+		if $$$ISERR(status) RETURN ##class(Stc.Utils.Msg).GetErrorStatus("saveSubGroup" ," | "_status) 	
+	}
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.TrainingD</DataLocation>
+<DefaultData>TrainingDefaultData</DefaultData>
+<IdLocation>^Stc.Data.TrainingD</IdLocation>
+<IndexLocation>^Stc.Data.TrainingI</IndexLocation>
+<StreamLocation>^Stc.Data.TrainingS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="SubGroups">
+<Attribute>SubGroups</Attribute>
+<Structure>subnode</Structure>
+<Subscript>"SubGroups"</Subscript>
+</Data>
+<Data name="TrainingDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Teacher</Value>
+</Value>
+<Value name="3">
+<Value>City</Value>
+</Value>
+<Value name="4">
+<Value>Course</Value>
+</Value>
+<Value name="5">
+<Value>Street</Value>
+</Value>
+<Value name="6">
+<Value>Room</Value>
+</Value>
+<Value name="7">
+<Value>Latitude</Value>
+</Value>
+<Value name="8">
+<Value>Longitude</Value>
+</Value>
+<Value name="9">
+<Value>TrainingTS</Value>
+</Value>
+<Value name="10">
+<Value>DateStart</Value>
+</Value>
+<Value name="11">
+<Value>DateFinish</Value>
+</Value>
+<Value name="12">
+<Value>TimeStart</Value>
+</Value>
+<Value name="13">
+<Value>TimeFinish</Value>
+</Value>
+<Value name="14">
+<Value>OtherInfo</Value>
+</Value>
+<Value name="15">
+<Value>IsCompleted</Value>
+</Value>
+<Value name="16">
+<Value>SubGroupNumber</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Utils.Init.BaseInit">
+<TimeCreated>63143,84424.482465</TimeCreated>
+
+<Method name="Init">
+<Description>
+do ##class(Stc.Utils.Init.BaseInit).Init()</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	do ..KillThemAll()
+
+	do ##class(Stc.Utils.Init.LTextLanguage).Import()
+ 	do ##class(Stc.Utils.Init.Currency).Import()
+ 	do ##class(Stc.Utils.Init.Course).Import()
+ 	do ##class(Stc.Utils.Init.OrderStatus).Import()
+ 	do ##class(Stc.Utils.Init.Region).Import()
+ 	do ##class(Stc.Utils.Init.Company).Import()
+ 	//do ##class(Stc.Utils.Init.Person).Import()
+ 	do ##class(Stc.Utils.Msg).Init()
+ 	do ##class(Stc.Data.Localization.Translation).Init()
+ 	do ..Settings()
+]]></Implementation>
+</Method>
+
+<Method name="KillThemAll">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	do $CLASSMETHOD("Stc.Data.Currency", "%KillExtent")
+	do $CLASSMETHOD("Stc.Data.Certificate", "%KillExtent")
+	do $CLASSMETHOD("Stc.Data.Company", "%KillExtent")
+	do $CLASSMETHOD("Stc.Data.Course", "%KillExtent")
+	do $CLASSMETHOD("Stc.Data.Order", "%KillExtent")
+	do $CLASSMETHOD("Stc.Data.OrderStatus", "%KillExtent")
+	do $CLASSMETHOD("Stc.Data.Person", "%KillExtent")
+	do $CLASSMETHOD("Stc.Data.Region", "%KillExtent")
+	do $CLASSMETHOD("Stc.Data.SubGroup", "%KillExtent")
+	do $CLASSMETHOD("Stc.Data.Training", "%KillExtent")
+	
+	do $CLASSMETHOD("Stc.Data.Localization.LTextValue", "%KillExtent")
+	do $CLASSMETHOD("Stc.Data.Localization.LTextLanguage", "%KillExtent")
+	do $CLASSMETHOD("Stc.Data.Localization.LText", "%KillExtent")
+]]></Implementation>
+</Method>
+
+<Method name="ImportXData">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>locationXData:%String,className:%String,xDataName:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	#dim sc As %Status = $$$OK
+
+	if $$$ISERR(sc)
+	{
+		write !, $System.Status.DisplayError(sc)
+		quit sc
+	}
+
+	#dim stream As %Stream.Object = ##class(%Dictionary.CompiledXData).%OpenId(locationXData_"||"_xDataName).Data
+	#dim reader As %XML.Reader = ##class(%XML.Reader).%New()
+
+	set sc = reader.OpenStream(stream, "literal")
+	if $$$ISERR(sc) {
+		write !, $System.Status.DisplayError(sc)
+		quit sc
+	}
+
+	do reader.Correlate($piece(className, ".", *), className)
+
+	set itemsCount = 0
+
+	while reader.Next(.obj, .sc)
+	{
+		if $$$ISERR(sc)
+		{
+			write !, $System.Status.DisplayError(sc)
+			quit
+		}
+		
+		set sc = obj.%Save()
+		
+		if $$$ISERR(sc)
+		{
+			write !, $System.Status.DisplayError(sc)
+			quit 
+		}
+		
+		set obj = ""
+		set itemsCount = itemsCount + 1
+	}
+	
+	write !,"Импортировано "_itemsCount_" объектов класса "_className
+]]></Implementation>
+</Method>
+
+<Method name="Settings">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	// Имя приложения области
+	set ^Settings("Stc", "WebApp") = "/csp/third"
+	// Имя приложения для работы с закрытыми запросами (BrokerAdmin)
+	set ^Settings("Stc", "WebAppAdmin") = "/stcapp/admin"
+	// Имя приложения для работы с открытыми запросами (BrokerUser)
+	set ^Settings("Stc", "WebAppUser") = "/stcapp/user"
+	// Адрес календаря
+	set ^Settings("Stc", "GoogleCalendarSrc") = "https://www.google.com/calendar/embed?showTitle=0&showNav=0&showDate=0&showPrint=0&showTabs=0&showCalendars=0&showTz=0&mode=AGENDA&height=300&wkst=1&bgcolor=%23FFFFFF&src=Nmszdm4yazVza3ZnZnF2N3IwbTJtMzY4b3NAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&color=%23B1365F&"
+	//set ^Settings("Stc", "GoogleCalendarSrc") = "https://www.google.com/calendar/embed?title=%D0%9A%D0%B0%D0%BB%D0%B5%D0%BD%D0%B4%D0%B0%D1%80%D1%8C+%D0%B1%D0%BB%D0%B8%D0%B6%D0%B0%D0%B9%D1%88%D0%B8%D1%85+%D0%BA%D1%83%D1%80%D1%81%D0%BE%D0%B2&showNav=0&showDate=0&showPrint=0&showTabs=0&showCalendars=0&showTz=0&mode=AGENDA&height=300&wkst=1&bgcolor=%23FFFFFF&src=Nmszdm4yazVza3ZnZnF2N3IwbTJtMzY4b3NAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&color=%23B1365F&"
+
+	// Настройки для почты
+	set ^Settings("Stc","EmailFrom") = "stc_testmail@mail.ru"
+	set ^Settings("Stc","EmailSMTPUSER") = "stc_testmail@mail.ru"
+	set ^Settings("Stc","EmailSMTPPASSWORD") = "simplepassword"
+	set ^Settings("Stc","EmailSMTPSERVER") = "smtp.mail.ru"
+	set ^Settings("Stc","EmailSMTPPORT") = 25
+]]></Implementation>
+</Method>
+</Class>
+</Export>

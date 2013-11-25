@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.Localization.Translation">
+<TimeCreated>63142,65508.32117</TimeCreated>
+
+<Method name="PersonLTextValue">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>inputStr:%Text,fromLang:%String,toLang:%String</FormalSpec>
+<ReturnType>%Text</ReturnType>
+<Implementation><![CDATA[
+	set outputStr = ""
+	
+	for i=1:1:$L(inputStr){
+		set inputChar = $E(inputStr, i)
+		set lower = $ZCONVERT(inputChar, "L")
+		set outputChar = $GET(^CacheMsg("stc", fromLang, toLang, lower), inputChar)
+		if (lower '= inputChar) set outputChar = $ZCONVERT($E(outputChar, 1), "U")_$E(outputChar, 2, *)
+		set outputStr = outputStr_outputChar
+	}
+	
+	quit outputStr
+]]></Implementation>
+</Method>
+
+<Method name="LTextValue">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>inputStr:%Text</FormalSpec>
+<ReturnType>%Text</ReturnType>
+<Implementation><![CDATA[	quit inputStr
+]]></Implementation>
+</Method>
+
+<Method name="Init">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set ^CacheMsg("stc", "ru", "en", "а") = "a"
+	set ^CacheMsg("stc", "ru", "en", "б") = "b"
+	set ^CacheMsg("stc", "ru", "en", "в") = "v"
+	set ^CacheMsg("stc", "ru", "en", "г") = "g"
+	set ^CacheMsg("stc", "ru", "en", "д") = "d"
+	set ^CacheMsg("stc", "ru", "en", "е") = "e"
+	set ^CacheMsg("stc", "ru", "en", "ё") = "e"
+	set ^CacheMsg("stc", "ru", "en", "ж") = "zh"
+	set ^CacheMsg("stc", "ru", "en", "з") = "z"
+	set ^CacheMsg("stc", "ru", "en", "и") = "i"
+	set ^CacheMsg("stc", "ru", "en", "й") = "y"
+	set ^CacheMsg("stc", "ru", "en", "к") = "k"
+	set ^CacheMsg("stc", "ru", "en", "л") = "l"
+	set ^CacheMsg("stc", "ru", "en", "м") = "m"
+	set ^CacheMsg("stc", "ru", "en", "н") = "n"
+	set ^CacheMsg("stc", "ru", "en", "о") = "o"
+	set ^CacheMsg("stc", "ru", "en", "п") = "p"
+	set ^CacheMsg("stc", "ru", "en", "р") = "r"	
+	set ^CacheMsg("stc", "ru", "en", "с") = "s"
+	set ^CacheMsg("stc", "ru", "en", "т") = "t"
+	set ^CacheMsg("stc", "ru", "en", "у") = "u"
+	set ^CacheMsg("stc", "ru", "en", "ф") = "f"
+	set ^CacheMsg("stc", "ru", "en", "х") = "kh"
+	set ^CacheMsg("stc", "ru", "en", "ц") = "ts"
+	set ^CacheMsg("stc", "ru", "en", "ч") = "ch"
+	set ^CacheMsg("stc", "ru", "en", "ш") = "sh"
+	set ^CacheMsg("stc", "ru", "en", "щ") = "shch"	
+	set ^CacheMsg("stc", "ru", "en", "ь") = ""
+	set ^CacheMsg("stc", "ru", "en", "ъ") = ""
+	set ^CacheMsg("stc", "ru", "en", "ы") = ""
+	set ^CacheMsg("stc", "ru", "en", "э") = "e"
+	set ^CacheMsg("stc", "ru", "en", "ю") = "yu"
+	set ^CacheMsg("stc", "ru", "en", "я") = "ya"
+	
+	set ^CacheMsg("stc", "en", "ru", "a") = "а"
+	set ^CacheMsg("stc", "en", "ru", "b") = "б"
+	set ^CacheMsg("stc", "en", "ru", "c") = "ц"
+	set ^CacheMsg("stc", "en", "ru", "d") = "д"
+	set ^CacheMsg("stc", "en", "ru", "e") = "е"
+	set ^CacheMsg("stc", "en", "ru", "f") = "ф"
+	set ^CacheMsg("stc", "en", "ru", "g") = "ж"
+	set ^CacheMsg("stc", "en", "ru", "h") = "ш"
+	set ^CacheMsg("stc", "en", "ru", "i") = "и"
+	set ^CacheMsg("stc", "en", "ru", "j") = "й"
+	set ^CacheMsg("stc", "en", "ru", "k") = "к"
+	set ^CacheMsg("stc", "en", "ru", "l") = "л"
+	set ^CacheMsg("stc", "en", "ru", "m") = "м"
+	set ^CacheMsg("stc", "en", "ru", "n") = "н"
+	set ^CacheMsg("stc", "en", "ru", "o") = "о"
+	set ^CacheMsg("stc", "en", "ru", "p") = "п"
+	set ^CacheMsg("stc", "en", "ru", "r") = "р"
+	set ^CacheMsg("stc", "en", "ru", "s") = "с"	
+	set ^CacheMsg("stc", "en", "ru", "q") = "ку"
+	set ^CacheMsg("stc", "en", "ru", "t") = "т"
+	set ^CacheMsg("stc", "en", "ru", "u") = "у"
+	set ^CacheMsg("stc", "en", "ru", "v") = "в"
+	set ^CacheMsg("stc", "en", "ru", "w") = "в"
+	set ^CacheMsg("stc", "en", "ru", "x") = "кс"
+	set ^CacheMsg("stc", "en", "ru", "y") = "у"
+	set ^CacheMsg("stc", "en", "ru", "z") = "з"
+]]></Implementation>
+</Method>
+</Class>
+</Export>

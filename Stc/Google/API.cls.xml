@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Google.API">
+<Description>
+Общий класс для доступа к API Google'а.</Description>
+<Abstract>1</Abstract>
+<IncludeCode>%callout,%occStatus,%occOptions</IncludeCode>
+<TimeCreated>63145,69487.892963</TimeCreated>
+
+<Method name="Call">
+<Description><![CDATA[
+Метод, осуществляющий обращение к заданному API Google'а. 
+Вызывает API по адресу pUrl (без имени сервера www.googleapis.com), с типом запроса pType, 
+токеном pToken и телом запроса - JSON'ом, сформированным из PObjInput.<br>
+Работает с API, ориентированными на JSON, не на GData.<br>]]></Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>pUrl:%String,pMethod:%String,pToken:%String,pSslConfig:%String,PObjInput:%ZEN.proxyObject="",*PResponse:%ZEN.proxyObject</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+ set sc = $$$OK
+ try 
+ {
+  set req = ##class(%Net.HttpRequest).%New()
+  //set req.SSLConfiguration=pSslConfig
+  set req.Server="www.googleapis.com"
+  set req.Https=1
+  set req.Authorization="Bearer "_pToken
+ 
+  if PObjInput'="" {
+   set req.ContentType="application/json"
+   
+   set tIO = $IO
+   set tMnemSpace = ##class(%Library.Device).GetMnemonicRoutine()
+   try
+   {
+	  $$$TOE(sc,##class(%ZEN.Auxiliary.jsonProvider).%WriteJSONStreamFromObject(req.EntityBody, PObjInput))
+	  use tIO::("^"_tMnemSpace)
+   }
+   catch ex
+   {
+	  use tIO::("^"_tMnemSpace)
+	  throw ex
+   }
+ 
+  //  s req.WriteRawMode=1
+  }
+ 
+  $$$TOE(sc,req.Send($zconvert(pMethod,"u"),pUrl))
+  
+  set json=req.HttpResponse.Data.Read()
+  $$$TOE(sc,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(json,,.PResponse))
+ }
+ catch ex
+ {
+  set sc = ex.AsStatus()
+ }
+ quit sc
+]]></Implementation>
+</Method>
+</Class>
+</Export>

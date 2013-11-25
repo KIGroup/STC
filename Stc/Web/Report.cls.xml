@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Web.Report">
+<Description>
+Генерация отчетов</Description>
+<TimeCreated>63138,24459.241313</TimeCreated>
+
+<Parameter name="ContentType">
+<Default>windows-1251</Default>
+</Parameter>
+
+<Parameter name="CharSet">
+<Default>windows-1251</Default>
+</Parameter>
+
+<Method name="Certificates">
+<Description>
+Экспорт сертификатов в csv документ для отправки в печать</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>lang:%String,trainingId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set %response.ContentType = ..#ContentType
+	set %response.CharSet = ..#CharSet
+	
+	set status = $$$OK
+	
+	try{
+		set training = ##class(Stc.Data.Training).%OpenId(trainingId)
+		$$$THROWONERROR(status, status)
+		
+		set course = ##class(Stc.Data.Localization.LTextValue).GetValue(training.Course.Name.%Id(), lang)
+		set city = ##class(Stc.Data.Localization.LTextValue).GetValue(training.City.Name.%Id(), lang)
+		set date = $ZDATE($NOW(),3)
+		
+		set fileName = ##class(%MessageDictionary).FormatText($G(^CacheMsg("Stc", lang, "certificatesReport"),"---"), course, city, date)_".csv"
+		
+		do %response.SetHeader("Content-Disposition","attachment;filename="_fileName)
+
+		&sql(DECLARE CertCur CURSOR FOR 
+		 	 SELECT Number, Student->LastName, Student->FirstName, Student->MiddleName
+		 	 FROM Stc_Data.Certificate
+		 	 WHERE Training = :trainingId)	
+		
+		&sql(OPEN CertCur)
+		for  
+		{	
+			&sql(FETCH CertCur INTO :number, :lnameId, :fnameId, :mnameId) 
+			quit:(SQLCODE '= 0)
+			
+			set lname = ##class(Stc.Data.Localization.LTextValue).GetValue(lnameId, lang)
+			set fname = ##class(Stc.Data.Localization.LTextValue).GetValue(fnameId, lang)
+			set mname = ##class(Stc.Data.Localization.LTextValue).GetValue(mnameId, lang)
+			
+			w number_";"_lname_";"_fname_";"_mname,!
+		}
+		
+		&sql(CLOSE CertCur)
+	}
+	catch ex{
+		set status = ex.AsStatus()	
+	}
+	
+	q status
+]]></Implementation>
+</Method>
+</Class>
+</Export>

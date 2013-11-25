@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/components/stcalert.csp" application="/csp/four/" default="1"><![CDATA[
+<div class="row-fluid" ng-show="data.visible">
+    <div ng-class="'span' + spanRight"></div>
+    <div ng-class="'span' + spanMiddle">
+        <div ng-class="data.cssClass">
+            <button class="close" type="button" ng-click="close()">&times;</button>
+            <strong ng-bind="data.title"></strong>&nbsp;<span ng-bind="data.msg"></span>
+        </div>
+    </div>
+    <div ng-class="'span' + spanLeft"></div>
+</div>]]></CSP>
+</Export>

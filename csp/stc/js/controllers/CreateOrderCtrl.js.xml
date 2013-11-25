@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/controllers/CreateOrderCtrl.js" application="/csp/four/" default="1"><![CDATA[
+'use strict';
+//ded
+
+/*===========================================================================================
+Создание заявки
+===========================================================================================*/
+
+controllersModule.controller('CreateOrderCtrl', function($scope, $cookies, YandexSrvc, OrderSrvc, CompanySrvc, RegionSrvc, CourseTeacherSrvc, UtilsSrvc){
+    $scope.menu.selectMenu('createOrder');    
+    $scope.ordForm = {};
+
+    /* Инициализация */
+    $scope.ordForm.init = function(){
+        $scope.ordForm.btnDisabled = false;
+        $scope.ordForm.cities = [];
+        $scope.ordForm.courses = [];
+        $scope.ordForm.companies = [];
+        $scope.ordForm.caption = 'Создание заявки';
+        $scope.ordForm.btnClearShow = true;
+    };
+
+    /* Подгрузить курсы */
+    $scope.ordForm.loadCourses = function(){
+        CourseTeacherSrvc.getAllCoursesShortInfo(1).then(
+            function(data){
+                $scope.ordForm.courses = data;
+            },
+            function(response){
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Ошибка!', response.data, 'error', true);
+            }); 
+    };
+
+    /* Подгрузить города */
+    $scope.ordForm.loadCities = function(startsWith){
+        if(!startsWith || startsWith.length == 0)
+            $scope.ordForm.cities = [];
+        
+        if (!startsWith || startsWith.length != 2)
+            return;  
+
+        RegionSrvc.getAllCitiesStartsWith(startsWith).then(
+            function(data){
+                $scope.ordForm.cities = data;
+            },
+            function(response){
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Ошибка!', response.data, 'error', true);
+            }); 
+    };
+
+    /* Подгрузить имена компаний */
+    $scope.ordForm.loadCompanies = function(){
+        CompanySrvc.getAllCompaniesShortInfo().then(
+            function(data){
+                $scope.ordForm.companies = data;
+            },
+            function(response){
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Ошибка!', response.data, 'error', true);
+            }); 
+    };
+    
+    /* Создать еще одну заявку */
+    $scope.ordForm.again = function(){
+        $scope.ordForm.date = "";
+        $scope.ordForm.order.date = "";
+        $scope.ordForm.order.course = {};
+        $scope.ordForm.order.studentsNumber = "";
+        $scope.ordForm.btnNewShow = false;
+        $scope.ordForm.btnClearShow = true;
+        $scope.ordForm.btnDisabled = false;
+        
+        if ($scope.ordForm.alert) $scope.ordForm.alert.visible = false;
+    };
+
+    /* Стереть все */
+    $scope.ordForm.clear = function(){
+        $scope.ordForm.order = {};
+        $scope.ordForm.date = "";
+        if ($scope.ordForm.alert) $scope.ordForm.alert.visible = false;
+    };
+
+    /* Проверка данных на корректность */
+    $scope.ordForm.formatData = function(){
+	    $scope.ordForm.order.date = UtilsSrvc.getValidDate($scope.ordForm.date);
+        if ($scope.ordForm.order.date == "")
+        	$scope.ordForm.date = "";
+
+        if (!$scope.ordForm.order.city || !$scope.ordForm.order.city.id)
+            $scope.ordForm.order.city = '';
+    };
+    
+    /* Создать заявку */
+    $scope.ordForm.create = function(){
+        OrderSrvc.createOrder($scope.ordForm.order).then(
+            function(data){
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Готово!', 'Ваша заявка принята.', 'success', true);
+                $scope.ordForm.btnDisabled = true;
+                $scope.ordForm.btnNewShow = true;
+                $scope.ordForm.btnClearShow = false;
+            },
+            function(response){
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Ошибка!', response.data, 'error', true);
+            });
+    };
+
+    /* Отправка формы */
+    $scope.ordForm.submit = function(){
+        // Получаем координаты из яндекса и создаем заявку
+        var searchStr = $scope.ordForm.order.city.greatParentName + ', ' + $scope.ordForm.order.city.parentName + ', ' + $scope.ordForm.order.city.name;
+        $scope.ordForm.order.point = '66.666 66.666'; // Если яндекс отвалится, то отправляем в "Салехард"
+        YandexSrvc.getResult(searchStr).then(
+            function(data){
+                var results = [];
+                for(var i=0; i < data.response.GeoObjectCollection.featureMember.length; i++){
+                    results.push(
+                        {point: UtilsSrvc.getPropertyValue(data.response.GeoObjectCollection.featureMember[i], 'GeoObject.Point.pos'),
+                         title: UtilsSrvc.getPropertyValue(data.response.GeoObjectCollection.featureMember[i], 'GeoObject.name')});
+                }
+
+                if (results.length > 0)
+                    $scope.ordForm.order.point = results[0].point;
+                
+                console.log($scope.ordForm.order.point);
+                $scope.ordForm.create();
+            },
+            function(response){
+                $scope.ordForm.create();
+            });
+    };
+    
+
+    $scope.ordForm.init();
+    $scope.ordForm.loadCourses();
+    $scope.ordForm.loadCompanies();
+  });
+
+]]></CSP>
+</Export>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/css/custom.css" application="/csp/four/" default="1"><![CDATA[
+#gcalendar .accordion-inner{
+	padding: 0;
+}
+
+.tableNumber,.atableAction{
+  width: 20px;
+}
+
+.atableAction{
+  cursor: pointer;
+  text-align: center!important;
+}
+
+
+.menuAfterActive{
+background-color: #EEEEEE;
+}
+
+.nav-tabs,.selectableMode {
+cursor: pointer;
+}
+
+
+.iSwitcher{
+color: rgb(190, 183, 183);
+}
+
+.iSwitcher:hover{
+color: rgb(48, 42, 94);
+}
+
+.pullCenter{
+display: table;
+margin: 0 auto;
+}
+
+.accordion-heading .accordion-toggle {
+background-color: #fafafa;
+background-image: -moz-linear-gradient(top,#fff,#F7F7F7);
+background-image: -webkit-gradient(linear,0 0,0 100%,from(#fff),to(#F7F7F7));
+background-image: -webkit-linear-gradient(top,#fff,#F7F7F7);
+background-image: -o-linear-gradient(top,#fff,#F7F7F7);
+background-image: linear-gradient(to bottom,#fff,#F7F7F7);
+}
+
+.accordion-heading a {
+
+}
+.accordion-heading a:hover{
+	color: #444;
+	text-decoration: none;
+}
+
+.accordion-heading a{
+	color: #777;
+	text-decoration: none;
+}
+
+.aSelected{
+background-color: #C4E3F3;
+	
+}
+
+.collapse {
+    position: inherit!important;
+ }
+ 
+ .spnTitle{
+padding: 0 0 1px 0!important;
+border-bottom: 1px dashed #005580!important;
+}
+
+.btn-small, .btn-group>.btn-small{
+font-size: 14px;
+}
+
+.btn-group>.btn-mini{
+font-size: 14px;
+}
+
+
+
+.label{
+font-weight: normal;
+}
+
+.btnRadio.active{
+
+color: #fff;
+text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+background-color: #006dcc;
+background-image: -moz-linear-gradient(top,#08c,#04c);
+background-image: -webkit-gradient(linear,0 0,0 100%,from(#08c),to(#04c));
+background-image: -webkit-linear-gradient(top,#08c,#04c);
+background-image: -o-linear-gradient(top,#08c,#04c);
+background-image: linear-gradient(to bottom,#08c,#04c);
+background-repeat: repeat-x;
+border-color: #04c #04c #002a80;
+border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc',endColorstr='#ff0044cc',GradientType=0);
+filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+
+.gridInput{
+ height: 12px!important;
+ line-height: 16px!important;
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+   .gridInput{
+ 	line-height: 12px!important;
+	}
+}]]></CSP>
+</Export>

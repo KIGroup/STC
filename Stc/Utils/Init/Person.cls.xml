@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Utils.Init.Person">
+<Super>BaseInit</Super>
+<TimeCreated>63145,82299.894583</TimeCreated>
+
+<Parameter name="PClassName">
+<Default>Person</Default>
+</Parameter>
+
+<Method name="Import">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	w !,"=== "_..#PClassName_" ==="
+	do ..ImportXData("Stc.Utils.Init."_..#PClassName, "Stc.Data.Localization.LText", "LTextXData")
+	do ..ImportXData("Stc.Utils.Init."_..#PClassName, "Stc.Data.Localization.LTextValue", "LTextValueXData")
+	do ..ImportXData("Stc.Utils.Init."_..#PClassName, "Stc.Data."_..#PClassName, "ClassXData")
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<XData name="ClassXData">
+<Data><![CDATA[
+<ClassXData>
+<Person><LastName>8BCD565C-8229-4755-BF5C-02CCA442A4C3</LastName><FirstName>B4414D27-F838-42DE-931A-62944BC6B9CB</FirstName><MiddleName>D3B1B4AE-02F3-4CEB-A9B1-09CECF995858</MiddleName><Company>1</Company><Phone>89234293456</Phone><Email>zero@gmail.com</Email><Skype></Skype></Person>
+<Person><LastName>D66BE296-8004-4A34-A7DD-81AA148F7F34</LastName><FirstName>A18CA216-A0FA-4084-955A-0FB7F17287ED</FirstName><MiddleName>F7927827-EE26-4D12-AD79-4B3903E508E6</MiddleName><Company>1</Company><Phone>89234293742</Phone><Email>one@gmail.com</Email><Skype></Skype></Person>
+<Person><LastName>21DB7AEB-DC09-4EA9-85DA-C63C76FFBE67</LastName><FirstName>71B01121-CEB3-4CF2-A985-61B3A39741FE</FirstName><MiddleName>CC49CBEE-6CAA-4327-B458-A9458A24982F</MiddleName><Company>1</Company><Phone>89234294742</Phone><Email>two@gmail.com</Email><Skype>rereg</Skype></Person>
+<Person><LastName>3CBFA966-57DE-430E-BCBF-F24C10E46AFD</LastName><FirstName>13A22049-3D57-4EE3-8118-CB964928A978</FirstName><MiddleName>05ECBC40-BCB4-4773-8431-EF8692224BA7</MiddleName><Company>1</Company><Phone>89234296742</Phone><Email>three@gmail.com</Email><Skype>erghre</Skype></Person>
+<Person><LastName>B4FDEEDF-8098-4B78-964D-7AA44957306E</LastName><FirstName>0ADE3181-423C-48C1-934F-A850D1B626FC</FirstName><MiddleName>62E8BCF8-7756-4AED-A8C4-A7409DE0E5CE</MiddleName><Company>1</Company><Phone>89234298742</Phone><Email>four@gmail.com</Email><Skype>gege</Skype></Person>
+<Person><LastName>23E33AC4-D4D8-4362-A5E4-FF39F1F55A0A</LastName><FirstName>D024210C-92E7-4BF5-A06F-A63EDC04304A</FirstName><MiddleName>226F163C-1623-469F-8879-997C974A30AC</MiddleName><Company>1</Company><Phone>89234291742</Phone><Email>five@gmail.com</Email><Skype></Skype></Person>
+<Person><LastName>543F047C-145D-4472-ADD2-5CC47A85A0BE</LastName><FirstName>2CD15069-6002-4750-B855-13A80A245A32</FirstName><MiddleName>D25118BA-6943-4D06-AC83-A9EBAA4DAA16</MiddleName><Company>1</Company><Phone>89234297742</Phone><Email>six@gmail.com</Email><Skype>greeg</Skype></Person>
+</ClassXData>
+]]></Data>
+</XData>
+
+<XData name="LTextXData">
+<Data><![CDATA[
+<LTextOrderStatusXData>
+<LText><Guid>8BCD565C-8229-4755-BF5C-02CCA442A4C3</Guid></LText>
+<LText><Guid>B4414D27-F838-42DE-931A-62944BC6B9CB</Guid></LText>
+<LText><Guid>D3B1B4AE-02F3-4CEB-A9B1-09CECF995858</Guid></LText>
+
+<LText><Guid>D66BE296-8004-4A34-A7DD-81AA148F7F34</Guid></LText>
+<LText><Guid>A18CA216-A0FA-4084-955A-0FB7F17287ED</Guid></LText>
+<LText><Guid>F7927827-EE26-4D12-AD79-4B3903E508E6</Guid></LText>
+
+<LText><Guid>21DB7AEB-DC09-4EA9-85DA-C63C76FFBE67</Guid></LText>
+<LText><Guid>71B01121-CEB3-4CF2-A985-61B3A39741FE</Guid></LText>
+<LText><Guid>CC49CBEE-6CAA-4327-B458-A9458A24982F</Guid></LText>
+
+<LText><Guid>3CBFA966-57DE-430E-BCBF-F24C10E46AFD</Guid></LText>
+<LText><Guid>13A22049-3D57-4EE3-8118-CB964928A978</Guid></LText>
+<LText><Guid>05ECBC40-BCB4-4773-8431-EF8692224BA7</Guid></LText>
+
+<LText><Guid>B4FDEEDF-8098-4B78-964D-7AA44957306E</Guid></LText>
+<LText><Guid>0ADE3181-423C-48C1-934F-A850D1B626FC</Guid></LText>
+<LText><Guid>62E8BCF8-7756-4AED-A8C4-A7409DE0E5CE</Guid></LText>
+
+<LText><Guid>23E33AC4-D4D8-4362-A5E4-FF39F1F55A0A</Guid></LText>
+<LText><Guid>D024210C-92E7-4BF5-A06F-A63EDC04304A</Guid></LText>
+<LText><Guid>226F163C-1623-469F-8879-997C974A30AC</Guid></LText>
+
+<LText><Guid>543F047C-145D-4472-ADD2-5CC47A85A0BE</Guid></LText>
+<LText><Guid>2CD15069-6002-4750-B855-13A80A245A32</Guid></LText>
+<LText><Guid>D25118BA-6943-4D06-AC83-A9EBAA4DAA16</Guid></LText>
+
+</LTextOrderStatusXData>
+]]></Data>
+</XData>
+
+<XData name="LTextValueXData">
+<Data><![CDATA[
+<LTextValueXData>
+<LTextValue><LText>8BCD565C-8229-4755-BF5C-02CCA442A4C3</LText><Value>Васильев</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>8BCD565C-8229-4755-BF5C-02CCA442A4C3</LText><Value>Vasiliev</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>B4414D27-F838-42DE-931A-62944BC6B9CB</LText><Value>Иван</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>B4414D27-F838-42DE-931A-62944BC6B9CB</LText><Value>Ivan</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>D3B1B4AE-02F3-4CEB-A9B1-09CECF995858</LText><Value>Петрович</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>D3B1B4AE-02F3-4CEB-A9B1-09CECF995858</LText><Value>Pertovich</Value><Lang>en</Lang></LTextValue>
+
+<LTextValue><LText>D66BE296-8004-4A34-A7DD-81AA148F7F34</LText><Value>Морозов</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>D66BE296-8004-4A34-A7DD-81AA148F7F34</LText><Value>Morozov</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>A18CA216-A0FA-4084-955A-0FB7F17287ED</LText><Value>Павел</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>A18CA216-A0FA-4084-955A-0FB7F17287ED</LText><Value>Pavel</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>F7927827-EE26-4D12-AD79-4B3903E508E6</LText><Value>Александрович</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>F7927827-EE26-4D12-AD79-4B3903E508E6</LText><Value>Alexandrovich</Value><Lang>en</Lang></LTextValue>
+
+<LTextValue><LText>21DB7AEB-DC09-4EA9-85DA-C63C76FFBE67</LText><Value>Шунков</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>21DB7AEB-DC09-4EA9-85DA-C63C76FFBE67</LText><Value>Shunkov</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>71B01121-CEB3-4CF2-A985-61B3A39741FE</LText><Value>Артем</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>71B01121-CEB3-4CF2-A985-61B3A39741FE</LText><Value>Artem</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>CC49CBEE-6CAA-4327-B458-A9458A24982F</LText><Value>Викторович</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>CC49CBEE-6CAA-4327-B458-A9458A24982F</LText><Value>Victorovich</Value><Lang>en</Lang></LTextValue>
+
+<LTextValue><LText>3CBFA966-57DE-430E-BCBF-F24C10E46AFD</LText><Value>Варов</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>3CBFA966-57DE-430E-BCBF-F24C10E46AFD</LText><Value>Varov</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>13A22049-3D57-4EE3-8118-CB964928A978</LText><Value>Вадим</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>13A22049-3D57-4EE3-8118-CB964928A978</LText><Value>Vadim</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>05ECBC40-BCB4-4773-8431-EF8692224BA7</LText><Value>Петрович</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>05ECBC40-BCB4-4773-8431-EF8692224BA7</LText><Value>Petrovich</Value><Lang>en</Lang></LTextValue>
+
+<LTextValue><LText>B4FDEEDF-8098-4B78-964D-7AA44957306E</LText><Value>Арбузов</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>B4FDEEDF-8098-4B78-964D-7AA44957306E</LText><Value>Arbuzov</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>0ADE3181-423C-48C1-934F-A850D1B626FC</LText><Value>Михаил</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>0ADE3181-423C-48C1-934F-A850D1B626FC</LText><Value>Michael</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>62E8BCF8-7756-4AED-A8C4-A7409DE0E5CE</LText><Value>Антонович</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>62E8BCF8-7756-4AED-A8C4-A7409DE0E5CE</LText><Value>Antonovich</Value><Lang>en</Lang></LTextValue>
+
+<LTextValue><LText>23E33AC4-D4D8-4362-A5E4-FF39F1F55A0A</LText><Value>Картошкин</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>23E33AC4-D4D8-4362-A5E4-FF39F1F55A0A</LText><Value>Kartoshkin</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>D024210C-92E7-4BF5-A06F-A63EDC04304A</LText><Value>Илья</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>D024210C-92E7-4BF5-A06F-A63EDC04304A</LText><Value>Ilya</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>226F163C-1623-469F-8879-997C974A30AC</LText><Value>Владимирович</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>226F163C-1623-469F-8879-997C974A30AC</LText><Value>Vladimirovich</Value><Lang>en</Lang></LTextValue>
+
+<LTextValue><LText>543F047C-145D-4472-ADD2-5CC47A85A0BE</LText><Value>Мышкин</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>543F047C-145D-4472-ADD2-5CC47A85A0BE</LText><Value>Mishkin</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>2CD15069-6002-4750-B855-13A80A245A32</LText><Value>Олег</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>2CD15069-6002-4750-B855-13A80A245A32</LText><Value>Oleg</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>D25118BA-6943-4D06-AC83-A9EBAA4DAA16</LText><Value>Сергеевич</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>D25118BA-6943-4D06-AC83-A9EBAA4DAA16</LText><Value>Sergeevich</Value><Lang>en</Lang></LTextValue>
+
+</LTextValueXData>
+]]></Data>
+</XData>
+</Class>
+</Export>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Google.Authorize.Win">
+<Super>%CSP.Page</Super>
+<TimeCreated>63150,55301.482577</TimeCreated>
+
+<Method name="OnPage">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	&html<<html>
+<head><title>Win!</title>
+</head>
+<body>>
+	s rtoken = $Get(%request.Data("refresh_token",1))
+	s atoken = $Get(%request.Data("access_token",1))
+	s ^Settings("Google", "RefreshToken") = rtoken
+	w "Refresh token is """_rtoken_"""",!
+	w "<br>"
+	w "Access token is """_atoken_"""",!
+	w "<br><br>"
+	d ##class(Stc.Google.Authorize).ExchangeToken(rtoken, .status, .atoken)
+	w "Status is """_status_"""",!
+	w "<br>"
+	w "Another access token is """_atoken_"""",!
+	&html<</body>
+</html>>
+	Quit $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

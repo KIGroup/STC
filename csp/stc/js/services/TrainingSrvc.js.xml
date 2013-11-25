@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/services/TrainingSrvc.js" application="/csp/four/" default="1"><![CDATA[
+'use strict';
+//dddddddddddd
+
+/*===========================================================================================
+Обучения
+===========================================================================================*/
+
+servicesModule.factory('TrainingSrvc', function(DALSrvc) {
+	return {
+        /* Вставить в календарь */
+        insertToCalendar: function(id){
+           return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/insertTrainingToCalendar/' + id, null);
+        },
+        /* Сохранить/ создать обучение */
+        saveTraining: function(trainingData){
+           return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/saveTraining', trainingData);
+        },
+        /* Завершить обучение */
+        completeTraining: function(trainingId){
+           return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/completeTraining', {id: trainingId});
+        },
+        /* Создать подгруппы из заявок для существующего обучения */
+        createSubGroupsForTraining: function(trainingData){
+           return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/createSubGroupsForTraining', trainingData);
+        },
+        /* Получить обучение */
+        getTraining: function(id){
+           return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/getTraining/' + id, null);
+        },
+        /* Получить все обучения для таблицы */
+        getTrainings: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, status){
+            var first = pageSize * (pageCurr - 1) + 1;
+            var obj = {sqlName: sqlName, 
+                       isDown: isDown, 
+                       first: first, 
+                       last: first + pageSize - 1,
+                       searchSqlName: searchSqlName, 
+                       searchText: searchText,
+                       status: status};
+
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/allTrainings', obj);
+        },
+        /* Все подгруппы обучения для таблицы */
+        getTrainingSubGroups: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, trainingId){
+            var first = pageSize * (pageCurr - 1) + 1;
+            var obj = {sqlName: sqlName, 
+                       isDown: isDown, 
+                       first: first, 
+                       last: first + pageSize - 1,
+                       searchSqlName: searchSqlName, 
+                       searchText: searchText,
+                       trainingId: trainingId};
+
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/getTrainingSubGroups', obj);
+        },
+        /* Все валюты */
+        getCurrencies: function(){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/allCurrencies', null);
+        },
+        /* Сохранить платеж */
+        saveSubGroupPayment: function(payment){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/saveSubGroupPayment', payment);  
+        },
+        /* Сохранить инфу о договоре */
+        saveSubGroupContract: function(contract){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/saveSubGroupContract', contract);  
+        },
+        /* Создать подгруппу и добавить ее в обучение */
+        createSubGroup: function(sgData){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/createSubGroup', sgData);  
+        },
+        /* Удалить подгруппу из обучения */
+        deleteSubGroup: function(trainingId, sgroupId){
+            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/deleteSubGroup/' + trainingId + ';' + sgroupId, null);  
+        }
+    }
+});
+  
+]]></CSP>
+</Export>

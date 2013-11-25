@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.Course">
+<Description>
+Курс</Description>
+<Super>%Persistent,%XML.Adaptor</Super>
+<TimeCreated>63098,13286.897066</TimeCreated>
+
+<Property name="Name">
+<Description>
+Название</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+<Parameter name="XMLREFERENCE" value="ID"/>
+</Property>
+
+<Property name="Hours">
+<Description>
+Продолжительность в часах</Description>
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Days">
+<Description>
+Продолжительность в днях</Description>
+<Type>%Integer</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="ProgramUrl">
+<Description>
+Ссылка на программу курса</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="1500"/>
+</Property>
+
+<Property name="Teachers">
+<Description>
+Преподаватели</Description>
+<Type>Person</Type>
+<Collection>array</Collection>
+</Property>
+
+<Property name="IsInUse">
+<Description>
+Используется = 1, 0 = нет</Description>
+<Type>%Boolean</Type>
+<InitialExpression>1</InitialExpression>
+<Required>1</Required>
+</Property>
+
+<Method name="ConvertToProxyObject">
+<Description>
+Конвертация в proxyObject для JSON </Description>
+<FormalSpec>shortInfo:%Boolean=0</FormalSpec>
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	
+	set proxy.id = ..%Id()
+	set proxy.name = ..Name.Value
+	
+	if (shortInfo = 1) quit proxy
+	
+	set proxy.days = ..Days
+	set proxy.hours = ..Hours
+	set proxy.programUrl = ..ProgramUrl
+	set proxy.isInUse = ..IsInUse
+	
+	quit proxy
+]]></Implementation>
+</Method>
+
+<Method name="Save">
+<Description>
+Сохранение / создание курса</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
+<ReturnType>Course</ReturnType>
+<Implementation><![CDATA[
+	if (data.id = ""){
+		set course = ..%New()
+		set course.Name = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.name, "I","UTF8"))
+	}
+	else{
+		set course = ..%OpenId(data.id)
+		set course.Name.Value = $ZCONVERT(data.name, "I","UTF8")
+	}
+	
+	set course.Hours = $ZCONVERT(data.hours, "I","UTF8")
+	set course.Days = $ZCONVERT(data.days, "I","UTF8")
+	set course.ProgramUrl = $REPLACE($REPLACE($ZCONVERT(data.programUrl, "I","UTF8"),"http://",""), "https://","")
+	
+	set status = course.%Save()
+	
+	quit course
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.CourseD</DataLocation>
+<DefaultData>CourseDefaultData</DefaultData>
+<IdLocation>^Stc.Data.CourseD</IdLocation>
+<IndexLocation>^Stc.Data.CourseI</IndexLocation>
+<StreamLocation>^Stc.Data.CourseS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="CourseDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Name</Value>
+</Value>
+<Value name="3">
+<Value>Hours</Value>
+</Value>
+<Value name="4">
+<Value>Days</Value>
+</Value>
+<Value name="5">
+<Value>ProgramUrl</Value>
+</Value>
+<Value name="6">
+<Value>IsInUse</Value>
+</Value>
+</Data>
+<Data name="Teachers">
+<Attribute>Teachers</Attribute>
+<Structure>subnode</Structure>
+<Subscript>"Teachers"</Subscript>
+</Data>
+</Storage>
+</Class>
+</Export>

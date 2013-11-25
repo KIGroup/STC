@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.Person">
+<Description>
+Сотрудник компании, преподаватель, слушатель</Description>
+<Super>%Persistent,%XML.Adaptor</Super>
+<TimeCreated>63098,13287.442379</TimeCreated>
+
+<Property name="Company">
+<Description>
+Сотрудник компании</Description>
+<Type>Stc.Data.Company</Type>
+<Cardinality>one</Cardinality>
+<Inverse>Employees</Inverse>
+<Relationship>1</Relationship>
+<Required>1</Required>
+<Parameter name="XMLPROJECTION" value="XELEMENT"/>
+<Parameter name="XMLREFERENCE" value="ID"/>
+</Property>
+
+<Property name="FirstName">
+<Description>
+Имя</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+<Parameter name="XMLREFERENCE" value="ID"/>
+</Property>
+
+<Property name="LastName">
+<Description>
+Фамилия</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+<Parameter name="XMLREFERENCE" value="ID"/>
+</Property>
+
+<Property name="MiddleName">
+<Description>
+Отчество</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+<Parameter name="XMLREFERENCE" value="ID"/>
+</Property>
+
+<Property name="Email">
+<Description>
+Почта</Description>
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Phone">
+<Description>
+Телефон</Description>
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Skype">
+<Description>
+Скайп</Description>
+<Type>%String</Type>
+</Property>
+
+<Index name="CompanyIdx">
+<Properties>Company</Properties>
+</Index>
+
+<Index name="EmailIdx">
+<Properties>Email</Properties>
+<Unique>1</Unique>
+</Index>
+
+<Method name="ConvertToProxyObject">
+<Description>
+Конвертация в proxyObject для JSON </Description>
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	set proxy.id = ..%Id()
+	set proxy.lastName = ..LastName.Value
+	set proxy.firstName = ..FirstName.Value
+	set proxy.middleName = ..MiddleName.Value
+	set proxy.email = ..Email
+	set proxy.phone = ..Phone
+	set proxy.skype = ..Skype
+	
+	set proxy.company = ..Company.ConvertToProxyObject(1)
+	
+	quit proxy
+]]></Implementation>
+</Method>
+
+<Method name="Save">
+<Description>
+Сохранение / создание сотрудника</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
+<ReturnType>Stc.Data.Person</ReturnType>
+<Implementation><![CDATA[
+	if (data.id '= ""){
+		set person = ..%OpenId(data.id)
+		set person.LastName.Value = $ZCONVERT(data.lastName, "I","UTF8")
+		set person.FirstName.Value = $ZCONVERT(data.firstName, "I","UTF8")
+		set person.MiddleName.Value = $ZCONVERT(data.middleName, "I","UTF8")
+	}
+	else{
+		set person = ..%New()
+		set person.LastName = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.lastName, "I","UTF8"), "Stc.Data.Localization.Translation;PersonLTextValue")
+		set person.FirstName = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.firstName, "I","UTF8"), "Stc.Data.Localization.Translation;PersonLTextValue")
+		set person.MiddleName = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.middleName, "I","UTF8"), "Stc.Data.Localization.Translation;PersonLTextValue")
+	}
+	
+	set person.Email = $ZCONVERT(data.email, "I","UTF8")
+	set person.Phone = $ZCONVERT(data.phone, "I","UTF8")
+	set person.Skype = $ZCONVERT(data.skype, "I","UTF8")
+	
+	if (data.company.exist) set data.company.id = data.company.exist.id
+	
+	set person.Company = ##class(Stc.Data.Company).%OpenId(data.company.id)
+	
+	set status = person.%Save()
+
+	quit person
+]]></Implementation>
+</Method>
+
+<Method name="Delete">
+<Description>
+Удаление сотрудника, если это возможно</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>personId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set person = ..%OpenId(personId, 4)
+	
+	set st = ##class(Stc.Data.Localization.LText).Delete(person.LastName.%Id())
+	quit:$$$ISERR(st) st
+		
+	set st = ##class(Stc.Data.Localization.LText).Delete(person.FirstName.%Id())
+	quit:$$$ISERR(st) st
+		
+	set st = ##class(Stc.Data.Localization.LText).Delete(person.MiddleName.%Id())
+	quit:$$$ISERR(st) st
+	
+	kill person	
+	
+	set st = ..%DeleteId(personId,4)
+	quit:$$$ISERR(st) ##class(Stc.Utils.Msg).GetErrorStatus("deletePerson", " | "_st) 
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="IsEditable">
+<Description>
+Проверка перед удалением, если есть ссылки на сотрудника, то не удаляем.</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>personId:%String,checkForDelete:%Boolean=0</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	set id = ""
+	set countId = ""
+	
+	// Проверка: является ли контактом какой-либо компании	
+	&sql(SELECT ID INTO:id FROM Stc_Data.Company WHERE Contact = :personId)
+	if (id = ""){
+		// Проверка: входит ли в подгруппу в обучении
+		&sql(SELECT ID INTO:id FROM Stc_Data.SubGroup_Students WHERE Students = :personId)
+		
+		if (id = ""){
+			// Проверка: является ли преподавателем
+			&sql(SELECT ID INTO:id FROM Stc_Data.Course_Teachers WHERE Teachers = :personId)	
+
+			if (id = ""){
+				// Проверка: есть ли у него сертификаты
+				&sql(SELECT ID INTO:id FROM Stc_Data.Certificate WHERE Student = :personId)	
+	
+				if (id = ""){
+					// Проверка: встречается ли больше 2 раз в списке слушателей в заявке
+					&sql(SELECT COUNT(ID) INTO:countId FROM Stc_Data.OrderApproved_Students WHERE Students = :personId)
+				}
+			}
+		}
+	}
+	
+ 	// Проверка на доступ к изменению (checkForDelete=0):
+ 	// Не встречается в др. таблицах и в заявках не более 1 раза => можно изменить
+ 	
+ 	// Проверка на доступ к удалению (checkForDelete=1):
+ 	// Не встречается во всех таблицах => можно удалить
+ 	
+ 	set maxOrderCount = 2
+ 	if (checkForDelete = 1) set maxOrderCount = 1
+	if (id = "") && (countId < maxOrderCount) quit 1
+	
+	quit 0
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.PersonD</DataLocation>
+<DefaultData>PersonDefaultData</DefaultData>
+<IdLocation>^Stc.Data.PersonD</IdLocation>
+<IndexLocation>^Stc.Data.PersonI</IndexLocation>
+<StreamLocation>^Stc.Data.PersonS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="PersonDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Company</Value>
+</Value>
+<Value name="3">
+<Value>FirstName</Value>
+</Value>
+<Value name="4">
+<Value>LastName</Value>
+</Value>
+<Value name="5">
+<Value>MiddleName</Value>
+</Value>
+<Value name="6">
+<Value>Email</Value>
+</Value>
+<Value name="7">
+<Value>Phone</Value>
+</Value>
+<Value name="8">
+<Value>Skype</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

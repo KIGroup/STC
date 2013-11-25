@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/components/stccompany.csp" application="/csp/four/" default="1"><![CDATA[
+<div class="row-fluid">
+    <div class="span6">
+        <div class="control-group">
+            <label class="control-label" ng-bind="('Название компании'|localize) + '*'"></label>
+            <div class="controls">
+                <input class="span12" type="text" ng-model="company.shortName" required ng-disabled="disableShortName"></input>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label"><span ng-bind="'Полное название компании'|localize"></span><span ng-show="requiredAll">*</span></label>
+            <div class="controls">
+                <input class="span12" type="text" ng-model="company.fullName" ng-required="requiredAll"></input>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label"><span ng-bind="'Юридический адрес'|localize"></span><span ng-show="requiredAll">*</span></label>
+            <div class="controls">
+                <input class="span12" type="text" ng-model="company.legalAddress" ng-required="requiredAll"></input>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label"><span ng-bind="'Почтовый адрес'|localize"></span><span ng-show="requiredAll">*</span></label>
+            <div class="controls">
+                <input class="span12" type="text" ng-model="company.mailAddress" ng-required="requiredAll"></input>
+            </div>
+        </div> 
+        <div class="control-group">
+            <label class="control-label" ng-bind="'Веб-сайт компании'|localize"></label>
+            <div class="controls">
+                <input class="span12" type="text" ng-model="company.site"></input>
+            </div>
+        </div>   
+        <div class="control-group">
+            <label class="control-label" ng-bind="'Другая информация'|localize"></label>
+            <div class="controls">
+                <textarea class="span12" rows="3" ng-model="company.otherInfo"></textarea>
+            </div>
+        </div>  
+    </div>
+
+
+    <div class="span6">
+        <div class="control-group">
+            <label class="control-label"><span ng-bind="'Код причины постановки на учёт'|localize"></span><span ng-show="requiredAll">*</span></label>
+            <div class="controls">
+                <input class="span12" type="text" ng-model="company.kpp" ng-required="requiredAll"></input>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label"><span ng-bind="'Идентификационный номер налогоплательщика'|localize"></span><span ng-show="requiredAll">*</span></label>
+            <div class="controls">
+                <input class="span12" type="text" ng-model="company.inn" ng-required="requiredAll"></input>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label"><span ng-bind="'Основной государственный регистрационный номер'|localize"></span><span ng-show="requiredAll">*</span></label>
+            <div class="controls">
+                <input class="span12" type="text" ng-model="company.ogrn" ng-required="requiredAll"></input>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label"><span ng-bind="'Расчётный счёт'|localize"></span><span ng-show="requiredAll">*</span></label>
+            <div class="controls">
+                <input class="span12" type="text" ng-model="company.settlementAccount" ng-required="requiredAll"></input>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label"><span ng-bind="'Корреспондентский счёт'|localize"></span><span ng-show="requiredAll">*</span></label>
+            <div class="controls">
+                <input class="span12" type="text" ng-model="company.correspondentAccount" ng-required="requiredAll"></input>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label"><span ng-bind="'Банковский идентификационный код'|localize"></span><span ng-show="requiredAll">*</span></label>
+            <div class="controls">
+                <input class="span12" type="text" ng-model="company.bic" ng-required="requiredAll"></input>
+            </div>
+        </div>     
+    </div>
+</div>]]></CSP>
+</Export>

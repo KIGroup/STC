@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/services/RegionSrvc.js" application="/csp/four/" default="1"><![CDATA[
+'use strict';
+//dddв
+
+/*===========================================================================================
+Регионы, города
+===========================================================================================*/
+
+servicesModule.factory('RegionSrvc', function(DALSrvc) {
+	return {
+	    /* Все города по начальным буквам */
+        getAllCitiesStartsWith: function(startsWith){
+            return DALSrvc.getPromise('get', StcAppSetting.user + '/json/citiesStartsWith/' + startsWith, null);
+        }
+    }
+});
+  
+]]></CSP>
+</Export>

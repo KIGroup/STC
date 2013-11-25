@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Utils.Init.Company">
+<Super>BaseInit</Super>
+<TimeCreated>63145,79644.758318</TimeCreated>
+
+<Parameter name="PClassName">
+<Default>Company</Default>
+</Parameter>
+
+<Method name="Import">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	w !,"=== "_..#PClassName_" ==="
+	
+	set company = ##class(Stc.Data.Company).%New()
+	set company.FullName = ##class(Stc.Data.Localization.LText).Create("ООО Главная компания")
+	set company.ShortName = ##class(Stc.Data.Localization.LText).Create("Главная компания")
+	set company.LegalAddress = ##class(Stc.Data.Localization.LText).Create("Город М.")
+	set company.MailAddress = ##class(Stc.Data.Localization.LText).Create("000000 Город М.")
+	set company.OtherInfo = ##class(Stc.Data.Localization.LText).Create("---")
+	w !, $CASE($$$ISERR(company.%Save()), 1: "Ошибка! Компания не создана!",:"Компания создана")
+	
+	set contact = ##class(Stc.Data.Person).%New()
+	set contact.LastName = ##class(Stc.Data.Localization.LText).Create("Петров", "Stc.Data.Localization.Translation;PersonLTextValue")
+	set contact.FirstName = ##class(Stc.Data.Localization.LText).Create("Петр", "Stc.Data.Localization.Translation;PersonLTextValue")
+	set contact.MiddleName = ##class(Stc.Data.Localization.LText).Create("Петрович", "Stc.Data.Localization.Translation;PersonLTextValue")
+	set contact.Email = "petorv@maincompany.com"
+	set contact.Phone = "000"
+	set contact.Company = company
+	set company.Contact = contact
+	w !, $CASE($$$ISERR(contact.%Save()) || $$$ISERR(company.%Save()), 1: "Ошибка! Контакт компании не создан!",:"Контакт компании создан")
+		
+	quit $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

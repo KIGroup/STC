@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.Localization.LText">
+<Super>%Persistent,%XML.Adaptor</Super>
+<TimeCreated>63142,65408.316829</TimeCreated>
+
+<Property name="Guid">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Value">
+<Type>%String</Type>
+<Calculated>1</Calculated>
+<SqlComputeCode>set {Value} = ##class({%%CLASSNAME}).GetValueById({%%ID})</SqlComputeCode>
+<SqlComputed>1</SqlComputed>
+</Property>
+
+<Index name="GuidIdx">
+<IdKey>1</IdKey>
+<Properties>Guid</Properties>
+<Unique>1</Unique>
+</Index>
+
+<Property name="Values">
+<Type>Stc.Data.Localization.LTextValue</Type>
+<Cardinality>many</Cardinality>
+<Inverse>LText</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Method name="ValueGet">
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetValueById(..%Id())
+]]></Implementation>
+</Method>
+
+<Method name="ValueSet">
+<FormalSpec>value:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ##class(LTextValue).SetValue(value, ..%Id(), $$$SessionLanguage)
+]]></Implementation>
+</Method>
+
+<Method name="GetValueById">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ##class(LTextValue).GetValue(id, $$$SessionLanguage)
+]]></Implementation>
+</Method>
+
+<Method name="Create">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value:%String,translateClassMethod:%String=""</FormalSpec>
+<ReturnType>LText</ReturnType>
+<Implementation><![CDATA[
+	set ltxt = ..%New()
+	set ltxt.Guid = $SYSTEM.Util.CreateGUID()
+	 
+	if $$$ISERR(ltxt.%Save()) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createLoc"))
+	
+	set ltxt.Value = value
+	
+	set currLang = $$$SessionLanguage
+	
+	&sql(DECLARE LangCurs CURSOR FOR 
+		 SELECT ID
+		 FROM Stc_Data_Localization.LTextLanguage
+		 WHERE ID <> :currLang)	
+		
+	&sql(OPEN LangCurs)
+	for  
+	{	
+		&sql(FETCH LangCurs INTO :langId) 
+		quit:(SQLCODE '= 0)
+	
+		if (translateClassMethod = ""){
+			do ##class(LTextValue).SetValue(value, ltxt.%Id(), langId)
+		}
+		else{
+			do ##class(LTextValue).SetValue($CLASSMETHOD($P(translateClassMethod,";",1), $P(translateClassMethod,";",2), value, currLang, langId), ltxt.%Id(), langId)
+		}
+	}
+		
+	&sql(CLOSE LangCurs)
+	
+	quit ltxt
+]]></Implementation>
+</Method>
+
+<Method name="Delete">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = ##class(LTextValue).Delete(id)
+	if $$$ISERR(status) quit status
+	
+	set status = ..%DeleteId(id,4)
+	if $$$ISERR(status) quit ##class(Stc.Utils.Msg).GetErrorStatus("deleteLoc", " | "_status)
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="SetValues">
+<FormalSpec>ltxtId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	&sql(DECLARE LangCur CURSOR FOR 
+		 SELECT ID
+		 FROM Stc_Data_Localization.LTextLanguage)	
+		
+	&sql(OPEN LangCur)
+	for  
+	{	
+		&sql(FETCH LangCur INTO :langId) 
+		quit:(SQLCODE '= 0)
+		
+		set value = ##class(Stc.Data.Localization.LTextValue).GetValue(ltxtId, langId)
+		do ##class(LTextValue).SetValue(value, ..%Id(), langId)
+	}
+		
+	&sql(CLOSE LangCur)
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.Localization.LTextD</DataLocation>
+<DefaultData>LTextDefaultData</DefaultData>
+<IdLocation>^Stc.Data.Localization.LTextD</IdLocation>
+<IndexLocation>^Stc.Data.Localization.LTextI</IndexLocation>
+<StreamLocation>^Stc.Data.Localization.LTextS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="LTextDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

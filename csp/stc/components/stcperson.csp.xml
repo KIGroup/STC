@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/components/stcperson.csp" application="/csp/four/" default="1"><![CDATA[
+<div>
+    <div class="control-group">
+        <label class="control-label" ng-bind="('Фамилия'|localize) + '*'"></label>
+        <div class="controls">
+            <input class="span12" type="text" ng-model="person.lastName" ng-disabled="allDisabled" required></input>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" ng-bind="('Имя'|localize) + '*'"></label>
+        <div class="controls">
+            <input class="span12" type="text" ng-model="person.firstName" ng-disabled="allDisabled" required></input>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" ng-bind="'Отчество'|localize"></label>
+        <div class="controls">
+            <input class="span12" type="text" ng-model="person.middleName" ng-disabled="allDisabled"></input>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Email*</label>
+        <div class="controls">
+            <input class="span12" type="email" ng-model="person.email" ng-disabled="allDisabled" required></input>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" ng-bind="('Телефон'|localize) + '*'"></label>
+        <div class="controls">
+            <input class="span12" type="text" ng-model="person.phone" ng-disabled="allDisabled" required></input>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Skype</label>
+        <div class="controls">
+            <input class="span12" type="text" ng-model="person.skype" ng-disabled="allDisabled" ></input>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" ng-show="companyDisabled" ng-bind="('Компания'|localize) + '*'"></label>
+        <label class="control-label" ng-hide="companyDisabled">{{('Компания'|localize) + '*'}}  
+            <i class="iSwitcher" ng-click="switchCompany(false)" ng-show="!companySwitchOff && companyExist" ng-bind="'(нет в списке)'|localize"></i>
+            <i class="iSwitcher" ng-click="switchCompany(true)" ng-show="!companySwitchOff && !companyExist" ng-bind="'(есть в списке)'|localize"></i>
+        </label>
+        <div class="controls">
+            <select class="span12" ng-show="companyExist" ng-required="companyExist" ng-model="person.company.exist.id" ng-options="company.id as company.name for company in companies" ng-disabled="companyDisabled || allDisabled">
+                <option value=""></option>
+            </select>
+            <input class="span12" ng-hide="companyExist" type="text" ng-model="person.company.notexist.name" ng-required="!companyExist"></input>
+        </div>
+    </div>
+    <div class="control-group" ng-hide="companyExist">
+        <label class="control-label" ng-bind="'Веб-сайт компании'|localize"></label>
+        <div class="controls">
+            <input class="span12" type="text" ng-model="person.company.notexist.site"></input>
+        </div>
+    </div>
+</div>
+]]></CSP>
+</Export>

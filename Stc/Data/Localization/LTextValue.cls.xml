@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.Localization.LTextValue">
+<Super>%Persistent,%XML.Adaptor</Super>
+<TimeCreated>63142,65463.16029</TimeCreated>
+
+<Property name="LText">
+<Type>Stc.Data.Localization.LText</Type>
+<Cardinality>one</Cardinality>
+<Inverse>Values</Inverse>
+<Relationship>1</Relationship>
+<Required>1</Required>
+<Parameter name="XMLPROJECTION" value="XELEMENT"/>
+<Parameter name="XMLREFERENCE" value="ID"/>
+</Property>
+
+<Property name="Lang">
+<Type>Stc.Data.Localization.LTextLanguage</Type>
+<Cardinality>one</Cardinality>
+<Inverse>Values</Inverse>
+<Relationship>1</Relationship>
+<Required>1</Required>
+<Parameter name="XMLPROJECTION" value="XELEMENT"/>
+<Parameter name="XMLREFERENCE" value="ID"/>
+</Property>
+
+<Property name="Value">
+<Type>%Text</Type>
+<Parameter name="MAXLEN" value="3000"/>
+</Property>
+
+<Index name="KeyIdx">
+<Properties>LText,Lang</Properties>
+<Unique>1</Unique>
+</Index>
+
+<Index name="LangIdx">
+<Properties>Lang</Properties>
+</Index>
+
+<Method name="GetValue">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ltxt,lang</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set value = "---"
+	//q lang
+	
+	&sql(SELECT Value INTO :value FROM Stc_Data_Localization.LTextValue WHERE LText = :ltxt AND Lang = :lang)
+	
+	quit value
+]]></Implementation>
+</Method>
+
+<Method name="SetValue">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value,ltxt,lang</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	&sql(UPDATE Stc_Data_Localization.LTextValue (Value) VALUES (:value) WHERE LText = :ltxt AND Lang = :lang)
+	
+	if (SQLCODE = 100){
+		set lv = ..%New()
+		set lv.Lang = ##class(LTextLanguage).%OpenId(lang)
+		set lv.LText = ##class(LText).%OpenId(ltxt)
+		set lv.Value = value
+		set sc = lv.%Save()
+		if $$$ISERR(sc) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveLoc", "| "_sc))
+	}
+	elseif (SQLCODE '= 0) {
+		$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveLoc", "| SQLCODE="_SQLCODE))
+	}
+
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="Delete">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>ltxt</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	&sql(DELETE FROM Stc_Data_Localization.LTextValue WHERE LText = :ltxt)
+	if (SQLCODE '= 0) && (SQLCODE '= 100) quit ##class(Stc.Utils.Msg).GetErrorStatus("deleteLoc", " | SQLCODE="_SQLCODE)
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.LocaliB126.LTextValueD</DataLocation>
+<DefaultData>LTextValueDefaultData</DefaultData>
+<IdLocation>^Stc.Data.LocaliB126.LTextValueD</IdLocation>
+<IndexLocation>^Stc.Data.LocaliB126.LTextValueI</IndexLocation>
+<StreamLocation>^Stc.Data.LocaliB126.LTextValueS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="LTextValueDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>LText</Value>
+</Value>
+<Value name="3">
+<Value>Lang</Value>
+</Value>
+<Value name="4">
+<Value>Value</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

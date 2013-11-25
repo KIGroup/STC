@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Utils.Init.OrderStatus">
+<Super>BaseInit</Super>
+<TimeCreated>63144,2225.298447</TimeCreated>
+
+<Parameter name="PClassName">
+<Default>OrderStatus</Default>
+</Parameter>
+
+<Method name="Import">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	w !,"=== "_..#PClassName_" ==="
+	do ..ImportXData("Stc.Utils.Init."_..#PClassName, "Stc.Data.Localization.LText", "LTextXData")
+	do ..ImportXData("Stc.Utils.Init."_..#PClassName, "Stc.Data.Localization.LTextValue", "LTextValueXData")
+	do ..ImportXData("Stc.Utils.Init."_..#PClassName, "Stc.Data."_..#PClassName, "ClassXData")
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<XData name="ClassXData">
+<Data><![CDATA[
+<ClassXData>
+<OrderStatus><Name>B1AA4BFB-DD06-4AE0-8FF3-530B4E7BF84D</Name><Code>New</Code></OrderStatus>
+<OrderStatus><Name>2B5FD80B-FBE7-415D-8D61-4B5FF46A9132</Name><Code>Approved</Code></OrderStatus>
+<OrderStatus><Name>7552526F-6AB0-4EC9-88BE-21D9F65D94FD</Name><Code>Completed</Code></OrderStatus>
+<OrderStatus><Name>499C4168-3705-45D7-8B20-26AF9B9EAA63</Name><Code>Closed</Code></OrderStatus>
+</ClassXData>
+]]></Data>
+</XData>
+
+<XData name="LTextXData">
+<Data><![CDATA[
+<LTextXData>
+<LText><Guid>B1AA4BFB-DD06-4AE0-8FF3-530B4E7BF84D</Guid></LText>
+<LText><Guid>2B5FD80B-FBE7-415D-8D61-4B5FF46A9132</Guid></LText>
+<LText><Guid>7552526F-6AB0-4EC9-88BE-21D9F65D94FD</Guid></LText>
+<LText><Guid>499C4168-3705-45D7-8B20-26AF9B9EAA63</Guid></LText>
+</LTextXData>
+]]></Data>
+</XData>
+
+<XData name="LTextValueXData">
+<Data><![CDATA[
+<LTextValueXData>
+<LTextValue><LText>B1AA4BFB-DD06-4AE0-8FF3-530B4E7BF84D</LText><Value>Новая</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>2B5FD80B-FBE7-415D-8D61-4B5FF46A9132</LText><Value>Одобрена</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>7552526F-6AB0-4EC9-88BE-21D9F65D94FD</LText><Value>Заполнена</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>499C4168-3705-45D7-8B20-26AF9B9EAA63</LText><Value>Закрыта</Value><Lang>ru</Lang></LTextValue>
+
+<LTextValue><LText>B1AA4BFB-DD06-4AE0-8FF3-530B4E7BF84D</LText><Value>New</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>2B5FD80B-FBE7-415D-8D61-4B5FF46A9132</LText><Value>Approved</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>7552526F-6AB0-4EC9-88BE-21D9F65D94FD</LText><Value>Completed</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>499C4168-3705-45D7-8B20-26AF9B9EAA63</LText><Value>Closed</Value><Lang>en</Lang></LTextValue>
+</LTextValueXData>
+]]></Data>
+</XData>
+</Class>
+</Export>

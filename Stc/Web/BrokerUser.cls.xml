@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Web.BrokerUser">
+<Description>
+Открытый обработчик запросов для пользователей</Description>
+<Super>%CSP.REST</Super>
+<TimeCreated>63098,81275.541503</TimeCreated>
+
+<Parameter name="UseSession">
+<Type>Integer</Type>
+<Default>1</Default>
+</Parameter>
+
+<XData name="UrlMap">
+<Data><![CDATA[
+<Routes>
+	<!-- ==================================== КУРСЫ ==================================== -->
+		
+	<!-- Получить все курсы, коротко -->
+	<Route Method="GET" Url="/json/allCoursesShortInfo/:isInUse" Call="Stc.Web.JsonUser:GetCoursesShortInfo"/>
+	
+	
+	<!-- ==================================== ЗАЯВКИ ==================================== -->
+	
+	<!-- Создать заявку -->
+	<Route Method="POST" Url="/json/createOrder" Call="Stc.Web.JsonUser:CreateOrder"/>
+	
+	<!-- Получить информацию о заявке по коду доступа -->
+	<Route Method="GET" Url="/json/approvedOrderInfo/:code" Call="Stc.Web.JsonUser:GetApprovedOrderInfo"/>
+	
+	<!-- Завершить редактирование заявки -->
+	<Route Method="POST" Url="/json/finishEditingOrder" Call="Stc.Web.JsonUser:FinishEditingOrder"/>
+	
+	
+	<!-- ==================================== КОМПАНИИ ==================================== -->
+	
+	<!-- Получить все компании, коротко -->
+	<Route Method="GET" Url="/json/allCompaniesShortInfo" Call="Stc.Web.JsonUser:GetCompaniesShortInfo"/>
+	
+	<!-- Сохранить данные компании из заявки, указав код доступа -->
+	<Route Method="POST" Url="/json/saveCompany" Call="Stc.Web.JsonUser:SaveCompany"/>
+	
+	<!-- ==================================== ПЕРСОНЫ ==================================== -->
+	
+	<!-- Получить студентов заявки по коду доступа -->
+	<Route Method="POST" Url="/json/approvedOrderStudents" Call="Stc.Web.JsonUser:GetApprovedOrderStudents"/>
+	
+	<!-- Создать слушателя для заявки. При совпадении email связать слушателя и заявку -->
+	<Route Method="POST" Url="/json/saveOrderStudent" Call="Stc.Web.JsonUser:SaveOrderStudent"/>
+	
+	<!-- Удалить слушателя из заявки и из базы(если удаление возможно) -->
+	<Route Method="POST" Url="/json/deleteOrderStudent" Call="Stc.Web.JsonUser:DeleteOrderStudent"/>
+	
+	<!-- Получить слушателя заявки по коду доступа -->
+	<Route Method="POST" Url="/json/getOrderStudent" Call="Stc.Web.JsonUser:GetOrderStudent"/>
+	
+	
+	<!-- ==================================== ДРУГОЕ ==================================== -->
+	
+	<!-- Получить все города, поиск совпадения -->
+	<Route Method="GET" Url="/json/citiesStartsWith/:startsWith" Call="Stc.Web.JsonUser:GetCitiesStartsWith"/>
+
+	
+</Routes>
+]]></Data>
+</XData>
+
+<Method name="DispatchRequest">
+<Description>
+Dispatch a REST request according to URL and Method</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>pUrl:%String,pMethod:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set lang = $CASE(%request.CgiEnvs("HTTP_ACCEPT_LANGUAGE"), "en":"en", :"ru")
+	do ##class(%MessageDictionary).SetSessionLanguage(lang)
+	set %session.Language = lang
+	//---
+    #dim tSC As %Status = $$$OK
+    #dim e As %Exception.AbstractException
+    
+    #dim tMatcher As %Regex.Matcher
+    
+    #dim tArgs,tClass,tMatchUrl,tMapEntry,tRegEx,tTarget,tAccess As %String
+    #dim tI,tIndex As %Integer
+    #dim tResourceMatched As %Boolean
+    #dim tMethodMatched As %Boolean
+    
+    Try {
+        #; Check that the effective user ( could be unknown user ) can access this resource
+        Set tAccess=$SYSTEM.Security.Check($Piece($zu(90,21,$namespace),"^",4))
+        If tAccess'["READ,WRITE"
+        {
+            #; Don't want the session token
+            Set %response.OutputSessionToken=0
+            
+            #; Set the Http Status
+            Set %response.Status="401 Unauthorized"
+        
+            #; Write out the header
+            Do %response.WriteHTTPHeader()
+            
+            #; Done
+            Quit
+        }
+        
+        Set (tResourceMatched,tMethodMatched)=0
+        
+        #; Walk the dispatch map in collation order of defintion
+        For tIndex=1:1 {
+            
+            #; Get the next map entry
+            Set tMapEntry=..DispatchMap(tIndex) If tMapEntry="" Quit
+             
+            #; Pick out the RegEx
+            Set tRegEx=$List(tMapEntry,1)
+            
+            #; Create a matcher
+            Set tMatcher=##class(%Regex.Matcher).%New(tRegEx)
+        
+            #; Extract the match url from the application name
+            Set tMatchUrl="/"_$Extract(pUrl,$Length(%request.Application)+1,*)
+            
+            #; Test each regular expression in turn, extracting the arguments,
+            #; dispatching to the named method  
+            If tMatcher.Match(tMatchUrl) {
+                
+                #; We have matched the resource
+                Set tResourceMatched=1
+                
+                #; Now check method name
+                If pMethod'=$List(tMapEntry,2) Continue
+                
+                Set tTarget=$List(tMapEntry,3)
+                
+                #; We have matched a method
+                Set tMethodMatched=1
+                
+                #; Got a match, marshall the arguments
+                If tMatcher.GroupCount {
+                    For tI=1:1:tMatcher.GroupCount Set tArgs(tI)=tMatcher.Group(tI)
+                    Set tArgs=tI
+                } else {
+                    Set tArgs=0
+                }
+                
+                #; Check for optional ClassName prefix
+                Set tClass=$classname()
+                If tTarget[":" Set tClass=$Piece(tTarget,":"),tTarget=$Piece(tTarget,":",2)
+                
+                #; Dispatch
+                Set tSC=$zobjclassmethod(tClass,tTarget,tArgs...)
+                If $$$ISERR(tSC) Do ..Http500(##class(%Exception.StatusException).CreateFromStatus(tSC))
+                
+                #; Don't want multiple matches
+                Quit
+            }
+        }
+        
+        #; Didn't have a match for the resource, report not found
+        If tResourceMatched=0 Set tSC=..Http404() Quit
+        
+        #; Had a match for resource but method not matched
+        If tMethodMatched=0 Set tSC=..Http405() Quit
+            
+    } Catch (e) {
+        
+        #; Issue a '500'
+        Do ..Http500(e)
+    }
+    
+    If ..#UseSession=0 Set %session.EndSession=1
+    
+    Quit tSC
+]]></Implementation>
+</Method>
+</Class>
+</Export>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/services/CourseTeacherSrvc.js" application="/csp/four/" default="1"><![CDATA[
+'use strict';
+//dddв
+
+/*===========================================================================================
+Курсы и преподватели
+===========================================================================================*/
+
+servicesModule.factory('CourseTeacherSrvc', function(DALSrvc) {
+	return {
+		/* Получить все курсы, коротко */
+		getAllCoursesShortInfo: function(isInUse){
+			return DALSrvc.getPromise('get', StcAppSetting.user + '/json/allCoursesShortInfo/' + isInUse, null);
+		},
+		/* Получить все курсы, полная инфа, для таблицы */
+		getAllCoursesFullInfo: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, isInUse){
+			var first = pageSize * (pageCurr - 1) + 1;
+            var obj = {sqlName: sqlName, 
+                       isDown: isDown, 
+                       first: first, 
+                       last: first + pageSize - 1,
+                       searchSqlName: searchSqlName, 
+                       searchText: searchText,
+                       isInUse: isInUse};
+
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/allCoursesFullInfo', obj);
+		},
+		/* Изменить статус курса */
+		changeIsInUse: function(courseId){
+			return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/changeIsInUseCourse', {id: courseId});
+		},
+		/* Обновить или создать курс */
+		saveCourse: function(course){
+			return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/saveCourse', course);
+		},
+		/*  */
+		getCourse: function(id){
+			return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/getCourse/' + id, null);
+		}
+	}
+});
+]]></CSP>
+</Export>

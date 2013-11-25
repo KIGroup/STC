@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.Company">
+<Description>
+Компания - заказчик</Description>
+<Super>%Persistent</Super>
+<TimeCreated>63098,13287.262923</TimeCreated>
+
+<Property name="FullName">
+<Description>
+Полное название компании</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="ShortName">
+<Description>
+Короткая форма названия</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="SettlementAccount">
+<Description>
+Расчётный счёт</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="1000"/>
+</Property>
+
+<Property name="CorrespondentAccount">
+<Description>
+Корреспондентский счёт</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="1000"/>
+</Property>
+
+<Property name="BIC">
+<Description>
+Банковский идентификационный код</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="500"/>
+</Property>
+
+<Property name="KPP">
+<Description>
+Код причины постановки на учёт</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="500"/>
+</Property>
+
+<Property name="INN">
+<Description>
+Идентификационный номер налогоплательщика</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="500"/>
+</Property>
+
+<Property name="OGRN">
+<Description>
+Основной государственный регистрационный номер</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="500"/>
+</Property>
+
+<Property name="LegalAddress">
+<Description>
+Юридический адрес</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="MailAddress">
+<Description>
+Почтовый адрес</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Contact">
+<Description>
+Контактное лицо</Description>
+<Type>Person</Type>
+</Property>
+
+<Property name="WebSite">
+<Description>
+Веб сайт</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="500"/>
+</Property>
+
+<Property name="OtherInfo">
+<Description>
+Другая информация</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Employees">
+<Description>
+Все сотрудники</Description>
+<Type>Stc.Data.Person</Type>
+<Cardinality>many</Cardinality>
+<Inverse>Company</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Method name="ConvertToProxyObject">
+<Description>
+Конвертация в proxyObject для JSON </Description>
+<FormalSpec>shortInfo:%Boolean=0</FormalSpec>
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	
+	set proxy.id = ..%Id()
+	set proxy.shortName = ..ShortName.Value
+	set proxy.site = ..WebSite
+	
+	if (shortInfo = 1) quit proxy
+	
+	set proxy.fullName = ..FullName.Value
+	set proxy.settlementAccount = ..SettlementAccount
+	set proxy.correspondentAccount = ..CorrespondentAccount
+	set proxy.bic = ..BIC
+	set proxy.kpp= ..KPP
+	set proxy.inn = ..INN
+	set proxy.ogrn = ..OGRN
+	set proxy.legalAddress = ..LegalAddress.Value
+	set proxy.mailAddress = ..MailAddress.Value
+	set proxy.otherInfo = ..OtherInfo.Value
+	
+	set proxy.contact = ..Contact.ConvertToProxyObject()
+	
+	set proxy.employeesNumber = ..Employees.Count()
+	
+	quit proxy
+]]></Implementation>
+</Method>
+
+<Method name="Save">
+<Description>
+Сохранить или создать компанию</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
+<ReturnType>Company</ReturnType>
+<Implementation><![CDATA[
+	if (data.id '= ""){
+		set company = ..%OpenId(data.id)
+		set company.FullName.Value = $ZCONVERT(data.fullName, "I","UTF8")
+		set company.ShortName.Value = $ZCONVERT(data.shortName, "I","UTF8")
+		set company.LegalAddress.Value = $ZCONVERT(data.legalAddress, "I","UTF8")
+		set company.MailAddress.Value = $ZCONVERT(data.mailAddress, "I","UTF8")
+		set company.OtherInfo.Value = $ZCONVERT(data.otherInfo, "I","UTF8")	
+	}
+	else{
+		set company = ..%New()
+		set company.FullName = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.fullName, "I","UTF8"))
+		set company.ShortName = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.shortName, "I","UTF8"))
+		set company.LegalAddress = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.legalAddress, "I","UTF8"))
+		set company.MailAddress = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.mailAddress, "I","UTF8"))
+		set company.OtherInfo = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.otherInfo, "I","UTF8"))
+	}
+	
+	set company.BIC = $ZCONVERT(data.bic, "I","UTF8")
+	set company.OGRN = $ZCONVERT(data.ogrn, "I","UTF8")
+	set company.INN = $ZCONVERT(data.inn, "I","UTF8")
+	set company.SettlementAccount = $ZCONVERT(data.settlementAccount, "I","UTF8")
+	set company.CorrespondentAccount = $ZCONVERT(data.correspondentAccount, "I","UTF8")	
+	set company.KPP = $ZCONVERT(data.kpp, "I","UTF8")
+	set company.WebSite = $REPLACE($REPLACE($ZCONVERT(data.site, "I","UTF8"),"http://",""), "https://","")
+	
+	set status = company.%Save()
+	quit company
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.CompanyD</DataLocation>
+<DefaultData>CompanyDefaultData</DefaultData>
+<IdLocation>^Stc.Data.CompanyD</IdLocation>
+<IndexLocation>^Stc.Data.CompanyI</IndexLocation>
+<StreamLocation>^Stc.Data.CompanyS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="CompanyDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>FullName</Value>
+</Value>
+<Value name="3">
+<Value>ShortName</Value>
+</Value>
+<Value name="4">
+<Value>SettlementAccount</Value>
+</Value>
+<Value name="5">
+<Value>CorrespondentAccount</Value>
+</Value>
+<Value name="6">
+<Value>BIC</Value>
+</Value>
+<Value name="7">
+<Value>KPP</Value>
+</Value>
+<Value name="8">
+<Value>INN</Value>
+</Value>
+<Value name="9">
+<Value>OGRN</Value>
+</Value>
+<Value name="10">
+<Value>LegalAddress</Value>
+</Value>
+<Value name="11">
+<Value>MailAddress</Value>
+</Value>
+<Value name="12">
+<Value>Contact</Value>
+</Value>
+<Value name="13">
+<Value>WebSite</Value>
+</Value>
+<Value name="14">
+<Value>OtherInfo</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

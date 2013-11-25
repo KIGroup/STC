@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Utils.Msg">
+<TimeCreated>63147,18153.813301</TimeCreated>
+
+<Method name="GetErrorStatus">
+<Description>
+Получить статус ошибки с текстом ошибки по ключу</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>errorKey:%String,additionalMsg:%String=""</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit $system.Status.Error(5001, ..GetMsg(errorKey)_" "_additionalMsg)
+]]></Implementation>
+</Method>
+
+<Method name="GetMsg">
+<Description>
+Получить локализованное сообщение</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>key</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit $GET(^CacheMsg("Stc", $$$SessionLanguage, key), "---")
+]]></Implementation>
+</Method>
+
+<Method name="Init">
+<Description>
+Записать все сообщения в глобал</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	
+	// Тема письма
+	set ^CacheMsg("Stc", "ru", "emailSubject") = "Заявка на обучение"
+	set ^CacheMsg("Stc", "en", "emailSubject") = "Order for training"
+	
+	// Сообщение заказчику на почту
+	set ^CacheMsg("Stc", "ru", "msgToCompanyContact") = ""_
+	"Здравствуйте, вы оставили заявку на обучение по курсу - '%1', в городе - '%2', дата обучения - '%3'. "_
+	"Вам необходимо перейти по <a href='http://%4/stc/index.csp#/updateorder?code=%5'>ссылке</a> для дальнейшего заполнения вашей заявки, проверить и заполнить реквизиты компании, добавить сотрудников для обучения.</br>"_
+	"Прямая ссылка на вашу заявку: http://%4/stc/index.csp#/updateorder?code=%5</br>"_
+	"Нажмите 'Завершить редактирование', чтобы отправить ее администратору системы для рассмотрения. Доступ к заявке будет закрыт после завершения редактирования.</br>"_
+	"------------</br>"_
+	"С уважением, Администратор 'Системы учета курсов InterSystems'"
+	
+	set ^CacheMsg("Stc", "en", "msgToCompanyContact") = ""_
+	"Hello, you left a order for a course - '%1', in city - '%2', training date - '%3'. "_
+	"You need to <a href='http://%4/stc/index.csp#/updateorder?code=%5'>link</a> for further filling your order, check and fill in your company details, add employees for training.</br>"_
+	"Direct link to your order: http://%4/stc/index.csp#/updateorder?code=%5</br>"_
+	"Click 'Finish editing' to send it to your system administrator for consideration. Access to the application will be closed after completion of editing.</br>"_
+	"------------</br>"_
+	"Best regards, Administrator 'Systems of training courses InterSystems'"
+	
+	
+	set ^CacheMsg("Stc", "ru", "certificatesReport") = "Сертификаты для [%1] [%2] [%3]"
+	set ^CacheMsg("Stc", "en", "certificatesReport") = "Certificates for [%1] [%2] [%3]"
+	
+	
+	
+	// Ошибки
+	set ^CacheMsg("Stc", "ru", "createCompany") = "Создание компании"
+	set ^CacheMsg("Stc", "en", "createCompany") = "Creation company"
+	
+	set ^CacheMsg("Stc", "ru", "saveCompany") = "Сохранение компании"
+	set ^CacheMsg("Stc", "en", "saveCompany") = "Saving company"
+	
+	set ^CacheMsg("Stc", "ru", "openCompany") = "Загрузка компании"
+	set ^CacheMsg("Stc", "en", "openCompany") = "Loading company"
+	
+	set ^CacheMsg("Stc", "ru", "createPerson") = "Создание сотрудника"
+	set ^CacheMsg("Stc", "en", "createPerson") = "Create employee"
+	
+	set ^CacheMsg("Stc", "ru", "savePerson") = "Сохранение сотрудника"
+	set ^CacheMsg("Stc", "en", "savePerson") = "Saving employee"
+	
+	set ^CacheMsg("Stc", "ru", "deletePerson") = "Удаление сотрудника"
+	set ^CacheMsg("Stc", "en", "deletePerson") = "Remove employee"
+	
+	set ^CacheMsg("Stc", "ru", "deletePersonImpossible") = "Удаление сотрудника невозможно, на него ссылаются из других таблиц."
+	set ^CacheMsg("Stc", "en", "deletePersonImpossible") = "Deleting employee impossible it is referenced from other tables."
+	
+	set ^CacheMsg("Stc", "ru", "openPerson") = "Загрузка сотрудника"
+	set ^CacheMsg("Stc", "en", "openPerson") = "Loading employee"
+	
+	set ^CacheMsg("Stc", "ru", "createCompanyContact") = "Создание контакта компании"
+	set ^CacheMsg("Stc", "en", "createCompanyContact") = "Creation company contact"
+	
+	set ^CacheMsg("Stc", "ru", "wrongOrderAccessCode") = "Неверный код доступа к заявке"
+	set ^CacheMsg("Stc", "en", "wrongOrderAccessCode") = "Invalid access code for order"
+	
+	set ^CacheMsg("Stc", "ru", "createDirtyOrder") = "Создание новой заявки"
+	set ^CacheMsg("Stc", "en", "createDirtyOrder") = "Creation new order"
+	
+	set ^CacheMsg("Stc", "ru", "openOrder") = "Загрузка заявки"
+	set ^CacheMsg("Stc", "en", "openOrder") = "Load order"
+	
+	set ^CacheMsg("Stc", "ru", "saveOrder") = "Сохранение заявки"
+	set ^CacheMsg("Stc", "en", "saveOrder") = "Saving order"
+	
+	set ^CacheMsg("Stc", "ru", "saveApprovedOrder") = "Сохранение одобренной заявки"
+	set ^CacheMsg("Stc", "en", "saveApprovedOrder") = "Saving approved order"
+	
+	set ^CacheMsg("Stc", "ru", "saveOrderStudent") = "Сохранение слушателя" 
+	set ^CacheMsg("Stc", "en", "saveOrderStudent") = "Saving student"
+	
+	set ^CacheMsg("Stc", "ru", "doNotHaveAccessToEditOrderStudent") = "Нет прав для редактирования слушателя"
+	set ^CacheMsg("Stc", "en", "doNotHaveAccessToEditOrderStudent") = "Do not have access to edit order student"
+	
+	set ^CacheMsg("Stc", "ru", "createOrderStudent") = "Создание слушателя"
+	set ^CacheMsg("Stc", "en", "createOrderStudent") = "Creatio"
+	
+	set ^CacheMsg("Stc", "ru", "saveDirtyOrder") = "Сохранение новой заявки"
+	set ^CacheMsg("Stc", "en", "saveDirtyOrder") = "Saving new order"
+	
+	set ^CacheMsg("Stc", "ru", "saveCourse") = "Сохранение курса"
+	set ^CacheMsg("Stc", "en", "saveCourse") = "Saving course"
+	
+	set ^CacheMsg("Stc", "ru", "createCourse") = "Создание курса"
+	set ^CacheMsg("Stc", "en", "createCourse") = "Creation course"
+	
+	set ^CacheMsg("Stc", "ru", "saveSubGroup") = "Сохранение подгруппы"
+	set ^CacheMsg("Stc", "en", "saveSubGroup") = "Saving sub-group"
+	
+	set ^CacheMsg("Stc", "ru", "createSubGroup") = "Создание подгруппы"
+	set ^CacheMsg("Stc", "en", "createSubGroup") = "Creation sub-group"
+	
+	set ^CacheMsg("Stc", "ru", "deleteSubGroup") = "Удаление подгруппы"
+	set ^CacheMsg("Stc", "en", "deleteSubGroup") = "Removing sub-group"
+	
+	set ^CacheMsg("Stc", "ru", "createTraining") = "Создание обучения"
+	set ^CacheMsg("Stc", "en", "createTraining") = "Creating a training"
+	
+	set ^CacheMsg("Stc", "ru", "saveTraining") = "Сохранение обучения"
+	set ^CacheMsg("Stc", "en", "saveTraining") = "Saving training"
+	
+	set ^CacheMsg("Stc", "ru", "isAlreadyCompleteTraining") = "Обучение уже было завершено"
+	set ^CacheMsg("Stc", "en", "isAlreadyCompleteTraining") = "Training is already completed"
+	
+	set ^CacheMsg("Stc", "ru", "createCertificate") = "Создание сертификата"
+	set ^CacheMsg("Stc", "en", "createCertificate") = "Creating a cretificate"
+	
+	
+	set ^CacheMsg("Stc", "ru", "saveLoc") = "Сохранение локализации"
+	set ^CacheMsg("Stc", "en", "saveLoc") = "Saving localization"
+		
+	set ^CacheMsg("Stc", "ru", "deleteLoc") = "Удаление локализации"
+	set ^CacheMsg("Stc", "en", "deleteLoc") = "Deleting localization"
+		
+	set ^CacheMsg("Stc", "ru", "createLoc") = "Создание локализации"
+	set ^CacheMsg("Stc", "en", "createLoc") = "Creating localization"
+	
+	set ^CacheMsg("Stc", "ru", "sendEmail") = "Отправка почты"
+	set ^CacheMsg("Stc", "en", "sendEmail") = "Sending email"
+]]></Implementation>
+</Method>
+</Class>
+</Export>

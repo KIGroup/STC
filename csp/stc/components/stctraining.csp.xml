@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/components/stctraining.csp" application="/csp/four/" default="1"><![CDATA[
+<div class="row-fluid">
+    <div class="span6">
+        <div class="control-group">
+            <label class="control-label" ng-bind="('Курс'|localize) + '*'"></label>
+            <div class="controls">
+                <select class="span12" ng-model="training.course.id" ng-options="course.id as course.name for course in courses">
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" ng-bind="('Преподаватель'|localize) + '*'"></label>
+            <div class="controls">
+                <select class="span12" ng-model="training.teacher.id" ng-options="teacher.id as teacher.lastName + ' ' + teacher.firstName + ' ' + teacher.middleName + ', ' + teacher.email for teacher in teachers">
+                </select>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span8">
+                <div class="control-group">
+                    <label class="control-label" title="{{'ДД-ММ-ГГГГ'|localize}}" ng-bind="('Дата начала / окончания обучения'|localize) + '*'"></label>
+                    <div class="controls">
+                        <div class="row-fluid">
+                            <div class="span6">
+                            <input type="text" class="span12" datepicker-popup="{{'d MMMM y'|localize}}" ng-model="dateStart" show-weeks="false" ng-required="true" />
+                            </div>
+                            <div class="span6">
+                            <input type="text" class="span12" datepicker-popup="{{'d MMMM y'|localize}}" ng-model="dateFinish" show-weeks="false" ng-required="true" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="span4">
+                <div class="control-group">
+                    <label class="control-label" ng-bind="('Аудитория'|localize) + '*'"></label>
+                    <div class="controls">
+                        <input class="span12" type="text"  ng-model="training.room" required></input>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" ng-bind="('Время начала / окончания обучения'|localize) + '*'"></label>
+            <div class="controls">
+                <input class="input" style="width: 2.7em;" type="text" placeholder="{{'ЧЧ:MM'|localize}}" pattern="([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" ng-model="training.timeStart" required></input>
+                &nbsp;&nbsp;
+                <input class="input" style="width: 2.7em;" type="text" placeholder="{{'ЧЧ:MM'|localize}}" pattern="([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" ng-model="training.timeFinish" required></input>
+            </div>
+        </div>
+        <button class="btn btn-success btn-small" type="submit" ng-bind="btnSubmitName|localize" ng-click="formatDate()" ng-disabled="formName.$pristine"></button>
+   		<button class="btn btn-small btn-primary" type="button" ng-show="btnAdditionVisible" ng-click="btnAdditionAction()" ng-bind="btnAdditionName|localize"></button>
+    </div>
+    <div class="span6">
+        <div class="control-group">
+            <label class="control-label" title="{{'Город, Регион, Страна'|localize}}" ng-bind="('Место обучения'|localize) + '*'"></label>
+            <div class="controls">
+                <input class="span12" type="text" title="{{'Город, Регион, Страна" ng-model="training.city" ng-change="loadCities(training.city)" placeholder="{{'Поиск'|localize}}" typeahead="city as city.name + ', ' + city.parentName + ', ' + city.greatParentName for city in cities | filter: {name: $viewValue} | limitTo: 15" required></input>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label"ng-bind="'Адрес'|localize"></label>
+            <div class="controls">
+                <input class="span12" type="text"  ng-model="training.notCorrectAddress" ng-change="addressCheck(false, false, true);"  required></input>
+            </div>
+        </div>
+        <span class="label label-important" ng-show="addressMsg" ng-bind="('Адрес не найден!'|localize) + '*'"></span>
+        <div class="control-group" ng-show="addressSelect">
+            <label class="control-label" ng-bind="('Корректный адрес'|localize) + '*'"></label>
+            <div class="controls">
+                <select class="span12" ng-model="training.address" ng-options="address as address.title for address in yandex.results">
+                </select>
+            </div>
+        </div>
+        <div ng-hide="addressSelect"></br></div>
+        <button class="btn btn-info" style="margin-top: 5px;"  type="button" ng-show="addressBtn" ng-click="findAddress()" ng-bind="('Скорректировать адрес'|localize) + '*'"></button>
+        <div ng-hide="addressSelect"></br></div>	
+        <div class="control-group">
+            <label class="control-label" ng-bind="'Примечание'|localize"></label>
+            <div class="controls">
+                <textarea class="span12" rows="3" ng-model="training.otherInfo"></textarea>
+            </div>
+        </div> 
+    </div>
+</div>
+]]></CSP>
+</Export>

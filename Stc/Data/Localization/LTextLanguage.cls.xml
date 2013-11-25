@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.Localization.LTextLanguage">
+<Super>%Persistent,%XML.Adaptor</Super>
+<TimeCreated>63142,65488.745547</TimeCreated>
+
+<Property name="Name">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Code">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Index name="CodeIdx">
+<IdKey>1</IdKey>
+<Properties>Code</Properties>
+<Unique>1</Unique>
+</Index>
+
+<Property name="Values">
+<Type>Stc.Data.Localization.LTextValue</Type>
+<Cardinality>many</Cardinality>
+<Inverse>Lang</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.LocB126.LTextLanguageD</DataLocation>
+<DefaultData>LTextLanguageDefaultData</DefaultData>
+<IdLocation>^Stc.Data.LocB126.LTextLanguageD</IdLocation>
+<IndexLocation>^Stc.Data.LocB126.LTextLanguageI</IndexLocation>
+<StreamLocation>^Stc.Data.LocB126.LTextLanguageS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="LTextLanguageDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Name</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

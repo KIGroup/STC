@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Web.BrokerAdmin">
+<Description>
+Закрытый обработчик запросов для администратора </Description>
+<Super>%CSP.REST</Super>
+<TimeCreated>63098,81405.67207</TimeCreated>
+
+<Parameter name="UseSession">
+<Type>Integer</Type>
+<Default>1</Default>
+</Parameter>
+
+<XData name="UrlMap">
+<Data><![CDATA[
+<Routes>
+	<!-- ==================================== КУРСЫ ==================================== -->
+	
+	<!-- Получить все курсы, полная информация -->
+	<Route Method="POST" Url="/json/allCoursesFullInfo" Call="Stc.Web.JsonAdmin:GetCoursesFullInfo"/>
+	
+	<!-- Сохранить / обновить курс -->
+	<Route Method="POST" Url="/json/saveCourse" Call="Stc.Web.JsonAdmin:SaveCourse"/>
+	
+	<!-- Получить курс -->
+	<Route Method="GET" Url="/json/getCourse/:id" Call="Stc.Web.JsonAdmin:GetCourse"/>	
+	
+	<!-- Вернуть/исключить курс -->
+	<Route Method="POST" Url="/json/changeIsInUseCourse" Call="Stc.Web.JsonAdmin:ChangeIsInUseCourse"/>	
+	
+	
+	<!-- ==================================== ЗАЯВКИ ==================================== -->
+
+	<!-- Получить все(или по статусу) заявки -->
+	<Route Method="POST" Url="/json/orders" Call="Stc.Web.JsonAdmin:GetOrders"/>
+	
+	<!-- Получить одну необработанную заявку -->
+	<Route Method="GET" Url="/json/dirtyOrder/:id" Call="Stc.Web.JsonAdmin:GetDirtyOrder"/>
+	
+	<!-- Создание обработанной заявки -->
+	<Route Method="POST" Url="/json/createApprovedOrder" Call="Stc.Web.JsonAdmin:CreateApprovedOrder"/>
+	
+	<!-- Получить всех студентов из выбранных заявок -->
+	<Route Method="GET" Url="/json/getStudentsFromOrders/:orderIdString" Call="Stc.Web.JsonAdmin:GetStudentsFromOrders"/>	
+	
+	<!-- Удаление любой заявки -->
+	<Route Method="DELETE" Url="/json/deleteOrder/:id" Call="Stc.Web.JsonAdmin:DeleteOrder"/>
+	
+	<!-- Сменить компанию в заявке -->
+	<Route Method="POST" Url="/json/changeOrderCompany" Call="Stc.Web.JsonAdmin:ChangeOrderCompany"/>
+	
+	<!-- Повторно отправить контакту компании email с инструкциями -->
+	<Route Method="POST" Url="/json/sendEmailToCompanyContactForApprovedOrder" Call="Stc.Web.JsonAdmin:SendEmailToCompanyContactForApprovedOrder"/>
+	
+	<!-- ==================================== КОМПАНИИ ==================================== -->
+	
+	<!-- Получить одну компанию по ИД -->
+	<Route Method="GET" Url="/json/company/:id" Call="Stc.Web.JsonAdmin:GetCompany"/>	
+	
+	<!-- Сохранить компанию и контакт из необработанной заявки -->
+	<Route Method="POST" Url="/json/saveCompanyFromOrder" Call="Stc.Web.JsonAdmin:SaveCompanyFromOrder"/>
+	
+	<!-- Обновить данные о компании -->
+	<Route Method="POST" Url="/json/saveCompany" Call="Stc.Web.JsonAdmin:SaveCompany"/>
+	
+	<!-- Заменить/обновить контакт у компании -->
+	<Route Method="POST" Url="/json/changeCompanyContact" Call="Stc.Web.JsonAdmin:ChangeCompanyContact"/>
+	
+	<!-- Получить все компании для таблицы, полная информация -->
+	<Route Method="POST" Url="/json/allCompaniesFullInfo" Call="Stc.Web.JsonAdmin:GetCompaniesFullInfo"/>
+	
+
+	<!-- ==================================== ОБУЧЕНИЯ ==================================== -->
+	<!-- Вставить обучение в Google календарь -->
+	<Route Method="GET" Url="/json/insertTrainingToCalendar/:id" Call="Stc.Web.JsonAdmin:InsertTrainingToCalendar"/>
+	
+	<!-- Создать обучение из выбранных заявок, создать подгруппы | или обновить -->
+	<Route Method="POST" Url="/json/saveTraining" Call="Stc.Web.JsonAdmin:SaveTraining"/>	
+	
+	<!-- Завершить обучение и создать сертификаты для каждого слушателя -->
+	<Route Method="POST" Url="/json/completeTraining" Call="Stc.Web.JsonAdmin:CompleteTraining"/>	
+	
+	<!-- Добавить в обучение подгруппы, основанные на выбранных заявках -->
+	<Route Method="POST" Url="/json/createSubGroupsForTraining" Call="Stc.Web.JsonAdmin:CreateSubGroupsForTraining"/>	
+	
+	<!-- Получить все обучения для таблицы -->
+	<Route Method="POST" Url="/json/allTrainings" Call="Stc.Web.JsonAdmin:GetTrainings"/>	
+	
+	<!-- Получить одно обучение -->
+	<Route Method="GET" Url="/json/getTraining/:id" Call="Stc.Web.JsonAdmin:GetTraining"/>	
+	
+	<!-- Получить подгруппы обучения -->
+	<Route Method="POST" Url="/json/getTrainingSubGroups" Call="Stc.Web.JsonAdmin:GetTrainingSubGroups"/>	
+	
+	<!-- Добавить подгруппу в обучение -->
+	<Route Method="POST" Url="/json/createSubGroup" Call="Stc.Web.JsonAdmin:CreateSubGroup"/>	
+	
+	<!-- Удалить подгруппу из обучения -->
+	<Route Method="DELETE" Url="/json/deleteSubGroup/:trainingIdsgroupId" Call="Stc.Web.JsonAdmin:DeleteSubGroup"/>	
+	
+	<!-- Сохранить платеж подгруппы -->
+	<Route Method="POST" Url="/json/saveSubGroupPayment" Call="Stc.Web.JsonAdmin:SaveSubGroupPayment"/>
+	
+	<!-- Сохранить договор подгруппы -->
+	<Route Method="POST" Url="/json/saveSubGroupContract" Call="Stc.Web.JsonAdmin:SaveSubGroupContract"/>
+
+	<!-- Все валюты -->
+	<Route Method="GET" Url="/json/allCurrencies" Call="Stc.Web.JsonAdmin:GetAllCurrencies"/>
+
+	<!-- ==================================== СЕРТИФИКАТЫ ================================ -->
+	
+	<!-- Получить все сертификаты для таблицы -->
+	<Route Method="POST" Url="/json/certificates" Call="Stc.Web.JsonAdmin:GetCertificates"/>
+
+	<!-- Печать сертификата -->
+	<Route Method="POST" Url="/json/printCertificate/:number" Call="Stc.Web.JsonAdmin:PrintCertificate"/>	
+	
+	<!-- ==================================== ПЕРСОНЫ ==================================== -->
+	
+	<!-- -->
+	<Route Method="POST" Url="/json/createPerson" Call="Stc.Web.JsonAdmin:SavePerson"/>
+	
+	<!-- -->
+	<Route Method="DELETE" Url="/json/deletePerson/:id" Call="Stc.Web.JsonAdmin:DeletePerson"/>
+	
+	<!-- Все заявки, в которых участвует данный сотрудник -->
+	<Route Method="GET" Url="/json/personOrders/:id" Call="Stc.Web.JsonAdmin:GetPersonOrders"/>
+	
+	<!-- Все обучения, в которых участвует данный сотрудник -->
+	<Route Method="GET" Url="/json/personTrainings/:id" Call="Stc.Web.JsonAdmin:GetPersonTrainings"/>
+	
+	<!-- Все сертификаты сотрудника -->
+	<Route Method="GET" Url="/json/personCertificates/:id" Call="Stc.Web.JsonAdmin:GetPersonCertificates"/>
+	
+	<!-- Все курсы, которые преподает сотрудник -->
+	<Route Method="GET" Url="/json/personCourses/:id" Call="Stc.Web.JsonAdmin:GetPersonCourses"/>
+	
+	<!-- Все компании, в которых он является контактом (в идеале 1 компания всегда) -->
+	<Route Method="GET" Url="/json/personCompanies/:id" Call="Stc.Web.JsonAdmin:GetPersonCompanies"/>
+
+	<!-- Все слушатели, поиск по совпадению с фамилией или почтой (поиск сначала) -->
+	<Route Method="GET" Url="/json/personByLastNameOrEmailStartsWith/:word" Call="Stc.Web.JsonAdmin:GetPersonByLastNameOrEmailStartsWith"/>
+				
+	<!-- Поиск сотрудников, которые не ведут данный курс. Поиск по фамилии и почте. -->
+	<Route Method="GET" Url="/json/getFreeTeachers/:courseword" Call="Stc.Web.JsonAdmin:GetFreeTeachers"/>
+	
+	<!-- Поиск сотрудников, которые не входят в подгруппу обучения. Поиск по фамилии и почте. -->
+	<Route Method="GET" Url="/json/getFreeStudents/:sgroupeword" Call="Stc.Web.JsonAdmin:GetFreeStudents"/>
+	
+	<!-- Получить одного сотрудника -->
+	<Route Method="GET" Url="/json/getPerson/:id" Call="Stc.Web.JsonAdmin:GetPerson"/>
+
+	<!-- Получить всех сотрудников для таблицы -->
+	<Route Method="POST" Url="/json/allPersons" Call="Stc.Web.JsonAdmin:GetAllPersons"/>
+
+	<!-- Обновить данные сотрудника -->
+	<Route Method="POST" Url="/json/updatePerson" Call="Stc.Web.JsonAdmin:SavePerson"/>
+
+	<!-- Получить всех преподавателей курса -->
+	<Route Method="GET" Url="/json/getCourseTeachers/:courseId" Call="Stc.Web.JsonAdmin:GetCourseTeachers"/>
+	
+	<!-- Создать / добавить слушателя для подгруппы обучения -->
+	<Route Method="POST" Url="/json/createSubGroupStudent" Call="Stc.Web.JsonAdmin:CreateSubGroupStudent"/>
+
+	<!-- Создать / добавить преподавателя в курс (назначить) -->
+	<Route Method="POST" Url="/json/createCourseTeacher" Call="Stc.Web.JsonAdmin:CreateCourseTeacher"/>
+
+	<!-- Удалить связь преподавателя и курса -->
+	<Route Method="DELETE" Url="/json/deleteCourseTeacher/:courseIdTeacherId" Call="Stc.Web.JsonAdmin:DeleteCourseTeacher"/>
+	
+	<!--  -->
+	<Route Method="DELETE" Url="/json/deleteSubGroupStudent/:sgroupIdstudentId" Call="Stc.Web.JsonAdmin:DeleteSubGroupStudent"/>
+	
+	
+	<!-- ==================================== ДРУГОЕ ==================================== -->
+	
+	<!-- Проверка парав доступа, принудительный вызов окна авторизации -->
+	<Route Method="GET" Url="/json/checkAdmin/:isLogin" Call="Stc.Web.JsonAdmin:CheckAdmin"/>
+		
+	
+	<Route Method="GET" Url="/text/:lang/certificates/:trainingId" Call="Stc.Web.Report:Certificates"/>
+</Routes>
+]]></Data>
+</XData>
+
+<Method name="DispatchRequest">
+<Description>
+Dispatch a REST request according to URL and Method</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>pUrl:%String,pMethod:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+
+	set lang = $CASE(%request.CgiEnvs("HTTP_ACCEPT_LANGUAGE"), "en":"en", :"ru")
+	do ##class(%MessageDictionary).SetSessionLanguage(lang)
+	set %session.Language = lang
+	
+    #dim tSC As %Status = $$$OK
+    #dim e As %Exception.AbstractException
+    
+    #dim tMatcher As %Regex.Matcher
+    
+    #dim tArgs,tClass,tMatchUrl,tMapEntry,tRegEx,tTarget,tAccess As %String
+    #dim tI,tIndex As %Integer
+    #dim tResourceMatched As %Boolean
+    #dim tMethodMatched As %Boolean
+    
+    Try {
+        #; Check that the effective user ( could be unknown user ) can access this resource
+        Set tAccess=$SYSTEM.Security.Check($Piece($zu(90,21,$namespace),"^",4))
+        If tAccess'["READ,WRITE"
+        {
+            #; Don't want the session token
+            Set %response.OutputSessionToken=0
+            
+            #; Set the Http Status
+            Set %response.Status="401 Unauthorized"
+        
+            #; Write out the header
+            Do %response.WriteHTTPHeader()
+            
+            #; Done
+            Quit
+        }
+        
+        Set (tResourceMatched,tMethodMatched)=0
+        
+        #; Walk the dispatch map in collation order of defintion
+        For tIndex=1:1 {
+            
+            #; Get the next map entry
+            Set tMapEntry=..DispatchMap(tIndex) If tMapEntry="" Quit
+             
+            #; Pick out the RegEx
+            Set tRegEx=$List(tMapEntry,1)
+            
+            #; Create a matcher
+            Set tMatcher=##class(%Regex.Matcher).%New(tRegEx)
+        
+            #; Extract the match url from the application name
+            Set tMatchUrl="/"_$Extract(pUrl,$Length(%request.Application)+1,*)
+            
+            #; Test each regular expression in turn, extracting the arguments,
+            #; dispatching to the named method  
+            If tMatcher.Match(tMatchUrl) {
+                
+                #; We have matched the resource
+                Set tResourceMatched=1
+                
+                #; Now check method name
+                If pMethod'=$List(tMapEntry,2) Continue
+                
+                Set tTarget=$List(tMapEntry,3)
+                
+                #; We have matched a method
+                Set tMethodMatched=1
+                
+                #; Got a match, marshall the arguments
+                If tMatcher.GroupCount {
+                    For tI=1:1:tMatcher.GroupCount Set tArgs(tI)=tMatcher.Group(tI)
+                    Set tArgs=tI
+                } else {
+                    Set tArgs=0
+                }
+                
+                #; Check for optional ClassName prefix
+                Set tClass=$classname()
+                If tTarget[":" Set tClass=$Piece(tTarget,":"),tTarget=$Piece(tTarget,":",2)
+                
+                #; Dispatch
+                Set tSC=$zobjclassmethod(tClass,tTarget,tArgs...)
+                If $$$ISERR(tSC) Do ..Http500(##class(%Exception.StatusException).CreateFromStatus(tSC))
+                
+                #; Don't want multiple matches
+                Quit
+            }
+        }
+        
+        #; Didn't have a match for the resource, report not found
+        If tResourceMatched=0 Set tSC=..Http404() Quit
+        
+        #; Had a match for resource but method not matched
+        If tMethodMatched=0 Set tSC=..Http405() Quit
+            
+    } Catch (e) {
+        
+        #; Issue a '500'
+        Do ..Http500(e)
+    }
+    
+    If ..#UseSession=0 Set %session.EndSession=1
+  
+    Quit tSC
+]]></Implementation>
+</Method>
+</Class>
+</Export>

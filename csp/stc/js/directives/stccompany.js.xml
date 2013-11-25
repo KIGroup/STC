@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/directives/stccompany.js" application="/csp/four/" default="1"><![CDATA[
+'use strict';
+//dddd
+
+directivesModule.directive('stccompany', function(){
+    return {
+        replace: true,
+        restrict: 'E',
+        templateUrl: 'components/stccompany.csp',
+        
+        scope: {
+            company: '=',
+            requiredAll: '=',
+            disableShortName: '='       
+        },
+        controller: function($scope){
+           
+	   	}
+    }
+});
+]]></CSP>
+</Export>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.SubGroup">
+<Description>
+Подгруппа оплаченных студентов обучения</Description>
+<Super>%Persistent</Super>
+<TimeCreated>63098,13360.062633</TimeCreated>
+
+<Property name="Payer">
+<Description>
+Компания - плательщик</Description>
+<Type>Company</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Students">
+<Description>
+Слушатели</Description>
+<Type>Person</Type>
+<Collection>array</Collection>
+</Property>
+
+<Property name="Amount">
+<Description>
+Сумма платежа</Description>
+<Type>%Float</Type>
+<InitialExpression>0</InitialExpression>
+<Required>1</Required>
+</Property>
+
+<Property name="Currency">
+<Description>
+Валюта</Description>
+<Type>Currency</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="SignerFullName">
+<Description>
+ФИО подписанта в родительном падеже</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="DocumentInfo">
+<Description>
+Документ основания, устав и проч.</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="DateStart">
+<Description>
+Дата создания договора</Description>
+<Type>%Date</Type>
+<Parameter name="FORMAT" value="3"/>
+</Property>
+
+<Property name="DateFinish">
+<Description>
+Дата окончания договора</Description>
+<Type>%Date</Type>
+<Parameter name="FORMAT" value="3"/>
+</Property>
+
+<Method name="ConvertToProxyObject">
+<Description>
+Конвертация в proxyObject для JSON </Description>
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	set proxy.id = ..%Id()
+	set proxy.payer = ..Payer.ConvertToProxyObject()
+	set proxy.amount = ..Amount
+	set proxy.currency = ..Currency.ConvertToProxyObject()
+	
+	set proxy.contract = ##class(%ZEN.proxyObject).%New()
+	set proxy.contract.fullName = ..SignerFullName.Value
+	set proxy.contract.document = ..DocumentInfo.Value
+	
+	if (..DateStart) && (..DateFinish){
+		set proxy.contract.dateStart = $ZDATE(..DateStart, 3)
+		set proxy.contract.dateFinish = $ZDATE(..DateFinish, 3)
+	}
+	
+	set proxy.students = ##class(%ListOfObjects).%New()
+	
+	set key = ""
+	for i=1:1:..Students.Count(){
+		set key = ..Students.Next(key)
+		do proxy.students.Insert(..Students.GetAt(key).ConvertToProxyObject())
+	}
+	
+	quit proxy
+]]></Implementation>
+</Method>
+
+<Method name="Create">
+<Description>
+Создание подгруппы в обучении</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[payer:Company,students:%ArrayOfObjects,&status]]></FormalSpec>
+<ReturnType>SubGroup</ReturnType>
+<Implementation><![CDATA[
+	set sub = ..%New()
+	set sub.Payer = payer
+	set sub.Students = students
+	set sub.Currency = ##class(Currency).%OpenId(1)
+	set sub.SignerFullName = ##class(Stc.Data.Localization.LText).Create("")
+	set sub.DocumentInfo = ##class(Stc.Data.Localization.LText).Create("")
+	set status = sub.%Save()
+	quit sub
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.SubGroupD</DataLocation>
+<DefaultData>SubGroupDefaultData</DefaultData>
+<IdLocation>^Stc.Data.SubGroupD</IdLocation>
+<IndexLocation>^Stc.Data.SubGroupI</IndexLocation>
+<StreamLocation>^Stc.Data.SubGroupS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="Students">
+<Attribute>Students</Attribute>
+<Structure>subnode</Structure>
+<Subscript>"Students"</Subscript>
+</Data>
+<Data name="SubGroupDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Payer</Value>
+</Value>
+<Value name="3">
+<Value>Amount</Value>
+</Value>
+<Value name="4">
+<Value>Currency</Value>
+</Value>
+<Value name="5">
+<Value>SignerFullName</Value>
+</Value>
+<Value name="6">
+<Value>DocumentInfo</Value>
+</Value>
+<Value name="7">
+<Value>DateStart</Value>
+</Value>
+<Value name="8">
+<Value>DateFinish</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

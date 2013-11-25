@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/services/DALSrvc.js" application="/csp/four/" default="1"><![CDATA[
+'use strict';
+//dddxdddddв
+
+/*===========================================================================================
+Доступ к БД через REST
+===========================================================================================*/
+
+servicesModule.factory('DALSrvc', function($resource, $q) {	
+	return {
+		getPromise: function(method, url, obj){
+    		var resource = $resource(url);
+            var deferred = $q.defer();
+
+            switch(method){
+                case 'save':
+                {
+                    resource.save(obj,
+                        function(data){
+                            deferred.resolve(data.children ? data.children : data);
+                        },
+                        function(response){
+                            deferred.reject(response);
+                        });
+                    break;    
+                }
+                case 'get':
+                {
+                    resource.get(obj,
+                        function(data){
+                            deferred.resolve(data.children ? data.children : data);
+                        },
+                        function(response){
+                            deferred.reject(response);
+                        });
+                    break;    
+                }
+                case 'delete':
+                {
+                    resource.delete(obj,
+                        function(data){
+                            deferred.resolve(data.children ? data.children : data);
+                        },
+                        function(response){
+                            deferred.reject(response);
+                        });
+                    break;    
+                }      
+            }
+
+            return deferred.promise;
+    	}
+    }
+});
+  
+]]></CSP>
+</Export>

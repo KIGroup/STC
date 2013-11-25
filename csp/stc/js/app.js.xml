@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/app.js" application="/csp/four/" default="1"><![CDATA[
+'use strict';
+//dd
+
+var servicesModule     = angular.module('servicesModule', ['ngResource', 'ngCookies']);
+var controllersModule  = angular.module('controllersModule', ['servicesModule']);
+var directivesModule   = angular.module('directivesModule', []);
+var localizationModule = angular.module('localizationModule', []);
+var filterModule       = angular.module('filterModule', []);
+var mainModule         = angular.module('mainModule', ['ui.bootstrap', 'servicesModule', 'controllersModule', 'directivesModule', 'localizationModule', 'filterModule']);
+
+mainModule.config(['$routeProvider', function($routeProvider) {
+	$routeProvider.when('/createorder',  {templateUrl: 'partials/createorder.csp',  controller: 'CreateOrderCtrl'});
+	$routeProvider.when('/updateorder',  {templateUrl: 'partials/updateorder.csp',  controller: 'UpdateOrderCtrl'});
+	$routeProvider.when('/orders',       {templateUrl: 'partials/orders.csp',       controller: 'AllOrdersCtrl'});
+	$routeProvider.when('/companies',    {templateUrl: 'partials/companies.csp',    controller: 'AllCompaniesCtrl'});
+	$routeProvider.when('/company',      {templateUrl: 'partials/company.csp',      controller: 'CompanyCtrl'});
+    $routeProvider.when('/persons',      {templateUrl: 'partials/persons.csp',      controller: 'AllPersonsCtrl'});
+    $routeProvider.when('/person',       {templateUrl: 'partials/person.csp',       controller: 'PersonCtrl'});
+    $routeProvider.when('/courses',      {templateUrl: 'partials/courses.csp',      controller: 'AllCoursesCtrl'});
+    $routeProvider.when('/course',       {templateUrl: 'partials/course.csp',       controller: 'CourseCtrl'});
+    $routeProvider.when('/trainings',    {templateUrl: 'partials/trainings.csp',    controller: 'AllTrainingsCtrl'});
+    $routeProvider.when('/training',     {templateUrl: 'partials/training.csp',     controller: 'TrainingCtrl'});
+    $routeProvider.when('/certificates', {templateUrl: 'partials/certificates.csp', controller: 'AllCertificatesCtrl'});
+    $routeProvider.otherwise({redirectTo: '/createorder'});
+  }]);]]></CSP>
+</Export>

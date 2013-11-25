@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Utils.Email">
+<Description>
+Работа с почтой</Description>
+<TimeCreated>63098,81612.618657</TimeCreated>
+
+<UDLText name="T">
+<Content><![CDATA[
+/*
+Parameter FROM = "stc_testmail@mail.ru";
+
+Parameter SMTPSERVER = "smtp.mail.ru";
+
+Parameter SMTPPORT = 25;
+
+Parameter SMTPUSER = "stc_testmail@mail.ru";
+
+Parameter SMTPPASSWORD = "simplepassword";
+*/
+]]></Content>
+</UDLText>
+
+<Method name="Send">
+<Description>
+Отправить на указанный ящик - email сообщение - msg с темой - subject</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>email:%String,subject:%String,msg:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try
+	{
+		set mail=##class(%Net.MailMessage).%New()
+    	set mail.From = $GET(^Settings("Stc","EmailFrom")) //..#FROM
+    	set mail.Subject = subject
+    	set mail.Charset = "utf-8"
+    	set mail.IsHTML = 1
+    	set mail.ContentType = "text/html"
+    	do mail.TextData.Write(msg)
+    	do mail.To.Insert(email)
+  	
+    	set auth=##class(%Net.Authenticator).%New()
+  		set auth.UserName = $GET(^Settings("Stc","EmailSMTPUSER")) //..#SMTPUSER
+  		set auth.Password = $GET(^Settings("Stc","EmailSMTPPASSWORD")) //..#SMTPPASSWORD
+  	
+  		set smtp = ##class(%Net.SMTP).%New()
+    	set smtp.smtpserver = $GET(^Settings("Stc","EmailSMTPSERVER")) //..#SMTPSERVER
+    	set smtp.port = $GET(^Settings("Stc","EmailSMTPPORT")) //..#SMTPPORT
+  		set smtp.authenticator = auth
+  	
+    	$$$THROWONERROR(status, smtp.Send(mail))
+	}
+	catch (ex){
+		set status = ex.AsStatus()
+  	}
+  	
+	quit status
+]]></Implementation>
+</Method>
+</Class>
+</Export>

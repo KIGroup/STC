@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/localization/filter.js" application="/csp/four/" default="1"><![CDATA[
+'use strict';
+//
+/*===========================================================================================
+Фильтр и общая настройка для заголовков
+===========================================================================================*/
+
+localizationModule.filter('localize', function(StcDictionary) {
+    return function(input) {  
+        return StcDictionary.getTranslate(input);
+    }
+});
+
+
+servicesModule.config(['$httpProvider', function ($httpProvider) {
+  $httpProvider.defaults.headers.common['Accept-Language'] = StcAppSetting.lang.substring(0,2);
+}]);]]></CSP>
+</Export>

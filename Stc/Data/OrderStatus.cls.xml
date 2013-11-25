@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.OrderStatus">
+<Description>
+Текущий статус заявки</Description>
+<Super>%Persistent,%XML.Adaptor</Super>
+<TimeCreated>63098,13359.687719</TimeCreated>
+
+<Property name="Name">
+<Description>
+Название статуса</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+<Parameter name="XMLREFERENCE" value="ID"/>
+</Property>
+
+<Property name="Code">
+<Description>
+Код заявки</Description>
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Index name="CodeIdx">
+<Properties>Code</Properties>
+<Unique>1</Unique>
+</Index>
+
+<Method name="ConvertToProxyObject">
+<Description>
+Конвертация в proxyObject для JSON </Description>
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	set proxy.code = ..Code
+	set proxy.name = ..Name.Value
+	quit proxy
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.OrderStatusD</DataLocation>
+<DefaultData>OrderStatusDefaultData</DefaultData>
+<IdLocation>^Stc.Data.OrderStatusD</IdLocation>
+<IndexLocation>^Stc.Data.OrderStatusI</IndexLocation>
+<StreamLocation>^Stc.Data.OrderStatusS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="OrderStatusDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Name</Value>
+</Value>
+<Value name="3">
+<Value>Code</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>
