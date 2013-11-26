@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/CompanySrvc.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/services/CompanySrvc.js" application="/csp/six/" default="1"><![CDATA[
 'use strict';
 //dddв
 
@@ -42,6 +42,10 @@ servicesModule.factory('CompanySrvc', function(DALSrvc) {
         /* Сохранить данные компании | создать*/
         saveCompany: function(company){
             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/saveCompany', company);
+        },
+        /* Удалить компанию*/
+        deleteCompany: function(id){
+            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/company/'+id, null);
         }
 
     }

@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Localization.LText">
+<Description>
+Локализованное свойство</Description>
 <Super>%Persistent,%XML.Adaptor</Super>
 <TimeCreated>63142,65408.316829</TimeCreated>
 
 <Property name="Guid">
+<Description>
+GUID = ID</Description>
 <Type>%String</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Value">
+<Description>
+Вычисляемое свойство, в зависимости от языка сессии будет возвращена нужная строка</Description>
 <Type>%String</Type>
 <Calculated>1</Calculated>
 <SqlComputeCode>set {Value} = ##class({%%CLASSNAME}).GetValueById({%%ID})</SqlComputeCode>
@@ -43,6 +49,8 @@
 </Method>
 
 <Method name="GetValueById">
+<Description>
+Поиск для текущего языка для свойства с id</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%String</ReturnType>
@@ -51,6 +59,9 @@
 </Method>
 
 <Method name="Create">
+<Description>
+Создание мультиязычного свойства. Для каждого языка создается запись,
+если не указана функция перевода, то значение будет одинаково на всех языках</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>value:%String,translateClassMethod:%String=""</FormalSpec>
 <ReturnType>LText</ReturnType>
@@ -90,6 +101,8 @@
 </Method>
 
 <Method name="Delete">
+<Description>
+Удаление обхекта и всех его мультиязычных представлений</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -105,6 +118,8 @@
 </Method>
 
 <Method name="SetValues">
+<Description>
+Установка мультиязычных значений объекта с ltxtId текущему объекту для определенного языка</Description>
 <FormalSpec>ltxtId:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[

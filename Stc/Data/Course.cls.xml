@@ -32,7 +32,7 @@
 <Description>
 Ссылка на программу курса</Description>
 <Type>%String</Type>
-<Parameter name="MAXLEN" value="1500"/>
+<Parameter name="MAXLEN" value="2500"/>
 </Property>
 
 <Property name="Teachers">

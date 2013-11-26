@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/orders.csp" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/partials/orders.csp" application="/csp/six/" default="1"><![CDATA[
 
 <div class="row-fluid">
 	<div class="span1">
@@ -107,8 +107,8 @@
 						        <button type="button" class="btn btn-small btnRadio" ng-model="order.contactType" btn-radio="'order'"   ng-bind="'Контакт из заявки'|localize"></button>
 						        <button type="button" class="btn btn-small btnRadio" ng-model="order.contactType" btn-radio="'company'" ng-bind="'Контакт компании'|localize" ></button>
 						    </div>	
-							<button class="btn btn-small" ng-click="order.changeCompanyContact(false)" title="{{'Обновить контакт'|localize}}">&nbsp;<i class="icon-refresh"></i>&nbsp;</button>
-							<button class="btn btn-small" ng-click="order.changeCompanyContact(true)"  title="{{'Заменить контакт'|localize}}">&nbsp;<i class="icon-exchange"></i>&nbsp;</button>
+							<button class="btn btn-small" ng-click="order.changeCompanyContact(false)" title="{{'Обновить контакт'|localize}}" ng-show="order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email">&nbsp;<i class="icon-refresh"></i>&nbsp;</button>
+							<button class="btn btn-small" ng-click="order.changeCompanyContact(true)"  title="{{'Заменить контакт'|localize}}" ng-show="order.selectedItems[0].contact.company.contact.email!=order.selectedItems[0].contact.email">&nbsp;<i class="icon-exchange"></i>&nbsp;</button>
 						</div>
 					</div>
 					<div class="span6">

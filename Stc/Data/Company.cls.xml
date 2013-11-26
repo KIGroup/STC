@@ -146,7 +146,7 @@
 <ReturnType>Company</ReturnType>
 <Implementation><![CDATA[
 	if (data.id '= ""){
-		set company = ..%OpenId(data.id)
+		set company = ..%OpenId(data.id,3,.status)
 		set company.FullName.Value = $ZCONVERT(data.fullName, "I","UTF8")
 		set company.ShortName.Value = $ZCONVERT(data.shortName, "I","UTF8")
 		set company.LegalAddress.Value = $ZCONVERT(data.legalAddress, "I","UTF8")
@@ -172,6 +172,57 @@
 	
 	set status = company.%Save()
 	quit company
+]]></Implementation>
+</Method>
+
+<Method name="Delete">
+<Description>
+Удаление компании, если это возможно</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set company = ..%OpenId(id,4,.status)
+	quit:$$$ISERR(status) ##class(Stc.Utils.Msg).GetErrorStatus("openCompany", "| "_status)
+	
+	set findId = ""
+	
+	// Проверка: есть ли в заявках	
+	&sql(SELECT ID INTO:findId FROM Stc_Data.Order WHERE Company = :id)
+	if (findId = ""){
+		// Проверка: есть ли сотрудники
+		&sql(SELECT ID INTO:findId FROM Stc_Data.Person WHERE Company = :id)
+		
+		if (findId = ""){
+			// Проверка: плательщик подгруппы
+			&sql(SELECT ID INTO:findId FROM Stc_Data.SubGroup WHERE Payer = :id)	
+		}
+	}
+	
+	// Выход, если есть связи
+	quit:findId'="" ##class(Stc.Utils.Msg).GetErrorStatus("deleteCompanyImpossible")
+	
+	// Удаление локализации
+	set status = ##class(Stc.Data.Localization.LText).Delete(company.FullName.%Id())
+	quit:$$$ISERR(status) status
+		
+	set status = ##class(Stc.Data.Localization.LText).Delete(company.ShortName.%Id())
+	quit:$$$ISERR(status) status
+		
+	set status = ##class(Stc.Data.Localization.LText).Delete(company.LegalAddress.%Id())
+	quit:$$$ISERR(status) status
+	
+	set status = ##class(Stc.Data.Localization.LText).Delete(company.MailAddress.%Id())
+	quit:$$$ISERR(status) status
+	
+	set status = ##class(Stc.Data.Localization.LText).Delete(company.OtherInfo.%Id())
+	quit:$$$ISERR(status) status
+	
+	// Удаление компании
+	set status = ..%DeleteId(id, 4)
+	quit:$$$ISERR(status) ##class(Stc.Utils.Msg).GetErrorStatus("deleteCompany", "| "_status)
+	
+	quit $$$OK
 ]]></Implementation>
 </Method>
 

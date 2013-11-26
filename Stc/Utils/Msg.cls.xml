@@ -151,6 +151,12 @@
 	
 	set ^CacheMsg("Stc", "ru", "sendEmail") = "Отправка почты"
 	set ^CacheMsg("Stc", "en", "sendEmail") = "Sending email"
+	
+	set ^CacheMsg("Stc", "ru", "deleteCompany") = "Удаление компании"
+	set ^CacheMsg("Stc", "en", "deleteCompany") = "Removing company"
+	
+	set ^CacheMsg("Stc", "ru", "deleteCompanyImpossible") = "Удаление компании невозможно, на неё ссылаются из других таблиц."
+	set ^CacheMsg("Stc", "en", "deleteCompanyImpossible") = "Deleting company impossible it is referenced from other tables."
 ]]></Implementation>
 </Method>
 </Class>

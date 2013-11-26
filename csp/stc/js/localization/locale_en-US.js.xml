@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/localization/locale_en-US.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/localization/locale_en-US.js" application="/csp/six/" default="1"><![CDATA[
 //
 
 localizationModule.constant('StcDictionary', {
@@ -68,6 +68,7 @@ localizationModule.constant('StcDictionary', {
     'Договор'                                                  : 'Contract',
     'Документ основания (устав и прочее)'                      : 'Document',
     'Другая информация'                                        : 'Other info',
+    'Если ссылочная целостность не нарушается, то произвести удаление компании':'If referential integrity is not violated, to make removal of company',
     'Завершённые'                                              : 'Completed',
     'Завершить'                                                : 'Сomplete',
     'Завершено'                                                : 'Complete',
@@ -81,6 +82,7 @@ localizationModule.constant('StcDictionary', {
     'Заявка'                                                   : 'Order',
     'Заявка на обучение'                                       : 'Order for training',
     'Заявка удалена.'                                          : 'Order has been removed.',
+    'Заявка одобрена.'                                         : 'Order has been approved.',
     'Заявки'                                                   : 'Orders',
     'Заявки для обучения'                                      : 'Orders for training',
     'Идентификационный номер налогоплательщика'                : 'Taxpayer identification number',
@@ -101,6 +103,7 @@ localizationModule.constant('StcDictionary', {
     'Количество слушателей'                                    : 'Students number',
     'Компании'                                                 : 'Companies',
     'Компания'                                                 : 'Company',
+    'Компания удалена.'                                        : 'Company has been removed',
     'Компания - плательщик подгруппы'                          : 'Company - payer',
     'Компания, указанная в заявке, не существует. Создать ее?' : 'The company specified in the order does not exist. Create it?',
     'Контакт'                                                  : 'Contact',
@@ -222,6 +225,7 @@ localizationModule.constant('StcDictionary', {
     'Создать заявку'                                           : 'Create order',
     'Создать обучение'                                         : 'Create training',
     'Сотрудник добавлен.'                                      : 'Employee has been added.',
+    'Сотрудник удален.'                                        : 'Employee has been removed.',
     'Сотрудник назначен преподавателем.'                       : 'Employee appointed as a teacher.',
     'Сотрудники'                                               : 'Employees',
     'Сохранить'                                                : 'Save',
@@ -231,6 +235,7 @@ localizationModule.constant('StcDictionary', {
     'Сумма платежа'                                            : 'Amount of payment',
     'Телефон'                                                  : 'Phone',
     'Удалить заявку'                                           : 'Remove order',
+    'Удалить компанию'                                           : 'Remove company',
     'Удалить заявку от компании'                               : 'Remove order from company - ',
     'Удалить подгруппу'                                        : 'Remove sub-group',
     'Удалить подгруппу плательщика'                            : 'Remove sub-group, payer -',

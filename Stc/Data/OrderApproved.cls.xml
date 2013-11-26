@@ -41,7 +41,7 @@
 <Implementation><![CDATA[
 	set approved = ..%New()
 	
-	set dirty = ##class(Stc.Data.OrderDirty).%OpenId(dirtyId)
+	set dirty = ##class(Stc.Data.OrderDirty).%OpenId(dirtyId,3,.status)
 
 	set approved.Partner = dirty.Partner
 	set approved.TrainingDate = dirty.TrainingDate
@@ -81,17 +81,6 @@
 	set proxy.studentsNumber = ..Students.Count()
 
 	quit proxy
-]]></Implementation>
-</Method>
-
-<Method name="DeleteStudent">
-<Description>
-Удалить студента из заявки и из БД, если это возможно</Description>
-<FormalSpec>studentId:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	do ..Students.RemoveAt(studentId)
-	quit ##class(Person).Delete(studentId)
 ]]></Implementation>
 </Method>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/persons.csp" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/partials/persons.csp" application="/csp/six/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -169,8 +169,13 @@
 			    selectable="false"
 			    selected-items="courseTable.selectedItems"
 			    multi-select-mode="false"
-
-			    action-column-visible="false"
+			    
+			    action-column-visible="true"
+		    	action-column-icon="'icon-ellipsis-horizontal'"
+		    	
+		    	first-row-action-icon="'icon-pencil'"
+		    	first-row-action-title="'Редактировать курс'|localize"
+		    	first-row-action-method="courseTable.edit(item)"
 				/>
 		    </tab>
 

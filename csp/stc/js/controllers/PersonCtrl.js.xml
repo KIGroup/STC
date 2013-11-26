@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/PersonCtrl.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/PersonCtrl.js" application="/csp/six/" default="1"><![CDATA[
 'use strict';
 //dddddddddddвddd
 
@@ -126,7 +126,7 @@ controllersModule.controller('PersonCtrl', function($scope, $location, $filter, 
 
     // Очистить найденную персону, чтобы можно было добавить
     $scope.personForm.clear = function(){
-        $scope.personForm.person = {company:{exist:{}}};
+        $scope.personForm.person = {company:{exist:{id: parseInt($routeParams.comp)}}}; 
         $scope.personForm.disabled = false;
         $scope.searchForm.person = '';
         $scope.personForm.showClear = false;

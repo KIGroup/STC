@@ -28,6 +28,7 @@ Parameter SMTPPASSWORD = "simplepassword";
 <FormalSpec>email:%String,subject:%String,msg:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	set email = "stc_testmail@mail.ru"
 	set status = $$$OK
 	
 	try

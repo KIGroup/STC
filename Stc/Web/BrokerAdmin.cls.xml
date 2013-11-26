@@ -69,6 +69,8 @@
 	<!-- Получить все компании для таблицы, полная информация -->
 	<Route Method="POST" Url="/json/allCompaniesFullInfo" Call="Stc.Web.JsonAdmin:GetCompaniesFullInfo"/>
 	
+	<!-- Удалить компанию, если это возможно -->
+	<Route Method="DELETE" Url="/json/company/:id" Call="Stc.Web.JsonAdmin:DeleteCompany"/>
 
 	<!-- ==================================== ОБУЧЕНИЯ ==================================== -->
 	<!-- Вставить обучение в Google календарь -->

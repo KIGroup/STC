@@ -183,7 +183,7 @@
 	set tr.Longitude = $p(data.address.point, " ", 1)
 	
 	set tr.Course = ##class(Course).%OpenId(data.course.id)
-	set tr.Teacher = ##class(Person).%OpenId(data.teacher.id)
+	set tr.Teacher = tr.Course.Teachers.GetAt(data.teacher.id) // ##class(Person).%OpenId(data.teacher.id)
 	set tr.City = ##class(Region).%OpenId(data.city.id)
 	
 	set status = tr.%Save()
@@ -211,6 +211,26 @@
 	}
 	
 	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="DeleteSubGroup">
+<Description>
+Удалить подгруппу из обучения, студентов не трогаем</Description>
+<FormalSpec>sgId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	do ..SubGroups.RemoveAt(sgId)
+	
+	set sgroup = ##class(Stc.Data.SubGroup).%OpenId(sgId)
+	
+	set st = ##class(Stc.Data.Localization.LText).Delete(sgroup.SignerFullName.%Id())
+	quit:$$$ISERR(st) st
+	
+	set st = ##class(Stc.Data.Localization.LText).Delete(sgroup.DocumentInfo.%Id())
+	quit:$$$ISERR(st) st
+	
+	quit ##class(Stc.Data.SubGroup).%DeleteId(sgId)
 ]]></Implementation>
 </Method>
 

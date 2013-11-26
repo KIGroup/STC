@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/courses.csp" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/partials/courses.csp" application="/csp/six/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -96,7 +96,7 @@
 		    first-row-action-title="'Редактировать преподавателя'|localize"
 		    first-row-action-method="teacherTable.edit(item)"
 		    
-		    second-row-action-icon="'icon-trash'"
+		    second-row-action-icon="'icon-remove'"
 		    second-row-action-title="'Удалить преподавателя'|localize"
 		    second-row-action-method="teacherTable.delete(item)" 
 		/>

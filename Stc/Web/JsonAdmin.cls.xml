@@ -204,10 +204,13 @@
 <FormalSpec>order:Stc.Data.OrderApproved</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	set domainWebApp = %request.CgiEnvs("HTTP_HOST")_$GET(^Settings("Stc", "WebApp")) 
+	
 	// 1 - Курс, 2 - Город, 3 - дата, 4 - домен для системы, 5 - код доступа к заявкe
-	set serverNamePortWebApp = %request.CgiEnvs("SERVER_NAME")_":"_%request.CgiEnvs("SERVER_PORT")_$GET(^Settings("Stc", "WebApp")) 
-	set msg = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToCompanyContact"), order.Course.Name.Value, order.City.Name.Value, $ZDATE(order.TrainingDate,3), serverNamePortWebApp, order.AccessCode)
+	set msg = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToCompanyContact"), order.Course.Name.Value, order.City.Name.Value, $ZDATE(order.TrainingDate,3), domainWebApp, order.AccessCode)
+	
 	set status = ##class(Stc.Utils.Email).Send(order.Company.Contact.Email, ##class(Stc.Utils.Msg).GetMsg("emailSubject"), msg)
+	
 	if $$$ISERR(status) quit ##class(Stc.Utils.Msg).GetErrorStatus("sendEmail", "| "_status)
 	quit $$$OK
 ]]></Implementation>
@@ -381,7 +384,7 @@
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
-		set company = ##class(Stc.Data.Company).%OpenId(data.companyId,, .status)
+		set company = ##class(Stc.Data.Company).%OpenId(data.companyId,3, .status)
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("openCompany", "| "_status))
 		
 		// Если замена контакта, иначе обновление данных
@@ -399,7 +402,7 @@
 			set company.Contact = newContact
 		}
 		else{
-			set order = ##class(Stc.Data.OrderDirty).%OpenId(data.orderId,,.status)
+			set order = ##class(Stc.Data.OrderDirty).%OpenId(data.orderId,3,.status)
 			if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("openOrder", "| "_status))
 			
 			do company.Contact.LastName.SetValues(order.LastName.%Id())
@@ -461,6 +464,31 @@
 		do ..GetProxyObject("Stc.Data.Company", id).%ToJSON()
 	}
 	catch ex {
+		set status = ex.AsStatus()
+	}
+
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="DeleteCompany">
+<Description>
+Удалить компанию, если это возможно</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try{
+		TSTART
+		
+		$$$THROWONERROR(status, ##class(Stc.Data.Company).Delete(id))
+      	
+      	TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
 		set status = ex.AsStatus()
 	}
 
@@ -557,7 +585,7 @@
 		TSTART
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
-		do ##class(Stc.Data.Training).Save(data, status)
+		do ##class(Stc.Data.Training).Save(data, .status)
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus($CASE(data.id = "", 1:"createTraining",:"saveTraining"), " | "_status)) 
 		
 		TCOMMIT
@@ -767,8 +795,7 @@
 		set training = ##class(Stc.Data.Training).%OpenId($p(trainingIdsgroupId,";",1), , .status)
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("openTraining", "| "_status)) 
 		
-		do training.SubGroups.RemoveAt($p(trainingIdsgroupId,";",2))
-		set status = ##class(Stc.Data.SubGroup).%DeleteId($p(trainingIdsgroupId,";",2))
+		set status = training.DeleteSubGroup($p(trainingIdsgroupId,";",2))
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("deleteSubGroup", "| "_status)) 
 		
 		set status = training.%Save()
@@ -1022,7 +1049,7 @@
 <Implementation><![CDATA[
 	set word = ..ParseParameter(word)
 	set sql = "SELECT ID as id, "_
-	"LastName->Value || ' ' || SUBSTRING(FirstName->Value,1,1) || '. ' || SUBSTRING(MiddleName->Value,1,1) || '., ' || Email || ', ' || Company->ShortName->Value as text "_
+	"LastName->Value || ' ' || SUBSTRING(FirstName->Value,1,1) || '. ' || SUBSTRING(ISNULL(MiddleName->Value,''),1,1) || '., ' || Email || ', ' || Company->ShortName->Value as text "_
 	"FROM Stc_Data.Person "_
 	"WHERE "_additionalWhere_" (LastName->Value LIKE '"_word_"%' OR Email LIKE '%"_ word_"%') "_
 	"ORDER BY text"

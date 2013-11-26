@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Localization.LTextLanguage">
+<Description>
+Доступные языки системы</Description>
 <Super>%Persistent,%XML.Adaptor</Super>
 <TimeCreated>63142,65488.745547</TimeCreated>
 
 <Property name="Name">
+<Description>
+Название</Description>
 <Type>%String</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Code">
+<Description>
+Код, 2х символьный = ID</Description>
 <Type>%String</Type>
 <Required>1</Required>
 </Property>

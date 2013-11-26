@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/directives/stcgrid.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/directives/stcgrid.js" application="/csp/six/" default="1"><![CDATA[
 'use strict';
 //dd
 
@@ -57,6 +57,7 @@ directivesModule.directive('stcgrid', function(){
             if (idxSort.length != 0) 
                 $scope.sortedColumn = $scope.columns[idxSort[0]];
 
+			// Отключить кнопки навигации, если достигли последней стриницы, первой и тп
             $scope.checkNavigatorButtons = function(){
                 
                 if ($scope.pageCurr == 1){
@@ -91,6 +92,7 @@ directivesModule.directive('stcgrid', function(){
             $scope.$watch('pageCurr', $scope.checkNavigatorButtons);
             $scope.$watch('pageTotal', $scope.checkPageTotal);
             
+            // Вкл/Выкл мультиселекта в таблице
             $scope.$watch('multiSelectMode', function(){
                 if (!$scope.selectedItems || $scope.selectedItems.length == 0){
                     $scope.selectedItems = [];
@@ -188,7 +190,8 @@ directivesModule.directive('stcgrid', function(){
                     $scope.firstRowActionMethod({item: item});   
                 }
             };
-
+			
+			// Обновить данные - вызов внешнего метода
             $scope.updateSource = function(){
                if (!$scope.sortedColumn){
                     var idx = UtilsSrvc.getIndexes($scope.columns, 'isSorted', true);
@@ -206,6 +209,7 @@ directivesModule.directive('stcgrid', function(){
                                     searchText: $scope.searchText}); 
             };
 
+			// Получит значение для поля .prop1.pro1_1.porp1_1_1 и тд
             $scope.getPropertyValue = function(item, property){
                 if (property.calculate)
                     property.calculate(item);
@@ -218,6 +222,7 @@ directivesModule.directive('stcgrid', function(){
                 return value;
             }
 
+			// Фильтрация даты
             $scope.getFilteredValue = function(value, filter, filterParam){
                 if (filter == 'date'){
                     value = $filter('convertCacheDate')(value, filterParam);
@@ -232,7 +237,7 @@ directivesModule.directive('stcgrid', function(){
                 return value;
             };
 
-
+			// Выбор столбца для поиска
             $scope.selectSearchColumn = function(column){
                 if ($scope.searchedColumn)
                     $scope.searchedColumn.isSearched = false;
@@ -240,14 +245,15 @@ directivesModule.directive('stcgrid', function(){
                 $scope.searchedColumn = column;
                 $scope.searchedColumn.isSearched = true;
             };
-
+	
+			// Поиск
             $scope.search = function(){
                 if (!$scope.searchedColumn)
                     return;
                 $scope.updateSource();
             };
             
-            
+            // Принудительное обновление при смене значения извне
             $scope.$watch('forciblyUpdate', function(){
 	            if ($scope.forciblyUpdate > 0)
 	            	$scope.updateSource();

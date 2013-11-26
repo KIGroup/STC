@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/TrainingCtrl.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/TrainingCtrl.js" application="/csp/six/" default="1"><![CDATA[
 'use strict';
 //dddddddddвdввввddd
 
@@ -201,6 +201,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
         function deleteSGroup(){
             TrainingSrvc.deleteSubGroup($scope.training.data.id, item.id).then(
                 function(data){
+	                $scope.sgroup.selectedItems = [];
                     $scope.sgroup.forciblyUpdate++;
                     $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Подгруппа удалена.', 'success', true);
                 },

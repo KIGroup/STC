@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllCompaniesCtrl.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllCompaniesCtrl.js" application="/csp/six/" default="1"><![CDATA[
 'use strict';
 //dвdddddddddddd
 
@@ -27,7 +27,8 @@ controllersModule.controller('AllCompaniesCtrl', function($scope, $filter, $loca
         $scope.company.itemsTotal = 0;
         $scope.company.selectedItems = [];
         $scope.company.multiSelectMode = false;
-
+		$scope.company.forciblyUpdate = 0;
+		
         $scope.company.loadItems($scope.company.pageCurr, $scope.company.pageSize, "ShortName->Value", false, "", "");  
     };
 
@@ -55,6 +56,22 @@ controllersModule.controller('AllCompaniesCtrl', function($scope, $filter, $loca
          $location.path('/company').search({id: item.id});
     };
 
+    // Удалить компанию
+    $scope.company.delete = function(item){
+        function deleteComp(){
+            CompanySrvc.deleteCompany(item.id).then(
+                function(data){
+                    $scope.company.alert = UtilsSrvc.getAlert('Готово!', 'Компания удалена.', 'success', true);
+                    $scope.company.selectedItems = [];
+                    $scope.company.forciblyUpdate++;
+                },
+                function(response){
+                    $scope.company.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });  
+        };
+
+        UtilsSrvc.openMessageBox('Удалить компанию', $filter('localize')("Если ссылочная целостность не нарушается, то произвести удаление компании") + " '" + item.shortName + "'?", deleteComp);    
+    };
     $scope.company.init();
 });
 

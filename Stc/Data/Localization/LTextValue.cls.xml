@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Localization.LTextValue">
+<Description>
+Значение на языке - Lang для объекта LText</Description>
 <Super>%Persistent,%XML.Adaptor</Super>
 <TimeCreated>63142,65463.16029</TimeCreated>
 
@@ -39,25 +41,32 @@
 </Index>
 
 <Method name="GetValue">
+<Description>
+Получить значение на языке=lang для объекта с ИД=ltxt </Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>ltxt,lang</FormalSpec>
 <ReturnType>%String</ReturnType>
 <Implementation><![CDATA[
 	set value = "---"
-	//q lang
 	
-	&sql(SELECT Value INTO :value FROM Stc_Data_Localization.LTextValue WHERE LText = :ltxt AND Lang = :lang)
+	&sql(SELECT Value INTO :value 
+	     FROM Stc_Data_Localization.LTextValue 
+	     WHERE LText = :ltxt AND Lang = :lang)
 	
 	quit value
 ]]></Implementation>
 </Method>
 
 <Method name="SetValue">
+<Description>
+Установить значение для объекта с ИД=ltxt для языка=lang,
+если у обхекта LText еще нет свойства на этом языке, то создаем его</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>value,ltxt,lang</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	&sql(UPDATE Stc_Data_Localization.LTextValue (Value) VALUES (:value) WHERE LText = :ltxt AND Lang = :lang)
+	&sql(UPDATE Stc_Data_Localization.LTextValue (Value) VALUES (:value) 
+	     WHERE LText = :ltxt AND Lang = :lang)
 	
 	if (SQLCODE = 100){
 		set lv = ..%New()
@@ -65,10 +74,10 @@
 		set lv.LText = ##class(LText).%OpenId(ltxt)
 		set lv.Value = value
 		set sc = lv.%Save()
-		if $$$ISERR(sc) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveLoc", "| "_sc))
+		if $$$ISERR(sc) quit ##class(Stc.Utils.Msg).GetErrorStatus("saveLoc", "| "_sc)
 	}
 	elseif (SQLCODE '= 0) {
-		$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveLoc", "| SQLCODE="_SQLCODE))
+		quit ##class(Stc.Utils.Msg).GetErrorStatus("saveLoc", "| SQLCODE="_SQLCODE)
 	}
 
 	quit $$$OK
@@ -76,6 +85,8 @@
 </Method>
 
 <Method name="Delete">
+<Description>
+Удалить все значения на всех языках для объекта LText</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>ltxt</FormalSpec>
 <ReturnType>%Status</ReturnType>

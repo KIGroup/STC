@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllTrainingsCtrl.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllTrainingsCtrl.js" application="/csp/six/" default="1"><![CDATA[
 'use strict';
 //ddвdddd
 
@@ -39,7 +39,7 @@ controllersModule.controller('AllTrainingsCtrl', function($scope, $filter, $loca
                                        }},
                                       {name: 'status', 
                                       getCssClass: function(item){
-                                                    return 'label ' + (item.isPaid == 0 ? 'label-info' : 'label-success');
+                                                    return 'label ' + (item.isCompleted == 0 ? 'label-info' : 'label-success');
                                         },
                                       calculate: function(item){
                                                     item.status = item.isCompleted == 1 ? $filter('localize')('Завершено') : $filter('localize')('Не завершено');

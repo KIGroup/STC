@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllOrdersCtrl.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllOrdersCtrl.js" application="/csp/six/" default="1"><![CDATA[
 'use strict';
 //ddddddd
 
@@ -94,11 +94,13 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
         $location.path('/updateorder').search({code: item.code});
     };
 
+	// Принять заявку
     $scope.order.accept = function(){
         function acceptOrder(sendEmail){
             OrderSrvc.createApprovedOrder($scope.order.selectedItems[0].id, sendEmail).then(
                 function(data){
                     $scope.order.selectedItems = [];
+                    $scope.order.alert = UtilsSrvc.getAlert('Готово!', 'Заявка одобрена.', 'success', true);
                     $scope.order.forciblyUpdate++;
                 },
                 function(response){
@@ -138,7 +140,7 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
         UtilsSrvc.openMessageBox('Отправить письмо', "Отправить контактному лицу на email код доступа к заявке для полного заполнения?", sendEmail);    
     };
 
-    // 
+    // Удалить заявку
     $scope.order.delete = function(item){
         function deleteOrder(){
             OrderSrvc.deleteOrder(item.id).then(
@@ -152,10 +154,10 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
                 });  
         };
 
-        UtilsSrvc.openMessageBox('Удалить заявку', $filter('localize')("Удалить заявку от компании") + ' ' + item.contact.company.shortName + "'?", deleteOrder);    
+        UtilsSrvc.openMessageBox('Удалить заявку', $filter('localize')("Удалить заявку от компании") + " '" + item.contact.company.shortName + "'?", deleteOrder);    
     };
 
-        // Обновить или заменить контакт компании 
+    // Обновить или заменить контакт компании 
     $scope.order.changeCompanyContact = function(isReplace){
         var msgSuccess = 'Контакт заменен.';
         var msgWindow = ['Заменить контакт', 'Заменить контакт компании контактом из заявки? Старый контакт компании не будет удален.'];
@@ -279,6 +281,8 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
     // TRAINING
     // Добовлять автоматом обработанные заявки
     $scope.$watch('order.selectedItems', function(){
+        $scope.order.contactType='order';
+        
         if (!$scope.order.selectedItems || $scope.order.selectedItems.length == 0 || $scope.order.selectedItems[0].status.code != 'Completed'){
             $scope.training.tabInfo = true;
             return;
@@ -333,6 +337,7 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
             }); 
     };
 
+    // Добавить в сущ. обучение
     $scope.training.add = function(){
       $scope.training.data.trainingId = $scope.training.selectedItems[0].id;
         

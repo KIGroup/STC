@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllPersonsCtrl.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllPersonsCtrl.js" application="/csp/six/" default="1"><![CDATA[
 'use strict';
 //dd
 
@@ -252,6 +252,11 @@ controllersModule.controller('AllPersonsCtrl', function($scope, $location, $rout
     // Открыть компанию, контактом которой является сотрудник
     $scope.companyTable.edit = function(item){
         $location.path('/company').search({id:item.id});
+    };
+    
+    // Открыть курс, который преподает
+    $scope.courseTable.edit = function(item){
+        $location.path('/course').search({id:item.id});
     };
 
     // Изменить статус сертификата сотрудника

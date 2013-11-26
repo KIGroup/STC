@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/companies.csp" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/partials/companies.csp" application="/csp/six/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -32,9 +32,11 @@
 		    first-row-action-title="'Редактировать компанию'|localize"
 		    first-row-action-method="company.edit(item)"
 		    
-		    second-row-action-icon=""
-		    second-row-action-title=""
-		    second-row-action-method=""
+		    second-row-action-icon="'icon-remove'"
+		    second-row-action-title="'Удалить компанию'|localize"
+		    second-row-action-method="company.delete(item)"
+		    
+		    forcibly-update="company.forciblyUpdate"
 		/>
 	</div>
 	<div class="span1">
@@ -85,6 +87,7 @@
 	<div class="span1">
 	</div>
 </div>
+</br>
 <stcalert data="company.alert" span-right="1" span-middle="10" span-left="1"/>
 ]]></CSP>
 </Export>

@@ -146,14 +146,12 @@
 		set compName = $ZCONVERT(data.contact.company.notexist.name, "I","UTF8")
 		set compId = ""
 		&sql(SELECT ID INTO:compId FROM Stc_Data.Company WHERE ShortName->Value  = :compName OR FullName->Value = :compName)
-		set company = ##class(Stc.Data.Company).%OpenId(compId,,.st)
-
-		if $$$ISERR(st){
+		if (##class(Stc.Data.Company).%ExistsId(compId) = 0) {
 			set order.CompanyString = $ZCONVERT(data.contact.company.notexist.name, "I","UTF8")
 			set order.CompanySite = $REPLACE($REPLACE($ZCONVERT(data.contact.company.notexist.site, "I","UTF8"),"http://",""), "https://","")
 		}
 		else{
-			set order.Company = company
+			set order.Company = ##class(Stc.Data.Company).%OpenId(compId,3,.status)
 		}
 	} 
 
