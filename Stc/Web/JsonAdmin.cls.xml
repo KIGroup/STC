@@ -504,72 +504,56 @@
 </UDLText>
 
 <Method name="InsertTrainingToCalendar">
+<Description>
+Импортировать обучение в календарь</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set status = $$$OK
+	set sc = $$$OK
 	
 	try{
-		set training = ##class(Stc.Data.Training).%OpenId(id,,.status)
-		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("openTraining", "| "_status))
-		/* 1 Название курса                                 | training.Course.Name.Value
-		   2 Когда                                          | training.DateStart - training.DateFinish  
-		   3 Описание:
-		     3.1 Программа курса URL                        | training.Course.ProgramUrl
-		     3.2 Место проведения - Город, улица, аудитория | training.City.Name.Value, training.Street, training.Room 
-		         тут еще можно указать ссылку на гуглмап
-                 <a href="https://maps.google.com/maps?q=training.Latitude + ',' + training.Longitude&spn=0.1,0.1&t=k&hl=ru" class="menu-link" target="_blank">(Карта)</a>
-                 
-                 Пример: в Москве https://maps.google.com/maps?q=55.751666676667,37.617777787778&spn=0.1,0.1&t=k&hl=ru
-                  
-		     3.3 Время с.. по ...                           | training.TimeStart - training.TimeFinish
-		     3.4 Преподаватель - ФИО, email                 | training.Teacher.LastName.Value .... 
-		     3.5 Примечания                                 | training.otherInfo    		 
-		*/
+		set training = ##class(Stc.Data.Training).%OpenId(id,,.sc)
+		if $$$ISERR(sc) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("openTraining", "| "_sc))
 		
-		RETURN $system.Status.Error(5001, "Функция еще не реализована")
+		set event = ##class(%ZEN.proxyObject).%New()
+		set event.summary = $ZCONVERT(training.Course.Name.Value_". "_training.City.Name.Value, "O", "UTF8")
+		set event.start = ##class(%ZEN.proxyObject).%New()
+		set event.start.date = $zd(training.DateStart,3)
+		set event.end = ##class(%ZEN.proxyObject).%New()
+		set event.end.date = $zd(training.DateFinish,3)
+		set event.location = $ZCONVERT(training.City.Name.Value_", "_training.Street.Value, "O", "UTF8")
+		set event.description = ""_
+		"Программа курса:<br>"_
+		"http://"_training.Course.ProgramUrl_"<br><br>"_
+		"Место проведения:<br>"_
+		training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value_"<br>"_
+		training.Street.Value_", "_training.Room_"<br><br>"_
+		"Преподаватель:<br>"_
+		training.Teacher.LastName.Value_" "_training.Teacher.FirstName.Value_" "_training.Teacher.MiddleName.Value_"<br>"_
+		training.Teacher.Email_"<br><br>"_
+		"Время проведения: "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5)
+		
+		set event.description = $ZCONVERT(event.description, "O", "UTF8")
+		//training.Street.Value_", "_training.Room_"</br>Время с"_$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" по "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5)
+		
+		set calendarId = $g(^Settings("Stc","Google", "CalendarId"))
+		set sslConfig = $g(^Settings("Stc","Google", "SslConfig"))
+		set rtoken = $g(^Settings("Stc","Google", "RefreshToken"))
+		
+		do ##class(Stc.Google.Authorize).ExchangeToken(rtoken, .status, .atoken)
+		if (status '= "success")
+		{
+			$$$ThrowStatus($$$ERROR(5002, "Exchange token error: "_status))
+		}
+		
+		$$$TOE(sc, ##class(Stc.Google.Calendar).CreateEvent(calendarId, event, atoken, sslConfig))
 	}
 	catch (ex){
-		set status = ex.AsStatus()
+		set sc = ex.AsStatus()
 	}
 	
-	quit status
-	
-	/*
-	set name = "Нзавание события "_$NOW()
-	// Дата события, вот тут как ее передавать чтобы календарь понял?
-	set startDate = +$h
-	set endDate = +$h+3
-	set location = "Город М, улица и дом"
-	set otherInfo = "Бла бла"
-	
-	// Вот тут идет инсерт в календарь
-	
-	set event = ##class(%ZEN.proxyObject).%New()
-	set event.summary = name
-	set event.start = ##class(%ZEN.proxyObject).%New()
-	set event.start.date = $zd(startDate,3)
-	set event.end = ##class(%ZEN.proxyObject).%New()
-	set event.end.date = $zd(endDate,3)
-	set event.description = otherInfo
-	set event.location = location
-	
-	set calendarId = $g(^Settings("Google", "CalendarId"))
-	set sslConfig = $g(^Settings("Google", "SslConfig"))
-	set rtoken = $g(^Settings("Google", "RefreshToken"))
-	
-	do ##class(Google.Authorize).ExchangeToken(rtoken, .status, .atoken)
-	if (status '= "success")
-	{
-		q $$$ERROR(5002, "Exchange token error: "_status)
-	}
-	
-	$$$QUITONERROR(sc, ##class(Google.Calendar).CreateEvent(calendarId, event, atoken, sslConfig))
-	
-	q $$$OK
-	
-	*/
+	quit sc
 ]]></Implementation>
 </Method>
 

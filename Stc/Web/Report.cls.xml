@@ -6,7 +6,7 @@
 <TimeCreated>63138,24459.241313</TimeCreated>
 
 <Parameter name="ContentType">
-<Default>windows-1251</Default>
+<Default>plain/text</Default>
 </Parameter>
 
 <Parameter name="CharSet">
@@ -34,6 +34,10 @@
 		set date = $ZDATE($NOW(),3)
 		
 		set fileName = ##class(%MessageDictionary).FormatText($G(^CacheMsg("Stc", lang, "certificatesReport"),"---"), course, city, date)_".csv"
+
+		if ($FIND(%request.UserAgent, "Firefox") '= 0) {
+			set fileName = $REPLACE(fileName, " ", "_")
+		}		
 		
 		do %response.SetHeader("Content-Disposition","attachment;filename="_fileName)
 

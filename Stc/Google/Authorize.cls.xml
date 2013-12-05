@@ -59,10 +59,14 @@
 <Private>1</Private>
 <Implementation><![CDATA[
 	s q = ##class(%Net.HttpRequest).%New()
-	s q.SSLConfiguration=$g(^Settings("Google", "SslConfig"))
+	s q.SSLConfiguration=$g(^Settings("Stc","Google", "SslConfig"))
 	s q.Server="accounts.google.com"
 	s q.Https=1
-#;	s q.Port=443
+	s q.Port=443
+	s q.ProxyHTTPS=1
+	s q.ProxyServer=$g(^Settings("Stc","Google", "ProxyServer"))
+	s q.ProxyPort=$g(^Settings("Stc","Google", "ProxyPort"))
+	s q.ProxyTunnel=$g(^Settings("Stc","Google", "ProxyTunnel"))
 	d q.InsertFormData("code", code)
 	d q.InsertFormData("client_id", ..#ClientId)
 	d q.InsertFormData("client_secret", ..#ClientSecret)
@@ -94,9 +98,14 @@
 <FormalSpec>rtoken:%String,*status:%String,*atoken:%String</FormalSpec>
 <Implementation><![CDATA[
 	s q = ##class(%Net.HttpRequest).%New()
-	s q.SSLConfiguration=$g(^Settings("Google", "SslConfig"))
+	s q.SSLConfiguration=$g(^Settings("Stc","Google", "SslConfig"))
 	s q.Server="accounts.google.com"
 	s q.Https=1
+	s q.Port=443
+	s q.ProxyHTTPS=1
+	s q.ProxyServer=$g(^Settings("Stc","Google", "ProxyServer"))
+	s q.ProxyPort=$g(^Settings("Stc","Google", "ProxyPort"))
+	s q.ProxyTunnel=$g(^Settings("Stc","Google", "ProxyTunnel"))
 	d q.InsertFormData("refresh_token", rtoken)
 	d q.InsertFormData("client_id", ..#ClientId)
 	d q.InsertFormData("client_secret", ..#ClientSecret)

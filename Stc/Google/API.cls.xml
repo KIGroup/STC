@@ -21,10 +21,17 @@
  try 
  {
   set req = ##class(%Net.HttpRequest).%New()
-  //set req.SSLConfiguration=pSslConfig
+  set req.SSLConfiguration=$g(^Settings("Stc","Google", "SslConfig"))
   set req.Server="www.googleapis.com"
   set req.Https=1
+  set req.Port=443
+  set req.ProxyHTTPS=1
+  set req.ProxyServer=$g(^Settings("Stc","Google", "ProxyServer"))
+  set req.ProxyPort=$g(^Settings("Stc","Google", "ProxyPort"))
+  set req.ProxyTunnel=$g(^Settings("Stc","Google", "ProxyTunnel"))
   set req.Authorization="Bearer "_pToken
+  
+  //set req.ContentCharset="windows-1251"
  
   if PObjInput'="" {
    set req.ContentType="application/json"
@@ -48,6 +55,7 @@
   $$$TOE(sc,req.Send($zconvert(pMethod,"u"),pUrl))
   
   set json=req.HttpResponse.Data.Read()
+  set ^temp("json") = json
   $$$TOE(sc,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(json,,.PResponse))
  }
  catch ex

@@ -10,7 +10,7 @@
 <FormalSpec>pCalendarId:%String,pEventObject:%ZEN.proxyObject,pToken:%String,pSslConfig:%String,*pEventId:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
- if pCalendarId = ""
+ if (pCalendarId = "")
  {
   q $$$OK
  }
