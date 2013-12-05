@@ -1,6 +1,7 @@
 ##Система учёта курсов
 Требования: Версия Caché 2014.1 и выше
 
+###Общие настройки
 1. Импортировать проект и выполнить для инициализации системы: 
         
 
@@ -66,8 +67,8 @@
 2. Создать календарь Google
 3. Настроить приложение (в глобале:
 
-        ^Settings("Google","SslConfig")=<имя конфигурации>
-        ^Settings("Google","CalendarId")=<id календаря>
+        ^Settings("Stc","Google","SslConfig")=<имя конфигурации>
+        ^Settings("Stc","Google","CalendarId")=<id календаря>
 
 4. - Если есть доменное имя, то добавить его в API Console приложения "Система учета курсов"
  - Если доменного имени нет - добавить в hosts (необходимо только во время получения авторизации Google):
@@ -77,6 +78,6 @@
 5. Перейти на страницу Stc.Google.Authorize.cls, авторизоваться как пользователь, имеющий доступ на запись к календарю CalendarId
 6. Настройки прокси для google.com (если без прокси нельзя):
 
-        ^Settings("Google","ProxyPort")=<proxy port>
-        ^Settings("Google","ProxyServer")=<proxy server>
-        ^Settings("Google","ProxyTunnel")=1
+        ^Settings("Stc","Google","ProxyPort")=<proxy port>
+        ^Settings("Stc","Google","ProxyServer")=<proxy server>
+        ^Settings("Stc","Google","ProxyTunnel")=1
