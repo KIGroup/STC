@@ -5,7 +5,7 @@
 
 <html ng-app="mainModule" ng-controller="MainCtrl">
   <head>
-    <title ng-bind="'Система учета курсов'|localize"></title>
+    <title ng-bind="'Система учёта курсов'|localize"></title>
     <link rel="shortcut icon" href="img/icon.ico" type="image/x-icon">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -76,7 +76,7 @@
         <div class="navbar">
           <div class="navbar-inner">
             <div class="container">
-              <a class="brand" href="" ng-bind="'Система учета курсов'|localize"></a>
+              <a class="brand" href="" ng-bind="'Система учёта курсов'|localize"></a>
               
               <div class="nav-responsive-collapse">
 

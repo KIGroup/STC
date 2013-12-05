@@ -205,7 +205,7 @@ localizationModule.constant('StcDictionary', {
     'Режим'                                                    : 'Mode',
     'Статус сертификата изменен.'                              : 'Certificate status has been changed.',
     'Сертификаты'                                              : 'Certificates',
-    'Система учета курсов'                                     : 'System of training courses',
+    'Система учёта курсов'                                     : 'System of training courses',
     'Скорректировать адрес'                                    : 'Correct the address',
     'Следующая страница'                                       : 'Next page',
     'Слушатели'                                                : 'Students',
