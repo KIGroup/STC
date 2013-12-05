@@ -32,30 +32,30 @@
   5) Для работы с почтой - можно в глобал занести свои данные или зайти в класс Stc.Utils.Email и там их жестко прописать<br>
      
 
-     Сейчас выглядит все так:
-	 ^Settings("Stc","EmailFrom") = "***"
-	 ^Settings("Stc","EmailSMTPUSER") = "***"
-	 ^Settings("Stc","EmailSMTPPASSWORD") = "**"
-     ^Settings("Stc","EmailSMTPSERVER") = "smtp.mail.ru"
-     ^Settings("Stc","EmailSMTPPORT") = 25
+        Сейчас выглядит все так:
+        ^Settings("Stc","EmailFrom") = "***"
+        ^Settings("Stc","EmailSMTPUSER") = "***"
+        ^Settings("Stc","EmailSMTPPASSWORD") = "**"
+        ^Settings("Stc","EmailSMTPSERVER") = "smtp.mail.ru"
+        ^Settings("Stc","EmailSMTPPORT") = 25
 
-	 Проверить 
-	 w ##class(Stc.Utils.Email).Send("email@email.com", "Subject", "Message")
+        Проверить 
+        w ##class(Stc.Utils.Email).Send("email@email.com", "Subject", "Message")
      
 5. Безопасность
 Создать две роли - первую для админа, вторую - для всех пользователей.
-Для	второй сделать доступ к таблицам из области. Назначить UnknownUser
+Для второй сделать доступ к таблицам из области. Назначить UnknownUser
 
-     SELECT  INSERT  UPDATE  DELETE
-     Stc_Data.Company 						   1       -       -      -
-     Stc_Data.Course                            1       -       -      -
-     Stc_Data.Order                             1       1       1      1
-     Stc_Data.OrderApproved_Students            1       1       1      1
-     Stc_Data.Person                            1       1       1      1
-     Stc_Data.Region                            1       -       -      1
-     Stc_Data_Localization.LText                1       1       1      1
-     Stc_Data_Localization.LTextLanguage        1       -       -      -
-     Stc_Data_Localization.LTextValue           1       1       1      1
+        SELECT  INSERT  UPDATE  DELETE
+        Stc_Data.Company 						   1       -       -      -
+        Stc_Data.Course                            1       -       -      -
+        Stc_Data.Order                             1       1       1      1
+        Stc_Data.OrderApproved_Students            1       1       1      1
+        Stc_Data.Person                            1       1       1      1
+        Stc_Data.Region                            1       -       -      1
+        Stc_Data_Localization.LText                1       1       1      1
+        Stc_Data_Localization.LTextLanguage        1       -       -      -
+        Stc_Data_Localization.LTextValue           1       1       1      1
 
 Затем создать пользователя - администратора системы - дать все привилегии для всех таблиц.
 Назначить соответствующие роли - веб приложениям.
