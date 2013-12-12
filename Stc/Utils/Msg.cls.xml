@@ -37,18 +37,18 @@
 	// Сообщение заказчику на почту
 	set ^CacheMsg("Stc", "ru", "msgToCompanyContact") = ""_
 	"Здравствуйте, вы оставили заявку на обучение по курсу - '%1', в городе - '%2', дата обучения - '%3'. "_
-	"Вам необходимо перейти по <a href='http://%4/stc/index.csp#/updateorder?code=%5'>ссылке</a> для дальнейшего заполнения вашей заявки, проверить и заполнить реквизиты компании, добавить сотрудников для обучения.</br>"_
-	"Прямая ссылка на вашу заявку: http://%4/stc/index.csp#/updateorder?code=%5</br>"_
-	"Нажмите 'Завершить редактирование', чтобы отправить ее администратору системы для рассмотрения. Доступ к заявке будет закрыт после завершения редактирования.</br>"_
-	"------------</br>"_
-	"С уважением, Администратор 'Системы учета курсов InterSystems'"
+	"<br>Вам необходимо перейти по <a href='http://%4/stc/index.csp#/updateorder?code=%5'>ссылке</a> для дальнейшего заполнения вашей заявки, проверить и заполнить реквизиты компании, добавить сотрудников для обучения.<br>"_
+	"Прямая ссылка на вашу заявку: http://%4/stc/index.csp#/updateorder?code=%5<br>"_
+	"Нажмите 'Завершить редактирование', чтобы отправить ее администратору системы для рассмотрения. Доступ к заявке будет закрыт после завершения редактирования.<br>"_
+	"------------<br>"_
+	"С уважением, Администратор 'Системы учёта курсов InterSystems'"
 	
 	set ^CacheMsg("Stc", "en", "msgToCompanyContact") = ""_
 	"Hello, you left a order for a course - '%1', in city - '%2', training date - '%3'. "_
-	"You need to <a href='http://%4/stc/index.csp#/updateorder?code=%5'>link</a> for further filling your order, check and fill in your company details, add employees for training.</br>"_
-	"Direct link to your order: http://%4/stc/index.csp#/updateorder?code=%5</br>"_
-	"Click 'Finish editing' to send it to your system administrator for consideration. Access to the application will be closed after completion of editing.</br>"_
-	"------------</br>"_
+	"<br>You need to <a href='http://%4/stc/index.csp#/updateorder?code=%5'>link</a> for further filling your order, check and fill in your company details, add employees for training.<br>"_
+	"Direct link to your order: http://%4/stc/index.csp#/updateorder?code=%5<br>"_
+	"Click 'Finish editing' to send it to your system administrator for consideration. Access to the application will be closed after completion of editing.<br>"_
+	"------------<br>"_
 	"Best regards, Administrator 'Systems of training courses InterSystems'"
 	
 	
