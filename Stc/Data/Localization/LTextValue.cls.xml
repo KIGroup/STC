@@ -7,6 +7,8 @@
 <TimeCreated>63142,65463.16029</TimeCreated>
 
 <Property name="LText">
+<Description>
+Промежуточный объект, возвращает или задает текст для текущего языка системы.</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Cardinality>one</Cardinality>
 <Inverse>Values</Inverse>
@@ -17,6 +19,8 @@
 </Property>
 
 <Property name="Lang">
+<Description>
+Язык</Description>
 <Type>Stc.Data.Localization.LTextLanguage</Type>
 <Cardinality>one</Cardinality>
 <Inverse>Values</Inverse>
@@ -60,7 +64,7 @@
 <Method name="SetValue">
 <Description>
 Установить значение для объекта с ИД=ltxt для языка=lang,
-если у обхекта LText еще нет свойства на этом языке, то создаем его</Description>
+если у объекта LText еще нет свойства на этом языке, то создаем его</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>value,ltxt,lang</FormalSpec>
 <ReturnType>%Status</ReturnType>

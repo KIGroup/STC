@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/createorder.csp" application="/csp/six/" default="1"><![CDATA[
+<CSP name="stc/partials/createorder.csp" application="/csp/concurs/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span4">
 	</div>

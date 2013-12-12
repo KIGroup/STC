@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/directives/stcalert.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/directives/stcalert.js" application="/csp/concurs/" default="1"><![CDATA[
 'use strict';
-//sdddddd
+//sddddddd
 
 directivesModule.directive('stcalert', function(){
     return {
@@ -16,13 +16,21 @@ directivesModule.directive('stcalert', function(){
             spanMiddle: '@',
             spanLeft: '@'
         },
-        controller: function($scope){
+        controller: function($scope, $timeout){           
+           $scope.data = {visible: false};
+           
            $scope.close = function(){
 	           $scope.data.visible = false;
                if ($scope.data.closeMethod) {
                     $scope.data.closeMethod();
                }
 	       };
+	       
+	       $scope.$watch('data.visible', function(){
+                if ($scope.data.visible && $scope.data.cssClass == 'alert alert-success'){
+                    $timeout(function(){$scope.close()}, 2200);        
+                }     
+           });
 	   	}
     }
 });

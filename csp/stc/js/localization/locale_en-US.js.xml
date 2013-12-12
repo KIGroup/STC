@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/localization/locale_en-US.js" application="/csp/six/" default="1"><![CDATA[
+<CSP name="stc/js/localization/locale_en-US.js" application="/csp/concurs/" default="1"><![CDATA[
 //
 
 localizationModule.constant('StcDictionary', {
@@ -254,7 +254,19 @@ localizationModule.constant('StcDictionary', {
     'ЧЧ:ММ'                                                    : 'HH:MM',
     'Экспорт сертификатов'                                     : 'Export certificates',
     'Юридический адрес'                                        : 'Legal address',
-    'Язык системы'                                             : 'System language'
+    'Язык системы'                                             : 'System language',
+    
+    'О проекте':'About',
+    'Руководитель':'Project manager',
+    'Разработчики':'Developers',
+    'Организация':'Organization',
+    'Якунин Ю.Ю.':'Yakunin Y.Y.',
+    'Подолько И.В.':'Podolko I.V.',
+    'Речитский А.Г.':'Rechitsky A.G.',
+    'Проект':'Project',
+    'ФГАОУ ВПО':'FSAEI HPE',
+    'Сибирский Федеральный Университет':'Siberian Federal University',
+    'Институт Космических и Информационных Технологий':'Institute of Space and Information Technologies'
 
   },
   getTranslate: function(word){

@@ -532,7 +532,8 @@
 		"Преподаватель:<br>"_
 		training.Teacher.LastName.Value_" "_training.Teacher.FirstName.Value_" "_training.Teacher.MiddleName.Value_"<br>"_
 		training.Teacher.Email_"<br><br>"_
-		"Время проведения: "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5)
+		"Время проведения: "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5)_"<br><br>"_
+		"Примечание: "_training.OtherInfo.Value
 		
 		set event.description = $ZCONVERT(event.description, "O", "UTF8")
 		//training.Street.Value_", "_training.Room_"</br>Время с"_$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" по "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5)
@@ -546,8 +547,9 @@
 		{
 			$$$ThrowStatus($$$ERROR(5002, "Exchange token error: "_status))
 		}
-		
+		s ^test = 1
 		$$$TOE(sc, ##class(Stc.Google.Calendar).CreateEvent(calendarId, event, atoken, sslConfig))
+		s ^test = 2
 	}
 	catch (ex){
 		set sc = ex.AsStatus()

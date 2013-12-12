@@ -53,6 +53,7 @@
   }
  
   $$$TOE(sc,req.Send($zconvert(pMethod,"u"),pUrl))
+  //$$$TOE(sc,req.Send($zconvert(pMethod,"u"),pUrl,1))
   
   set json=req.HttpResponse.Data.Read()
   set ^temp("json") = json

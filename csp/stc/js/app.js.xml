@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/app.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/app.js" application="/csp/concurs/" default="1"><![CDATA[
 'use strict';
-//dd
+//ddd
 
 var servicesModule     = angular.module('servicesModule', ['ngResource', 'ngCookies']);
 var controllersModule  = angular.module('controllersModule', ['servicesModule']);

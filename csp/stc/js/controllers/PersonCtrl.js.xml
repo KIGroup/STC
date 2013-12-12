@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/PersonCtrl.js" application="/csp/six/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/PersonCtrl.js" application="/csp/concurs/" default="1"><![CDATA[
 'use strict';
 //dddddddddddвddd
 
@@ -255,7 +255,7 @@ controllersModule.controller('PersonCtrl', function($scope, $location, $filter, 
         PersonSrvc.createSubGroupStudent($routeParams.sgroup, $scope.personForm.person).then(
             function(data){
                 $scope.personForm.alert = UtilsSrvc.getAlert('Готово!', 'Слушатель добавлен в подгруппу.', 'success', true);
-                $scope.personForm.alert.closeMethod = $scope.personForm.back;
+                //$scope.personForm.alert.closeMethod = $scope.personForm.back;
                 //$scope.personForm.visible = false;
                 $scope.personForm.person = {};   
                 $scope.searchForm.person = '';
