@@ -521,7 +521,7 @@
 		set event.start = ##class(%ZEN.proxyObject).%New()
 		set event.start.date = $zd(training.DateStart,3)
 		set event.end = ##class(%ZEN.proxyObject).%New()
-		set event.end.date = $zd(training.DateFinish,3)
+		set event.end.date = $zd(training.DateFinish+1,3)
 		set event.location = $ZCONVERT(training.City.Name.Value_", "_training.Street.Value, "O", "UTF8")
 		set event.description = ""_
 		"Программа курса:<br>"_
@@ -532,11 +532,13 @@
 		"Преподаватель:<br>"_
 		training.Teacher.LastName.Value_" "_training.Teacher.FirstName.Value_" "_training.Teacher.MiddleName.Value_"<br>"_
 		training.Teacher.Email_"<br><br>"_
-		"Время проведения: "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5)_"<br><br>"_
-		"Примечание: "_training.OtherInfo.Value
+		"Время проведения: "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5)_"<br><br>"
+		
+		if (training.OtherInfo.Value '= ""){
+			set event.description = event.description_"<br><br>Примечание:<br>"_training.OtherInfo.Value
+		}
 		
 		set event.description = $ZCONVERT(event.description, "O", "UTF8")
-		//training.Street.Value_", "_training.Room_"</br>Время с"_$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" по "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5)
 		
 		set calendarId = $g(^Settings("Stc","Google", "CalendarId"))
 		set sslConfig = $g(^Settings("Stc","Google", "SslConfig"))
@@ -547,9 +549,9 @@
 		{
 			$$$ThrowStatus($$$ERROR(5002, "Exchange token error: "_status))
 		}
-		s ^test = 1
+		
 		$$$TOE(sc, ##class(Stc.Google.Calendar).CreateEvent(calendarId, event, atoken, sslConfig))
-		s ^test = 2
+		
 	}
 	catch (ex){
 		set sc = ex.AsStatus()

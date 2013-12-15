@@ -81,8 +81,11 @@
 			set key = order.Students.Next(key)
 			do order.Students.RemoveAt(key)
 			
-			set st = ##class(Person).Delete(key)
-			if $$$ISERR(st) RETURN st
+			if (##class(Stc.Data.Person).IsEditable(key, 1) = 1){
+				set st = ##class(Person).Delete(key)
+
+				if $$$ISERR(st) RETURN st
+			}
 		}
 	}
 	elseif (##class(OrderDirty).%ExistsId(id) = $$$OK){
