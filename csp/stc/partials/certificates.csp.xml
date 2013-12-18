@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/certificates.csp" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/partials/certificates.csp" application="/csp/dorabotka/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -43,6 +43,11 @@
 		    first-row-action-icon="'icon-print'"
 		    first-row-action-title="'Изменить статус'|localize"
 		    first-row-action-method="cert.print(item)"
+
+		   	second-row-action-icon="'icon-remove'"
+		    second-row-action-title="'Удалить сертификат'|localize"
+		    second-row-action-method="cert.remove(item)"
+
 		    	
  			forcibly-update="cert.forciblyUpdate"
 		/>

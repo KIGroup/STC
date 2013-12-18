@@ -48,6 +48,11 @@
 <Unique>1</Unique>
 </Index>
 
+<Index name="KeyIdx">
+<Properties>Training,Student</Properties>
+<Unique>1</Unique>
+</Index>
+
 <Method name="ConvertToProxyObject">
 <Description>
 Конвертация в proxyObject для JSON </Description>
@@ -65,13 +70,12 @@
 ]]></Implementation>
 </Method>
 
-<Method name="Create">
-<Description>
-Создание сертификата для студента из обучения</Description>
-<ClassMethod>1</ClassMethod>
-<FormalSpec><![CDATA[student:Person,training:Training,&status]]></FormalSpec>
-<ReturnType>Certificate</ReturnType>
-<Implementation><![CDATA[
+<UDLText name="T">
+<Content><![CDATA[
+/*
+/// Создание сертификата для студента из обучения
+ClassMethod Create(student As Person, training As Training, ByRef status) As Certificate
+{
 	set cert = ..%New()
 	set cert.Training = training
 	set cert.Student = student
@@ -80,6 +84,34 @@
 	set status = cert.%Save()
 	
 	quit cert
+}
+*/
+]]></Content>
+</UDLText>
+
+<Method name="CreateAll">
+<Description>
+Создание всех сертификатов для обучения</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>training:Training,listOfStudents:%ListOfObjects</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+		
+	for i=1:1:listOfStudents.Count(){
+		if (##class(Stc.Data.Certificate).KeyIdxExists(training.%Id(), listOfStudents.GetAt(i).%Id()) = 0){
+			set cert = ..%New()
+			set cert.Training = training
+			set cert.Student = listOfStudents.GetAt(i)
+			set cert.CreatedDate = training.DateFinish
+			set cert.Number = ..GenerateNumber(training.DateFinish)
+			set status = cert.%Save()
+			
+			if $$$ISERR(status) RETURN status
+		}	
+	}
+	
+	quit status
 ]]></Implementation>
 </Method>
 

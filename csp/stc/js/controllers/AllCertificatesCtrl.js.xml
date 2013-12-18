@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllCertificatesCtrl.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllCertificatesCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
 'use strict';
-//dd
+//ddd
 
 /*===========================================================================================
 Все сертификаты
@@ -40,7 +40,7 @@ controllersModule.controller('AllCertificatesCtrl', function($scope, $filter, $l
                                   }}];
 
         $scope.cert.status = UtilsSrvc.getPropertyValue($scope.pageStore, 'certificates.status', 'All');
-        $scope.cert.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'certificates.grid.pageSize', 5);
+        $scope.cert.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'certificates.grid.pageSize', 10);
         $scope.cert.pageCurr = UtilsSrvc.getPropertyValue($scope.pageStore, 'certificates.grid.pageCurr', 1);
         $scope.cert.itemsTotal = 0;
         $scope.cert.selectedItems = [];
@@ -67,6 +67,7 @@ controllersModule.controller('AllCertificatesCtrl', function($scope, $filter, $l
             });
     };
 
+    // Сменить статус печати
     $scope.cert.print = function(item){
          CertificateSrvc.print(item.number).then(
             function(data){
@@ -76,6 +77,22 @@ controllersModule.controller('AllCertificatesCtrl', function($scope, $filter, $l
             function(response){
                 $scope.cert.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
             });
+    };
+
+    // Удалить сертификат
+    $scope.cert.remove = function(item){
+        function removeCert(){
+           CertificateSrvc.remove(item.number).then(
+              function(data){
+                  $scope.cert.forciblyUpdate++;
+                  $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Сертификат удалён.', 'success', true);
+              },
+              function(response){
+                  $scope.cert.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+              });
+        };
+
+        UtilsSrvc.openMessageBox('Удалить сертификат', $filter('localize')("Удалить сертификат слушателя") + " '" + item.student.lastName + "'?", removeCert); 
     };
 
     $scope.$watch('cert.status', function(){

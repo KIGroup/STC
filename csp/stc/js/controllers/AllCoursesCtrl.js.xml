@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllCoursesCtrl.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllCoursesCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
 'use strict';
-//вdddddddd
+//вddddddddd
 
 /*===========================================================================================
 Все курсы + преподаватели курсов
@@ -19,10 +19,12 @@ controllersModule.controller('AllCoursesCtrl', function($scope, $location, $filt
 
     $scope.courseTable.init = function(){
         $scope.courseTable.columns = [
-                          {name: 'Курс',            sqlName: 'Name->Value', isSorted: true,  isSortable: true,  isDown: false, isSearched: true,  isSearchable: true},
+                          {name: 'Курс',            sqlName: 'Name->Value', isSorted: true,  isSortable: true,  isDown: true,  isSearched: true,  isSearchable: true},
                           {name: 'Часы',            sqlName: '',            isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false},
                           {name: 'Дни',             sqlName: '',            isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false},
-                          {name: 'Программа курса', sqlName: '',            isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false}];
+                          {name: 'Программа курса', sqlName: '',            isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false},
+                          {name: 'Стоимость',       sqlName: 'Price',       isSorted: false, isSortable: true,  isDown: true,  isSearched: false, isSearchable: false},
+                          {name: 'Валюта',          sqlName: '',            isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false}];
         
         $scope.courseTable.status = UtilsSrvc.getPropertyValue($scope.pageStore, 'courses.status', 1);
         $scope.courseTable.properties = [{name:'name'}, 
@@ -32,7 +34,9 @@ controllersModule.controller('AllCoursesCtrl', function($scope, $location, $filt
                                          calculate: function(item){
                                                         var tail = (item.programUrl && item.programUrl.length > 25) ? '...':'';
                                                         item.programUrlShort = item.programUrl.substring(0,25) + tail;
-                                                    }}];
+                                                    }},
+                                         {name:'price'},
+                                         {name:'currency.name'}];
                                                                              
         $scope.courseTable.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'courses.grid.pageSize', 10);
         $scope.courseTable.pageCurr = UtilsSrvc.getPropertyValue($scope.pageStore, 'courses.grid.pageCurr', 1);

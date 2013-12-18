@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/CourseCtrl.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/CourseCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
 'use strict';
-//dddddf
+//dddddfd
 
 /*===========================================================================================
 Курс, создание и изменение
 ===========================================================================================*/
 
-controllersModule.controller('CourseCtrl', function($scope, $routeParams, $location, CourseTeacherSrvc, UtilsSrvc){
+controllersModule.controller('CourseCtrl', function($scope, $routeParams, $location, CourseTeacherSrvc, TrainingSrvc, UtilsSrvc){
     if ($scope.menu.active) $scope.menu.active.css = "menuAfterActive";
     $scope.courseForm = {};
     
     $scope.courseForm.init = function(){
+        $scope.courseForm.loadCurrencies();
+
         if (!isNaN(parseInt($routeParams.id))){
             $scope.courseForm.caption = 'Редактирование курса';
             $scope.courseForm.actionName = 'Сохранить';
@@ -57,6 +59,18 @@ controllersModule.controller('CourseCtrl', function($scope, $routeParams, $locat
         $location.path('/courses').search({id:null});
     };
 
+
+    // Загрузить валюты
+    $scope.courseForm.loadCurrencies = function(){
+        TrainingSrvc.getCurrencies().then(
+            function(data){
+                $scope.courseForm.currencies = data;
+            },
+            function(response){
+                $scope.courseForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+    
     $scope.courseForm.init();
 });
     

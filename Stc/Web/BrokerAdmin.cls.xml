@@ -108,6 +108,13 @@
 
 	<!-- Все валюты -->
 	<Route Method="GET" Url="/json/allCurrencies" Call="Stc.Web.JsonAdmin:GetAllCurrencies"/>
+	
+	<!-- Все сертификаты обучения -->
+	<Route Method="POST" Url="/json/training/getCertificates" Call="Stc.Web.JsonAdmin:GetTrainingCertificates"/>
+	
+	<!-- Создать все сертификаты для обучения -->
+	<Route Method="POST" Url="/json/training/createCertificates" Call="Stc.Web.JsonAdmin:CreateTrainingCertificates"/>
+
 
 	<!-- ==================================== СЕРТИФИКАТЫ ================================ -->
 	
@@ -116,6 +123,9 @@
 
 	<!-- Печать сертификата -->
 	<Route Method="POST" Url="/json/printCertificate/:number" Call="Stc.Web.JsonAdmin:PrintCertificate"/>	
+	
+	<!-- Удаление сертификата -->
+	<Route Method="DELETE" Url="/json/certificate/:number" Call="Stc.Web.JsonAdmin:DeleteCertificate"/>	
 	
 	<!-- ==================================== ПЕРСОНЫ ==================================== -->
 	

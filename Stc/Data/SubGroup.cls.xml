@@ -35,6 +35,16 @@
 <Required>1</Required>
 </Property>
 
+<Property name="Discount">
+<Description>
+Скидка</Description>
+<Type>%Float</Type>
+<InitialExpression>0</InitialExpression>
+<Required>1</Required>
+<Parameter name="MAXVAL" value="100"/>
+<Parameter name="MINVAL" value="0"/>
+</Property>
+
 <Property name="SignerFullName">
 <Description>
 ФИО подписанта в родительном падеже</Description>
@@ -72,6 +82,15 @@
 	set proxy.id = ..%Id()
 	set proxy.payer = ..Payer.ConvertToProxyObject()
 	set proxy.amount = ..Amount
+	set proxy.amountNDS = ..Amount * 1.18
+	
+	if (..Discount = 0) {
+		set proxy.discount = ""
+	}
+	else{
+		set proxy.discount = ..Discount
+	}
+	
 	set proxy.currency = ..Currency.ConvertToProxyObject()
 	
 	set proxy.contract = ##class(%ZEN.proxyObject).%New()
@@ -99,7 +118,7 @@
 <Description>
 Создание подгруппы в обучении</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec><![CDATA[payer:Company,students:%ArrayOfObjects,&status]]></FormalSpec>
+<FormalSpec><![CDATA[payer:Company,students:%ArrayOfObjects,course:Stc.Data.Course,&status]]></FormalSpec>
 <ReturnType>SubGroup</ReturnType>
 <Implementation><![CDATA[
 	set sub = ..%New()
@@ -108,6 +127,10 @@
 	set sub.Currency = ##class(Currency).%OpenId(1)
 	set sub.SignerFullName = ##class(Stc.Data.Localization.LText).Create("")
 	set sub.DocumentInfo = ##class(Stc.Data.Localization.LText).Create("")
+	
+	set sub.Amount = course.Price
+	set sub.Currency = course.Currency
+	
 	set status = sub.%Save()
 	quit sub
 ]]></Implementation>
@@ -150,6 +173,12 @@
 </Value>
 <Value name="8">
 <Value>DateFinish</Value>
+</Value>
+<Value name="9">
+<Value>AmountNDS</Value>
+</Value>
+<Value name="10">
+<Value>Discount</Value>
 </Value>
 </Data>
 </Storage>

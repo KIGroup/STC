@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/courses.csp" application="/csp/six/" default="1"><![CDATA[
+<CSP name="stc/partials/courses.csp" application="/csp/dorabotka/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>

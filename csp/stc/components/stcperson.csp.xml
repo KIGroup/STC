@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/components/stcperson.csp" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/components/stcperson.csp" application="/csp/dorabotka/" default="1"><![CDATA[
 <div>
     <div class="control-group">
         <label class="control-label" ng-bind="('Фамилия'|localize) + '*'"></label>
@@ -27,9 +27,9 @@
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label" ng-bind="('Телефон'|localize) + '*'"></label>
+        <label class="control-label" ng-bind="('Телефон'|localize)"></label>
         <div class="controls">
-            <input class="span12" type="text" ng-model="person.phone" ng-disabled="allDisabled" required></input>
+            <input class="span12" type="text" ng-model="person.phone" ng-disabled="allDisabled"></input>
         </div>
     </div>
     <div class="control-group">

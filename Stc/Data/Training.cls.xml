@@ -150,6 +150,11 @@
 	
 	if (paidsNumber = ..SubGroups.Count()) set proxy.isPaid = 1
 	
+	// Стоимость обучения и валюта
+	set proxy.cost = ##class(%ZEN.proxyObject).%New()
+	set proxy.cost.price = ..Course.Price
+	set proxy.cost.currency = ..Course.Currency.ConvertToProxyObject()
+	
 	quit proxy
 ]]></Implementation>
 </Method>
@@ -199,7 +204,7 @@
 <Implementation><![CDATA[
 	for i=1:1:orders.Count(){
 		set order = ##class(OrderApproved).%OpenId(orders.GetAt(i))
-		set sub = ##class(SubGroup).Create(order.Company, order.Students, .status)
+		set sub = ##class(SubGroup).Create(order.Company, order.Students, order.Course, .status)
 		if $$$ISERR(status) RETURN ##class(Stc.Utils.Msg).GetErrorStatus("createSubGroup" ," | "_status) 	
 			
 		do ..SubGroups.SetAt(sub, sub.%Id())
@@ -231,6 +236,31 @@
 	quit:$$$ISERR(st) st
 	
 	quit ##class(Stc.Data.SubGroup).%DeleteId(sgId)
+]]></Implementation>
+</Method>
+
+<Method name="CreateCertificates">
+<Description>
+Создать сертификаты для всех слушателей</Description>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set listOfStudents = ##class(%ListOfObjects).%New()
+	
+	set keyGr = ""
+	for i=1:1:..SubGroups.Count(){
+		set keyGr = ..SubGroups.Next(keyGr)
+		set sgroup = ..SubGroups.GetAt(keyGr)
+			
+		set keySt = ""
+		for j=1:1:sgroup.Students.Count(){
+			set keySt = sgroup.Students.Next(keySt)
+			set student = sgroup.Students.GetAt(keySt)
+				
+			do listOfStudents.Insert(student)
+		}
+	}
+	
+	quit ##class(Stc.Data.Certificate).CreateAll($this, listOfStudents)
 ]]></Implementation>
 </Method>
 

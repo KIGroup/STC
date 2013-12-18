@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/TrainingSrvc.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/services/TrainingSrvc.js" application="/csp/dorabotka/" default="1"><![CDATA[
 'use strict';
-//dddddddddddd
+//ddddddddddddd
 
 /*===========================================================================================
 Обучения
@@ -30,6 +30,22 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
         getTraining: function(id){
            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/getTraining/' + id, null);
         },
+        /* Все сертификаты обучения */
+        getCertificates: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, trainingId){
+            var first = pageSize * (pageCurr - 1) + 1;
+            var obj = {sqlName: sqlName, 
+                       isDown: isDown, 
+                       first: first, 
+                       last: first + pageSize - 1,
+                       searchSqlName: searchSqlName, 
+                       searchText: searchText,
+                       trainingId: trainingId};
+
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/getCertificates', obj);
+        },
+        createCertificates: function(trainingId){
+	        return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/createCertificates', {id: trainingId});
+	    },
         /* Получить все обучения для таблицы */
         getTrainings: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, status){
             var first = pageSize * (pageCurr - 1) + 1;

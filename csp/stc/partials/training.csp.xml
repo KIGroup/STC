@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/training.csp" application="/csp/six/" default="1"><![CDATA[
+<CSP name="stc/partials/training.csp" application="/csp/dorabotka/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -14,7 +14,7 @@
 							 date-finish="training.dateFinish" 
 							 edit-mode="true" 
 							 btn-addition-name="training.btnAdditionName|localize" 
-							 btn-addition-visible="true" 
+							 btn-addition-visible="training.btnAdditionVisible" 
 							 btn-addition-action="training.btnAdditionAction()"/>
 			</form>
 		</tab>
@@ -48,6 +48,41 @@
 			    forcibly-update="sgroup.forciblyUpdate"
 			/>
     	</tab>
+    	<tab heading="{{('Сертификаты'|localize) + ' (' + cert.itemsTotal + ')'}}">
+    		<stcgrid
+		    	grid="pageStore.trainingCertificates.grid"
+			    table-class="table table-bordered table-hover"
+			    caption=""
+			    columns="cert.columns"
+			    items="cert.items"
+			    properties="cert.properties"
+			    update-items="cert.loadItems(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText)"
+
+			    page-curr="cert.pageCurr"
+			    page-total="cert.pageTotal"
+			    page-size="cert.pageSize"
+			    navigator-visible="true"
+
+			    selectable="true"
+			    selected-items="cert.selectedItems"
+			    multi-select-mode="cert.multiSelectMode"
+	 			
+	 			action-column-visible="true"
+			    action-column-icon="'icon-ellipsis-horizontal'"
+
+			    first-row-action-icon="'icon-print'"
+			    first-row-action-title="'Изменить статус'|localize"
+			    first-row-action-method="cert.print(item)"
+
+			   	second-row-action-icon="'icon-remove'"
+			    second-row-action-title="'Удалить сертификат'|localize"
+			    second-row-action-method="cert.remove(item)"
+			    	
+	 			forcibly-update="cert.forciblyUpdate"
+			/>
+			<button type="button" class="btn btn-small btn-primary" ng-click="cert.createAll()" ng-bind="'Обновить'|localize" title="Создание сертификатов для слушателей (если еще не созданы)"></button>
+			<button type="button" class="btn btn-small btn-primary" ng-click="cert.exportToCSV()" ng-bind="'Экспорт'|localize" title="Экспорт всех сертификатов в файл *.csv"></button>
+    	</tab>
     </tabset>
 	</div>
 	<div class="span1">
@@ -77,10 +112,15 @@
 						<p><span class="spnTitle" ng-bind="'Skype'"           ></span>: <span ng-bind="sgroup.selectedItems[0].payer.contact.skype"></span></p>
 					</div>
 					<div class="span6">
-						<p>
-							<span class="spnTitle" ng-bind="('Сумма платежа'|localize) + ', ' + ('валюта'|localize)"></span>: <span ng-bind="sgroup.selectedItems[0].amount + ', ' + sgroup.selectedItems[0].currency.name"></span>
-							<a href="#PaymentModal" role="button" data-toggle="modal" ng-click="sgroup.modalPaymentVisible=true" style="color: rgb(83,83,83); text-decoration: none;" onmouseover="this.style.color='black';" onmouseout="this.style.color='rgb(83,83,83)';" title="{{'Редактировать платеж'|localize}}"> <i class="icon-pencil" style="cursor: pointer;"></i> </a>
+						<p><span class="spnTitle" ng-bind="'Стоимость обучения'|localize"></span>: <span ng-bind="training.data.cost.price + ', ' + training.data.cost.currency.name"></span></p>
+						<p><span class="spnTitle" ng-bind="('Скидка'|localize)"          ></span>: <span ng-show="sgroup.selectedItems[0].discount!==''" ng-bind="sgroup.selectedItems[0].discount + ' %'"></span> <span ng-show="sgroup.selectedItems[0].discount===''" ng-bind="'не указана, т.к. сумма к оплате задана вручную'|localize"></span></p>
+						<p><span class="spnTitle" ng-bind="'Сумма к оплате'|localize"    ></span>: <span ng-bind="sgroup.selectedItems[0].amount + ', ' + sgroup.selectedItems[0].currency.name"></span></p>
+						<p><span class="spnTitle" ng-bind="'Сумма c НДС'|localize"       ></span>: <span ng-bind="(sgroup.selectedItems[0].amount*1.18+0.000001).toFixed(2)*1 + ', ' + sgroup.selectedItems[0].currency.name"></span>
+							&nbsp;&nbsp;<a href="#PaymentModal" role="button" data-toggle="modal" ng-click="sgroup.modalPaymentVisible=true" style="color: rgb(83,83,83); text-decoration: none;" onmouseover="this.style.color='black';" onmouseout="this.style.color='rgb(83,83,83)';" title="{{'Редактировать платеж'|localize}}"> <i class="icon-pencil" style="cursor: pointer;"></i> </a>
 						</p>
+						
+						
+						</br>
 						<p><span class="spnTitle" ng-bind="'КПП'|localize"  title="{{'Код причины постановки на учёт'|localize}}"                 ></span>: <span ng-bind="sgroup.selectedItems[0].payer.kpp"></span></p>
 						<p><span class="spnTitle" ng-bind="'ИНН'|localize"  title="{{'Идентификационный номер налогоплательщика'|localize}}"      ></span>: <span ng-bind="sgroup.selectedItems[0].payer.inn"></span></p>
 						<p><span class="spnTitle" ng-bind="'ОГРН'|localize" title="{{'Основной государственный регистрационный номер'|localize}}" ></span>: <span ng-bind="sgroup.selectedItems[0].payer.ogrn"></span></p>
@@ -88,6 +128,8 @@
 						<p><span class="spnTitle" ng-bind="'К/С'|localize"  title="{{'Корреспондентский счёт'|localize}}"                         ></span>: <span ng-bind="sgroup.selectedItems[0].payer.correspondentAccount"></span></p>
 						<p><span class="spnTitle" ng-bind="'БИК'|localize"  title="{{'Банковский идентификационный код'|localize}}"               ></span>: <span ng-bind="sgroup.selectedItems[0].payer.bic"></span></p>
 						<p><span class="spnTitle" ng-bind="'Другая информация'|localize"    ></span>: <span ng-bind="sgroup.selectedItems[0].payer.otherInfo"></span></p>
+
+
 					</div>
 				</div>
 			</tab>
@@ -192,29 +234,46 @@
     <h3 id="PaymentModalLabel" ng-bind="'Платеж'|localize"></h3>
   </div>
   <div class="modal-body">
-	<form name="sgPaymentForm" style="margin: 0 0 10px 0;" ng-submit="">
-		<div class="row-fluid">
-			<div class="span6">
-				<div class="control-group">
-			    <label class="control-label" ng-bind="('Сумма'|localize) + '*'"></label>
-			        <div class="controls">
-			    		<input type="text" class="span12" ng-model="sgroup.selectedItems[0].amount"/>
-			        </div>
-			    </div>
-			</div>
-			<div class="span6">
-				<div class="control-group">
-				    <label class="control-label" ng-bind="('Валюта'|localize) + '*'"></label>
-			        <div class="controls">
-		            	<select class="span12" ng-model="sgroup.selectedItems[0].currency.id" ng-options="curr.id as curr.name for curr in sgroup.currencies" required>
-		            	</select>
-			        </div>
-				</div>
+	<form  class="form-horizontal" name="sgPaymentForm" style="margin: 0 0 10px 0;" ng-submit="">
+
+	    <div class="control-group">
+		    <label class="control-label" ng-bind="'Стоимость обучения'|localize"></label>
+		    <div class="controls">
+		    	<input type="text" value="{{training.data.cost.price + ', ' + training.data.cost.currency.name}}" disabled>
+		    </div>
+	    </div>
+	    <div class="control-group">
+		    <label class="control-label" ng-bind="('Скидка'|localize) + ' (%)'"></label>
+		    <div class="controls" >
+		    	<input type="text" ng-model="sgroup.selectedItems[0].discount" ng-change="sgroup.changeDiscount()">
+		    </div>
+	    </div>
+		<div class="control-group">
+		    <label class="control-label" ng-bind="('Валюта платежа'|localize) + '*'"></label>
+	        <div class="controls">
+            	<select ng-model="sgroup.selectedItems[0].currency.id" ng-options="curr.id as curr.name for curr in sgroup.currencies" required>
+            	</select>
+	        </div>
+		</div>
+	    <div class="control-group">
+		    <label class="control-label" ng-bind="('Сумма к оплате'|localize) + '*'"></label>
+		    <div class="controls">
+		    	<input type="text" ng-model="sgroup.selectedItems[0].amount" ng-change="sgroup.selectedItems[0].discount=''">
+		    </div>
+	    </div>
+	    <div class="control-group">
+		    <label class="control-label" ng-bind="('Сумма с НДС'|localize) + '*'"></label>
+		    <div class="controls">
+		    	<input type="text" value="{{(sgroup.selectedItems[0].amount * 1.18 + 0.000001).toFixed(2)*1}}" disabled>
+		    </div>
+	    </div>
+	    <div class="control-group">	 
+	    	<div class="controls">  
+				<button class="btn btn-success btn-small" data-dismiss="modal" aria-hidden="true" ng-click="sgroup.savePayment()" ng-disabled="sgPaymentForm.$pristine" ng-bind="'Сохранить'|localize"></button>
+				<button class="btn btn-small" data-dismiss="modal" aria-hidden="true" ng-click="sgroup.cancelPayment()" ng-bind="'Отмена'|localize"></button>
 			</div>
 		</div>
-		<button class="btn btn-success" data-dismiss="modal" aria-hidden="true" ng-click="sgroup.savePayment()" ng-disabled="sgPaymentForm.$pristine" ng-bind="'Сохранить'|localize"></button>
-		<button class="btn" data-dismiss="modal" aria-hidden="true" ng-click="sgroup.cancelPayment()" ng-bind="'Отмена'|localize"></button>
-	</form>
+ 	</form>
   </div>
 </div>
 
@@ -235,9 +294,10 @@
 		        </div>
 			</div>
 		</div>
-		<button class="btn btn-success" data-dismiss="modal" aria-hidden="true" ng-click="sgroup.addSubGroup()" ng-bind="'Добавить'|localize"></button>
-		<button class="btn" data-dismiss="modal" aria-hidden="true" ng-click="sgroup.modalAddSubGroupVisible=false" ng-bind="'Отмена'|localize"></button>
+		<button class="btn btn-success btn-small" data-dismiss="modal" aria-hidden="true" ng-click="sgroup.addSubGroup()" ng-bind="'Добавить'|localize"></button>
+		<button class="btn btn-small" data-dismiss="modal" aria-hidden="true" ng-click="sgroup.modalAddSubGroupVisible=false" ng-bind="'Отмена'|localize"></button>
 	</form>
   </div>
-</div>]]></CSP>
+</div>
+]]></CSP>
 </Export>

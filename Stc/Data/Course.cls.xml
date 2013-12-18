@@ -50,6 +50,22 @@
 <Required>1</Required>
 </Property>
 
+<Property name="Price">
+<Description>
+Сумма платежа</Description>
+<Type>%Float</Type>
+<InitialExpression>0</InitialExpression>
+<Required>1</Required>
+</Property>
+
+<Property name="Currency">
+<Description>
+Валюта</Description>
+<Type>Currency</Type>
+<Required>1</Required>
+<Parameter name="XMLREFERENCE" value="ID"/>
+</Property>
+
 <Method name="ConvertToProxyObject">
 <Description>
 Конвертация в proxyObject для JSON </Description>
@@ -67,6 +83,8 @@
 	set proxy.hours = ..Hours
 	set proxy.programUrl = ..ProgramUrl
 	set proxy.isInUse = ..IsInUse
+	set proxy.price = ..Price
+	set proxy.currency = ..Currency.ConvertToProxyObject()
 	
 	quit proxy
 ]]></Implementation>
@@ -91,6 +109,8 @@
 	set course.Hours = $ZCONVERT(data.hours, "I","UTF8")
 	set course.Days = $ZCONVERT(data.days, "I","UTF8")
 	set course.ProgramUrl = $REPLACE($REPLACE($ZCONVERT(data.programUrl, "I","UTF8"),"http://",""), "https://","")
+	set course.Price = data.price
+	set course.Currency = ##class(Stc.Data.Currency).%OpenId(data.currency.id)
 	
 	set status = course.%Save()
 	
@@ -124,6 +144,12 @@
 </Value>
 <Value name="6">
 <Value>IsInUse</Value>
+</Value>
+<Value name="7">
+<Value>Price</Value>
+</Value>
+<Value name="8">
+<Value>Currency</Value>
 </Value>
 </Data>
 <Data name="Teachers">

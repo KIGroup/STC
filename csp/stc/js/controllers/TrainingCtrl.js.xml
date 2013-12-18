@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/TrainingCtrl.js" application="/csp/six/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/TrainingCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
 'use strict';
-//dddddddddвdввввddd
+//ddddddeddddddddddddddddddddddd
 
 /*===========================================================================================
 Обучение
 ===========================================================================================*/
 
-controllersModule.controller('TrainingCtrl', function($scope, $location, $filter, $routeParams, UtilsSrvc, ReportSrvc, TrainingSrvc, CompanySrvc, PersonSrvc){
+controllersModule.controller('TrainingCtrl', function($scope, $location, $filter, $routeParams, UtilsSrvc, ReportSrvc, TrainingSrvc, CompanySrvc, PersonSrvc, CertificateSrvc){
     $scope.training = {};
     $scope.sgroup = {contract:{}};
+    $scope.cert = {};
     $scope.student = {};
     $scope.other = {};
 
@@ -18,14 +19,17 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
     if (!$scope.pageStore.training || $scope.pageStore.training.id != $routeParams.id)
         $scope.pageStore.training = {id: $routeParams.id, tabSgActive: false, tabSgStActive: false};
 
+    if (!$scope.pageStore.trainingCertificates)
+        $scope.pageStore.trainingCertificates = {grid:{}};
+
     $scope.other.init = function(){
         $scope.sgroup.columns = [
-                          {name: 'Плательщик',   sqlName: 'SubGroups->Payer->ShortName->Value', isSorted: true,  isSortable: true,   isDown: false, isSearched: true,  isSearchable: true},
-                          {name: 'Слушатели',    sqlName: '',                                   isSorted: false, isSortable: false,  isDown: true,  isSearched: false, isSearchable: false},
-                          {name: 'Валюта',       sqlName: 'SubGroups->Currency->Name->Value',   isSorted: false, isSortable: true,   isDown: true,  isSearched: false, isSearchable: true},
-                          {name: 'Сумма платежа',sqlName: '',                                   isSorted: false, isSortable: false,  isDown: true,  isSearched: false, isSearchable: false}];
-
-        $scope.sgroup.properties = [{name:'payer.shortName'}, {name:'students.length'}, {name:'currency.name'}, {name:'amount'}];
+                          {name: 'Плательщик',    sqlName: 'SubGroups->Payer->ShortName->Value', isSorted: true,  isSortable: true,   isDown: true, isSearched: true,  isSearchable: true},
+                          {name: 'Слушатели',     sqlName: '',                                   isSorted: false, isSortable: false,  isDown: true,  isSearched: false, isSearchable: false},
+                          {name: 'Сумма к оплате',sqlName: '',                                   isSorted: false, isSortable: false,  isDown: true,  isSearched: false, isSearchable: false},
+                          {name: 'Валюта',        sqlName: 'SubGroups->Currency->Name->Value',   isSorted: false, isSortable: true,   isDown: true,  isSearched: false, isSearchable: true}];
+                          
+        $scope.sgroup.properties = [{name:'payer.shortName'}, {name:'students.length'}, {name:'amount'}, {name:'currency.name'}];
         $scope.sgroup.pageSize = 10;
         $scope.sgroup.pageCurr = 1;
         $scope.sgroup.itemsTotal = 0;
@@ -35,16 +39,51 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
 
         $scope.sgroup.loadCurrencies();
         $scope.training.loadData($routeParams.id)
-        $scope.sgroup.loadItems($scope.sgroup.pageCurr, $scope.sgroup.pageSize, "SubGroups->Payer->ShortName->Value", false, "", "");
-        //--
+        //---------------------------------------------------------------
 
+        $scope.cert.columns = [
+                          {name: 'Курс',          sqlName: 'Training->Course->Name->Value', isSorted: false, isSortable: true, isDown: true,  isSearched: true,  isSearchable: true},
+                          {name: 'Номер',         sqlName: 'Number',                        isSorted: true, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
+                          {name: 'Слушатель',     sqlName: 'Student->LastName->Value',      isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
+                          {name: 'Компания',      sqlName: '',                              isSorted: false, isSortable: false,isDown: true,  isSearched: false, isSearchable: false},
+                          {name: 'Дата создания', sqlName: 'CreatedDate',                   isSorted: false,  isSortable: true, isDown: false, isSearched: false, isSearchable: false, filter: 'date'},
+                          {name: 'Статус',        sqlName: 'isPrinted',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true}];
+        
+        $scope.cert.properties = [{name:'training.course.name'}, 
+                                  {name:'number'},
+                                  {name:'student.fullName', 
+                                  calculate: function(item){
+                                                item.student.fullName = item.student.lastName + ' ' + item.student.firstName + ' ' + item.student.middleName;
+                                  }}, 
+                                  {name:'student.company.shortName'},
+                                  {name:'date', filter: 'date', filterParam: $filter('localize')('d MMMM y')}, 
+                                  {name:'status', 
+                                  getCssClass: function(item){
+                                                return 'label ' + (item.isPrinted == 0 ? 'label-important' : 'label-success');
+                                              }, 
+                                  calculate: function(item){
+                                                item.status = item.isPrinted == 1 ? $filter('localize')('Распечатан') : $filter('localize')('Не распечатан');
+                                  }}];
+
+        $scope.cert.status = UtilsSrvc.getPropertyValue($scope.pageStore, 'trainingCertificates.status', 'All');
+        $scope.cert.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'trainingCertificates.grid.pageSize', 10);
+        $scope.cert.pageCurr = UtilsSrvc.getPropertyValue($scope.pageStore, 'trainingCertificates.grid.pageCurr', 1);
+        $scope.cert.itemsTotal = 0;
+        $scope.cert.selectedItems = [];
+        $scope.cert.multiSelectMode = false;
+        $scope.cert.forciblyUpdate = 0;
+        $scope.cert.actionColumnVisible = true;
+
+        $scope.cert.forciblyUpdate++; 
+
+        //---------------------------------------------------------------
         $scope.student.columns = [{name: 'Фамилия'}, {name: 'Имя'}, {name: 'Отчество'}, {name: 'Компания'}, {name: 'Email'}, {name: 'Телефон'}, {name: 'Skype'}];
         $scope.student.properties = [{name:'lastName'}, {name:'firstName'}, {name:'middleName'}, {name:'company.shortName'}, {name:'email'}, {name:'phone'}, {name:'skype'}];
         $scope.student.pageSize = 100;
         $scope.student.pageCurr = 1;
         $scope.student.itemsTotal = 0;
         $scope.student.selectedItems = [];
-        $scope.student.multiSelectMode = false;  
+        $scope.student.multiSelectMode = false; 
     };
 
     // Загрузить валюты
@@ -71,11 +110,13 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
                 if (data.isCompleted == 0){
                     $scope.training.btnAdditionName = 'Завершить';
                     $scope.training.btnAdditionAction = $scope.training.complete;
+                    $scope.training.btnAdditionVisible = true;
                 }
                 else{
-                    $scope.training.btnAdditionName = 'Экспорт сертификатов';
-                    $scope.training.btnAdditionAction = $scope.training.exportToCSV;
+                    $scope.training.btnAdditionVisible = false;
                 }
+
+                 $scope.sgroup.loadItems($scope.sgroup.pageCurr, $scope.sgroup.pageSize, "SubGroups->Payer->ShortName->Value", true, "", "");
             },
             function(response){
                 $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
@@ -106,11 +147,6 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
             });
     };
 
-    // Экспорт сертификатов
-    $scope.training.exportToCSV = function(){
-        ReportSrvc.certificates($scope.training.data.id);
-    };
-
     // Загрузить подгруппы
     $scope.sgroup.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
         TrainingSrvc.getTrainingSubGroups(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $routeParams.id).then(
@@ -133,7 +169,8 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
     $scope.sgroup.savePayment = function(){
         TrainingSrvc.saveSubGroupPayment({id: $scope.sgroup.selectedItems[0].id, 
                                           currencyId: $scope.sgroup.selectedItems[0].currency.id, 
-                                          amount: $scope.sgroup.selectedItems[0].amount}).then(
+                                          amount: $scope.sgroup.selectedItems[0].amount,
+                                          discount: $scope.sgroup.selectedItems[0].discount=='' ? 0: $scope.sgroup.selectedItems[0].discount}).then(
             function(data){
                 $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Платеж для подгруппы сохранен.', 'success', true);
                 $scope.sgPaymentForm.$setPristine();
@@ -144,6 +181,16 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
             });  
     };
     
+    // Изменение величины скидки на обучение
+    $scope.sgroup.changeDiscount = function(){
+        if ($scope.sgroup.selectedItems[0].discount <= 100 && $scope.sgroup.selectedItems[0].discount >= 0){
+            $scope.sgroup.selectedItems[0].amount = ($scope.training.data.cost.price - $scope.training.data.cost.price * ($scope.sgroup.selectedItems[0].discount / 100)).toFixed(2) * 1;    
+        }
+        else{
+            $scope.sgroup.selectedItems[0].amount = $scope.sgroup.selectedItems[0].amountReal; 
+        }
+    };
+
     // Сохранить данные договора
     $scope.sgroup.saveContract = function(){
         TrainingSrvc.saveSubGroupContract($scope.sgroup.contract).then(
@@ -172,6 +219,10 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
         	$scope.sgroup.contract = $scope.sgroup.selectedItems[0].contract;
         	$scope.sgroup.dateSt = $scope.sgroup.contract.dateStart;
         	$scope.sgroup.dateFn = $scope.sgroup.contract.dateFinish;
+
+            if ($scope.sgroup.selectedItems[0].amount == $scope.training.data.cost.price && $scope.sgroup.selectedItems[0].currency.id == $scope.training.data.cost.currency.id){
+                $scope.sgroup.selectedItems[0].discount = 0;
+            }
         }
         
         if (!$scope.sgPaymentForm.$dirty)
@@ -267,7 +318,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
                     $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Слушатель удален из подгруппы.', 'success', true);
                 },
                 function(response){
-                    $scope.order.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                    $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
                 });  
         };
 
@@ -287,6 +338,68 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
         $scope.sgroup.contract.city = $scope.training.data.city;
         $scope.sgroup.contract.id = $scope.sgroup.selectedItems[0].id;
     };
+
+
+    //================= Сертификаты ==========================
+    // Загрузка сертификатов
+    $scope.cert.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
+        TrainingSrvc.getCertificates(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $routeParams.id).then(
+            function(data){
+                $scope.cert.pageTotal = Math.ceil(data.itemsTotal / pageSize);
+                $scope.cert.itemsTotal = data.itemsTotal;
+                $scope.cert.items = data.items;
+            },
+            function(response){
+                $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    // Сменить статус печати
+    $scope.cert.print = function(item){
+         CertificateSrvc.print(item.number).then(
+            function(data){
+                //$scope.cert.alert = UtilsSrvc.getAlert('Готово!', 'Статус сертификата изменен.', 'success', true);
+                $scope.cert.forciblyUpdate++;
+            },
+            function(response){
+                $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    // Удалить сертификат
+    $scope.cert.remove = function(item){
+        function removeCert(){
+           CertificateSrvc.remove(item.number).then(
+              function(data){
+                  $scope.cert.forciblyUpdate++;
+                  $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Сертификат удалён.', 'success', true);
+              },
+              function(response){
+                  $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+              });
+        };
+
+        UtilsSrvc.openMessageBox('Удалить сертификат', $filter('localize')("Удалить сертификат слушателя") + " '" + item.student.lastName + "'?", removeCert); 
+    };
+
+
+    // Экспорт сертификатов
+    $scope.cert.exportToCSV = function(){
+        ReportSrvc.certificates($scope.training.data.id);
+    };
+
+    // Создать все сертификаты
+    $scope.cert.createAll = function(){
+         TrainingSrvc.createCertificates($routeParams.id).then(
+            function(data){
+                $scope.cert.forciblyUpdate++;
+                $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Сертификаты обновлены.', 'success', true);
+            },
+            function(response){
+                $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
 
     $scope.other.init();
 });

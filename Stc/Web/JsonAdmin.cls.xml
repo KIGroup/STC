@@ -611,20 +611,8 @@
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveTraining", "| "_status)) 
 		
 		// Создать сертификаты для каждого студента из каждой подгруппы в обучении
-		set keyGr = ""
-		for i=1:1:training.SubGroups.Count(){
-			set keyGr = training.SubGroups.Next(keyGr)
-			set sgroup = training.SubGroups.GetAt(keyGr)
-			
-			set keySt = ""
-			for j=1:1:sgroup.Students.Count(){
-				set keySt = sgroup.Students.Next(keySt)
-				set student = sgroup.Students.GetAt(keySt)
-				
-				do ##class(Stc.Data.Certificate).Create(student, training, .status)
-				if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createCertificate", "| "_status)) 
-			}
-		}
+		set status = training.CreateCertificates()
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createCertificate", "| "_status)) 
 		
 		TCOMMIT
 	}
@@ -749,7 +737,7 @@
 		
 		set training = ##class(Stc.Data.Training).%OpenId(data.trainingId)
 		set payer = ##class(Stc.Data.Company).%OpenId(data.payerId)
-		set sgroup = ##class(Stc.Data.SubGroup).Create(payer, ##class(%ArrayOfObjects).%New(), .status)
+		set sgroup = ##class(Stc.Data.SubGroup).Create(payer, ##class(%ArrayOfObjects).%New(), training.Course, .status)
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createSubGroup", "| "_status)) 
 		
 		do training.SubGroups.SetAt(sgroup, sgroup.%Id())
@@ -815,6 +803,7 @@
 		
 		set sg = ##class(Stc.Data.SubGroup).%OpenId(data.id)
 		set sg.Amount = data.amount
+		set sg.Discount = data.discount
 		set sg.Currency = ##class(Stc.Data.Currency).%OpenId(data.currencyId)
 		set status = sg.%Save()
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveSubGroup" ," | "_status)) 
@@ -874,6 +863,61 @@
 ]]></Implementation>
 </Method>
 
+<Method name="GetTrainingCertificates">
+<Description>
+Все сертификаты обучения. грид</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try{
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
+      	
+      	set whereRequired = "Training = "_..ParseParameter(params.trainingId)
+	    
+      	$$$THROWONERROR(status, ..WriteJsonForGrid("SELECT ID FROM Stc_Data.Certificate", "Stc.Data.Certificate", params, whereRequired))
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="CreateTrainingCertificates">
+<Description>
+Создать сертификаты для обучения, если возможно</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+	
+	try{
+		TSTART
+		
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		
+		set training = ##class(Stc.Data.Training).%OpenId(data.id,,.status)
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("openTraining", "| "_status)) 
+		
+	
+		// Создать сертификаты для каждого студента из каждой подгруппы в обучении
+		set status = training.CreateCertificates()
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createCertificate", "| "_status)) 
+		
+		TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
+		set status = ex.AsStatus()
+	}
+	
+    quit status
+]]></Implementation>
+</Method>
+
 <UDLText name="T">
 <Content><![CDATA[
 // ==================================== СЕРТИФИКАТЫ ==================================== 
@@ -908,6 +952,8 @@
 </Method>
 
 <Method name="PrintCertificate">
+<Description>
+Печать сертификата (Смена статуса)</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>number:%String</FormalSpec>
 <Implementation><![CDATA[
@@ -925,6 +971,15 @@
 	}
 
 	quit status
+]]></Implementation>
+</Method>
+
+<Method name="DeleteCertificate">
+<Description>
+Удаление сертификата</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>number:%String</FormalSpec>
+<Implementation><![CDATA[	quit ##class(Stc.Data.Certificate).NumberIdxDelete(number)
 ]]></Implementation>
 </Method>
 

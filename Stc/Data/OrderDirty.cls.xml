@@ -40,7 +40,6 @@
 <Description>
 Контактное лицо, Телефон</Description>
 <Type>%String</Type>
-<Required>1</Required>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
