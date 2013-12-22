@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/PersonCtrl.js" application="/csp/concurs/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/PersonCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
 'use strict';
-//dddddddddddвddd
+//dddddddddddвdddd
 
 /*===========================================================================================
 Персона: сотрудник, преподаватель, слушатель...
@@ -42,6 +42,7 @@ controllersModule.controller('PersonCtrl', function($scope, $location, $filter, 
             }
             /* Работа со слушателем из подгруппы */
             case 'sgstud':
+            case 'trng':
             {
                 $scope.personForm.back = function(){
                      $location.path('/training').search({id: $routeParams.training});
@@ -145,6 +146,9 @@ controllersModule.controller('PersonCtrl', function($scope, $location, $filter, 
         switch($routeParams.type){
             case 'sgstud':
                 promise = PersonSrvc.getFreeStudents($routeParams.sgroup + ";" + startsWith);
+                break;
+            case 'trng':
+                promise = PersonSrvc.getFreeTrainingStudents($routeParams.training + ";" + startsWith);
                 break;
             case 'teach':
                 promise = PersonSrvc.getFreeTeachers($routeParams.course + ";" + startsWith);
@@ -252,7 +256,7 @@ controllersModule.controller('PersonCtrl', function($scope, $location, $filter, 
 
     // Создать и добавить слушателя в подгруппу
     $scope.other.createSubGroupStudent = function(){
-        PersonSrvc.createSubGroupStudent($routeParams.sgroup, $scope.personForm.person).then(
+        PersonSrvc.createSubGroupStudent($routeParams.type=='trng' ? $routeParams.training: 0, $routeParams.sgroup, $scope.personForm.person).then(
             function(data){
                 $scope.personForm.alert = UtilsSrvc.getAlert('Готово!', 'Слушатель добавлен в подгруппу.', 'success', true);
                 //$scope.personForm.alert.closeMethod = $scope.personForm.back;

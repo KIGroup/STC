@@ -17,10 +17,10 @@ do ##class(Stc.Utils.Init.BaseInit).Init()</Description>
  	do ##class(Stc.Utils.Init.OrderStatus).Import()
  	do ##class(Stc.Utils.Init.Region).Import()
  	do ##class(Stc.Utils.Init.Company).Import()
- 	//do ##class(Stc.Utils.Init.Person).Import()
+ 	do ##class(Stc.Utils.Init.Person).Import()
  	do ##class(Stc.Utils.Msg).Init()
  	do ##class(Stc.Data.Localization.Translation).Init()
- 	do ..Settings()
+ 	//do ..Settings()
 ]]></Implementation>
 </Method>
 
@@ -32,6 +32,7 @@ do ##class(Stc.Utils.Init.BaseInit).Init()</Description>
 	do $CLASSMETHOD("Stc.Data.Company", "%KillExtent")
 	do $CLASSMETHOD("Stc.Data.Course", "%KillExtent")
 	do $CLASSMETHOD("Stc.Data.Order", "%KillExtent")
+	do $CLASSMETHOD("Stc.Data.OrderNewStudent", "%KillExtent")
 	do $CLASSMETHOD("Stc.Data.OrderStatus", "%KillExtent")
 	do $CLASSMETHOD("Stc.Data.Person", "%KillExtent")
 	do $CLASSMETHOD("Stc.Data.Region", "%KillExtent")

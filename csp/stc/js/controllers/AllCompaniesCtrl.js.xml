@@ -29,7 +29,7 @@ controllersModule.controller('AllCompaniesCtrl', function($scope, $filter, $loca
         $scope.company.multiSelectMode = false;
 		$scope.company.forciblyUpdate = 0;
 		
-        $scope.company.loadItems($scope.company.pageCurr, $scope.company.pageSize, "ShortName->Value", false, "", "");  
+        $scope.company.loadItems($scope.company.pageCurr, $scope.company.pageSize, "ShortName->Value", true, "", "");  
     };
 
     // company

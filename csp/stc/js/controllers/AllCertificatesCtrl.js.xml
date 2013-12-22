@@ -85,7 +85,7 @@ controllersModule.controller('AllCertificatesCtrl', function($scope, $filter, $l
            CertificateSrvc.remove(item.number).then(
               function(data){
                   $scope.cert.forciblyUpdate++;
-                  $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Сертификат удалён.', 'success', true);
+                  $scope.cert.alert = UtilsSrvc.getAlert('Готово!', 'Сертификат удалён.', 'success', true);
               },
               function(response){
                   $scope.cert.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);

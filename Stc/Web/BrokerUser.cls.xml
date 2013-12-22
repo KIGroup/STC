@@ -25,6 +25,9 @@
 	<!-- Создать заявку -->
 	<Route Method="POST" Url="/json/createOrder" Call="Stc.Web.JsonUser:CreateOrder"/>
 	
+	<!-- Создать заявку для одного слушателя -->
+	<Route Method="POST" Url="/json/createOrderNewStudent" Call="Stc.Web.JsonUser:CreateOrderNewStudent"/>
+	
 	<!-- Получить информацию о заявке по коду доступа -->
 	<Route Method="GET" Url="/json/approvedOrderInfo/:code" Call="Stc.Web.JsonUser:GetApprovedOrderInfo"/>
 	
@@ -57,6 +60,9 @@
 	
 	<!-- ==================================== ДРУГОЕ ==================================== -->
 	
+	<!-- Получить обучение, коротко -->
+	<Route Method="GET" Url="/json/training/:id" Call="Stc.Web.JsonUser:GetTraining"/>
+
 	<!-- Получить все города, поиск совпадения -->
 	<Route Method="GET" Url="/json/citiesStartsWith/:startsWith" Call="Stc.Web.JsonUser:GetCitiesStartsWith"/>
 

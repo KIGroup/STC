@@ -2,28 +2,31 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/controllers/TrainingCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
 'use strict';
-//ddddddeddddddddddddddddddddddd
+//djdddddddddd
 
 /*===========================================================================================
 Обучение
 ===========================================================================================*/
 
-controllersModule.controller('TrainingCtrl', function($scope, $location, $filter, $routeParams, UtilsSrvc, ReportSrvc, TrainingSrvc, CompanySrvc, PersonSrvc, CertificateSrvc){
+controllersModule.controller('TrainingCtrl', function($scope, $route, $location, $filter, $routeParams, UtilsSrvc, OrderSrvc, ReportSrvc, TrainingSrvc, CompanySrvc, PersonSrvc, CertificateSrvc){
     $scope.training = {};
     $scope.sgroup = {contract:{}};
     $scope.cert = {};
+    $scope.newstud = {};
     $scope.student = {};
+    $scope.allstud = {};
     $scope.other = {};
 
-
     if (!$scope.pageStore.training || $scope.pageStore.training.id != $routeParams.id)
-        $scope.pageStore.training = {id: $routeParams.id, tabSgActive: false, tabSgStActive: false};
+        $scope.pageStore.training = {id: $routeParams.id, tabSgActive: false, tabSgStActive: false, tabAllStudActive: false, tabCertsActive: false, tabNewStudActive: false};
 
-    if (!$scope.pageStore.trainingCertificates)
-        $scope.pageStore.trainingCertificates = {grid:{}};
+    $scope.pageStore.trainingCertificates = {grid:{}};
+    $scope.pageStore.newstud = {grid:{}};
+    $scope.pageStore.allstud = {grid:{}};
 
     $scope.other.init = function(){
-        $scope.sgroup.columns = [
+        //============================== ПОДГРУППЫ ==========================================================================
+		    $scope.sgroup.columns = [
                           {name: 'Плательщик',    sqlName: 'SubGroups->Payer->ShortName->Value', isSorted: true,  isSortable: true,   isDown: true, isSearched: true,  isSearchable: true},
                           {name: 'Слушатели',     sqlName: '',                                   isSorted: false, isSortable: false,  isDown: true,  isSearched: false, isSearchable: false},
                           {name: 'Сумма к оплате',sqlName: '',                                   isSorted: false, isSortable: false,  isDown: true,  isSearched: false, isSearchable: false},
@@ -38,9 +41,8 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
         $scope.sgroup.forciblyUpdate = 0;
 
         $scope.sgroup.loadCurrencies();
-        $scope.training.loadData($routeParams.id)
-        //---------------------------------------------------------------
-
+		
+        //============================== СЕРТИФИКАТЫ ==========================================================================
         $scope.cert.columns = [
                           {name: 'Курс',          sqlName: 'Training->Course->Name->Value', isSorted: false, isSortable: true, isDown: true,  isSearched: true,  isSearchable: true},
                           {name: 'Номер',         sqlName: 'Number',                        isSorted: true, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
@@ -65,8 +67,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
                                                 item.status = item.isPrinted == 1 ? $filter('localize')('Распечатан') : $filter('localize')('Не распечатан');
                                   }}];
 
-        $scope.cert.status = UtilsSrvc.getPropertyValue($scope.pageStore, 'trainingCertificates.status', 'All');
-        $scope.cert.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'trainingCertificates.grid.pageSize', 10);
+        $scope.cert.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'trainingCertificates.grid.pageSize', 15);
         $scope.cert.pageCurr = UtilsSrvc.getPropertyValue($scope.pageStore, 'trainingCertificates.grid.pageCurr', 1);
         $scope.cert.itemsTotal = 0;
         $scope.cert.selectedItems = [];
@@ -76,7 +77,37 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
 
         $scope.cert.forciblyUpdate++; 
 
-        //---------------------------------------------------------------
+        //============================== НОВЫЕ СЛУШАТЕЛИ ==========================================================================
+        $scope.newstud.columns = [
+                          {name: 'Фамилия',       sqlName: 'LastName->Value',           isSorted: false, isSortable: true, isDown: true,  isSearched: true, isSearchable: true},
+                          {name: 'Имя',           sqlName: 'FirstName->Value',          isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false},
+                          {name: 'Отчество',      sqlName: 'MiddleName->Value',         isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false},
+                          {name: 'Компания',      sqlName: 'Company->ShortName->Value', isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
+                          {name: 'Email',         sqlName: 'Email',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
+                          {name: 'Телефон',       sqlName: 'Phone',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
+                          {name: 'Skype',         sqlName: 'Skype',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: false},
+                          {name: 'Дата создания', sqlName: 'CreatedTS',                 isSorted: true,  isSortable: true, isDown: false, isSearched: false, isSearchable: false, filter: 'date'}];
+
+        $scope.newstud.properties = [{name:'lastName'}, 
+                                     {name:'firstName'},
+                                     {name:'middleName'}, 
+                                     {name:'company.shortName'},
+                                     {name:'email'},
+                                     {name:'phone'},
+                                     {name:'skype'},
+                                     {name:'createdTS', filter: 'date', filterParam: $filter('localize')('d MMMM y, HH:mm:ss')}];
+
+        $scope.newstud.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'newstud.grid.pageSize', 10);
+        $scope.newstud.pageCurr = UtilsSrvc.getPropertyValue($scope.pageStore, 'newstud.grid.pageCurr', 1);
+        $scope.newstud.itemsTotal = 0;
+        $scope.newstud.selectedItems = [];
+        $scope.newstud.multiSelectMode = false;
+        $scope.newstud.forciblyUpdate = 0;
+        $scope.newstud.actionColumnVisible = true;
+
+        $scope.newstud.forciblyUpdate++;
+        
+        //============================== СТУДЕНТЫ ПОДГРУППЫ ==========================================================================
         $scope.student.columns = [{name: 'Фамилия'}, {name: 'Имя'}, {name: 'Отчество'}, {name: 'Компания'}, {name: 'Email'}, {name: 'Телефон'}, {name: 'Skype'}];
         $scope.student.properties = [{name:'lastName'}, {name:'firstName'}, {name:'middleName'}, {name:'company.shortName'}, {name:'email'}, {name:'phone'}, {name:'skype'}];
         $scope.student.pageSize = 100;
@@ -84,6 +115,25 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
         $scope.student.itemsTotal = 0;
         $scope.student.selectedItems = [];
         $scope.student.multiSelectMode = false; 
+
+
+        //============================== ВСЕ СТУДЕНТЫ ==========================================================================
+        $scope.allstud.columns = [
+                          {name: 'Фамилия',       sqlName: 'Students->LastName->Value',           isSorted: false, isSortable: true, isDown: true,  isSearched: true,   isSearchable: true},
+                          {name: 'Имя',           sqlName: 'Students->FirstName->Value',          isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: false},
+                          {name: 'Отчество',      sqlName: 'Students->MiddleName->Value',         isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: false},
+                          {name: 'Компания',      sqlName: 'Students->Company->ShortName->Value', isSorted: true,  isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
+                          {name: 'Email',         sqlName: 'Students->Email',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
+                          {name: 'Телефон',       sqlName: 'Students->Phone',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
+                          {name: 'Skype',         sqlName: 'Students->Skype',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: false}];
+
+        $scope.allstud.properties = [{name:'lastName'}, {name:'firstName'}, {name:'middleName'}, {name:'company.shortName'}, {name:'email'}, {name:'phone'}, {name:'skype'}];
+        $scope.allstud.pageSize = 15;
+        $scope.allstud.pageCurr = 1;
+        $scope.allstud.itemsTotal = 0;
+        $scope.allstud.selectedItems = [];
+        $scope.allstud.multiSelectMode = false;
+        $scope.allstud.forciblyUpdate = 0;
     };
 
     // Загрузить валюты
@@ -104,8 +154,8 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
                 $scope.training.data = data;
                 $scope.training.data.notCorrectAddress = data.address.title;
                 
-        		$scope.training.dateStart = data.dateStart;
-        		$scope.training.dateFinish = data.dateFinish;
+        		    $scope.training.dateStart = data.dateStart;
+        		    $scope.training.dateFinish = data.dateFinish;
         		
                 if (data.isCompleted == 0){
                     $scope.training.btnAdditionName = 'Завершить';
@@ -116,7 +166,10 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
                     $scope.training.btnAdditionVisible = false;
                 }
 
-                 $scope.sgroup.loadItems($scope.sgroup.pageCurr, $scope.sgroup.pageSize, "SubGroups->Payer->ShortName->Value", true, "", "");
+                $scope.sgroup.forciblyUpdate++;
+                $scope.allstud.forciblyUpdate++;
+                //$scope.sgroup.loadItems($scope.sgroup.pageCurr, $scope.sgroup.pageSize, "SubGroups->Payer->ShortName->Value", true, "", "");
+                //$scope.sgroup.loadItems($scope.sgroup.pageCurr, $scope.sgroup.pageSize, "SubGroups->Payer->ShortName->Value", true, "", "");
             },
             function(response){
                 $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
@@ -140,7 +193,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
         TrainingSrvc.completeTraining($scope.training.data.id).then(
             function(data){
                 $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Обучение завершено.', 'success', true);
-                $scope.other.init();
+               	$route.reload();
             },
             function(response){
                 $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
@@ -213,7 +266,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
         $scope.sgPaymentForm.$setPristine();
     };
 
-    // 
+    // Отслеживание выбранной подгруппы
     $scope.$watch('sgroup.selectedItems[0].id', function(){
         if ($scope.sgroup.selectedItems.length != 0){
         	$scope.sgroup.contract = $scope.sgroup.selectedItems[0].contract;
@@ -232,7 +285,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
         $scope.sgPaymentForm.$setPristine();
     },true);
 
-    // 
+    // При изменении валюты в выбранной подгруппе
     $scope.$watch('sgroup.selectedItems[0].currency.id', function(){ 
         if (!$scope.sgroup.selectedItems[0])
         	return;
@@ -254,6 +307,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
                 function(data){
 	                $scope.sgroup.selectedItems = [];
                     $scope.sgroup.forciblyUpdate++;
+                    $scope.allstud.forciblyUpdate++;
                     $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Подгруппа удалена.', 'success', true);
                 },
                 function(response){
@@ -315,6 +369,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
             PersonSrvc.deleteSubGroupStudent($scope.sgroup.selectedItems[0].id, item.id).then(
                 function(data){
                     $scope.sgroup.forciblyUpdate++;
+                    $scope.allstud.forciblyUpdate++;
                     $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Слушатель удален из подгруппы.', 'success', true);
                 },
                 function(response){
@@ -401,7 +456,201 @@ controllersModule.controller('TrainingCtrl', function($scope, $location, $filter
     };
 
 
+    ///============================= НОВЫЕ СЛУШАТЕЛИ ===========================================
+    // Загрузка новых слушателей
+    $scope.newstud.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
+        OrderSrvc.getOrdersNewStudent(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $routeParams.id).then(
+            function(data){
+                $scope.newstud.pageTotal = Math.ceil(data.itemsTotal / pageSize);
+                $scope.newstud.itemsTotal = data.itemsTotal;
+                $scope.newstud.items = data.items;
+
+                if ($scope.newstud.selectedItems && $scope.newstud.items && $scope.newstud.selectedItems.length == 0 && $scope.newstud.items.length != 0){
+                    $scope.newstud.selectedItems[0] = $scope.newstud.items[0];
+                    $scope.newstud.selectedItems[0].rowClass = 'info';
+                }
+            },
+            function(response){
+                $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    // Удалить заявку
+    $scope.newstud.remove = function(item){
+        function removeOrd(){
+           OrderSrvc.deleteOrderNewStudent(item.id).then(
+              function(data){
+                  $scope.newstud.forciblyUpdate++;
+                  $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Заявка от слушателя удалена.', 'success', true);
+              },
+              function(response){
+                  $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+              });
+        };
+
+        UtilsSrvc.openMessageBox('Удалить заявку', $filter('localize')("Удалить заявку от слушателя") + " '" + item.lastName + "'?", removeOrd); 
+    };
+
+    // Вызов при каждом выборе студента
+    $scope.$watch('newstud.selectedItems[0].id', function(){
+        if ($scope.newstud.selectedItems.length == 0)
+            return;
+
+        PersonSrvc.getPersonByEmail($scope.newstud.selectedItems[0].email).then(
+            function(data){
+                $scope.newstud.conflict = data;
+            },
+            function(response){
+                $scope.newstud.conflict = {};
+            });
+    },true);
+
+    // Открыть диалог смены компании в заявке
+    $scope.other.openChangeCompanyDialog = function(){
+        if (!$scope.sgroup.companies || $scope.sgroup.companies.length == 0)
+            $scope.sgroup.loadCompanies();
+        
+        $('#ChangeCompanyModal').modal('show');
+        $scope.other.modalChangeCompanyVisible = true;
+    };
+
+    // Изменение компании в заявке
+    $scope.other.changeCompany = function(){
+        $scope.other.modalChangeCompanyVisible = false;
+        if (!$scope.other.newOrderCompany || !$scope.other.newOrderCompany.id)
+            return;
+        
+        OrderSrvc.changeOrderNewStudentCompany($scope.newstud.selectedItems[0].id, $scope.other.newOrderCompany.id).then(
+                function(data){
+                    $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Произошла смена компании в заявке.', 'success', true);
+                    $scope.newstud.forciblyUpdate++;
+                },
+                function(response){
+                    $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });
+    };
+
+    // Переход на страницу создания компании
+    $scope.other.createCompany = function(){
+        $location.path('/company').search({ordernewstudent: $scope.newstud.selectedItems[0].id});
+    };
+
+    // Добавление слушателя из заявки в обучение
+    $scope.newstud.addIntoTraining = function(type){
+        TrainingSrvc.addNewStudentIntoTraining({orderId: $scope.newstud.selectedItems[0].id, trainingId: $scope.training.data.id, type: type}).then(
+                function(data){
+                    $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Слушатель из заявки добавлен в обучение.', 'success', true);
+                    $scope.newstud.forciblyUpdate++;
+                    $scope.sgroup.forciblyUpdate++;
+					          $scope.allstud.forciblyUpdate++;
+					
+                    $scope.newstud.selectedItems = [];
+                },
+                function(response){
+                    $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });
+    };
+
+
+    // Загрузить всех слушателей
+    $scope.allstud.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
+        TrainingSrvc.getTrainingStudents(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $routeParams.id).then(
+            function(data){
+                $scope.allstud.pageTotal = Math.ceil(data.itemsTotal / pageSize);
+                $scope.allstud.itemsTotal = data.itemsTotal;
+                $scope.allstud.items = data.items;
+
+                if ($scope.allstud.selectedItems && $scope.allstud.items && $scope.allstud.selectedItems.length == 0 && $scope.allstud.items.length != 0){
+                    $scope.allstud.selectedItems[0] = $scope.allstud.items[0];
+                    $scope.allstud.selectedItems[0].rowClass = 'info';
+                }
+            },
+            function(response){
+                $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    // Перейти на страницу для добавления слушателя в подгруппу
+    $scope.allstud.add = function(){
+        $location.path('/person').search({type: 'trng', training: $scope.training.data.id});
+    };
+    
+    // Перейти на страницу для редактирования слушателя в подгруппу
+    $scope.allstud.edit = function(item){
+        $location.path('/person').search({type: 'trng', id: item.id, training: $scope.training.data.id});
+    };
+
+    // Удалить слушателя из подгруппы
+    $scope.allstud.delete = function(item){
+        function deleteTrainingStudent(){
+            PersonSrvc.deleteTrainingStudent($scope.training.data.id, item.id).then(
+                function(data){
+                    $scope.sgroup.forciblyUpdate++;
+                    $scope.allstud.forciblyUpdate++;
+                    $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Слушатель удален из подгруппы.', 'success', true);
+                },
+                function(response){
+                    $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });  
+        };
+
+        UtilsSrvc.openMessageBox('Удалить слушателя', $filter('localize')("Удалить слушателя") + ' ' + item.lastName + "?", deleteTrainingStudent);   
+    };
+
+
+    $scope.training.loadEvent = function(){
+       TrainingSrvc.doEvent({method: "get", id: $routeParams.id}).then(
+            function(data){
+                data.event.description = data.event.description.replace(/<br>/g, "\n");
+                $scope.training.eventData = data;
+            },
+            function(response){
+                $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    $scope.training.createEvent = function(){
+       TrainingSrvc.doEvent({method: "create", id: $routeParams.id, event:  $scope.training.eventData.event}).then(
+            function(data){
+                $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Событие создано.', 'success', true);
+                $scope.training.eventData.event.exists = 1;
+            },
+            function(response){
+                $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    $scope.training.updateEvent = function(){
+       TrainingSrvc.doEvent({method: "update", id: $routeParams.id, event:  $scope.training.eventData.event}).then(
+            function(data){
+                $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Событие обновлено.', 'success', true);
+            },
+            function(response){
+                $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+
+    $scope.training.deleteEvent = function(){
+        function deleteEvent(){
+           TrainingSrvc.doEvent({method: "delete", id: $routeParams.id}).then(
+                function(data){
+                    //$scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Событие удалено.', 'success', true);
+                    $scope.training.loadEvent();      
+                    $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Событие удалено.', 'success', true);
+                },
+                function(response){
+                    //$scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                    $scope.training.loadEvent();      
+                    $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Событие удалено.', 'success', true);
+                });
+        };
+
+        UtilsSrvc.openMessageBox('Удалить событие', "Удалить событие из календаря?", deleteEvent);   
+    };
+
     $scope.other.init();
+    $scope.training.loadData($routeParams.id);
 });
 
 ]]></CSP>

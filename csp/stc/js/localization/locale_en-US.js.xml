@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/localization/locale_en-US.js" application="/csp/concurs/" default="1"><![CDATA[
-//
+<CSP name="stc/js/localization/locale_en-US.js" application="/csp/dorabotka/" default="1"><![CDATA[
+//ввв
 
 localizationModule.constant('StcDictionary', {
   strings: {
@@ -256,17 +256,35 @@ localizationModule.constant('StcDictionary', {
     'Юридический адрес'                                        : 'Legal address',
     'Язык системы'                                             : 'System language',
     
-    'О проекте':'About',
-    'Руководитель':'Project manager',
-    'Разработчики':'Developers',
-    'Организация':'Organization',
-    'Якунин Ю.Ю.':'Yakunin Y.Y.',
-    'Подолько И.В.':'Podolko I.V.',
-    'Речитский А.Г.':'Rechitsky A.G.',
-    'Проект':'Project',
-    'ФГАОУ ВПО':'FSAEI HPE',
-    'Сибирский Федеральный Университет':'Siberian Federal University',
-    'Институт Космических и Информационных Технологий':'Institute of Space and Information Technologies'
+    'Все слушатели'          :'All Students',
+    'Новые заявки'           :'New orders',
+    'Google календарь'       :'Google calendar',
+    'Описание'               :'Description',
+    'Событие'                :'Event',
+    'Место'                  :'Location',
+    '(не включительно)'      :'(not in)',
+    'Регистрация на обучение':'Register for training',
+    'Обновить'               :'Refresh',
+    'Экспорт'                :'Export',
+    'Скидка'                 :'Discount',
+    'Сумма к оплате'         :'Amount',
+    'Сумма с НДС'            :'Amount + tax',
+    'Стоимость обучения'     :'Cost of training',
+    'Добавить обучение'      :'Add training',
+    'Удалить сертификат'     :'Remove certificate',
+    'Удалить сертификат слушателя':'Remove student certificate',
+    'Удалить заявку от слушателя' :'Remove order from student',
+    'События нет в календаре'     :'No event in the calendar',
+    'Событие есть в календаре'    :'Event is on the calendar',
+    'Справка'                     :'Help',
+    'Компания слушателя не существует, создайте её или смените':'Company student does not exist, create it or change',
+    'Слушатель будет добавлен в обучение'                      :'The student is added to the training',
+    'Заменить компанию в заявке на существующую'               :'Company to replace the existing order',
+    'Создать новую компанию, контактом компании станет слушатель из заявки':'Create a new company, contact the company will be a student from the order',
+    'Обновить и добавить в обучение'    :'Update and add to the training',
+    'Не обновлять и добавить в обучение':'Not to update and add to training',
+    'В системе уже присутствует сотрудник с email: ':'The system is already present with the employee email: ',
+    'Заявка на обучение':'Order for training'
 
   },
   getTranslate: function(word){

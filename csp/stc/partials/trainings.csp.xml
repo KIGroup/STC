@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/trainings.csp" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/partials/trainings.csp" application="/csp/dorabotka/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -38,12 +38,18 @@
 		    multi-select-mode="training.multiSelectMode"
 
 		    action-column-visible="true"
-		    action-column-icon="'icon-ellipsis-horizontal'"
+		    action-column-icon="'icon-plus-sign'"
+		    action-column-title="'Добавить обучение'|localize"
+		    action-column-method="training.add()"
 
 		    first-row-action-icon="'icon-eye-open'"
 		    first-row-action-title="'Окрыть обучение'|localize"
 		    first-row-action-method="training.open(item)"
 		    
+		    second-row-action-icon="'icon-remove'"
+		    second-row-action-title="'Удалить обучение'|localize"
+		    second-row-action-method="training.remove(item)"
+
 		    forcibly-update="training.forciblyUpdate"
 		/>
 	</div>
@@ -74,7 +80,9 @@
 						<p><span class="spnTitle" ng-bind="'Email'"                                      ></span>: <span ng-bind="training.selectedItems[0].teacher.email"></span></p>
 						<p><span class="spnTitle" ng-bind="'Телефон'|localize"                           ></span>: <span ng-bind="training.selectedItems[0].teacher.phone"></span></p>
 						<p><span class="spnTitle" ng-bind="'Skype'"                                      ></span>: <span ng-bind="training.selectedItems[0].teacher.skype"></span></p>
-						<p><span class="spnTitle" ng-bind="('Оплачено подгрупп'|localize)+' / '+('всего подгрупп'|localize)"></span>: <span ng-bind="training.selectedItems[0].isPaidProgress"></span></p>
+						<p><span class="spnTitle" ng-bind="('Подгрупп'|localize)+' / '+('слушателей'|localize)"></span>: <span ng-bind="training.selectedItems[0].sgroups + ' / ' + training.selectedItems[0].students"></span></p>
+						<p><span class="spnTitle" ng-bind="('Новые заявки'|localize)"                    ></span>: <span ng-bind="training.selectedItems[0].newStudents"></span></p>
+						<a target="_blank" style="text-decoration: none;" ng-href="{{'#/orderstudent?training=' + training.selectedItems[0].id}}"><i ng-bind="'Заявка на обучение'|localize"></i></a></p>
 					</div>
 					<div class="span6">
 						<p><span class="spnTitle" ng-bind="'Место обучения'|localize"         ></span>: <span ng-bind="training.selectedItems[0].city.name + ', ' + training.selectedItems[0].city.parentName + ', ' + training.selectedItems[0].city.greatParentName"></span></p>
@@ -83,7 +91,9 @@
 						<p><span class="spnTitle" ng-bind="'Дата начала обучения'|localize"   ></span>: <span ng-bind="training.selectedItems[0].dateStart|convertCacheDate:('d MMMM y'|localize)"></span></p>
 						<p><span class="spnTitle" ng-bind="'Дата окончания обучения'|localize"></span>: <span ng-bind="training.selectedItems[0].dateFinish|convertCacheDate:('d MMMM y'|localize)"></span></p>
 						<p><span class="spnTitle" ng-bind="'Время'|localize"         ></span>: <span ng-bind="training.selectedItems[0].timeStartFinish"></span></p>
-						<button class="btn btn-primary btn-small" ng-show="training.selectedItems[0].isCompleted==0" ng-click="training.insertToCalendar()" ng-bind="'Импортировать в календарь'|localize"></button>
+						<p><span class="spnTitle" ng-bind="'Примечание'|localize"         ></span>: <span ng-bind="training.selectedItems[0].otherInfo"></span></p>
+						<p><span class="label label-success"   ng-bind="'Событие есть в календаре'|localize" ng-hide="training.selectedItems[0].event==''"></span></p>
+						<p><span class="label label-important" ng-bind="'События нет в календаре'|localize"  ng-show="training.selectedItems[0].event==''"></span></span></p>		
 					</div>
 				</div>
 				</br>

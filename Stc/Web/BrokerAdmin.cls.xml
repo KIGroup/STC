@@ -34,8 +34,16 @@
 	<!-- Получить все(или по статусу) заявки -->
 	<Route Method="POST" Url="/json/orders" Call="Stc.Web.JsonAdmin:GetOrders"/>
 	
+	<!-- Получить все заявки - от слушателей для обучения -->
+	<Route Method="POST" Url="/json/ordersNewStudent" Call="Stc.Web.JsonAdmin:GetOrdersNewStudent"/>
+	
+	
 	<!-- Получить одну необработанную заявку -->
 	<Route Method="GET" Url="/json/dirtyOrder/:id" Call="Stc.Web.JsonAdmin:GetDirtyOrder"/>
+	
+	<!-- Получить одну заявку от слушателя -->
+	<Route Method="GET" Url="/json/orderNewStudent/:id" Call="Stc.Web.JsonAdmin:GetOrderNewStudent"/>
+	
 	
 	<!-- Создание обработанной заявки -->
 	<Route Method="POST" Url="/json/createApprovedOrder" Call="Stc.Web.JsonAdmin:CreateApprovedOrder"/>
@@ -46,8 +54,16 @@
 	<!-- Удаление любой заявки -->
 	<Route Method="DELETE" Url="/json/deleteOrder/:id" Call="Stc.Web.JsonAdmin:DeleteOrder"/>
 	
+	<!-- Удаление заявки от слушателя -->
+	<Route Method="DELETE" Url="/json/deleteOrderNewStudent/:id" Call="Stc.Web.JsonAdmin:DeleteOrderNewStudent"/>
+	
+	
 	<!-- Сменить компанию в заявке -->
 	<Route Method="POST" Url="/json/changeOrderCompany" Call="Stc.Web.JsonAdmin:ChangeOrderCompany"/>
+	
+	<!-- Сменить компанию в заявке от слушателя-->
+	<Route Method="POST" Url="/json/changeOrderNewStudentCompany" Call="Stc.Web.JsonAdmin:ChangeOrderNewStudentCompany"/>
+	
 	
 	<!-- Повторно отправить контакту компании email с инструкциями -->
 	<Route Method="POST" Url="/json/sendEmailToCompanyContactForApprovedOrder" Call="Stc.Web.JsonAdmin:SendEmailToCompanyContactForApprovedOrder"/>
@@ -59,6 +75,10 @@
 	
 	<!-- Сохранить компанию и контакт из необработанной заявки -->
 	<Route Method="POST" Url="/json/saveCompanyFromOrder" Call="Stc.Web.JsonAdmin:SaveCompanyFromOrder"/>
+	
+	<!-- Сохранить компанию и контакт из заявки от слушателя -->
+	<Route Method="POST" Url="/json/saveCompanyFromOrderNewStudent" Call="Stc.Web.JsonAdmin:SaveCompanyFromOrderNewStudent"/>
+	
 	
 	<!-- Обновить данные о компании -->
 	<Route Method="POST" Url="/json/saveCompany" Call="Stc.Web.JsonAdmin:SaveCompany"/>
@@ -72,12 +92,16 @@
 	<!-- Удалить компанию, если это возможно -->
 	<Route Method="DELETE" Url="/json/company/:id" Call="Stc.Web.JsonAdmin:DeleteCompany"/>
 
+
 	<!-- ==================================== ОБУЧЕНИЯ ==================================== -->
-	<!-- Вставить обучение в Google календарь -->
-	<Route Method="GET" Url="/json/insertTrainingToCalendar/:id" Call="Stc.Web.JsonAdmin:InsertTrainingToCalendar"/>
+	<!-- Работа с событием обучения в календаре - создание, удаление, обновление  -->
+	<Route Method="POST" Url="/json/trainingEvent" Call="Stc.Web.JsonAdmin:TrainingCalendarEvent"/>
 	
 	<!-- Создать обучение из выбранных заявок, создать подгруппы | или обновить -->
 	<Route Method="POST" Url="/json/saveTraining" Call="Stc.Web.JsonAdmin:SaveTraining"/>	
+	
+	<!-- Удалить обучение -->
+	<Route Method="DELETE" Url="/json/deleteTraining/:id" Call="Stc.Web.JsonAdmin:DeleteTraining"/>	
 	
 	<!-- Завершить обучение и создать сертификаты для каждого слушателя -->
 	<Route Method="POST" Url="/json/completeTraining" Call="Stc.Web.JsonAdmin:CompleteTraining"/>	
@@ -94,8 +118,14 @@
 	<!-- Получить подгруппы обучения -->
 	<Route Method="POST" Url="/json/getTrainingSubGroups" Call="Stc.Web.JsonAdmin:GetTrainingSubGroups"/>	
 	
+	<!-- Получить слушателей обучения -->
+	<Route Method="POST" Url="/json/getTrainingStudents" Call="Stc.Web.JsonAdmin:GetTrainingStudents"/>	
+	
 	<!-- Добавить подгруппу в обучение -->
 	<Route Method="POST" Url="/json/createSubGroup" Call="Stc.Web.JsonAdmin:CreateSubGroup"/>	
+	
+	<!-- Добавить сотрудника из заявки в обучение, создать/открыть подгруппу и добавить его туда-->
+	<Route Method="POST" Url="/json/addNewStudentIntoTraining" Call="Stc.Web.JsonAdmin:AddNewStudentIntoTraining"/>	
 	
 	<!-- Удалить подгруппу из обучения -->
 	<Route Method="DELETE" Url="/json/deleteSubGroup/:trainingIdsgroupId" Call="Stc.Web.JsonAdmin:DeleteSubGroup"/>	
@@ -127,12 +157,13 @@
 	<!-- Удаление сертификата -->
 	<Route Method="DELETE" Url="/json/certificate/:number" Call="Stc.Web.JsonAdmin:DeleteCertificate"/>	
 	
+	
 	<!-- ==================================== ПЕРСОНЫ ==================================== -->
 	
-	<!-- -->
+	<!-- Сохранить/создать-->
 	<Route Method="POST" Url="/json/createPerson" Call="Stc.Web.JsonAdmin:SavePerson"/>
 	
-	<!-- -->
+	<!-- Удалить -->
 	<Route Method="DELETE" Url="/json/deletePerson/:id" Call="Stc.Web.JsonAdmin:DeletePerson"/>
 	
 	<!-- Все заявки, в которых участвует данный сотрудник -->
@@ -157,10 +188,17 @@
 	<Route Method="GET" Url="/json/getFreeTeachers/:courseword" Call="Stc.Web.JsonAdmin:GetFreeTeachers"/>
 	
 	<!-- Поиск сотрудников, которые не входят в подгруппу обучения. Поиск по фамилии и почте. -->
-	<Route Method="GET" Url="/json/getFreeStudents/:sgroupeword" Call="Stc.Web.JsonAdmin:GetFreeStudents"/>
+	<Route Method="GET" Url="/json/getFreeStudents/:sgroupword" Call="Stc.Web.JsonAdmin:GetFreeStudents"/>
 	
-	<!-- Получить одного сотрудника -->
+	<!-- Поиск сотрудников, которые не входят в обучение. Поиск по фамилии и почте. -->
+	<Route Method="GET" Url="/json/getFreeTrainingStudents/:trainingword" Call="Stc.Web.JsonAdmin:GetFreeTrainingStudents"/>
+	
+	<!-- Получить одного сотрудника по ИД-->
 	<Route Method="GET" Url="/json/getPerson/:id" Call="Stc.Web.JsonAdmin:GetPerson"/>
+
+	<!-- Получить одного сотрудника по Email-->
+	<Route Method="GET" Url="/json/getPersonByEmail/:email" Call="Stc.Web.JsonAdmin:GetPersonByEmail"/>
+
 
 	<!-- Получить всех сотрудников для таблицы -->
 	<Route Method="POST" Url="/json/allPersons" Call="Stc.Web.JsonAdmin:GetAllPersons"/>
@@ -183,13 +221,15 @@
 	<!--  -->
 	<Route Method="DELETE" Url="/json/deleteSubGroupStudent/:sgroupIdstudentId" Call="Stc.Web.JsonAdmin:DeleteSubGroupStudent"/>
 	
+	<!--  -->
+	<Route Method="DELETE" Url="/json/deleteTrainingStudent/:trainingIdstudentId" Call="Stc.Web.JsonAdmin:DeleteTrainingStudent"/>
 	
 	<!-- ==================================== ДРУГОЕ ==================================== -->
 	
 	<!-- Проверка парав доступа, принудительный вызов окна авторизации -->
 	<Route Method="GET" Url="/json/checkAdmin/:isLogin" Call="Stc.Web.JsonAdmin:CheckAdmin"/>
 		
-	
+	<!-- Отчет, сертификаты обучения-->
 	<Route Method="GET" Url="/text/:lang/certificates/:trainingId" Call="Stc.Web.Report:Certificates"/>
 </Routes>
 ]]></Data>

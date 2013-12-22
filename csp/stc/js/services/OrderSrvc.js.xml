@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/OrderSrvc.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/services/OrderSrvc.js" application="/csp/dorabotka/" default="1"><![CDATA[
 'use strict';
-//dвdddв
+//dвdddвd
 
 /*===========================================================================================
 Заявки
@@ -14,15 +14,23 @@ servicesModule.factory('OrderSrvc', function(DALSrvc) {
         createOrder: function(order){
             return DALSrvc.getPromise('save', StcAppSetting.user + '/json/createOrder', order);
         },
+        /* Создание заявки для слушателя*/
+        createOrderNewStudent: function(order){
+            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/createOrderNewStudent', order);
+        },
         /* Удаление любой заявки */
         deleteOrder: function(id){
             return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/deleteOrder/' + id, null);
+        },
+        /* Удаление заявки от слушателя*/
+        deleteOrderNewStudent: function(id){
+            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/deleteOrderNewStudent/' + id, null);
         },
         /* Создание чистой заявки из грязной */
         createApprovedOrder: function(orderId, sendEmail){
             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/createApprovedOrder', {id: orderId, sendEmail: sendEmail});
         },
-                /* */
+        /* Получить все заявки */
         getOrders: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, status){
             var first = pageSize * (pageCurr - 1) + 1;
             var obj = {sqlName: sqlName, 
@@ -34,6 +42,19 @@ servicesModule.factory('OrderSrvc', function(DALSrvc) {
                        status: status};
 
             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/orders', obj);
+        },
+        /* Получить все заявки-студентов */
+        getOrdersNewStudent: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, trainingId){
+            var first = pageSize * (pageCurr - 1) + 1;
+            var obj = {sqlName: sqlName, 
+                       isDown: isDown, 
+                       first: first, 
+                       last: first + pageSize - 1,
+                       searchSqlName: searchSqlName, 
+                       searchText: searchText,
+                       trainingId: trainingId};
+
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/ordersNewStudent', obj);
         },
         /* Получить грязные заявки для таблицы */
         getDirtyOrders: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, status){
@@ -64,6 +85,10 @@ servicesModule.factory('OrderSrvc', function(DALSrvc) {
         getDirtyOrder: function(id){
             return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/dirtyOrder/' + id, null);
         },
+        /* Получить 1 заявку от слушателя*/
+        getOrderNewStudent: function(id){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/orderNewStudent/' + id, null);
+        },
         /* Получить чистую заявку по коду доступа */
         getApprovedOrderByCode: function(code){
             return DALSrvc.getPromise('get', StcAppSetting.user + '/json/approvedOrderInfo/' + code, null);
@@ -92,14 +117,19 @@ servicesModule.factory('OrderSrvc', function(DALSrvc) {
         getStudentsFromOrders: function(orderIdString){
             return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/getStudentsFromOrders/' + orderIdString, null);
         },
-        /* Обновть данные в контакте или заменить контакт компании */
+        /* Сменить компанию в заявке */
         changeOrderCompany: function(orderId, companyId){
             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/changeOrderCompany', {orderId: orderId, companyId: companyId});
+        },
+        /* Сменить компанию в заявке от слушателя */
+        changeOrderNewStudentCompany: function(orderId, companyId){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/changeOrderNewStudentCompany', {orderId: orderId, companyId: companyId});
         },
         /* Отправить повторно контакту письмо */
         sendEmail: function(orderCode){
             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/sendEmailToCompanyContactForApprovedOrder', {code: orderCode});
         }
+
     }
 });
 ]]></CSP>

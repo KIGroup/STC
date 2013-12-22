@@ -63,6 +63,33 @@
 ]]></Implementation>
 </Method>
 
+<Method name="CreateOrderNewStudent">
+<Description>
+Создать заявку для нового слушателя</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+    try{
+	    TSTART
+	    
+	   	$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.order,1))
+       
+       	do ##class(Stc.Data.OrderNewStudent).Create(order, .status)
+       	if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createDirtyOrder", "| "_status))
+       	
+       	TCOMMIT
+   	}
+   	catch ex {
+	   	TROLLBACK
+	   	set status = ex.AsStatus()
+	}
+	
+	quit status
+]]></Implementation>
+</Method>
+
 <Method name="GetApprovedOrderInfo">
 <Description>
 Получить информацию о заявке по коду доступа</Description>
@@ -372,6 +399,29 @@
 	do proxyResult.%ToJSON()
 	    
 	q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetTraining">
+<Description>
+Полчить обучение по ИД</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try{
+		set proxy = ..GetProxyObject("Stc.Data.Training", id)
+		set proxy.teacher = ""
+		set proxy.cost = ""
+		do proxy.%ToJSON()
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+	
+	quit status
 ]]></Implementation>
 </Method>
 </Class>

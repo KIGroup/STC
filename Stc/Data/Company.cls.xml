@@ -195,7 +195,12 @@
 		
 		if (findId = ""){
 			// Проверка: плательщик подгруппы
-			&sql(SELECT ID INTO:findId FROM Stc_Data.SubGroup WHERE Payer = :id)	
+			&sql(SELECT ID INTO:findId FROM Stc_Data.SubGroup WHERE Payer = :id)
+			
+			if (findId = ""){
+				// Проверка: в заявке от слушателя
+				&sql(SELECT ID INTO:findId FROM Stc_Data.OrderNewStudent WHERE Company = :id)	
+			}	
 		}
 	}
 	

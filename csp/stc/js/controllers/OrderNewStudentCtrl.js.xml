@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/controllers/OrderNewStudentCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
+'use strict';
+//dedddddd
+
+/*===========================================================================================
+Создание заявки для одного слушателя
+===========================================================================================*/
+
+controllersModule.controller('OrderNewStudentCtrl', function($scope, $routeParams, OrderSrvc, TrainingSrvc, CompanySrvc, UtilsSrvc){
+    $scope.ordForm = {order:{}};
+
+    /* Инициализация */
+    $scope.ordForm.init = function(){
+        $scope.ordForm.btnDisabled = false;
+        $scope.ordForm.companies = [];
+        $scope.ordForm.caption = 'Создание заявки';
+        $scope.ordForm.btnClearShow = true;
+        $scope.ordForm.order.trainingId = $routeParams.training;
+    };
+
+    /* Подгрузить имена компаний */
+    $scope.ordForm.loadCompanies = function(){
+        CompanySrvc.getAllCompaniesShortInfo().then(
+            function(data){
+                $scope.ordForm.companies = data;
+            },
+            function(response){
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            }); 
+    };
+
+    /* Подгрузить обучение */
+    $scope.ordForm.loadTraining = function(){
+        TrainingSrvc.getTrainingForUser($scope.ordForm.order.trainingId).then(
+            function(data){
+                $scope.ordForm.training = data;
+            },
+            function(response){
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            }); 
+    };
+
+    
+    /* Стереть все */
+    $scope.ordForm.clear = function(){
+        $scope.ordForm.order = {trainingId: $scope.ordForm.order.trainingId};
+        $scope.ordForm.btnDisabled = false;
+    };
+
+    /* Создать заявку */
+    $scope.ordForm.submit = function(){
+        OrderSrvc.createOrderNewStudent($scope.ordForm.order).then(
+            function(data){
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Готово!', 'Ваша заявка принята.', 'success', true);
+                $scope.ordForm.btnDisabled = true;
+                $scope.ordForm.btnClearShow = true;
+            },
+            function(response){
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+    
+
+    $scope.ordForm.init();
+    $scope.ordForm.loadTraining();
+    $scope.ordForm.loadCompanies();
+  });
+
+]]></CSP>
+</Export>

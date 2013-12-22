@@ -2,7 +2,7 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/services/TrainingSrvc.js" application="/csp/dorabotka/" default="1"><![CDATA[
 'use strict';
-//ddddddddddddd
+//ddd
 
 /*===========================================================================================
 Обучения
@@ -10,13 +10,17 @@
 
 servicesModule.factory('TrainingSrvc', function(DALSrvc) {
 	return {
-        /* Вставить в календарь */
-        insertToCalendar: function(id){
-           return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/insertTrainingToCalendar/' + id, null);
+        /* Добавить слушателя из заявки в обучение */
+        addNewStudentIntoTraining: function(trainingData){
+           return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/addNewStudentIntoTraining', trainingData);
         },
         /* Сохранить/ создать обучение */
         saveTraining: function(trainingData){
            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/saveTraining', trainingData);
+        },
+        /* Удалить обучение */
+        deleteTraining: function(id){
+           return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/deleteTraining/'+id, null);
         },
         /* Завершить обучение */
         completeTraining: function(trainingId){
@@ -29,6 +33,10 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
         /* Получить обучение */
         getTraining: function(id){
            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/getTraining/' + id, null);
+        },
+        /* Получить обучение для пользователя*/
+        getTrainingForUser: function(id){
+           return DALSrvc.getPromise('get', StcAppSetting.user + '/json/training/' + id, null);
         },
         /* Все сертификаты обучения */
         getCertificates: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, trainingId){
@@ -72,6 +80,19 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
 
             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/getTrainingSubGroups', obj);
         },
+        /* Все слушатели обучения для таблицы */
+        getTrainingStudents: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, trainingId){
+            var first = pageSize * (pageCurr - 1) + 1;
+            var obj = {sqlName: sqlName, 
+                       isDown: isDown, 
+                       first: first, 
+                       last: first + pageSize - 1,
+                       searchSqlName: searchSqlName, 
+                       searchText: searchText,
+                       trainingId: trainingId};
+
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/getTrainingStudents', obj);
+        },
         /* Все валюты */
         getCurrencies: function(){
             return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/allCurrencies', null);
@@ -91,7 +112,10 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
         /* Удалить подгруппу из обучения */
         deleteSubGroup: function(trainingId, sgroupId){
             return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/deleteSubGroup/' + trainingId + ';' + sgroupId, null);  
-        }
+        },
+        doEvent: function(data){
+	        return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/trainingEvent', data);
+	    }
     }
 });
   

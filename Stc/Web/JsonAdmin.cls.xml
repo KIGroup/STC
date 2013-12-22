@@ -143,6 +143,29 @@
 ]]></Implementation>
 </Method>
 
+<Method name="GetOrdersNewStudent">
+<Description>
+Все заявки - от слушателей для обучения</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try{
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
+      	
+      	set whereRequired = "Training = '"_..ParseParameter(params.trainingId)_"'"
+	    
+      	$$$THROWONERROR(status, ..WriteJsonForGrid("SELECT ID FROM Stc_Data.OrderNewStudent", "Stc.Data.OrderNewStudent", params, whereRequired))
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+
+	quit status
+]]></Implementation>
+</Method>
+
 <Method name="GetDirtyOrder">
 <Description>
 Получить одну необработанную заявку</Description>
@@ -154,6 +177,26 @@
 	
 	try{
 		do ..GetProxyObject("Stc.Data.OrderDirty", id).%ToJSON()
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="GetOrderNewStudent">
+<Description>
+Получить одну заявку от слушателя</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try{
+		do ..GetProxyObject("Stc.Data.OrderNewStudent", id).%ToJSON()
 	}
 	catch ex {
 		set status = ex.AsStatus()
@@ -260,6 +303,31 @@
 ]]></Implementation>
 </Method>
 
+<Method name="DeleteOrderNewStudent">
+<Description>
+Удалить заявку от слушателя </Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+	
+	try{
+		TSTART
+		
+		$$$THROWONERROR(status, ##class(Stc.Data.OrderNewStudent).Delete(id))
+		
+		TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
+		set status = ex.AsStatus()
+	}
+	
+    quit status
+]]></Implementation>
+</Method>
+
 <Method name="ChangeOrderCompany">
 <Description>
 Сменить компанию у заявки </Description>
@@ -274,6 +342,38 @@
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
       	
       	set order = ##class(Stc.Data.Order).%OpenId(data.orderId,,.status)
+      	$$$THROWONERROR(status, status)
+      	
+      	set order.Company = ##class(Stc.Data.Company).%OpenId(data.companyId,,.status)
+      	$$$THROWONERROR(status, status)
+      	
+      	$$$THROWONERROR(status, order.%Save())
+      	
+		TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
+		set status = ex.AsStatus()
+	}
+	
+    quit status
+]]></Implementation>
+</Method>
+
+<Method name="ChangeOrderNewStudentCompany">
+<Description>
+Сменить компанию у заявки  от слушателя</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+	
+	try{
+		TSTART
+		
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+      	
+      	set order = ##class(Stc.Data.OrderNewStudent).%OpenId(data.orderId,,.status)
       	$$$THROWONERROR(status, status)
       	
       	set order.Company = ##class(Stc.Data.Company).%OpenId(data.companyId,,.status)
@@ -355,6 +455,57 @@
       	
       	// Теперь у новой заявки есть компания
       	set order = ##class(Stc.Data.OrderDirty).%OpenId(data.orderId)
+      	set order.Company = company
+      	
+      	set status = order.%Save()
+      	if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveDirtyOrder", " | "_status))
+      	
+      	TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
+		set status = ex.AsStatus()
+	}
+
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="SaveCompanyFromOrderNewStudent">
+<Description>
+Создать компанию из заявки от слушателя</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try{
+		TSTART
+		
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+      	
+      	// Создание компании
+      	set company = ##class(Stc.Data.Company).Save(data.company, .status)
+      	if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createCompany", "| "_status)) 
+      	
+      	// Создание контакта компании
+      	set data.company.contact.company = ##class(%ZEN.proxyObject).%New()
+      	set data.company.contact.company.id = company.%Id()
+      	
+      	if (##class(Stc.Data.Person).EmailIdxExists(data.company.contact.email) = 1){
+	    	set company.Contact = ##class(Stc.Data.Person).EmailIdxOpen(data.company.contact.email)
+	    }
+	    else{
+			set company.Contact = ##class(Stc.Data.Person).Save(data.company.contact, .status)
+		}  	
+		
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createCompanyContact", " | "_status))
+		
+		set status = company.%Save()
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveCompany", " | "_status))
+      	
+      	// Теперь у новой заявки есть компания
+      	set order = ##class(Stc.Data.OrderNewStudent).%OpenId(data.orderId)
       	set order.Company = company
       	
       	set status = order.%Save()
@@ -503,61 +654,99 @@
 ]]></Content>
 </UDLText>
 
-<Method name="InsertTrainingToCalendar">
+<Method name="TrainingCalendarEvent">
 <Description>
-Импортировать обучение в календарь</Description>
+Работа с событием в календаре</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set sc = $$$OK
+	set status = $$$OK
 	
 	try{
-		set training = ##class(Stc.Data.Training).%OpenId(id,,.sc)
-		if $$$ISERR(sc) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("openTraining", "| "_sc))
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
-		set event = ##class(%ZEN.proxyObject).%New()
-		set event.summary = $ZCONVERT(training.Course.Name.Value_". "_training.City.Name.Value, "O", "UTF8")
-		set event.start = ##class(%ZEN.proxyObject).%New()
-		set event.start.date = $zd(training.DateStart,3)
-		set event.end = ##class(%ZEN.proxyObject).%New()
-		set event.end.date = $zd(training.DateFinish+1,3)
-		set event.location = $ZCONVERT(training.City.Name.Value_", "_training.Street.Value, "O", "UTF8")
-		set event.description = ""_
-		"Программа курса:<br>"_
-		"http://"_training.Course.ProgramUrl_"<br><br>"_
-		"Место проведения:<br>"_
-		training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value_"<br>"_
-		training.Street.Value_", "_training.Room_"<br><br>"_
-		"Преподаватель:<br>"_
-		training.Teacher.LastName.Value_" "_training.Teacher.FirstName.Value_" "_training.Teacher.MiddleName.Value_"<br>"_
-		training.Teacher.Email_"<br><br>"_
-		"Время проведения: "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5)_"<br><br>"
-		
-		if (training.OtherInfo.Value '= ""){
-			set event.description = event.description_"<br><br>Примечание:<br>"_training.OtherInfo.Value
-		}
-		
-		set event.description = $ZCONVERT(event.description, "O", "UTF8")
-		
+		set training = ##class(Stc.Data.Training).%OpenId(data.id,,.status)
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("openTraining", "| "_status))
+	
 		set calendarId = $g(^Settings("Stc","Google", "CalendarId"))
 		set sslConfig = $g(^Settings("Stc","Google", "SslConfig"))
 		set rtoken = $g(^Settings("Stc","Google", "RefreshToken"))
 		
-		do ##class(Stc.Google.Authorize).ExchangeToken(rtoken, .status, .atoken)
-		if (status '= "success")
-		{
-			$$$ThrowStatus($$$ERROR(5002, "Exchange token error: "_status))
+		do ##class(Stc.Google.Authorize).ExchangeToken(rtoken, .st, .atoken)
+		if (st '= "success") $$$ThrowStatus($$$ERROR(5002, "Exchange token error: "_st))
+	
+		if (data.method = "get"){
+			// Получить событие
+			set event = ##class(%ZEN.proxyObject).%New()
+			set proxy = ##class(%ZEN.proxyObject).%New()
+			set proxy.id = training.%Id()
+			
+			if (training.CalendarEvent = ""){
+				// Если еще не было создано, то выводим данные из обучения
+				set event.summary = training.Course.Name.Value_". "_training.City.Name.Value
+				set event.start = ##class(%ZEN.proxyObject).%New()
+				set event.start.date = $zd(training.DateStart,3)
+				set event.end = ##class(%ZEN.proxyObject).%New()
+				set event.end.date = $zd(training.DateFinish+1,3)
+				set event.location = training.City.Name.Value_", "_training.Street.Value
+					
+				set domainWebApp = %request.CgiEnvs("HTTP_HOST")_$GET(^Settings("Stc", "WebApp")) 
+					
+				set event.description = ""_
+				"<a href='http://"_training.Course.ProgramUrl_"'>Программа курса</a><br><br>"_
+				"<a href='http://"_domainWebApp_"/stc/index.csp#/orderstudent?training="_training.%Id()_"'>Записаться на обучение</a><br><br>"_
+					
+				"Место проведения:<br>"_
+				training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value_"<br>"_
+				training.Street.Value_", "_training.Room_"<br><br>"_
+				"Преподаватель:<br>"_
+				training.Teacher.LastName.Value_" "_training.Teacher.FirstName.Value_" "_training.Teacher.MiddleName.Value_"<br>"_
+				training.Teacher.Email_"<br><br>"_
+				"Время проведения: "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5)
+					
+				if (training.OtherInfo.Value '= ""){
+					set event.description = event.description_"<br><br>Примечание:<br>"_training.OtherInfo.Value
+				}	
+			}
+			else{
+				// Получаем созданное
+				$$$TOE(status, ##class(Stc.Google.Calendar).GetEvent(calendarId, training.CalendarEvent,.eventObj, atoken, sslConfig))
+				
+				set event.summary = $ZCONVERT(eventObj.summary, "I", "UTF8")
+				set event.location = $ZCONVERT(eventObj.location, "I", "UTF8")
+				set event.description = $ZCONVERT(eventObj.description, "I", "UTF8")
+				set event.start = eventObj.start
+				set event.end = eventObj.end
+				set event.exists = 1
+			}
+				
+			set proxy.event = event
+			do proxy.%ToJSON()
 		}
-		
-		$$$TOE(sc, ##class(Stc.Google.Calendar).CreateEvent(calendarId, event, atoken, sslConfig))
-		
+		elseif (data.method = "create"){
+			set data.event.summary = data.event.summary
+			set data.event.location = data.event.location
+			set data.event.description = data.event.description
+			
+			$$$TOE(status, ##class(Stc.Google.Calendar).CreateEvent(calendarId, data.event, atoken, sslConfig, .eventId))
+			set training.CalendarEvent = eventId
+			do training.%Save()
+		}
+		elseif (data.method = "update"){
+			$$$TOE(status, ##class(Stc.Google.Calendar).ModifyEvent(calendarId, training.CalendarEvent, data.event, atoken, sslConfig))
+		}
+		elseif (data.method = "delete"){
+			set eventId = training.CalendarEvent
+			set training.CalendarEvent = ""
+			do training.%Save()
+			$$$TOE(status, ##class(Stc.Google.Calendar).DeleteEvent(calendarId, eventId, atoken, sslConfig))
+		}
 	}
 	catch (ex){
-		set sc = ex.AsStatus()
+		set status = ex.AsStatus()
 	}
 	
-	quit sc
+	quit status
 ]]></Implementation>
 </Method>
 
@@ -584,6 +773,43 @@
 	}
 	
     quit status
+]]></Implementation>
+</Method>
+
+<Method name="DeleteTraining">
+<Description>
+Удалить обучение</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+	
+	try{
+		TSTART
+		
+		set (sgroups, certs) = 0
+		
+		&sql(SELECT COUNT(ID) INTO :sgroups FROM Stc_Data.Training_SubGroups WHERE Training = :id)
+		
+		if (sgroups = 0){
+			&sql(SELECT COUNT(ID) INTO :certs FROM Stc_Data.Certificate WHERE Training = :id)
+		}
+		
+		if (sgroups > 0) || (certs > 0) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("deleteTrainingImpossible"))
+	
+		set status = ##class(Stc.Data.Training).Delete(id)
+		
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("deleteTraining", "| "_status))
+		
+		TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
+		set status = ex.AsStatus()
+	}
+	
+	quit status
 ]]></Implementation>
 </Method>
 
@@ -722,6 +948,29 @@
 ]]></Implementation>
 </Method>
 
+<Method name="GetTrainingStudents">
+<Description>
+Все студенты обучения</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try{
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
+      	
+      	set whereRequired = "SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training = '"_..ParseParameter(params.trainingId)_"')"
+      	
+      	$$$THROWONERROR(status, ..WriteJsonForGrid("SELECT Students FROM Stc_Data.SubGroup_Students", "Stc.Data.Person", params, whereRequired))
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+
+	quit status
+]]></Implementation>
+</Method>
+
 <Method name="CreateSubGroup">
 <Description>
 Создать подгруппу для обучения. Создается пустая подгруппа, только плательщик укзан.</Description>
@@ -744,6 +993,73 @@
 	
 		set status = training.%Save()
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveTraining", "| "_status)) 
+			
+		TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
+		set status = ex.AsStatus()
+	}
+	
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="AddNewStudentIntoTraining">
+<Description>
+Добавить сотрудника из заявки в обучение, создать/открыть подгруппу и добавить его туда</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+
+	try{
+		TSTART
+		
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		
+		set training = ##class(Stc.Data.Training).%OpenId(data.trainingId)
+		set order = ##class(Stc.Data.OrderNewStudent).%OpenId(data.orderId)
+		
+		if (data.type = "create_add") || (data.type = "update_add"){
+			
+			if (data.type = "create_add"){
+				set person = ##class(Stc.Data.Person).%New()
+				set person.LastName = ##class(Stc.Data.Localization.LText).Create("")
+				set person.FirstName = ##class(Stc.Data.Localization.LText).Create("")
+				set person.MiddleName = ##class(Stc.Data.Localization.LText).Create("")
+			}
+			elseif (data.type = "update_add"){
+				set person = ##class(Stc.Data.Person).EmailIdxOpen(order.Email)
+			}
+			
+			do person.LastName.SetValues(order.LastName.%Id())
+			do person.FirstName.SetValues(order.FirstName.%Id())
+			do person.MiddleName.SetValues(order.MiddleName.%Id())
+			
+			set person.Email = order.Email
+			set person.Phone = order.Phone
+			set person.Skype = order.Skype
+			
+			set person.Company = order.Company
+			
+			set status = person.%Save()
+			$$$THROWONERROR(status, status)
+			
+			set status = training.AddPersonIntoTraining(person.%Id())
+			$$$THROWONERROR(status, status)
+		}
+		elseif (data.type = "old_add"){
+			set person = ##class(Stc.Data.Person).EmailIdxOpen(order.Email)
+			set status = training.AddPersonIntoTraining(person.%Id())
+			$$$THROWONERROR(status, status)
+		}
+		
+		set status = ##class(Stc.Data.OrderNewStudent).%DeleteId(order.%Id())
+		$$$THROWONERROR(status, status)
+		
+		set status = training.%Save()
+		$$$THROWONERROR(status, status)
 			
 		TCOMMIT
 	}
@@ -979,7 +1295,11 @@
 Удаление сертификата</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>number:%String</FormalSpec>
-<Implementation><![CDATA[	quit ##class(Stc.Data.Certificate).NumberIdxDelete(number)
+<Implementation><![CDATA[
+	set status = ##class(Stc.Data.Certificate).NumberIdxDelete(number)
+	if $$$ISERR(status) quit ##class(Stc.Utils.Msg).GetErrorStatus("deleteCertificate", "| "_status)
+	
+	quit status
 ]]></Implementation>
 </Method>
 
@@ -1046,7 +1366,7 @@
 
 <Method name="GetPerson">
 <Description>
-Получить любую персону</Description>
+Получить любую персону по ИД</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <Implementation><![CDATA[
@@ -1054,6 +1374,27 @@
 	set status = $$$OK
 	try{
 		do ..GetProxyObject("Stc.Data.Person", id).%ToJSON()
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+	
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="GetPersonByEmail">
+<Description>
+Получить любую персону по email</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>email:%String</FormalSpec>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try{
+		set person = ##class(Stc.Data.Person).EmailIdxOpen(email,,.status)
+		
+		if (status = $$$OK) do person.ConvertToProxyObject().%ToJSON()
 	}
 	catch ex {
 		set status = ex.AsStatus()
@@ -1125,6 +1466,18 @@
 ]]></Implementation>
 </Method>
 
+<Method name="GetFreeTrainingStudents">
+<Description>
+Все слушатели, которые не входят обучение. Поиск по совпадению в фамилии/почте</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>trainingword:%String</FormalSpec>
+<Implementation><![CDATA[
+	set where = "id NOT IN (SELECT Students FROM Stc_Data.SubGroup_Students WHERE SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training = '"_..ParseParameter($p(trainingword,";",1))_"')) AND"
+    
+    quit ..GetPersonByLastNameOrEmailStartsWith($p(trainingword,";",2), where)
+]]></Implementation>
+</Method>
+
 <Method name="GetStudentsFromOrders">
 <Description>
 Получить студентов по ид, из нескольких заявок</Description>
@@ -1173,6 +1526,29 @@
 	}
 	
 	quit status
+]]></Implementation>
+</Method>
+
+<Method name="DeleteTrainingStudent">
+<Description>
+Удалить из обучения студента</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>trainingIdstudentId</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set trainingId = $piece(trainingIdstudentId,";",1)
+	set studentId = $piece(trainingIdstudentId,";",2)
+	
+	set sgroupId = 0
+	
+	&sql(SELECT SubGroup INTO :sgroupId
+		 FROM Stc_Data.SubGroup_Students
+		 WHERE SubGroup IN (SELECT SubGroups 
+		 					FROM Stc_Data.Training_SubGroups 
+		 					WHERE Training = :trainingId) 
+		 				AND Students = :studentId)
+	
+	quit ..DeleteSubGroupStudent(sgroupId_";"_studentId)
 ]]></Implementation>
 </Method>
 
@@ -1324,14 +1700,22 @@
 		
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createPerson", "| "_status))
 		
-		set sgroup = ##class(Stc.Data.SubGroup).%OpenId(data.group.id,, .status)
-		$$$THROWONERROR(status, status)
+		if (data.training.id = 0){
+			set sgroup = ##class(Stc.Data.SubGroup).%OpenId(data.group.id,, .status)
+			$$$THROWONERROR(status, status)
 		
-		$$$THROWONERROR(status, sgroup.Students.SetAt(student, student.%Id()))
+			$$$THROWONERROR(status, sgroup.Students.SetAt(student, student.%Id()))
 		
-		set status = sgroup.%Save()
-		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveSubGroup", "| "_status))
-		 
+			set status = sgroup.%Save()
+			if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveSubGroup", "| "_status))
+		}
+		else{
+			set training = ##class(Stc.Data.Training).%OpenId(data.training.id)
+			set status = training.AddPersonIntoTraining(student.%Id())
+			$$$THROWONERROR(status, status)
+			$$$THROWONERROR(status, training.%Save())
+		}
+		
 		TCOMMIT
 	}
 	catch ex {

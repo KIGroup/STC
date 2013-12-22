@@ -157,6 +157,26 @@
 	
 	set ^CacheMsg("Stc", "ru", "deleteCompanyImpossible") = "Удаление компании невозможно, на неё ссылаются из других таблиц."
 	set ^CacheMsg("Stc", "en", "deleteCompanyImpossible") = "Deleting company impossible it is referenced from other tables."
+	
+	set ^CacheMsg("Stc", "ru", "deleteCertificate") = "Удаление сертификата"
+	set ^CacheMsg("Stc", "en", "deleteCertificate") = "Removing certificate"
+	
+	set ^CacheMsg("Stc", "ru", "deleteTraining") = "Удаление обучения"
+	set ^CacheMsg("Stc", "en", "deleteTraining") = "Removing training"
+
+	set ^CacheMsg("Stc", "ru", "deleteOrderNewStudent") = "Удаление заявки от слушателя"
+	set ^CacheMsg("Stc", "en", "deleteOrderNewStudent") = "Removing order from student"
+	
+	set ^CacheMsg("Stc", "ru", "tooMuchOrderNewStudent") = "Слишком много заявок для выбранного обучения"
+	set ^CacheMsg("Stc", "en", "tooMuchOrderNewStudent") = "Too much new orders for this training"
+	
+	set ^CacheMsg("Stc", "ru", "deleteTrainingImpossible") = "Удаление обучения невозможно, на него ссылаются из других таблиц."
+	set ^CacheMsg("Stc", "en", "deleteTrainingImpossible") = "Deleting training impossible it is referenced from other tables."
+
+	set ^CacheMsg("Stc", "ru", "personContainsInTraining") = "Слушатель уже есть в этом обучении"
+	set ^CacheMsg("Stc", "en", "personContainsInTraining") = "Student is already in this training"
+	
+	//personContainsInTraining
 ]]></Implementation>
 </Method>
 </Class>

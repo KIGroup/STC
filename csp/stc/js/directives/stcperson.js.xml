@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/directives/stcperson.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/directives/stcperson.js" application="/csp/dorabotka/" default="1"><![CDATA[
 'use strict';
 //dddd
 
@@ -15,7 +15,8 @@ directivesModule.directive('stcperson', function(){
             companies: '=',
             companyDisabled: '=',
             allDisabled: '=',
-            companySwitchOff: '='    
+            companySwitchOff: '=',
+            webSiteOff: '='    
         },
         controller: function($scope){
             $scope.companyExist = true;

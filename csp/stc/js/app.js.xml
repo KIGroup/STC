@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/app.js" application="/csp/concurs/" default="1"><![CDATA[
+<CSP name="stc/js/app.js" application="/csp/dorabotka/" default="1"><![CDATA[
 'use strict';
-//ddd
+//dddddd
 
 var servicesModule     = angular.module('servicesModule', ['ngResource', 'ngCookies']);
 var controllersModule  = angular.module('controllersModule', ['servicesModule']);
@@ -13,6 +13,7 @@ var mainModule         = angular.module('mainModule', ['ui.bootstrap', 'services
 
 mainModule.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/createorder',  {templateUrl: 'partials/createorder.csp',  controller: 'CreateOrderCtrl'});
+    $routeProvider.when('/orderstudent', {templateUrl: 'partials/orderstudent.csp', controller: 'OrderNewStudentCtrl'});
 	$routeProvider.when('/updateorder',  {templateUrl: 'partials/updateorder.csp',  controller: 'UpdateOrderCtrl'});
 	$routeProvider.when('/orders',       {templateUrl: 'partials/orders.csp',       controller: 'AllOrdersCtrl'});
 	$routeProvider.when('/companies',    {templateUrl: 'partials/companies.csp',    controller: 'AllCompaniesCtrl'});
@@ -23,6 +24,7 @@ mainModule.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/course',       {templateUrl: 'partials/course.csp',       controller: 'CourseCtrl'});
     $routeProvider.when('/trainings',    {templateUrl: 'partials/trainings.csp',    controller: 'AllTrainingsCtrl'});
     $routeProvider.when('/training',     {templateUrl: 'partials/training.csp',     controller: 'TrainingCtrl'});
+    $routeProvider.when('/createtraining',{templateUrl:'partials/createtraining.csp', controller: 'CreateTrainingCtrl'});
     $routeProvider.when('/certificates', {templateUrl: 'partials/certificates.csp', controller: 'AllCertificatesCtrl'});
     $routeProvider.otherwise({redirectTo: '/createorder'});
   }]);]]></CSP>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/CompanySrvc.js" application="/csp/six/" default="1"><![CDATA[
+<CSP name="stc/js/services/CompanySrvc.js" application="/csp/dorabotka/" default="1"><![CDATA[
 'use strict';
 //dddв
 
@@ -38,6 +38,10 @@ servicesModule.factory('CompanySrvc', function(DALSrvc) {
         /* Сохранить компанию из заявки */
         saveCompanyFromOrder: function(company, orderId){
             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/saveCompanyFromOrder', {company: company, orderId: orderId});
+        },
+        /* Сохранить компанию из заявки от слушателя*/
+        saveCompanyFromOrderNewStudent: function(company, orderId){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/saveCompanyFromOrderNewStudent', {company: company, orderId: orderId});
         },
         /* Сохранить данные компании | создать*/
         saveCompany: function(company){

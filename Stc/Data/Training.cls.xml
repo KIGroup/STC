@@ -107,6 +107,22 @@
 <Required>1</Required>
 </Property>
 
+<Property name="CalendarEvent">
+<Description>
+EventId в календаре Google</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="500"/>
+</Property>
+
+<Property name="NewStudents">
+<Description>
+Новые заявки от слушателей, регистрация на обучение</Description>
+<Type>Stc.Data.OrderNewStudent</Type>
+<Cardinality>many</Cardinality>
+<Inverse>Training</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
 <Method name="ConvertToProxyObject">
 <Description>
 Конвертация в proxyObject для JSON </Description>
@@ -115,6 +131,7 @@
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()
 	set proxy.id = ..%Id()
+	set proxy.event = ..CalendarEvent
 	set proxy.city = ..City.ConvertToProxyObject()
 	set proxy.course = ..Course.ConvertToProxyObject(1)
 	set proxy.teacher = ..Teacher.ConvertToProxyObject()
@@ -132,23 +149,20 @@
 	set proxy.address.title = ..Street.Value
 	set proxy.address.point = ..Latitude_" "_..Longitude
 	
+
 	if (shortInfo = 1) quit proxy
 	
-	set paidsNumber = 0
-	set proxy.isPaid = 0
-	
+	set proxy.newStudents = ..NewStudents.Count()
+	set proxy.sgroups = ..SubGroups.Count()
+	set proxy.students = 0
+
 	set key = ""
 	for i=1:1:..SubGroups.Count(){
 		set key = ..SubGroups.Next(key)
 		set sgroup = ..SubGroups.GetAt(key)
-		if (sgroup.Amount > 0){
-			set paidsNumber = paidsNumber + 1
-		}
+		
+		set proxy.students = proxy.students + sgroup.Students.Count()
 	}
-	// Оплачено: 2/3, т.е. две подгруппы оплатили
-	set proxy.isPaidProgress = paidsNumber_" / "_..SubGroups.Count()
-	
-	if (paidsNumber = ..SubGroups.Count()) set proxy.isPaid = 1
 	
 	// Стоимость обучения и валюта
 	set proxy.cost = ##class(%ZEN.proxyObject).%New()
@@ -264,6 +278,90 @@
 ]]></Implementation>
 </Method>
 
+<Method name="Delete">
+<Description>
+Удаление обучения, удаляются все заявки от слушателей</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	set training = ..%OpenId(id, 4)
+	
+	set key = ""
+	for i=1:1:training.NewStudents.Count(){
+		set key = training.NewStudents.Next(key)
+		set order = training.NewStudents.GetAt(key)
+		set st = ##class(Stc.Data.OrderNewStudent).Delete(order.%Id())
+		if $$$ISERR(st) RETURN st
+	}
+	
+	set st = ##class(Stc.Data.Localization.LText).Delete(training.Street.%Id())
+	quit:$$$ISERR(st) st
+	
+	set st = ##class(Stc.Data.Localization.LText).Delete(training.OtherInfo.%Id())
+	quit:$$$ISERR(st) st
+	
+	kill training
+	
+	quit ..%DeleteId(id, 4)
+]]></Implementation>
+</Method>
+
+<Method name="AddPersonIntoTraining">
+<Description>
+Добавление сотрудника в обучение, определяется подгруппа автоматически</Description>
+<FormalSpec>personId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	set trainingId = ..%Id()
+	
+	// Поиск слушателя в обучении, чтобы избежать ситуации, 
+	// когда один слушатель в двух подгруппах одного обучения 
+	set contains = 0
+	&sql(SELECT COUNT(ID) INTO :contains
+		 FROM Stc_Data.SubGroup_Students
+		 WHERE SubGroup IN (SELECT $PIECE(ID,'||',2) 
+		 					FROM Stc_Data.Training_SubGroups 
+		 					WHERE Training = :trainingId) 
+		 				AND Students = :personId)
+	
+	 
+	if (contains '= 0) quit ##class(Stc.Utils.Msg).GetErrorStatus("personContainsInTraining")
+	
+	// Если в обучении еще нет такого слушателя, то возможно есть в обучении подгруппа его компании
+	set person = ##class(Stc.Data.Person).%OpenId(personId)
+	set personCompanyId = person.Company.%Id()
+	set sgroupId = ""
+	
+	&sql(SELECT $PIECE(ID,'||',2) INTO :sgroupId FROM Stc_Data.Training_SubGroups WHERE Training = :trainingId AND SubGroups->Payer = :personCompanyId)
+	
+	if (sgroupId = ""){
+		// В обучении еще нет подгруппы компании нового слушателя, создадим подгруппу и добавим его туда
+		set array = ##class(%ArrayOfObjects).%New()
+		do array.SetAt(person, personId)
+		set sgroup = ##class(Stc.Data.SubGroup).Create(person.Company, array, ..Course, .status)
+		
+		if $$$ISERR(status) quit status
+		
+		do ..SubGroups.SetAt(sgroup, sgroup.%Id())
+	}
+	else{
+		// В обучении уже есть подгруппа компании слушателя, добавим его туда
+		set group = ..SubGroups.GetAt(sgroupId)
+		do group.Students.SetAt(person, personId)
+		set status = group.%Save()
+		
+		if $$$ISERR(status) quit status
+	}
+	
+	quit status
+]]></Implementation>
+</Method>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^Stc.Data.TrainingD</DataLocation>
@@ -325,6 +423,9 @@
 </Value>
 <Value name="16">
 <Value>SubGroupNumber</Value>
+</Value>
+<Value name="17">
+<Value>CalendarEvent</Value>
 </Value>
 </Data>
 </Storage>

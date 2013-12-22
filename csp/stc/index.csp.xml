@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/index.csp" application="/csp/six/" default="1"><![CDATA[
+<CSP name="stc/index.csp" application="/csp/dorabotka/" default="1"><![CDATA[
 <!doctype html>
 
 <html ng-app="mainModule" ng-controller="MainCtrl">
@@ -114,8 +114,10 @@
     <script language="javascript"  src="js/controllers/MainCtrl.js"></script>
     <script language="javascript"  src="js/controllers/TrainingCtrl.js"></script>
     <script language="javascript"  src="js/controllers/AllTrainingsCtrl.js"></script>
+    <script language="javascript"  src="js/controllers/CreateTrainingCtrl.js"></script>
     <script language="javascript"  src="js/controllers/UpdateOrderCtrl.js"></script>
     <script language="javascript"  src="js/controllers/CreateOrderCtrl.js"></script>
+    <script language="javascript"  src="js/controllers/OrderNewStudentCtrl.js"></script>
     <script language="javascript"  src="js/controllers/AllOrdersCtrl.js"></script>
     <script language="javascript"  src="js/controllers/AllCompaniesCtrl.js"></script>
 	  <script language="javascript"  src="js/controllers/CompanyCtrl.js"></script>
