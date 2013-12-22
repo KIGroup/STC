@@ -3,7 +3,6 @@
 <Class name="Stc.Utils.Email">
 <Description>
 Работа с почтой</Description>
-<IncludeCode>%occStatus,%occOptions</IncludeCode>
 <TimeCreated>63098,81612.618657</TimeCreated>
 
 <UDLText name="T">
@@ -34,7 +33,7 @@ Parameter SMTPPASSWORD = "simplepassword";
 	try
 	{
 		set mail=##class(%Net.MailMessage).%New()
-    	set mail.From = "kurapatka795@gmail.com" //$GET(^Settings("Stc","EmailFrom")) //..#FROM
+    	set mail.From = $GET(^Settings("Stc","EmailFrom")) //..#FROM
     	set mail.Subject = subject
     	set mail.Charset = "utf-8"
     	set mail.IsHTML = 1
@@ -43,12 +42,12 @@ Parameter SMTPPASSWORD = "simplepassword";
     	do mail.To.Insert(email)
   	
     	set auth=##class(%Net.Authenticator).%New()
-  		set auth.UserName = "kurapatka795@gmail.com" // $GET(^Settings("Stc","EmailSMTPUSER")) //..#SMTPUSER
-  		set auth.Password = "joseph128" // $GET(^Settings("Stc","EmailSMTPPASSWORD")) //..#SMTPPASSWORD
+  		set auth.UserName = $GET(^Settings("Stc","EmailSMTPUSER")) //..#SMTPUSER
+  		set auth.Password = $GET(^Settings("Stc","EmailSMTPPASSWORD")) //..#SMTPPASSWORD
   	
   		set smtp = ##class(%Net.SMTP).%New()
-    	set smtp.smtpserver = "smtp.gmail.com" //$GET(^Settings("Stc","EmailSMTPSERVER")) //..#SMTPSERVER
-    	set smtp.port = 465 //$GET(^Settings("Stc","EmailSMTPPORT")) //..#SMTPPORT
+    	set smtp.smtpserver = $GET(^Settings("Stc","EmailSMTPSERVER")) //..#SMTPSERVER
+    	set smtp.port = $GET(^Settings("Stc","EmailSMTPPORT")) //..#SMTPPORT
   		set smtp.authenticator = auth
   	
     	$$$THROWONERROR(status, smtp.Send(mail))
