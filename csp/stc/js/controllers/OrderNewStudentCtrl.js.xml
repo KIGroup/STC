@@ -8,21 +8,23 @@
 Создание заявки для одного слушателя
 ===========================================================================================*/
 
-controllersModule.controller('OrderNewStudentCtrl', function($scope, $routeParams, OrderSrvc, TrainingSrvc, CompanySrvc, UtilsSrvc){
+controllersModule.controller('OrderNewStudentCtrl', function($scope, $filter, $routeParams, OrderSrvc, TrainingSrvc, CompanySrvc, UtilsSrvc){
+    $scope.menu.hide = true;
     $scope.ordForm = {order:{}};
 
     /* Инициализация */
     $scope.ordForm.init = function(){
         $scope.ordForm.btnDisabled = false;
         $scope.ordForm.companies = [];
-        $scope.ordForm.caption = 'Создание заявки';
+        $scope.ordForm.orderCaption = $filter('localize')("Форма регистрации слушателя");
+        $scope.ordForm.trainingCaption = $filter('localize')("Подробнее о курсе");;
         $scope.ordForm.btnClearShow = true;
         $scope.ordForm.order.trainingId = $routeParams.training;
     };
 
     /* Подгрузить имена компаний */
     $scope.ordForm.loadCompanies = function(){
-        CompanySrvc.getAllCompaniesShortInfo().then(
+        CompanySrvc.getAllCompaniesShortInfoForTraining($routeParams.training).then(
             function(data){
                 $scope.ordForm.companies = data;
             },
@@ -36,6 +38,8 @@ controllersModule.controller('OrderNewStudentCtrl', function($scope, $routeParam
         TrainingSrvc.getTrainingForUser($scope.ordForm.order.trainingId).then(
             function(data){
                 $scope.ordForm.training = data;
+                $scope.menu.brandCaption = $filter('localize')('Форма регистрации на обучение компании InterSystems по курсу "') + data.course.name + '" ';
+            	$scope.menu.appTitle = $scope.menu.brandCaption;
             },
             function(response){
                 $scope.ordForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
@@ -53,7 +57,7 @@ controllersModule.controller('OrderNewStudentCtrl', function($scope, $routeParam
     $scope.ordForm.submit = function(){
         OrderSrvc.createOrderNewStudent($scope.ordForm.order).then(
             function(data){
-                $scope.ordForm.alert = UtilsSrvc.getAlert('Готово!', 'Ваша заявка принята.', 'success', true);
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Готово!', 'Регистрация прошла успешно.', 'success', true);
                 $scope.ordForm.btnDisabled = true;
                 $scope.ordForm.btnClearShow = true;
             },

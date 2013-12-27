@@ -166,6 +166,30 @@
 ]]></Implementation>
 </Method>
 
+<Method name="GetCompaniesShortInfoForTraining">
+<Description>
+Получить все компании, коротко. Для обучения</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set id = ..ParseParameter(id)
+	set sql =  "SELECT id, name "_
+			   "FROM( "_
+                    "SELECT SubGroups->Payer as id, SubGroups->Payer->ShortName->Value As name "_
+                    "FROM Stc_Data.Training_SubGroups "_
+                    "WHERE Training = '"_id_"' "_
+					"UNION "_
+					"SELECT Company As id, Company->ShortName->Value As name "_
+					"FROM Stc_Data.OrderNewStudent "_
+					"WHERE Training = '"_id_"' AND Company IS NOT NULL "_
+				") "_
+				"ORDER BY name"
+				
+    quit ..WriteJsonFromSql(sql)
+]]></Implementation>
+</Method>
+
 <Method name="SaveCompany">
 <Description>
 Сохранение данных компании из заявки после проверки кода доступа к заявке</Description>

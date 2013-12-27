@@ -2,11 +2,16 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/partials/orderstudent.csp" application="/csp/dorabotka/" default="1"><![CDATA[
 <div class="row-fluid">
-	<div class="span4">
+	<div class="span2">
 	</div>
-	<div class="span4">
+	<div class="span8">
+	
+	<div class="row-fluid">
+	<div class="span2">
+	</div>
+	<div class="span8">
 		<accordion close-others="false">
-		    <accordion-group is-open="true" heading="{{'Обучение'|localize}}">
+		    <accordion-group is-open="true" heading="{{ordForm.trainingCaption}}">
 				<p><span ng-bind="'Курс'|localize"></span>: <span ng-bind="ordForm.training.course.name"></span></p>
 				<p><span ng-bind="'Город'|localize"></span>: <span ng-bind="ordForm.training.city.name + ', ' + ordForm.training.city.parentName + ', ' + ordForm.training.city.greatParentName"></span></p>
 				<p><span ng-bind="'Адрес'|localize"></span>: <span ng-bind="ordForm.training.address.title"></span></p>
@@ -15,7 +20,7 @@
 				<p><span ng-bind="'Дата окончания'|localize"></span>: <span ng-bind="ordForm.training.dateFinish|convertCacheDate:('d MMMM y'|localize)"></span></p>
     		</accordion-group>
 
-		    <accordion-group is-open="true" heading="{{'Регистрация на обучение'|localize}}">
+		    <accordion-group is-open="true" heading="{{ordForm.orderCaption}}">
     			<form class="form" ng-submit="ordForm.submit()" style="margin: 0 0 10px 0;" >
 					<stcperson
 						person="ordForm.order.contact"
@@ -26,7 +31,7 @@
 					<div>
 						<div class="control-group">
 					        <div class="controls">
-					            <button type="submit" class="btn btn-success btn-small" ng-bind="'Создать'|localize"      ng-click="ordForm.formatData()" ng-disabled="ordForm.btnDisabled"></button>
+					            <button type="submit" class="btn btn-success btn-small" ng-bind="'Зарегистрироваться'|localize"      ng-click="ordForm.formatData()" ng-disabled="ordForm.btnDisabled"></button>
 					            <button type="button" class="btn btn-small"             ng-bind="'Очистить'|localize"     ng-click="ordForm.clear()"      ng-show="ordForm.btnClearShow"></button>
 					        </div>
 					    </div>
@@ -35,10 +40,17 @@
 		    </accordion-group>
 		</accordion>
 	</div >
-	<div class="span4">
+	<div class="span2">
+	</div >
+	</div >
+	
+	<stcalert data="ordForm.alert" span-right="2" span-middle="8" span-left="2"/>
+		
+	</div >
+	<div class="span2">
 	</div >
 </div >
-<stcalert data="ordForm.alert" span-right="4" span-middle="4" span-left="4"/>
+
 <br>
 ]]></CSP>
 </Export>

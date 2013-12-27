@@ -284,7 +284,11 @@ localizationModule.constant('StcDictionary', {
     'Обновить и добавить в обучение'    :'Update and add to the training',
     'Не обновлять и добавить в обучение':'Not to update and add to training',
     'В системе уже присутствует сотрудник с email: ':'The system is already present with the employee email: ',
-    'Заявка на обучение':'Order for training'
+    'Заявка на обучение':'Order for training',
+    'Зарегистрироваться':'Registration',
+    'Подробнее о курсе':'About training',
+    'Форма регистрации слушателя':'Student registration form',
+    'Форма регистрации на обучение компании InterSystems по курсу "': 'Registration form for training course "'
 
   },
   getTranslate: function(word){

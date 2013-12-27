@@ -15,7 +15,11 @@ servicesModule.factory('CompanySrvc', function(DALSrvc) {
         getAllCompaniesShortInfo: function(){
             return DALSrvc.getPromise('get', StcAppSetting.user + '/json/allCompaniesShortInfo', null);
         },
-                /* Получить короткую информацию о компаниях */
+        /* Получить короткую информацию о компаниях, котроые входят в обучение*/
+        getAllCompaniesShortInfoForTraining: function(id){
+            return DALSrvc.getPromise('get', StcAppSetting.user + '/json/allCompaniesShortInfo/training/' + id, null);
+        },
+        /* Получить короткую информацию о компаниях */
         getAllCompaniesFullInfo: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
             var first = pageSize * (pageCurr - 1) + 1;
             var obj = {sqlName: sqlName, 

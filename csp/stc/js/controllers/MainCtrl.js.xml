@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/MainCtrl.js" application="/csp/karmac/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/MainCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
 'use strict';
 //dddddddd
 
@@ -33,6 +33,9 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
 
     // Выбор меню - сделать активным пункт
     $scope.menu.selectMenu = function(menuId){
+	    $scope.menu.hide = false;
+    	$scope.menu.brandCaption = 'Система учёта курсов';
+    	$scope.menu.appTitle = 'Система учёта курсов';
         if (!$scope.menu.active || $scope.menu.active.id == menuId){
             $scope.menu.active = $scope.menu[menuId];
             $scope.menu.active.css = 'active';

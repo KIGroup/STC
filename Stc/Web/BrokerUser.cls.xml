@@ -40,6 +40,9 @@
 	<!-- Получить все компании, коротко -->
 	<Route Method="GET" Url="/json/allCompaniesShortInfo" Call="Stc.Web.JsonUser:GetCompaniesShortInfo"/>
 	
+	<!-- Получить все компании, коротко для конкретного обучения -->
+	<Route Method="GET" Url="/json/allCompaniesShortInfo/training/:id" Call="Stc.Web.JsonUser:GetCompaniesShortInfoForTraining"/>
+	
 	<!-- Сохранить данные компании из заявки, указав код доступа -->
 	<Route Method="POST" Url="/json/saveCompany" Call="Stc.Web.JsonUser:SaveCompany"/>
 	

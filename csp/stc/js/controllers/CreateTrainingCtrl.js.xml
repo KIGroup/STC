@@ -9,6 +9,7 @@
 ===========================================================================================*/
 
 controllersModule.controller('CreateTrainingCtrl', function($scope, $location, UtilsSrvc, TrainingSrvc){
+    
     $scope.training = {data:{timeStart:'10:00', timeFinish: '14:00', orders: []}};
     
     $scope.training.submit = function(){
