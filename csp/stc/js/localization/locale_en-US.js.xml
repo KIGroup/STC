@@ -288,7 +288,10 @@ localizationModule.constant('StcDictionary', {
     'Зарегистрироваться':'Registration',
     'Подробнее о курсе':'About training',
     'Форма регистрации слушателя':'Student registration form',
-    'Форма регистрации на обучение компании InterSystems по курсу "': 'Registration form for training course "'
+    'Форма регистрации на обучение компании InterSystems по курсу "': 'Registration form for InterSystems training course "',
+    'Форма регистрации на обучение компании InterSystems':'Registration form for training courses InterSystems',
+    'Зарегистрироваться на другой курс':'Registration for another course',
+    'Форма регистрации':'Registration form'
 
   },
   getTranslate: function(word){

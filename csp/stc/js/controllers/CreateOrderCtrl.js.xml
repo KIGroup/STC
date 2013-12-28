@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/CreateOrderCtrl.js" application="/csp/concurs/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/CreateOrderCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
 'use strict';
 //dedd
 
@@ -9,6 +9,9 @@
 ===========================================================================================*/
 
 controllersModule.controller('CreateOrderCtrl', function($scope, $cookies, YandexSrvc, OrderSrvc, CompanySrvc, RegionSrvc, CourseTeacherSrvc, UtilsSrvc){
+    $scope.menu.brandCaption = 'Форма регистрации на обучение компании InterSystems';
+    $scope.menu.appTitle = 'Форма регистрации на обучение компании InterSystems';
+    		
     $scope.menu.selectMenu('createOrder');    
     $scope.ordForm = {};
 

@@ -34,8 +34,12 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
     // Выбор меню - сделать активным пункт
     $scope.menu.selectMenu = function(menuId){
 	    $scope.menu.hide = false;
-    	$scope.menu.brandCaption = 'Система учёта курсов';
-    	$scope.menu.appTitle = 'Система учёта курсов';
+    	
+    	if ($scope.menu.admin){
+    		$scope.menu.brandCaption = 'Система учёта курсов';
+    		$scope.menu.appTitle = 'Система учёта курсов';
+    	}
+    	
         if (!$scope.menu.active || $scope.menu.active.id == menuId){
             $scope.menu.active = $scope.menu[menuId];
             $scope.menu.active.css = 'active';
@@ -72,6 +76,8 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
                 $cookies['admin'] = 'false';
                 $scope.menu.loginCaption = 'Вход';
                 $location.path('/createorder');
+                $scope.menu.brandCaption = 'Форма регистрации на обучение компании InterSystems';
+   				$scope.menu.appTitle = 'Форма регистрации на обучение компании InterSystems';
             });
     }
     

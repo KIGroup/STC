@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/createorder.csp" application="/csp/concurs/" default="1"><![CDATA[
+<CSP name="stc/partials/createorder.csp" application="/csp/dorabotka/" default="1"><![CDATA[
 <div class="row-fluid">
-	<div class="span4">
+	<div class="span2">
 	</div>
-	<div class="span4">
+	<div class="span8">
+	
+	<div class="row-fluid">
+	<div class="span2">
+	</div>
+	<div class="span8">
+
 		<accordion close-others="true">
 			<accordion-group id="gcalendar" heading="{{'Календарь ближайших курсов'|localize}}" is-open="ordForm.calendarOpen">
 		    	<iframe id="ifcalendar"
@@ -16,7 +22,7 @@
 		    		scrolling="auto">
 		    	</iframe>
 		    </accordion-group>
-		    <accordion-group heading="{{'Заявка на обучение'|localize}}" is-open="!ordForm.calendarOpen">
+		    <accordion-group heading="{{'Форма регистрации'|localize}}" is-open="!ordForm.calendarOpen">
     			<form class="form" ng-submit="ordForm.submit()" style="margin: 0 0 10px 0;" >
 					<stcperson
 						person="ordForm.order.contact"
@@ -58,8 +64,8 @@
 					    </div>
 					    <div class="control-group">
 					        <div class="controls">
-					            <button type="submit" class="btn btn-success btn-small" ng-bind="'Создать'|localize"      ng-click="ordForm.formatData()" ng-disabled="ordForm.btnDisabled"></button>
-					            <button type="button" class="btn btn-primary btn-small" ng-bind="'Новая заявка'|localize" ng-click="ordForm.again()"      ng-show="ordForm.btnNewShow"></button>
+					            <button type="submit" class="btn btn-success btn-small" ng-bind="'Зарегистрироваться'|localize"      ng-click="ordForm.formatData()" ng-disabled="ordForm.btnDisabled"></button>
+					            <button type="button" class="btn btn-primary btn-small" ng-bind="'Зарегистрироваться на другой курс'|localize" ng-click="ordForm.again()"      ng-show="ordForm.btnNewShow"></button>
 					            <button type="button" class="btn btn-small"             ng-bind="'Очистить'|localize"     ng-click="ordForm.clear()"      ng-show="ordForm.btnClearShow"></button>
 					        </div>
 					    </div>
@@ -67,11 +73,18 @@
 				</form>
 		    </accordion-group>
 		</accordion>
+
 	</div >
-	<div class="span4">
+	<div class="span2">
+	</div >
+	</div >
+	
+	<stcalert data="ordForm.alert" span-right="2" span-middle="8" span-left="2"/>
+	</div >
+	<div class="span2">
 	</div >
 </div >
-<stcalert data="ordForm.alert" span-right="4" span-middle="4" span-left="4"/>
+
 </br>
 ]]></CSP>
 </Export>
