@@ -289,7 +289,7 @@ localizationModule.constant('StcDictionary', {
     'Подробнее о курсе':'About training',
     'Форма регистрации слушателя':'Student registration form',
     'Форма регистрации на обучение компании InterSystems по курсу "': 'Registration form for InterSystems training course "',
-    'Форма регистрации на обучение компании InterSystems':'Registration form for training courses InterSystems',
+    'Форма регистрации на обучение компании InterSystems':'Registration form for InterSystems training courses',
     'Зарегистрироваться на другой курс':'Registration for another course',
     'Форма регистрации':'Registration form'
 
