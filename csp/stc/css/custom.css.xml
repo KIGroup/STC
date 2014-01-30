@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/css/custom.css" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/css/custom.css" application="/csp/papampam/" default="1"><![CDATA[
 #gcalendar .accordion-inner{
 	padding: 0;
 }
@@ -113,5 +113,32 @@ filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
    .gridInput{
  	line-height: 12px!important;
 	}
+}
+
+.emailContact:hover, .close:focus {
+color: #000000;
+text-decoration: none;
+cursor: pointer;
+opacity: 0.9;
+filter: alpha(opacity=90);
+}
+
+button.emailContact {
+padding: 0;
+cursor: pointer;
+background: transparent;
+border: 0;
+-webkit-appearance: none;
+padding: 2px 11px 2px 0px;
+}
+
+.emailContact {
+float: left;
+font-size: 14px;
+line-height: 14px;
+color: #000000;
+text-shadow: 0 1px 0 #ffffff;
+opacity: 0.6;
+filter: alpha(opacity=60);
 }]]></CSP>
 </Export>

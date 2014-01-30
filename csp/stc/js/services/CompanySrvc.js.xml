@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/CompanySrvc.js" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/js/services/CompanySrvc.js" application="/csp/papampam/" default="1"><![CDATA[
 'use strict';
 //dddв
 
@@ -20,14 +20,15 @@ servicesModule.factory('CompanySrvc', function(DALSrvc) {
             return DALSrvc.getPromise('get', StcAppSetting.user + '/json/allCompaniesShortInfo/training/' + id, null);
         },
         /* Получить короткую информацию о компаниях */
-        getAllCompaniesFullInfo: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
+        getAllCompaniesFullInfo: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, status){
             var first = pageSize * (pageCurr - 1) + 1;
             var obj = {sqlName: sqlName, 
                        isDown: isDown, 
                        first: first, 
                        last: first + pageSize - 1,
                        searchSqlName: searchSqlName, 
-                       searchText: searchText};
+                       searchText: searchText,
+                       status: status};
 
             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/allCompaniesFullInfo', obj);
         },

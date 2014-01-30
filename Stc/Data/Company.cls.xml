@@ -89,6 +89,11 @@
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
+<Property name="IsUniversity">
+<Type>%Boolean</Type>
+<InitialExpression>0</InitialExpression>
+</Property>
+
 <Property name="OtherInfo">
 <Description>
 Другая информация</Description>
@@ -133,6 +138,7 @@
 	set proxy.contact = ..Contact.ConvertToProxyObject()
 	
 	set proxy.employeesNumber = ..Employees.Count()
+	set proxy.status = ..IsUniversity
 	
 	quit proxy
 ]]></Implementation>
@@ -169,6 +175,7 @@
 	set company.CorrespondentAccount = $ZCONVERT(data.correspondentAccount, "I","UTF8")	
 	set company.KPP = $ZCONVERT(data.kpp, "I","UTF8")
 	set company.WebSite = $REPLACE($REPLACE($ZCONVERT(data.site, "I","UTF8"),"http://",""), "https://","")
+	set company.IsUniversity = data.status
 	
 	set status = company.%Save()
 	quit company

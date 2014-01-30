@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/CompanyCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/CompanyCtrl.js" application="/csp/papampam/" default="1"><![CDATA[
 'use strict';
 //dddddddfd
 
@@ -97,6 +97,7 @@ controllersModule.controller('CompanyCtrl', function($scope, $routeParams, $time
     $scope.compForm.loadCompany = function(id){
 		CompanySrvc.getCompany(id).then(
                 function(data){
+	                data.status = data.status == 1; 
                     $scope.compForm.company = data;
                 },
                 function(response){

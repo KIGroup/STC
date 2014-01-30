@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/trainings.csp" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/partials/trainings.csp" application="/csp/papampam/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -90,10 +90,13 @@
 						<p><span class="spnTitle" ng-bind="'Аудитория'|localize"              ></span>: <span ng-bind="training.selectedItems[0].room"></span></p>
 						<p><span class="spnTitle" ng-bind="'Дата начала обучения'|localize"   ></span>: <span ng-bind="training.selectedItems[0].dateStart|convertCacheDate:('d MMMM y'|localize)"></span></p>
 						<p><span class="spnTitle" ng-bind="'Дата окончания обучения'|localize"></span>: <span ng-bind="training.selectedItems[0].dateFinish|convertCacheDate:('d MMMM y'|localize)"></span></p>
-						<p><span class="spnTitle" ng-bind="'Время'|localize"         ></span>: <span ng-bind="training.selectedItems[0].timeStartFinish"></span></p>
-						<p><span class="spnTitle" ng-bind="'Примечание'|localize"         ></span>: <span ng-bind="training.selectedItems[0].otherInfo"></span></p>
+						<p><span class="spnTitle" ng-bind="'Время'|localize"      ></span>: <span ng-bind="training.selectedItems[0].timeStartFinish"></span></p>
+						<p><span class="spnTitle" ng-bind="'Примечание'|localize" ></span>: <span ng-bind="training.selectedItems[0].otherInfo"></span></p>
 						<p><span class="label label-success"   ng-bind="'Событие есть в календаре'|localize" ng-hide="training.selectedItems[0].event==''"></span></p>
-						<p><span class="label label-important" ng-bind="'События нет в календаре'|localize"  ng-show="training.selectedItems[0].event==''"></span></span></p>		
+						<p><span class="label label-important" ng-bind="'События нет в календаре'|localize"  ng-show="training.selectedItems[0].event==''"></span></span></p>
+						<label class="checkbox"  style="padding-top: 5px;" >
+					    	<input type="checkbox" ng-click="training.changeAutoMailing()" ng-model="training.selectedItems[0].isAutoMailing">{{'Авторассылка'|localize}}
+					    </label>		
 					</div>
 				</div>
 				</br>

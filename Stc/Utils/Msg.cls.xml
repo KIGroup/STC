@@ -51,6 +51,26 @@
 	"------------<br>"_
 	"Best regards, Administrator 'Systems of training courses'"
 	
+	set ^CacheMsg("Stc", "ru", "msgSubjectToTrainingStudents") = "Обучение"
+	set ^CacheMsg("Stc", "ru", "msgToTrainingStudents") = ""_
+	"Здравствуйте!<br>"_
+	"Дата начала обучения: %1<br>"_
+	"Курс: %2<br>"_
+	"Город: %3<br>"_
+	"Адрес: %4<br>"_
+	"Аудитория: %5<br>"_
+	"Время: %6<br>"
+	
+	set ^CacheMsg("Stc", "en", "msgSubjectToTrainingStudents") = "Training"
+	set ^CacheMsg("Stc", "en", "msgToTrainingStudents") = ""_
+	"Hello!<br>"_
+	"Date: %1<br>"_
+	"Course: %2<br>"_
+	"City: %3<br>"_
+	"Street: %4<br>"_
+	"Room: %5<br>"_
+	"Time: %6<br>"
+	
 	
 	set ^CacheMsg("Stc", "ru", "certificatesReport") = "Сертификаты для [%1] [%2] [%3]"
 	set ^CacheMsg("Stc", "en", "certificatesReport") = "Certificates for [%1] [%2] [%3]"

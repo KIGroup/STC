@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/index.csp" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/index.csp" application="/csp/papampam/" default="1"><![CDATA[
 <!doctype html>
 
 <html ng-app="mainModule" ng-controller="MainCtrl">
@@ -52,11 +52,13 @@
             if (lang) 
               return lang;
 
-			      switch(getLocale()){
+			/*
+			switch(getLocale()){
               case 'en-US':
               case 'en':
                 return 'en-US';
             }
+            */
             
             return 'ru-RU';
         }

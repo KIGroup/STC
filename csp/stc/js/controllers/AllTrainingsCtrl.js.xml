@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllTrainingsCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllTrainingsCtrl.js" application="/csp/papampam/" default="1"><![CDATA[
 'use strict';
-//ddвddddddddddddв
+//ddвdddd
 
 /*===========================================================================================
 Все обучения
@@ -20,9 +20,9 @@ controllersModule.controller('AllTrainingsCtrl', function($scope, $filter, $loca
 
     $scope.training.init = function(){
         $scope.training.columns = [
-                          {name: 'Курс',           sqlName: 'Course->Name->Value', isSorted: true,  isSortable: true,  isDown: false, isSearched: true,  isSearchable: true},
+                          {name: 'Курс',           sqlName: 'Course->Name->Value', isSorted: false,  isSortable: true,  isDown: false, isSearched: true,  isSearchable: true},
                           {name: 'Город',          sqlName: 'City->Name->Value',   isSorted: false, isSortable: true,  isDown: true,  isSearched: false, isSearchable: true},
-                          {name: 'Дата начала',    sqlName: 'DateStart',           isSorted: false, isSortable: true,  isDown: true,  isSearched: false, isSearchable: false},
+                          {name: 'Дата начала',    sqlName: 'DateStart',           isSorted: true, isSortable: true,  isDown: false,  isSearched: false, isSearchable: false},
                           {name: 'Дата окончания', sqlName: 'DateFinish',          isSorted: false, isSortable: true,  isDown: true,  isSearched: false, isSearchable: false},
                           /*{name: 'Время',             sqlName: '',                    isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false},*/
                           {name: 'Подгруппы',       sqlName: '',                    isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false},
@@ -59,6 +59,7 @@ controllersModule.controller('AllTrainingsCtrl', function($scope, $filter, $loca
                                                     return 'label ' + (item.isCompleted == 0 ? 'label-info' : 'label-success');
                                         },
                                       calculate: function(item){
+                                                    item.isAutoMailing = item.isAutoMailing==0 ? false : true;
                                                     item.status = item.isCompleted == 1 ? $filter('localize')('Завершено') : $filter('localize')('Не завершено');
                                         }}];
 
@@ -122,7 +123,15 @@ controllersModule.controller('AllTrainingsCtrl', function($scope, $filter, $loca
         UtilsSrvc.openMessageBox('Удалить обучение', $filter('localize')("Удалить обучение по курсу ") + " '" + item.course.name + "'?", deleteTraining);    
     };
 
-
+    $scope.training.changeAutoMailing = function(){
+        TrainingSrvc.changeAutoMailing({id: $scope.training.selectedItems[0].id, isAutoMailing: $scope.training.selectedItems[0].isAutoMailing}).then(
+            function(data){
+                $scope.training.alert = UtilsSrvc.getAlert('Готово!', 'Изменения сохранены.', 'success', true);
+            },
+            function(response){
+                $scope.training.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
     $scope.training.init();
 });
 

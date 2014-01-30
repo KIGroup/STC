@@ -145,7 +145,15 @@
 	<!-- Создать все сертификаты для обучения -->
 	<Route Method="POST" Url="/json/training/createCertificates" Call="Stc.Web.JsonAdmin:CreateTrainingCertificates"/>
 
-
+	<!-- Все email слушателей обучения для редактирования письма -->
+	<Route Method="GET" Url="/json/trainingStudentsEmails/:trainingId" Call="Stc.Web.JsonAdmin:GetTrainingStudentsEmails"/>
+	
+	<!-- Отправить всем слушателем обучения письмо -->
+	<Route Method="POST" Url="/json/sendEmailToTrainingStudents" Call="Stc.Web.JsonAdmin:SendEmailToTrainingStudents"/>
+	
+	<!-- Изменить авторассылку -->
+	<Route Method="POST" Url="/json/changeTrainingAutoMailing" Call="Stc.Web.JsonAdmin:ChangeTrainingAutoMailing"/>
+	
 	<!-- ==================================== СЕРТИФИКАТЫ ================================ -->
 	
 	<!-- Получить все сертификаты для таблицы -->

@@ -39,8 +39,16 @@ Parameter SMTPPASSWORD = "simplepassword";
     	set mail.IsHTML = 1
     	set mail.ContentType = "text/html"
     	do mail.TextData.Write(msg)
-    	do mail.To.Insert(email)
-  	
+    	
+    	if ($CLASSNAME(email) = "%Library.ListOfDataTypes"){
+    		for i=1:1:email.Count(){
+	    		do mail.To.Insert(email.GetAt(i))
+    		}
+    	}
+    	else{
+	    	do mail.To.Insert(email)
+    	}
+    	
     	set auth=##class(%Net.Authenticator).%New()
   		set auth.UserName = $GET(^Settings("Stc","EmailSMTPUSER")) //..#SMTPUSER
   		set auth.Password = $GET(^Settings("Stc","EmailSMTPPASSWORD")) //..#SMTPPASSWORD

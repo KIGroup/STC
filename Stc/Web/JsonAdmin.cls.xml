@@ -592,8 +592,14 @@
 	try{
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
       	
-      	$$$THROWONERROR(status, ..WriteJsonForGrid("SELECT ID FROM Stc_Data.Company", "Stc.Data.Company", params,))
-	}
+      	set whereRequired = ""
+      	if (params.status '= "All"){
+	      	set whereRequired = "IsUniversity = '"_..ParseParameter(params.status)_"'"
+	    }
+	    
+		$$$THROWONERROR(status, ..WriteJsonForGrid("SELECT ID FROM Stc_Data.Company", "Stc.Data.Company", params, whereRequired))
+    
+    }
 	catch ex {
 		set status = ex.AsStatus()
 	}
@@ -971,6 +977,40 @@
 ]]></Implementation>
 </Method>
 
+<Method name="GetTrainingStudentsEmails">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>trainingId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	set proxy.children = ##class(%ListOfObjects).%New()
+	
+	&sql(DECLARE StudCur CURSOR FOR 
+		 	 SELECT Students As ID, Students->LastName->Value As LastName, Students->Email 
+		 	 FROM Stc_Data.SubGroup_Students
+		 	 WHERE SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training = :trainingId)
+		 	 ORDER BY LastName)	
+		
+	&sql(OPEN StudCur)
+	for  
+	{	
+		&sql(FETCH StudCur INTO :id, :lastName, :email) 
+		quit:(SQLCODE '= 0)
+		set stEmail = ##class(%ZEN.proxyObject).%New()
+		set stEmail.id = id
+		set stEmail.lastName = lastName
+		set stEmail.email = email
+		do proxy.children.Insert(stEmail)	
+	}
+		
+	&sql(CLOSE StudCur)
+	
+	do proxy.%ToJSON()
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+
 <Method name="CreateSubGroup">
 <Description>
 Создать подгруппу для обучения. Создается пустая подгруппа, только плательщик укзан.</Description>
@@ -1223,6 +1263,52 @@
 		set status = training.CreateCertificates()
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createCertificate", "| "_status)) 
 		
+		TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
+		set status = ex.AsStatus()
+	}
+	
+    quit status
+]]></Implementation>
+</Method>
+
+<Method name="SendEmailToTrainingStudents">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+	
+	try{
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		
+		
+		$$$THROWONERROR(status, ##class(Stc.Utils.Email).Send(data.emails, $ZCONVERT(data.subject, "I", "UTF8"), $ZCONVERT(data.msg, "I", "UTF8")))
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+	
+    quit status
+]]></Implementation>
+</Method>
+
+<Method name="ChangeTrainingAutoMailing">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+	
+	try{
+		TSTART
+		
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		
+		NEW SQLCODE
+		&sql(UPDATE Stc_Data.Training (IsAutoMailing) VALUES (:data.isAutoMailing) WHERE ID = :data.id)
+		
+		if (SQLCODE '= 0) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveTraining", " | SQLCODE="_SQLCODE)) 
 		TCOMMIT
 	}
 	catch ex {

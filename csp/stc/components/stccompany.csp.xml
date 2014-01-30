@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/components/stccompany.csp" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/components/stccompany.csp" application="/csp/papampam/" default="1"><![CDATA[
 <div class="row-fluid">
     <div class="span6">
         <div class="control-group">
@@ -78,7 +78,10 @@
             <div class="controls">
                 <input class="span12" type="text" ng-model="company.bic" ng-required="requiredAll"></input>
             </div>
-        </div>     
+        </div>
+        <label class="checkbox"  style="padding-top: 5px;" >
+			<input type="checkbox" ng-model="company.status">{{'Университет'|localize}}
+		</label>      
     </div>
 </div>]]></CSP>
 </Export>

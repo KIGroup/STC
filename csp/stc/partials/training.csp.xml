@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/training.csp" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/partials/training.csp" application="/csp/papampam/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -171,7 +171,7 @@
 				
 					<button type="button" class="btn btn-small btn-warning" ng-click="newstud.addIntoTraining('update_add')" ng-bind="'Обновить и добавить в обучение'|localize"     title="{{'Сотрудник из системы будет обновлен и добавлен в обучение'|localize}}" ng-disabled="!newstud.selectedItems[0].company.id"></button>
 					<button type="button" class="btn btn-small btn-success" ng-click="newstud.addIntoTraining('old_add')"    ng-bind="'Не обновлять и добавить в обучение'|localize" title="{{'Сотрудник из системы будет добавлен в обучение'|localize}}"></button>
-					<button type="button" class="btn btn-small btn-info"    ng-click="other.openChangeCompanyDialog()"       ng-bind="'Семенить компанию'|localize"                  title="{{'Заменить компанию в заявке на существующую'|localize}}"></button>				
+					<button type="button" class="btn btn-small btn-info"    ng-click="other.openChangeCompanyDialog()"       ng-bind="'Сменить компанию'|localize"                  title="{{'Заменить компанию в заявке на существующую'|localize}}"></button>				
 					<button type="button" class="btn btn-small btn-primary" ng-click="other.createCompany()"                 ng-bind="'Создать компанию'|localize"                   title="{{'Создать новую компанию, контактом компании станет слушатель из заявки'|localize}}" ng-hide="newstud.selectedItems[0].company.id"></button>				
 				</div>
 			</div>
@@ -374,11 +374,62 @@
 	</div>
 </div>
 </br>
+
+<div class="row-fluid" ng-show="pageStore.training.tabAllStudActive">
+	<div class="span1">
+	</div>
+	<div class="span10">
+		 <tabset>
+		 	<!-- ============================================ ПИСЬМО ==================================================-->
+			<tab heading="{{'Рассылка'|localize}}">
+				<form style="margin: 0 0 10px 0;" ng-submit="">
+				    <div class="control-group">
+					    <label class="control-label">{{('Получатели'|localize) + '*'}}
+            				<i class="iSwitcher"ng-bind="'(обновить)'|localize" ng-click="other.loadEmailContacts()"></i>
+        				</label>
+					    <div class="controls">
+							<button class="emailContact" type="button" ng-repeat="contact in other.email.contacts" ng-bind="contact.lastName + ' &times;'" title="{{contact.email}}" ng-click="other.deleteEmailContact(contact)"></button>    	
+					    </div>
+				    </div>
+				    <br>
+				    <br>
+				    <div class="control-group">
+					    <label class="control-label" ng-bind="('Тема письма'|localize) + '*'"></label>
+					    <div class="controls">
+					    	<input class="span12" type="text" ng-model="other.email.subject" required>
+					    </div>
+				    </div>
+				    <div class="control-group">
+					    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
+					    <div class="controls">
+					    	<textarea class="span12" rows="8" ng-model="other.email.msg" required></textarea>
+					    </div>
+				    </div>
+				    <div class="row-fluid">
+						<div class="span5">
+							<div class="input-append">
+								<input class="span6" id="appendedInputButton" placeholder="{{'simple@mail.com'}}" type="email" ng-model="other.email.single"><button class="btn" type="submit" ng-click="other.sendEmailToTrainingStudents(true)">Отправить на адрес</button>
+							</div>
+						</div>
+						<div class="span3">
+							<label class="checkbox"  style="padding-top: 5px;">
+					    		<input type="checkbox" ng-click="training.changeAutoMailing()" ng-model="training.data.isAutoMailing">{{('Авторассылка'|localize) + '*'}}
+					    	</label>
+						</div>
+						<div class="span4">
+							<button class="btn btn-success btn-small pull-right" type="submit" ng-click="other.sendEmailToTrainingStudents(false)">Отправить получателям</button>
+						</div>
+				    </div>
+	    		</form>
+			</tab>
+		</tabset>
+	</div>
+	<div class="span1">
+	</div>
+</div>
+
 <stcalert data="other.alert" span-right="1" span-middle="10" span-left="1"/>
-
-
-
- 
+<br>
 <div class="modal" id="PaymentModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="PaymentModalLabel" aria-hidden="true" ng-show="sgroup.modalPaymentVisible">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="sgroup.cancelPayment()">×</button>

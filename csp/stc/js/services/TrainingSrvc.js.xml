@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/TrainingSrvc.js" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/js/services/TrainingSrvc.js" application="/csp/papampam/" default="1"><![CDATA[
 'use strict';
-//ddd
+//dddd
 
 /*===========================================================================================
 Обучения
@@ -115,7 +115,16 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
         },
         doEvent: function(data){
 	        return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/trainingEvent', data);
-	    }
+	    },
+        getEmailContacts: function(trainingId){
+          	return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/trainingStudentsEmails/' + trainingId, null);
+        },
+        sendEmailToTrainingStudents: function(data){
+          	return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/sendEmailToTrainingStudents', data);
+        },
+        changeAutoMailing: function(data){
+          	return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/changeTrainingAutoMailing', data);
+        }
     }
 });
   

@@ -100,8 +100,14 @@
 <Required>1</Required>
 </Property>
 
+<Property name="IsAutoMailing">
+<Type>%Boolean</Type>
+<InitialExpression>1</InitialExpression>
+</Property>
+
 <Property name="OtherInfo">
 <Description>
+Авто рассылка почты слушателям за n - дней до начала
 Другая информация</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
@@ -148,9 +154,14 @@ EventId в календаре Google</Description>
 	set proxy.address = ##class(%ZEN.proxyObject).%New()
 	set proxy.address.title = ..Street.Value
 	set proxy.address.point = ..Latitude_" "_..Longitude
-	
+	set proxy.isAutoMailing = ..IsAutoMailing
 
 	if (shortInfo = 1) quit proxy
+	
+	set proxy.email = ##class(%ZEN.proxyObject).%New()
+	set proxy.email.msg = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudents")
+	set proxy.email.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudents")
+	
 	
 	set proxy.newStudents = ..NewStudents.Count()
 	set proxy.sgroups = ..SubGroups.Count()
