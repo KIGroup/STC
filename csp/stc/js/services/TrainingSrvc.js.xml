@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/TrainingSrvc.js" application="/csp/papampam/" default="1"><![CDATA[
+<CSP name="stc/js/services/TrainingSrvc.js" application="/csp/tnt/" default="1"><![CDATA[
 'use strict';
 //dddd
 
@@ -93,6 +93,19 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
 
             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/getTrainingStudents', obj);
         },
+        /* Все слушатели обучения для таблицы */
+        getTrainingStudentsByAccessCode: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, code){
+            var first = pageSize * (pageCurr - 1) + 1;
+            var obj = {sqlName: sqlName, 
+                       isDown: isDown, 
+                       first: first, 
+                       last: first + pageSize - 1,
+                       searchSqlName: searchSqlName, 
+                       searchText: searchText,
+                       accessCode: code};
+
+            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/trainingStudents', obj);
+        },
         /* Все валюты */
         getCurrencies: function(){
             return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/allCurrencies', null);
@@ -122,8 +135,14 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
         sendEmailToTrainingStudents: function(data){
           	return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/sendEmailToTrainingStudents', data);
         },
-        changeAutoMailing: function(data){
-          	return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/changeTrainingAutoMailing', data);
+        sendEmailToTrainingTeacher: function(data){
+          	return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/sendEmailToTrainingTeacher', data);
+        },
+        changeStudentsAutoMailing: function(data){
+          	return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/changeTrainingStudentsAutoMailing', data);
+        },
+        changeTeacherAutoMailing: function(data){
+          	return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/changeTrainingTeacherAutoMailing', data);
         }
     }
 });

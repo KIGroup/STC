@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/app.js" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/js/app.js" application="/csp/tnt/" default="1"><![CDATA[
 'use strict';
-//dddddd
+//ddddddd
 
 var servicesModule     = angular.module('servicesModule', ['ngResource', 'ngCookies']);
 var controllersModule  = angular.module('controllersModule', ['servicesModule']);
@@ -24,6 +24,7 @@ mainModule.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/course',       {templateUrl: 'partials/course.csp',       controller: 'CourseCtrl'});
     $routeProvider.when('/trainings',    {templateUrl: 'partials/trainings.csp',    controller: 'AllTrainingsCtrl'});
     $routeProvider.when('/training',     {templateUrl: 'partials/training.csp',     controller: 'TrainingCtrl'});
+    $routeProvider.when('/trainingstudents', {templateUrl: 'partials/trainingstudents.csp', controller: 'TrainingStudentsCtrl'});
     $routeProvider.when('/createtraining',{templateUrl:'partials/createtraining.csp', controller: 'CreateTrainingCtrl'});
     $routeProvider.when('/certificates', {templateUrl: 'partials/certificates.csp', controller: 'AllCertificatesCtrl'});
     $routeProvider.otherwise({redirectTo: '/createorder'});

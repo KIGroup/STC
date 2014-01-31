@@ -100,14 +100,22 @@
 <Required>1</Required>
 </Property>
 
-<Property name="IsAutoMailing">
+<Property name="IsStudentsAutoMailing">
+<Description>
+Авторассылка почты слушателям за n - дней до начала</Description>
+<Type>%Boolean</Type>
+<InitialExpression>1</InitialExpression>
+</Property>
+
+<Property name="IsTeacherAutoMailing">
+<Description>
+Авторассылка почты преподавателю за n - дней до начала</Description>
 <Type>%Boolean</Type>
 <InitialExpression>1</InitialExpression>
 </Property>
 
 <Property name="OtherInfo">
 <Description>
-Авто рассылка почты слушателям за n - дней до начала
 Другая информация</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
@@ -129,6 +137,17 @@ EventId в календаре Google</Description>
 <Relationship>1</Relationship>
 </Property>
 
+<Property name="AccessCode">
+<Description>
+Код доступа к обучению для преподавателя</Description>
+<Type>%String</Type>
+</Property>
+
+<Index name="AccessCodeIdx">
+<Properties>AccessCode</Properties>
+<Unique>1</Unique>
+</Index>
+
 <Method name="ConvertToProxyObject">
 <Description>
 Конвертация в proxyObject для JSON </Description>
@@ -137,6 +156,7 @@ EventId в календаре Google</Description>
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()
 	set proxy.id = ..%Id()
+	set proxy.accessCode = ..AccessCode
 	set proxy.event = ..CalendarEvent
 	set proxy.city = ..City.ConvertToProxyObject()
 	set proxy.course = ..Course.ConvertToProxyObject(1)
@@ -154,13 +174,19 @@ EventId в календаре Google</Description>
 	set proxy.address = ##class(%ZEN.proxyObject).%New()
 	set proxy.address.title = ..Street.Value
 	set proxy.address.point = ..Latitude_" "_..Longitude
-	set proxy.isAutoMailing = ..IsAutoMailing
+	set proxy.isStudentsAutoMailing = ..IsStudentsAutoMailing
+	set proxy.isTeacherAutoMailing = ..IsTeacherAutoMailing
 
 	if (shortInfo = 1) quit proxy
 	
 	set proxy.email = ##class(%ZEN.proxyObject).%New()
-	set proxy.email.msg = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudents")
-	set proxy.email.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudents")
+	set proxy.email.teacher = ##class(%ZEN.proxyObject).%New()
+	set proxy.email.teacher.msg = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingTeacher")
+	set proxy.email.teacher.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingTeacher")
+	
+	set proxy.email.students = ##class(%ZEN.proxyObject).%New()
+	set proxy.email.students.msg = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudents")
+	set proxy.email.students.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudents")
 	
 	
 	set proxy.newStudents = ..NewStudents.Count()
@@ -437,6 +463,18 @@ EventId в календаре Google</Description>
 </Value>
 <Value name="17">
 <Value>CalendarEvent</Value>
+</Value>
+<Value name="18">
+<Value>IsAutoMailing</Value>
+</Value>
+<Value name="19">
+<Value>AccessCode</Value>
+</Value>
+<Value name="20">
+<Value>IsStudentsAutoMailing</Value>
+</Value>
+<Value name="21">
+<Value>IsTeacherAutoMailing</Value>
 </Value>
 </Data>
 </Storage>

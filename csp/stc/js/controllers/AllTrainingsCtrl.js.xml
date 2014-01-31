@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllTrainingsCtrl.js" application="/csp/papampam/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllTrainingsCtrl.js" application="/csp/tnt/" default="1"><![CDATA[
 'use strict';
 //ddвdddd
 
@@ -59,7 +59,8 @@ controllersModule.controller('AllTrainingsCtrl', function($scope, $filter, $loca
                                                     return 'label ' + (item.isCompleted == 0 ? 'label-info' : 'label-success');
                                         },
                                       calculate: function(item){
-                                                    item.isAutoMailing = item.isAutoMailing==0 ? false : true;
+                                                    item.isStudentsAutoMailing = item.isStudentsAutoMailing==0 ? false : true;
+                                                    item.isTeacherAutoMailing = item.isTeacherAutoMailing==0 ? false : true;
                                                     item.status = item.isCompleted == 1 ? $filter('localize')('Завершено') : $filter('localize')('Не завершено');
                                         }}];
 
@@ -123,8 +124,18 @@ controllersModule.controller('AllTrainingsCtrl', function($scope, $filter, $loca
         UtilsSrvc.openMessageBox('Удалить обучение', $filter('localize')("Удалить обучение по курсу ") + " '" + item.course.name + "'?", deleteTraining);    
     };
 
-    $scope.training.changeAutoMailing = function(){
-        TrainingSrvc.changeAutoMailing({id: $scope.training.selectedItems[0].id, isAutoMailing: $scope.training.selectedItems[0].isAutoMailing}).then(
+    $scope.training.changeStudentsAutoMailing = function(){
+        TrainingSrvc.changeStudentsAutoMailing({id: $scope.training.selectedItems[0].id, isAutoMailing: $scope.training.selectedItems[0].isStudentsAutoMailing}).then(
+            function(data){
+                $scope.training.alert = UtilsSrvc.getAlert('Готово!', 'Изменения сохранены.', 'success', true);
+            },
+            function(response){
+                $scope.training.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+    
+    $scope.training.changeTeacherAutoMailing = function(){
+        TrainingSrvc.changeTeacherAutoMailing({id: $scope.training.selectedItems[0].id, isAutoMailing: $scope.training.selectedItems[0].isTeacherAutoMailing}).then(
             function(data){
                 $scope.training.alert = UtilsSrvc.getAlert('Готово!', 'Изменения сохранены.', 'success', true);
             },

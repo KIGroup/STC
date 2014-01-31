@@ -66,9 +66,15 @@
 	<!-- Получить обучение, коротко -->
 	<Route Method="GET" Url="/json/training/:id" Call="Stc.Web.JsonUser:GetTraining"/>
 
+	<!--  -->
+	<Route Method="POST" Url="/json/trainingStudents" Call="Stc.Web.JsonUser:GetTrainingStudents"/>
+
+
 	<!-- Получить все города, поиск совпадения -->
 	<Route Method="GET" Url="/json/citiesStartsWith/:startsWith" Call="Stc.Web.JsonUser:GetCitiesStartsWith"/>
-
+	
+	<!-- Отчет, слушатели обучения-->
+	<Route Method="GET" Url="/text/:lang/students/:trainingAccessCode" Call="Stc.Web.Report:Students"/>
 	
 </Routes>
 ]]></Data>

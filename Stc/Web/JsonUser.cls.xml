@@ -437,9 +437,33 @@
 	
 	try{
 		set proxy = ..GetProxyObject("Stc.Data.Training", id)
+		set proxy.accessCode = ""
 		set proxy.teacher = ""
 		set proxy.cost = ""
 		do proxy.%ToJSON()
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+	
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="GetTrainingStudents">
+<Description>
+Все студенты обучения</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try{
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
+      	
+      	set whereRequired = "SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training->AccessCode = '"_..ParseParameter(params.accessCode)_"')"
+      	
+      	$$$THROWONERROR(status, ..WriteJsonForGrid("SELECT Students FROM Stc_Data.SubGroup_Students", "Stc.Data.Person", params, whereRequired))
 	}
 	catch ex {
 		set status = ex.AsStatus()

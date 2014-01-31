@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/MainCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/MainCtrl.js" application="/csp/tnt/" default="1"><![CDATA[
 'use strict';
 //dddddddd
 
@@ -69,7 +69,7 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
                 $scope.menu.admin = true;
                 $scope.menu.loginCaption = 'Выход';
                 $cookies['admin'] = 'true';
-                $location.path('/orders');
+                $location.path('/trainings');
             },
             function(response){
                 $scope.menu.admin = false;

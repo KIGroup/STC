@@ -54,12 +54,12 @@
 	set ^CacheMsg("Stc", "ru", "msgSubjectToTrainingStudents") = "Обучение"
 	set ^CacheMsg("Stc", "ru", "msgToTrainingStudents") = ""_
 	"Здравствуйте!<br>"_
-	"Дата начала обучения: %1<br>"_
+	"Дата начала обучения: %1, время: %6<br>"_
 	"Курс: %2<br>"_
 	"Город: %3<br>"_
-	"Адрес: %4<br>"_
-	"Аудитория: %5<br>"_
-	"Время: %6<br>"
+	"Адрес: %4%5<br>"_
+	"Преподаватель: %7<br>"_
+	"%8"
 	
 	set ^CacheMsg("Stc", "en", "msgSubjectToTrainingStudents") = "Training"
 	set ^CacheMsg("Stc", "en", "msgToTrainingStudents") = ""_
@@ -69,15 +69,53 @@
 	"City: %3<br>"_
 	"Street: %4<br>"_
 	"Room: %5<br>"_
+	"Time: %6<br>"_
+	"%7<br>"
+	
+	set ^CacheMsg("Stc", "ru", "msgSubjectToNewTrainingStudent") = "Регистрация на курс"
+	set ^CacheMsg("Stc", "ru", "msgToNewTrainingStudent") = ""_
+	"Здравствуйте! Ваша заявка на обучение принята.<br>"_
+	"Дата начала обучения: %1, время: %6<br>"_
+	"Курс: %2<br>"_
+	"Город: %3<br>"_
+	"Адрес: %4%5<br>"_
+	"Преподаватель: %7<br>"_
+	"%8"
+	
+	set ^CacheMsg("Stc", "en", "msgSubjectToNewTrainingStudent") = "Registration for course"
+	set ^CacheMsg("Stc", "en", "msgToNewTrainingStudent") = ""_
+	"Hello!<br>"_
+	"Date: %1<br>"_
+	"Course: %2<br>"_
+	"City: %3<br>"_
+	"Street: %4<br>"_
+	"Room: %5<br>"_
 	"Time: %6<br>"
 	
+	set ^CacheMsg("Stc", "ru", "msgSubjectToTrainingTeacher") = "Слушатели курса"
+	set ^CacheMsg("Stc", "ru", "msgToTrainingTeacher") = ""_
+	"Здравствуйте!<br>Перейдите по <a href='http://%1'>ссылке</a> для просмотра списка слушателей курса.<br>"_
+	"Дата начала обучения: %2, время: %3<br>"_
+	"Курс: %4<br>"_
+	"Город: %5<br>"_
+	"Адрес: %6%7<br>"_
+	"%8"
+	
+	set ^CacheMsg("Stc", "en", "msgSubjectToTrainingTeacher") = "Training Students"
+	set ^CacheMsg("Stc", "en", "msgToTrainingTeacher") = ""_
+	"Hello! Students!"
 	
 	set ^CacheMsg("Stc", "ru", "certificatesReport") = "Сертификаты для [%1] [%2] [%3]"
 	set ^CacheMsg("Stc", "en", "certificatesReport") = "Certificates for [%1] [%2] [%3]"
-	
+
+	set ^CacheMsg("Stc", "ru", "studentsReport") = "Слушатели [%1] [%2] [%3]"
+	set ^CacheMsg("Stc", "en", "studentsReport") = "Students [%1] [%2] [%3]"	
 	
 	
 	// Ошибки
+	set ^CacheMsg("Stc", "ru", "emailAddNewStudent") = "Слушатель добавлен, но письмо не было отправлено."
+	set ^CacheMsg("Stc", "en", "emailAddNewStudent") = "Student has been added into training, but email was not sent."
+	
 	set ^CacheMsg("Stc", "ru", "createCompany") = "Создание компании"
 	set ^CacheMsg("Stc", "en", "createCompany") = "Creation company"
 	
