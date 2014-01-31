@@ -14,7 +14,7 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set diffDays = $GET(^Settings("Stc", "TeacherAutoMailingDays"), 4)
-	set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp#/trainingstudents?id=%1&code%2"
+	set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp#/trainingstudents?id=%1&code=%2"
 		
 	&sql(DECLARE TrCur CURSOR FOR 
 			SELECT ID

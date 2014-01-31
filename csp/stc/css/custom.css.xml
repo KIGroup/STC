@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/css/custom.css" application="/csp/papampam/" default="1"><![CDATA[
+<CSP name="stc/css/custom.css" application="/csp/tnt/" default="1"><![CDATA[
 #gcalendar .accordion-inner{
 	padding: 0;
 }
@@ -70,7 +70,7 @@ background-color: #C4E3F3;
  
  .spnTitle{
 padding: 0 0 1px 0!important;
-border-bottom: 1px dashed #005580!important;
+border-bottom: 1px solid #C9C9C9!important;
 }
 
 .btn-small, .btn-group>.btn-small{

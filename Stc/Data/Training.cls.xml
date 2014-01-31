@@ -230,6 +230,7 @@ EventId в календаре Google</Description>
 		set tr.OtherInfo.Value = $ZCONVERT(data.otherInfo, "I","UTF8")
 	}
 	
+	set tr.AccessCode = $SYSTEM.Util.CreateGUID()
 	set tr.DateFinish = $ZDATEH(data.dateFinish, 15)
 	set tr.DateStart = $ZDATEH(data.dateStart, 15)
 	set tr.TimeFinish = ##class(%Library.Time).DisplayToLogical(data.timeFinish)
