@@ -43,7 +43,7 @@ Bank Identification Code</Description>
 
 <Property name="KPP">
 <Description>
-Сode reason for registration</Description>
+Code reason for registration</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
@@ -196,27 +196,27 @@ Delete organization, if it is available</Description>
 	
 	set findId = ""
 	
-	// Проверка: есть ли в заявках	
+	// Checking: if in applications
 	&sql(SELECT ID INTO:findId FROM Stc_Data.Order WHERE Company = :id)
 	if (findId = ""){
-		// Проверка: есть ли сотрудники
+		// Checking: if has employees
 		&sql(SELECT ID INTO:findId FROM Stc_Data.Person WHERE Company = :id)
 		
 		if (findId = ""){
-			// Проверка: плательщик подгруппы
+			// Checking: if is payer for subgroup
 			&sql(SELECT ID INTO:findId FROM Stc_Data.SubGroup WHERE Payer = :id)
 			
 			if (findId = ""){
-				// Проверка: в заявке от слушателя
+				// Checking: in application from student
 				&sql(SELECT ID INTO:findId FROM Stc_Data.OrderNewStudent WHERE Company = :id)	
 			}	
 		}
 	}
 	
-	// Выход, если есть связи
+	// Quit, if has links
 	quit:findId'="" ##class(Stc.Utils.Msg).GetErrorStatus("deleteCompanyImpossible")
 	
-	// Удаление локализации
+	// Delete localization
 	set status = ##class(Stc.Data.Localization.LText).Delete(company.FullName.%Id())
 	quit:$$$ISERR(status) status
 		
@@ -232,7 +232,7 @@ Delete organization, if it is available</Description>
 	set status = ##class(Stc.Data.Localization.LText).Delete(company.OtherInfo.%Id())
 	quit:$$$ISERR(status) status
 	
-	// Удаление компании
+	// Delete organization
 	set status = ..%DeleteId(id, 4)
 	quit:$$$ISERR(status) ##class(Stc.Utils.Msg).GetErrorStatus("deleteCompany", "| "_status)
 	

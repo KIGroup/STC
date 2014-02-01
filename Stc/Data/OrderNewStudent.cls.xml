@@ -142,8 +142,8 @@ Create application</Description>
 	if (data.contact.company.exist) set order.Company = ##class(Company).%OpenId(data.contact.company.exist.id)
 		
 	if '(order.Company){
-		// Если компания не была выбрана в заявке, то поиск по имени существующей,
-		// нашли - устаналиваем, нет - новая компания -> строка
+		// If organization is not selected then search by name,
+		// if found - use it, else - new company with name
 		set compName = $ZCONVERT(data.contact.company.notexist.name, "I","UTF8")
 		set compId = ""
 		&sql(SELECT ID INTO:compId FROM Stc_Data.Company WHERE ShortName->Value  = :compName OR FullName->Value = :compName)

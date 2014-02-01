@@ -102,14 +102,14 @@ Training is finished</Description>
 
 <Property name="IsStudentsAutoMailing">
 <Description>
-Авторассылка почты слушателям за n - дней до начала</Description>
+Automailing to students in n - days before start</Description>
 <Type>%Boolean</Type>
 <InitialExpression>1</InitialExpression>
 </Property>
 
 <Property name="IsTeacherAutoMailing">
 <Description>
-Авторассылка почты преподавателю за n - дней до начала</Description>
+Automailing to teachers in n - days before start</Description>
 <Type>%Boolean</Type>
 <InitialExpression>1</InitialExpression>
 </Property>
@@ -139,7 +139,7 @@ New applications from students for this certain training</Description>
 
 <Property name="AccessCode">
 <Description>
-Код доступа к обучению для преподавателя</Description>
+Access code to training for teacher</Description>
 <Type>%String</Type>
 </Property>
 
@@ -201,7 +201,7 @@ Convert to proxyObject (for JSON)</Description>
 		set proxy.students = proxy.students + sgroup.Students.Count()
 	}
 	
-	// Стоимость обучения и валюта
+	// Training's cost and currency
 	set proxy.cost = ##class(%ZEN.proxyObject).%New()
 	set proxy.cost.price = ..Course.Price
 	set proxy.cost.currency = ..Course.Currency.ConvertToProxyObject()
@@ -261,7 +261,7 @@ Add new subgroups to trainings from applications</Description>
 			
 		do ..SubGroups.SetAt(sub, sub.%Id())
 		
-		// Закрыть заявку, т.к. все слушатели вошли в обучение	
+		// Close app - all students in training
 		set order.OrderStatus = ##class(OrderStatus).CodeIdxOpen("Closed")
 		set status = order.%Save()
 		if $$$ISERR(status) RETURN ##class(Stc.Utils.Msg).GetErrorStatus("saveSubGroup" ," | "_status) 	
@@ -357,8 +357,8 @@ Add person to training, subgroup is detirmining automatically</Description>
 	
 	set trainingId = ..%Id()
 	
-	// Поиск слушателя в обучении, чтобы избежать ситуации, 
-	// когда один слушатель в двух подгруппах одного обучения 
+	// Search student in training to avoid situation, 
+	// when student in two different subgroups of one training
 	set contains = 0
 	&sql(SELECT COUNT(ID) INTO :contains
 		 FROM Stc_Data.SubGroup_Students
@@ -370,7 +370,7 @@ Add person to training, subgroup is detirmining automatically</Description>
 	 
 	if (contains '= 0) quit ##class(Stc.Utils.Msg).GetErrorStatus("personContainsInTraining")
 	
-	// Если в обучении еще нет такого слушателя, то возможно есть в обучении подгруппа его компании
+	// If training has no this person, maybe training his organization's subgroup
 	set person = ##class(Stc.Data.Person).%OpenId(personId)
 	set personCompanyId = person.Company.%Id()
 	set sgroupId = ""
@@ -378,7 +378,7 @@ Add person to training, subgroup is detirmining automatically</Description>
 	&sql(SELECT $PIECE(ID,'||',2) INTO :sgroupId FROM Stc_Data.Training_SubGroups WHERE Training = :trainingId AND SubGroups->Payer = :personCompanyId)
 	
 	if (sgroupId = ""){
-		// В обучении еще нет подгруппы компании нового слушателя, создадим подгруппу и добавим его туда
+		// If training has no organization's subgroup, create subgroup and add person to it
 		set array = ##class(%ArrayOfObjects).%New()
 		do array.SetAt(person, personId)
 		set sgroup = ##class(Stc.Data.SubGroup).Create(person.Company, array, ..Course, .status)
@@ -388,7 +388,7 @@ Add person to training, subgroup is detirmining automatically</Description>
 		do ..SubGroups.SetAt(sgroup, sgroup.%Id())
 	}
 	else{
-		// В обучении уже есть подгруппа компании слушателя, добавим его туда
+		// If training has organization's subgroup, just add person to it
 		set group = ..SubGroups.GetAt(sgroupId)
 		do group.Students.SetAt(person, personId)
 		set status = group.%Save()

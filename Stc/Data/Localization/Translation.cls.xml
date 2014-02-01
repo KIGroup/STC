@@ -66,7 +66,7 @@ Translation dictionary</Description>
 	set ^CacheMsg("Stc", "ru", "en", "ю") = "yu"
 	set ^CacheMsg("Stc", "ru", "en", "я") = "ya"
 	
-	// Обратный перевод плох
+	// Reverse translation is not good enough
 	set ^CacheMsg("Stc", "en", "ru", "a") = "а"
 	set ^CacheMsg("Stc", "en", "ru", "b") = "б"
 	set ^CacheMsg("Stc", "en", "ru", "c") = "ц"
