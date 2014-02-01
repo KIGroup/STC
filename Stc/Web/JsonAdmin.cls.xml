@@ -1100,6 +1100,19 @@
 		
 		set status = training.%Save()
 		$$$THROWONERROR(status, status)
+		
+		set subj = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToNewTrainingStudent")
+		set msg = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToNewTrainingStudent"),
+						$ZDATE(training.DateStart, 3),
+						training.Course.Name.Value,
+						training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value,
+						training.Street.Value,
+						training.Room,
+						$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5),
+						training.Teacher.LastName.Value_" "_training.Teacher.FirstName.Value,
+						training.OtherInfo.Value)
+		set status = ##class(Stc.Utils.Email).Send(order.Email, subj, msg)
+		if $$$OK '= status set status = ##class(Stc.Utils.Msg).GetErrorStatus("emailAddNewStudent", "| "_status) 
 			
 		TCOMMIT
 	}
@@ -1282,8 +1295,7 @@
 	
 	try{
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
-		
-		
+				
 		$$$THROWONERROR(status, ##class(Stc.Utils.Email).Send(data.emails, $ZCONVERT(data.subject, "I", "UTF8"), $ZCONVERT(data.msg, "I", "UTF8")))
 	}
 	catch ex {
@@ -1294,7 +1306,26 @@
 ]]></Implementation>
 </Method>
 
-<Method name="ChangeTrainingAutoMailing">
+<Method name="SendEmailToTrainingTeacher">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+	
+	try{
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+				
+		$$$THROWONERROR(status, ##class(Stc.Utils.Email).Send(data.emails, $ZCONVERT(data.subject, "I", "UTF8"), $ZCONVERT(data.msg, "I", "UTF8")))
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+	
+    quit status
+]]></Implementation>
+</Method>
+
+<Method name="ChangeTrainingStudentsAutoMailing">
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -1306,7 +1337,33 @@
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
 		NEW SQLCODE
-		&sql(UPDATE Stc_Data.Training (IsAutoMailing) VALUES (:data.isAutoMailing) WHERE ID = :data.id)
+		&sql(UPDATE Stc_Data.Training (IsStudentsAutoMailing) VALUES (:data.isAutoMailing) WHERE ID = :data.id)
+		
+		if (SQLCODE '= 0) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveTraining", " | SQLCODE="_SQLCODE)) 
+		TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
+		set status = ex.AsStatus()
+	}
+	
+    quit status
+]]></Implementation>
+</Method>
+
+<Method name="ChangeTrainingTeacherAutoMailing">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+	
+	try{
+		TSTART
+		
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		
+		NEW SQLCODE
+		&sql(UPDATE Stc_Data.Training (IsTeacherAutoMailing) VALUES (:data.isAutoMailing) WHERE ID = :data.id)
 		
 		if (SQLCODE '= 0) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveTraining", " | SQLCODE="_SQLCODE)) 
 		TCOMMIT

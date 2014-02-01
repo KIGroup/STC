@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/trainings.csp" application="/csp/papampam/" default="1"><![CDATA[
+<CSP name="stc/partials/trainings.csp" application="/csp/tnt/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -95,7 +95,10 @@
 						<p><span class="label label-success"   ng-bind="'Событие есть в календаре'|localize" ng-hide="training.selectedItems[0].event==''"></span></p>
 						<p><span class="label label-important" ng-bind="'События нет в календаре'|localize"  ng-show="training.selectedItems[0].event==''"></span></span></p>
 						<label class="checkbox"  style="padding-top: 5px;" >
-					    	<input type="checkbox" ng-click="training.changeAutoMailing()" ng-model="training.selectedItems[0].isAutoMailing">{{'Авторассылка'|localize}}
+					    	<input type="checkbox" ng-click="training.changeStudentsAutoMailing()" ng-model="training.selectedItems[0].isStudentsAutoMailing">{{'Авторассылка студентам'|localize}}
+					    </label>
+					    <label class="checkbox"  style="padding-top: 5px;" >
+					    	<input type="checkbox" ng-click="training.changeTeacherAutoMailing()" ng-model="training.selectedItems[0].isTeacherAutoMailing">{{'Авторассылка преподавателю'|localize}}
 					    </label>		
 					</div>
 				</div>

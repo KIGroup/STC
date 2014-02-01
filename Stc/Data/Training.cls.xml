@@ -100,7 +100,16 @@ Training is finished</Description>
 <Required>1</Required>
 </Property>
 
-<Property name="IsAutoMailing">
+<Property name="IsStudentsAutoMailing">
+<Description>
+Авторассылка почты слушателям за n - дней до начала</Description>
+<Type>%Boolean</Type>
+<InitialExpression>1</InitialExpression>
+</Property>
+
+<Property name="IsTeacherAutoMailing">
+<Description>
+Авторассылка почты преподавателю за n - дней до начала</Description>
 <Type>%Boolean</Type>
 <InitialExpression>1</InitialExpression>
 </Property>
@@ -128,6 +137,17 @@ New applications from students for this certain training</Description>
 <Relationship>1</Relationship>
 </Property>
 
+<Property name="AccessCode">
+<Description>
+Код доступа к обучению для преподавателя</Description>
+<Type>%String</Type>
+</Property>
+
+<Index name="AccessCodeIdx">
+<Properties>AccessCode</Properties>
+<Unique>1</Unique>
+</Index>
+
 <Method name="ConvertToProxyObject">
 <Description>
 Convert to proxyObject (for JSON)</Description>
@@ -136,6 +156,7 @@ Convert to proxyObject (for JSON)</Description>
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()
 	set proxy.id = ..%Id()
+	set proxy.accessCode = ..AccessCode
 	set proxy.event = ..CalendarEvent
 	set proxy.city = ..City.ConvertToProxyObject()
 	set proxy.course = ..Course.ConvertToProxyObject(1)
@@ -153,13 +174,19 @@ Convert to proxyObject (for JSON)</Description>
 	set proxy.address = ##class(%ZEN.proxyObject).%New()
 	set proxy.address.title = ..Street.Value
 	set proxy.address.point = ..Latitude_" "_..Longitude
-	set proxy.isAutoMailing = ..IsAutoMailing
+	set proxy.isStudentsAutoMailing = ..IsStudentsAutoMailing
+	set proxy.isTeacherAutoMailing = ..IsTeacherAutoMailing
 
 	if (shortInfo = 1) quit proxy
 	
 	set proxy.email = ##class(%ZEN.proxyObject).%New()
-	set proxy.email.msg = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudents")
-	set proxy.email.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudents")
+	set proxy.email.teacher = ##class(%ZEN.proxyObject).%New()
+	set proxy.email.teacher.msg = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingTeacher")
+	set proxy.email.teacher.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingTeacher")
+	
+	set proxy.email.students = ##class(%ZEN.proxyObject).%New()
+	set proxy.email.students.msg = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudents")
+	set proxy.email.students.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudents")
 	
 	
 	set proxy.newStudents = ..NewStudents.Count()
@@ -203,6 +230,7 @@ Create or save modified training</Description>
 		set tr.OtherInfo.Value = $ZCONVERT(data.otherInfo, "I","UTF8")
 	}
 	
+	set tr.AccessCode = $SYSTEM.Util.CreateGUID()
 	set tr.DateFinish = $ZDATEH(data.dateFinish, 15)
 	set tr.DateStart = $ZDATEH(data.dateStart, 15)
 	set tr.TimeFinish = ##class(%Library.Time).DisplayToLogical(data.timeFinish)
@@ -436,6 +464,18 @@ Add person to training, subgroup is detirmining automatically</Description>
 </Value>
 <Value name="17">
 <Value>CalendarEvent</Value>
+</Value>
+<Value name="18">
+<Value>IsAutoMailing</Value>
+</Value>
+<Value name="19">
+<Value>AccessCode</Value>
+</Value>
+<Value name="20">
+<Value>IsStudentsAutoMailing</Value>
+</Value>
+<Value name="21">
+<Value>IsTeacherAutoMailing</Value>
 </Value>
 </Data>
 </Storage>

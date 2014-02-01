@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/index.csp" application="/csp/papampam/" default="1"><![CDATA[
+<CSP name="stc/index.csp" application="/csp/tnt/" default="1"><![CDATA[
 <!doctype html>
 
 <html ng-app="mainModule" ng-controller="MainCtrl">
@@ -65,7 +65,8 @@
 
 
         // Настройки приложения. Имена веб-приложений для REST, google календарь, язык
-        var StcAppSetting = {admin: '#($GET(^Settings("Stc", "WebAppAdmin")))#',
+        var StcAppSetting = {default: '#($GET(^Settings("Stc", "WebApp")))#',
+	        				 admin: '#($GET(^Settings("Stc", "WebAppAdmin")))#',
                              user:  '#($GET(^Settings("Stc", "WebAppUser")))#',
                              lang: getLang()};
 
@@ -128,6 +129,7 @@
 	  <script language="javascript"  src="js/controllers/AllPersonsCtrl.js"></script>
     <script language="javascript"  src="js/controllers/AllCoursesCtrl.js"></script>    
     <script language="javascript"  src="js/controllers/CourseCtrl.js"></script>
+    <script language="javascript"  src="js/controllers/TrainingStudentsCtrl.js"></script>
 
     <script language="javascript"  src="js/services/DALSrvc.js"></script>
     <script language="javascript"  src="js/services/YandexSrvc.js"></script>

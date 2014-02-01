@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Utils.UpdateCode">
+<Super>%Persistent</Super>
+<TimeCreated>63217,78308.778701</TimeCreated>
+
+<UDLText name="T">
+<Content><![CDATA[
+// do ##class(Stc.Utils.UpdateCode).Upd()
+
+]]></Content>
+</UDLText>
+
+<Method name="Upd">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	NEW SQLCODE
+	&sql(UPDATE Stc_Data.Training (IsStudentsAutoMailing, IsTeacherAutoMailing) VALUES (0,0))
+	
+	w !, "SQLCODE="_SQLCODE
+	
+	NEW SQLCODE
+	&sql(UPDATE Stc_Data.Company (IsUniversity) VALUES (0))
+	
+	w !, "SQLCODE="_SQLCODE
+]]></Implementation>
+</Method>
+
+<Method name="SetTrainingAccessCode">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	&sql(DECLARE TrCur CURSOR FOR
+			SELECT ID FROM Stc_Data.Training)	
+		
+	&sql(OPEN TrCur)
+	for  
+	{	
+		&sql(FETCH TrCur INTO :id) 
+		quit:(SQLCODE '= 0)
+			
+		set training = ##class(Stc.Data.Training).%OpenId(id)
+		set training.AccessCode = $SYSTEM.Util.CreateGUID()
+		w training.%Save()
+	}	
+	&sql(CLOSE TrCur)
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Utils.UpdateCodeD</DataLocation>
+<DefaultData>UpdateCodeDefaultData</DefaultData>
+<IdLocation>^Stc.Utils.UpdateCodeD</IdLocation>
+<IndexLocation>^Stc.Utils.UpdateCodeI</IndexLocation>
+<StreamLocation>^Stc.Utils.UpdateCodeS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="UpdateCodeDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

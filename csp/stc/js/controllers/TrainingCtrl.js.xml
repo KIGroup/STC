@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/TrainingCtrl.js" application="/csp/papampam/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/TrainingCtrl.js" application="/csp/tnt/" default="1"><![CDATA[
 'use strict';
-//dddddddddddedd
+//ddddd
 
 /*===========================================================================================
 Обучение
@@ -153,7 +153,8 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
             function(data){
                 $scope.training.data = data;
                 $scope.training.data.notCorrectAddress = data.address.title;
-                $scope.training.data.isAutoMailing = $scope.training.data.isAutoMailing==0 ? false : true; 
+                $scope.training.data.isStudentsAutoMailing = $scope.training.data.isStudentsAutoMailing==0 ? false : true; 
+                $scope.training.data.isTeacherAutoMailing = $scope.training.data.isTeacherAutoMailing==0 ? false : true; 
 
         		    $scope.training.dateStart = data.dateStart;
         		    $scope.training.dateFinish = data.dateFinish;
@@ -171,14 +172,28 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
                 $scope.allstud.forciblyUpdate++;
 
                 //-----------------------------------------------convertCacheDate:('d MMMM y'|localize)
-                $scope.other.email.subject = data.email.subject;
-                $scope.other.email.msg = data.email.msg.replace("%1", $filter('convertCacheDate')(data.dateStart, $filter('localize')('d MMMM y')))
+                $scope.other.email.students = {
+                    subject: data.email.students.subject,
+                    msg: data.email.students.msg.replace("%1", $filter('convertCacheDate')(data.dateStart, $filter('localize')('d MMMM y')))
                                                       .replace("%2", data.course.name)
                                                       .replace("%3", data.city.name + ', ' + data.city.parentName + ', ' + data.city.greatParentName)
                                                       .replace("%4", data.address.title)
-                                                      .replace("%5", data.room)
+                                                      .replace("%5", data.room == "-" ? "" : (", " + data.room))
                                                       .replace("%6", data.timeStart + ' - ' + data.timeFinish)
-                                                      .replace(/<br>/g, "\n");
+                                                      .replace("%7", data.teacher.lastName + ' ' + data.teacher.firstName)
+                                                      .replace("%8", data.otherInfo)
+                                                      .replace(/<br>/g, "\n")};
+                $scope.other.email.teacher = {
+                    subject: data.email.teacher.subject,
+                    msg: data.email.teacher.msg.replace("%1", $location.host() + ":" + $location.port() + StcAppSetting.default + "/stc/index.csp#/trainingstudents?id="+data.id + "&code="+data.accessCode)
+                                                      .replace("%2", $filter('convertCacheDate')(data.dateStart, $filter('localize')('d MMMM y')))
+                                                      .replace("%4", data.course.name)
+                                                      .replace("%5", data.city.name + ', ' + data.city.parentName + ', ' + data.city.greatParentName)
+                                                      .replace("%6", data.address.title)
+                                                      .replace("%7", data.room)
+                                                      .replace("%3", data.timeStart + ' - ' + data.timeFinish)
+                                                      .replace("%8", data.otherInfo)
+                                                      .replace(/<br>/g, "\n")};
 
             },
             function(response){
@@ -558,6 +573,11 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
                 },
                 function(response){
                     $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                    $scope.newstud.forciblyUpdate++;
+                    $scope.sgroup.forciblyUpdate++;
+                    $scope.allstud.forciblyUpdate++;
+          
+                    $scope.newstud.selectedItems = [];
                 });
     };
 
@@ -607,7 +627,10 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
         UtilsSrvc.openMessageBox('Удалить слушателя', $filter('localize')("Удалить слушателя") + ' ' + item.lastName + "?", deleteTrainingStudent);   
     };
 
-
+    //===============================================================================================================================================
+    // Google Calendar                                                                                                                Google Calendar
+    //===============================================================================================================================================
+    // Load event by id or if id==null -> generate
     $scope.training.loadEvent = function(){
        TrainingSrvc.doEvent({method: "get", id: $routeParams.id}).then(
             function(data){
@@ -619,6 +642,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
             });
     };
 
+    // Create event
     $scope.training.createEvent = function(){
        TrainingSrvc.doEvent({method: "create", id: $routeParams.id, event:  $scope.training.eventData.event}).then(
             function(data){
@@ -630,6 +654,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
             });
     };
 
+    // Update event
     $scope.training.updateEvent = function(){
        TrainingSrvc.doEvent({method: "update", id: $routeParams.id, event:  $scope.training.eventData.event}).then(
             function(data){
@@ -640,7 +665,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
             });
     };
 
-
+    // Delete event
     $scope.training.deleteEvent = function(){
         function deleteEvent(){
            TrainingSrvc.doEvent({method: "delete", id: $routeParams.id}).then(
@@ -650,7 +675,6 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
                     $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Событие удалено.', 'success', true);
                 },
                 function(response){
-                    //$scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
                     $scope.training.loadEvent();      
                     $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Событие удалено.', 'success', true);
                 });
@@ -660,6 +684,10 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
     };
 
 
+    //===============================================================================================================================================
+    // Automailing                                                                                                                        Automailing
+    //===============================================================================================================================================
+    // Load all students emails
     $scope.other.loadEmailContacts = function(){
         TrainingSrvc.getEmailContacts($routeParams.id).then(
             function(data){
@@ -670,6 +698,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
             });
     };
 
+    // Delete email from recipient field
     $scope.other.deleteEmailContact = function(contact){
         var idx = UtilsSrvc.getIndexes($scope.other.email.contacts, 'id', contact.id);
                 
@@ -677,6 +706,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
             $scope.other.email.contacts.splice(idx[0], 1);
     };
 
+    // Send email to training students or custom student (single email)
     $scope.other.sendEmailToTrainingStudents = function(isSingleEmail){
         var emails;
 
@@ -697,9 +727,9 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
             }            
         }
 
-        if (!$scope.other.email.msg || $scope.other.email.msg == '') return;
+        if (!$scope.other.email.students.msg || $scope.other.email.students.msg == '') return;
 
-        TrainingSrvc.sendEmailToTrainingStudents({emails: emails, subject: $scope.other.email.subject, msg: $scope.other.email.msg.replace(/\n/g, "<br>")}).then(
+        TrainingSrvc.sendEmailToTrainingStudents({emails: emails, subject: $scope.other.email.students.subject, msg: $scope.other.email.students.msg.replace(/\n/g, "<br>")}).then(
             function(data){
                 $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Почта отправлена', 'success', true);
             },
@@ -708,9 +738,31 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
             });
     };
 
-    
-    $scope.training.changeAutoMailing = function(){
-        TrainingSrvc.changeAutoMailing({id: $scope.training.data.id, isAutoMailing: $scope.training.data.isAutoMailing}).then(
+    // Send email to training teacher
+    $scope.other.sendEmailToTrainingTeacher = function(isSingleEmail){
+        TrainingSrvc.sendEmailToTrainingTeacher({emails: $scope.training.data.teacher.email, subject: $scope.other.email.teacher.subject, msg: $scope.other.email.teacher.msg.replace(/\n/g, "<br>")}).then(
+            function(data){
+                $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Почта отправлена', 'success', true);
+            },
+            function(response){
+                $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    // Off\On Automailing for training students
+    $scope.training.changeStudentsAutoMailing = function(){
+        TrainingSrvc.changeStudentsAutoMailing({id: $scope.training.data.id, isAutoMailing: $scope.training.data.isStudentsAutoMailing}).then(
+            function(data){
+                $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Изменения сохранены.', 'success', true);
+            },
+            function(response){
+                $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    // Off\On Automailing for training teacher
+    $scope.training.changeTeacherAutoMailing = function(){
+        TrainingSrvc.changeTeacherAutoMailing({id: $scope.training.data.id, isAutoMailing: $scope.training.data.isTeacherAutoMailing}).then(
             function(data){
                 $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Изменения сохранены.', 'success', true);
             },

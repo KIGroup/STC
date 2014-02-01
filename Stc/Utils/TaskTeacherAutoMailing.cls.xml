@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Utils.TaskTeacherAutoMailing">
+<Super>%SYS.Task.Definition</Super>
+<TimeCreated>63218,17441.976726</TimeCreated>
+
+<Method name="OnTask">
+<Description><![CDATA[
+This method is responsible for executing the task.<br>
+At the scheduled time, the Task Manager creates an instance of this object,
+sets any property values using the stored "settings" for the task, and then
+invokes this method to execute the task.<br>
+In order to execute a real task, override this method in a subclass.]]></Description>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set diffDays = $GET(^Settings("Stc", "TeacherAutoMailingDays"), 4)
+	set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp#/trainingstudents?id=%1&code=%2"
+		
+	&sql(DECLARE TrCur CURSOR FOR 
+			SELECT ID
+		 	FROM Stc_Data.Training
+		 	WHERE IsTeacherAutoMailing = 1 AND DATEDIFF(D,{fn NOW()}, DateStart) = :diffDays)	
+		
+	&sql(OPEN TrCur)
+	for  
+	{	
+		&sql(FETCH TrCur INTO :trainingId) 
+		quit:(SQLCODE '= 0)
+		
+		set training = ##class(Stc.Data.Training).%OpenId(trainingId)
+		
+		set tempUrl = $replace(url, "%1", trainingId)
+		set tempUrl = $replace(tempUrl, "%2", training.AccessCode)
+		
+		set msg =  ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingTeacher"),
+						tempUrl,
+						$ZDATE(training.DateStart, 3),
+						$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5),
+						training.Course.Name.Value,
+						training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value,
+						training.Street.Value,
+						training.Room,
+						training.OtherInfo.Value)
+			
+		set status = ##class(Stc.Utils.Email).Send(training.Teacher.Email, ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingTeacher"), msg)
+			
+		if '$$$ISERR(status){
+			set training.IsTeacherAutoMailing = 0
+			do training.%Save()
+		}						
+	}
+		
+	&sql(CLOSE TrCur)
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>
