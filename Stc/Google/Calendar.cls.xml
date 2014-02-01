@@ -7,7 +7,7 @@
 
 <Method name="CreateEvent">
 <Description>
-Создание события</Description>
+Create event</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>pCalendarId:%String,pEventObject:%ZEN.proxyObject,pToken:%String,pSslConfig:%String,*pEventId:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -40,7 +40,7 @@
 
 <Method name="ModifyEvent">
 <Description>
-Обновление события</Description>
+Refresh event</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>pCalendarId:%String,pEventId:%String,pEventObject:%ZEN.proxyObject,pToken:%String,pSslConfig:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -66,7 +66,7 @@
 
 <Method name="GetEvent">
 <Description>
-Получение события</Description>
+Get event</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>pCalendarId:%String,pEventId:%String,*pEventObj:%ZEN.proxyObject,pToken:%String,pSslConfig:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -95,7 +95,7 @@
 
 <Method name="DeleteEvent">
 <Description>
-Удаление события</Description>
+Delete event</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>pCalendarId:%String,pEventId:%String,pToken:%String,pSslConfig:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>

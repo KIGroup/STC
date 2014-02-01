@@ -2,13 +2,13 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.OrderStatus">
 <Description>
-Текущий статус заявки</Description>
+Current status of application</Description>
 <Super>%Persistent,%XML.Adaptor</Super>
 <TimeCreated>63098,13359.687719</TimeCreated>
 
 <Property name="Name">
 <Description>
-Название статуса</Description>
+Status name</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 <Parameter name="XMLREFERENCE" value="ID"/>
@@ -16,7 +16,7 @@
 
 <Property name="Code">
 <Description>
-Код заявки</Description>
+Application code</Description>
 <Type>%String</Type>
 <Required>1</Required>
 </Property>
@@ -28,7 +28,7 @@
 
 <Method name="ConvertToProxyObject">
 <Description>
-Конвертация в proxyObject для JSON </Description>
+Convert to proxyObject (for JSON)</Description>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()

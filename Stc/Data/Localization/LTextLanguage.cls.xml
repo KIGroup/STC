@@ -2,20 +2,20 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Localization.LTextLanguage">
 <Description>
-Доступные языки системы</Description>
+Available languages</Description>
 <Super>%Persistent,%XML.Adaptor</Super>
 <TimeCreated>63142,65488.745547</TimeCreated>
 
 <Property name="Name">
 <Description>
-Название</Description>
+Name</Description>
 <Type>%String</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Code">
 <Description>
-Код, 2х символьный = ID</Description>
+Two-letter code = ID</Description>
 <Type>%String</Type>
 <Required>1</Required>
 </Property>

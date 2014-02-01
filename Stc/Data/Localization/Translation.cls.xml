@@ -2,12 +2,12 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Localization.Translation">
 <Description>
-Класс перевода текста</Description>
+Class for text translation</Description>
 <TimeCreated>63142,65508.32117</TimeCreated>
 
 <Method name="PersonLTextValue">
 <Description>
-Метод для перевода ФИО, если язык неизвестен, то возвращает входную строку</Description>
+Name translation method; if language is unknown, returns input string</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>inputStr:%Text,fromLang:%String,toLang:%String</FormalSpec>
 <ReturnType>%Text</ReturnType>
@@ -28,7 +28,7 @@
 
 <Method name="Init">
 <Description>
-Словарь для перевода</Description>
+Translation dictionary</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[

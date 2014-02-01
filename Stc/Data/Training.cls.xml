@@ -2,69 +2,69 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Training">
 <Description>
-Обучение</Description>
+Training</Description>
 <Super>%Persistent</Super>
 <TimeCreated>63098,13359.879291</TimeCreated>
 
 <Property name="Teacher">
 <Description>
-Преподаватель</Description>
+Teacher</Description>
 <Type>Person</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Course">
 <Description>
-Курс </Description>
+Course</Description>
 <Type>Course</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="SubGroups">
 <Description>
-Подгруппы со студентами</Description>
+Subgroups with students</Description>
 <Type>SubGroup</Type>
 <Collection>array</Collection>
 </Property>
 
 <Property name="City">
 <Description>
-Город обучения</Description>
+City of training</Description>
 <Type>Region</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Street">
 <Description>
-Адрес</Description>
+Address</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Room">
 <Description>
-Аудитория</Description>
+Room</Description>
 <Type>%String</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Latitude">
 <Description>
-Широта</Description>
+Latitude</Description>
 <Type>%Float</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Longitude">
 <Description>
-Долгота</Description>
+Longitude</Description>
 <Type>%Float</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="DateStart">
 <Description>
-Дата начала обучения</Description>
+Training start date</Description>
 <Type>%Date</Type>
 <Required>1</Required>
 <Parameter name="FORMAT" value="3"/>
@@ -72,7 +72,7 @@
 
 <Property name="DateFinish">
 <Description>
-Дата окончания обучения</Description>
+Training finish date</Description>
 <Type>%Date</Type>
 <Required>1</Required>
 <Parameter name="FORMAT" value="3"/>
@@ -80,21 +80,21 @@
 
 <Property name="TimeStart">
 <Description>
-Время начала обучения</Description>
+Training start time</Description>
 <Type>%Time</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="TimeFinish">
 <Description>
-Время окончания обучения</Description>
+Training finish time</Description>
 <Type>%Time</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="IsCompleted">
 <Description>
-Завершено</Description>
+Training is finished</Description>
 <Type>%Boolean</Type>
 <InitialExpression>0</InitialExpression>
 <Required>1</Required>
@@ -107,22 +107,21 @@
 
 <Property name="OtherInfo">
 <Description>
-Авто рассылка почты слушателям за n - дней до начала
-Другая информация</Description>
+Other information</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="CalendarEvent">
 <Description>
-EventId в календаре Google</Description>
+EventId Google Calendar</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="NewStudents">
 <Description>
-Новые заявки от слушателей, регистрация на обучение</Description>
+New applications from students for this certain training</Description>
 <Type>Stc.Data.OrderNewStudent</Type>
 <Cardinality>many</Cardinality>
 <Inverse>Training</Inverse>
@@ -131,7 +130,7 @@ EventId в календаре Google</Description>
 
 <Method name="ConvertToProxyObject">
 <Description>
-Конвертация в proxyObject для JSON </Description>
+Convert to proxyObject (for JSON)</Description>
 <FormalSpec>shortInfo:%Boolean=0</FormalSpec>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
@@ -186,7 +185,7 @@ EventId в календаре Google</Description>
 
 <Method name="Save">
 <Description>
-Сохранить / создать обучение</Description>
+Create or save modified training</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
 <ReturnType>Training</ReturnType>
@@ -223,7 +222,7 @@ EventId в календаре Google</Description>
 
 <Method name="AddSubGroupsFromOrders">
 <Description>
-Добавить новые подгруппы в обучение из заявок</Description>
+Add new subgroups to trainings from applications</Description>
 <FormalSpec>orders:%ListOfObjects</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -246,7 +245,7 @@ EventId в календаре Google</Description>
 
 <Method name="DeleteSubGroup">
 <Description>
-Удалить подгруппу из обучения, студентов не трогаем</Description>
+Delete subgroup from training, without deleting students</Description>
 <FormalSpec>sgId:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -266,7 +265,7 @@ EventId в календаре Google</Description>
 
 <Method name="CreateCertificates">
 <Description>
-Создать сертификаты для всех слушателей</Description>
+Create certificates for all students</Description>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set listOfStudents = ##class(%ListOfObjects).%New()
@@ -291,7 +290,7 @@ EventId в календаре Google</Description>
 
 <Method name="Delete">
 <Description>
-Удаление обучения, удаляются все заявки от слушателей</Description>
+Delete training with applications</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -322,7 +321,7 @@ EventId в календаре Google</Description>
 
 <Method name="AddPersonIntoTraining">
 <Description>
-Добавление сотрудника в обучение, определяется подгруппа автоматически</Description>
+Add person to training, subgroup is detirmining automatically</Description>
 <FormalSpec>personId:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[

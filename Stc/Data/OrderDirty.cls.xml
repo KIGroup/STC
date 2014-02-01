@@ -2,35 +2,35 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.OrderDirty">
 <Description>
-Заявка от заказчика новая и не одобренная</Description>
+New application, not approved by admin</Description>
 <ClassType>persistent</ClassType>
 <Super>Stc.Data.Order</Super>
 <TimeCreated>63098,13699.29894</TimeCreated>
 
 <Property name="FirstName">
 <Description>
-Контактное лицо, Имя</Description>
+First name of contact person</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="LastName">
 <Description>
-Контактное лицо, Фамилия</Description>
+Last name of contact person</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="MiddleName">
 <Description>
-Контактное лицо, Отчество</Description>
+Middle name of contact person</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Email">
 <Description>
-Контактное лицо, Почта</Description>
+Email of contact person</Description>
 <Type>%String</Type>
 <Required>1</Required>
 <Parameter name="MAXLEN" value="500"/>
@@ -38,42 +38,42 @@
 
 <Property name="Phone">
 <Description>
-Контактное лицо, Телефон</Description>
+Phone of contact person</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="Skype">
 <Description>
-Контактное лицо, Скайп</Description>
+Skype of contact person</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="CompanyString">
 <Description>
-Короткое название новой компании</Description>
+Short name of new organization</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="CompanySite">
 <Description>
-Сайт компании</Description>
+Website of new organization</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="StudentsNumber">
 <Description>
-Количество слушателей</Description>
+Students count</Description>
 <Type>%Integer</Type>
 <Required>1</Required>
 </Property>
 
 <Method name="ConvertToProxyObject">
 <Description>
-Конвертация в proxyObject для JSON </Description>
+Convert to proxyObject (for JSON)</Description>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()
@@ -113,7 +113,7 @@
 
 <Method name="Create">
 <Description>
-Создание 'новой' заявки</Description>
+Create "new" application</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
 <ReturnType>OrderDirty</ReturnType>

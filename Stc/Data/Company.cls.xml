@@ -2,108 +2,110 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Company">
 <Description>
-Компания - заказчик</Description>
+Customer organization</Description>
 <Super>%Persistent</Super>
 <TimeCreated>63098,13287.262923</TimeCreated>
 
 <Property name="FullName">
 <Description>
-Полное название компании</Description>
+Full name of organization</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="ShortName">
 <Description>
-Короткая форма названия</Description>
+Short name of organization</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="SettlementAccount">
 <Description>
-Расчётный счёт</Description>
+Settlement account of organizaton</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="1000"/>
 </Property>
 
 <Property name="CorrespondentAccount">
 <Description>
-Корреспондентский счёт</Description>
+Correspondent account of organization</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="1000"/>
 </Property>
 
 <Property name="BIC">
 <Description>
-Банковский идентификационный код</Description>
+Bank Identification Code</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="KPP">
 <Description>
-Код причины постановки на учёт</Description>
+Сode reason for registration</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="INN">
 <Description>
-Идентификационный номер налогоплательщика</Description>
+Taxpayer identification number</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="OGRN">
 <Description>
-Основной государственный регистрационный номер</Description>
+Main state registration number</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="LegalAddress">
 <Description>
-Юридический адрес</Description>
+Legal address</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="MailAddress">
 <Description>
-Почтовый адрес</Description>
+Mail address</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Contact">
 <Description>
-Контактное лицо</Description>
+Contact person</Description>
 <Type>Person</Type>
 </Property>
 
 <Property name="WebSite">
 <Description>
-Веб сайт</Description>
+Web-site</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="IsUniversity">
+<Description>
+Organization is university</Description>
 <Type>%Boolean</Type>
 <InitialExpression>0</InitialExpression>
 </Property>
 
 <Property name="OtherInfo">
 <Description>
-Другая информация</Description>
+Other information</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Employees">
 <Description>
-Все сотрудники</Description>
+All employees</Description>
 <Type>Stc.Data.Person</Type>
 <Cardinality>many</Cardinality>
 <Inverse>Company</Inverse>
@@ -112,7 +114,7 @@
 
 <Method name="ConvertToProxyObject">
 <Description>
-Конвертация в proxyObject для JSON </Description>
+Convert to proxyObject (for JSON)</Description>
 <FormalSpec>shortInfo:%Boolean=0</FormalSpec>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
@@ -146,7 +148,7 @@
 
 <Method name="Save">
 <Description>
-Сохранить или создать компанию</Description>
+Create or save modified organization</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
 <ReturnType>Company</ReturnType>
@@ -184,7 +186,7 @@
 
 <Method name="Delete">
 <Description>
-Удаление компании, если это возможно</Description>
+Delete organization, if it is available</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id</FormalSpec>
 <ReturnType>%Status</ReturnType>

@@ -5,7 +5,7 @@
 
 <Method name="GetErrorStatus">
 <Description>
-Получить статус ошибки с текстом ошибки по ключу</Description>
+Get error status by key</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>errorKey:%String,additionalMsg:%String=""</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -15,7 +15,7 @@
 
 <Method name="GetMsg">
 <Description>
-Получить локализованное сообщение</Description>
+Get localized error message</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>key</FormalSpec>
 <ReturnType>%String</ReturnType>
@@ -25,7 +25,7 @@
 
 <Method name="Init">
 <Description>
-Записать все сообщения в глобал</Description>
+Write all messages into global</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[

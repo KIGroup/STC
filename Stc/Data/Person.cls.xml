@@ -2,13 +2,13 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Person">
 <Description>
-Сотрудник компании, преподаватель, слушатель</Description>
+Organization's employee, teacher or student</Description>
 <Super>%Persistent,%XML.Adaptor</Super>
 <TimeCreated>63098,13287.442379</TimeCreated>
 
 <Property name="Company">
 <Description>
-Сотрудник компании</Description>
+Organization</Description>
 <Type>Stc.Data.Company</Type>
 <Cardinality>one</Cardinality>
 <Inverse>Employees</Inverse>
@@ -20,7 +20,7 @@
 
 <Property name="FirstName">
 <Description>
-Имя</Description>
+First name</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 <Parameter name="XMLREFERENCE" value="ID"/>
@@ -28,7 +28,7 @@
 
 <Property name="LastName">
 <Description>
-Фамилия</Description>
+Last name</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 <Parameter name="XMLREFERENCE" value="ID"/>
@@ -36,7 +36,7 @@
 
 <Property name="MiddleName">
 <Description>
-Отчество</Description>
+Middle name</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 <Parameter name="XMLREFERENCE" value="ID"/>
@@ -44,20 +44,20 @@
 
 <Property name="Email">
 <Description>
-Почта</Description>
+Email</Description>
 <Type>%String</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Phone">
 <Description>
-Телефон</Description>
+Phone</Description>
 <Type>%String</Type>
 </Property>
 
 <Property name="Skype">
 <Description>
-Скайп</Description>
+Skype</Description>
 <Type>%String</Type>
 </Property>
 
@@ -72,7 +72,7 @@
 
 <Method name="ConvertToProxyObject">
 <Description>
-Конвертация в proxyObject для JSON </Description>
+Convert to proxyObject (for JSON)</Description>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()
@@ -92,7 +92,7 @@
 
 <Method name="Save">
 <Description>
-Сохранение / создание сотрудника</Description>
+Create or save modified person</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
 <ReturnType>Stc.Data.Person</ReturnType>
@@ -126,7 +126,7 @@
 
 <Method name="Delete">
 <Description>
-Удаление сотрудника, если это возможно</Description>
+Delete person if it is available</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>personId:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -151,7 +151,7 @@
 
 <Method name="IsEditable">
 <Description>
-Проверка перед удалением, если есть ссылки на сотрудника, то не удаляем.</Description>
+Checking before deletion</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>personId:%String,checkForDelete:%Boolean=0</FormalSpec>
 <ReturnType>%Boolean</ReturnType>

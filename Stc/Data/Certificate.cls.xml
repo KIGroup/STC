@@ -2,34 +2,34 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Certificate">
 <Description>
-Сертификат слушателя</Description>
+Student's certificate</Description>
 <Super>%Persistent</Super>
 <TimeCreated>63098,13360.224443</TimeCreated>
 
 <Property name="Number">
 <Description>
-Уникальный номер сертификата</Description>
+Certificate's unique number</Description>
 <Type>%String</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Training">
 <Description>
-Обучение</Description>
+Training</Description>
 <Type>Training</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Student">
 <Description>
-Слушатель</Description>
+Student</Description>
 <Type>Person</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="CreatedDate">
 <Description>
-Дата создания сертификата</Description>
+Certificate's creation date</Description>
 <Type>%Date</Type>
 <Required>1</Required>
 <Parameter name="FORMAT" value="3"/>
@@ -37,7 +37,7 @@
 
 <Property name="IsPrinted">
 <Description>
-Сертификат был распечатан</Description>
+Certificate is printed</Description>
 <Type>%Boolean</Type>
 <InitialExpression>0</InitialExpression>
 <Required>1</Required>
@@ -55,7 +55,7 @@
 
 <Method name="ConvertToProxyObject">
 <Description>
-Конвертация в proxyObject для JSON </Description>
+Convert to proxyObject (for JSON)</Description>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()
@@ -91,7 +91,7 @@ ClassMethod Create(student As Person, training As Training, ByRef status) As Cer
 
 <Method name="CreateAll">
 <Description>
-Создание всех сертификатов для обучения</Description>
+Create all certificates for training</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>training:Training,listOfStudents:%ListOfObjects</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -117,7 +117,8 @@ ClassMethod Create(student As Person, training As Training, ByRef status) As Cer
 
 <Method name="GenerateNumber">
 <Description>
-Генерация номера для сертификата: тип ДДММГГ-Порядковый номер сертификата в этот день</Description>
+Generate certificate number.
+Template: DDMMYY-number</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>date:%Date</FormalSpec>
 <ReturnType>%String</ReturnType>

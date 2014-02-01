@@ -2,34 +2,34 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.OrderNewStudent">
 <Description>
-Заявка от слушателя, регистрация на конкретное обучение</Description>
+Application from student for given training</Description>
 <Super>%Persistent</Super>
 <TimeCreated>63175,13882.849108</TimeCreated>
 
 <Property name="FirstName">
 <Description>
-Имя</Description>
+First name</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="LastName">
 <Description>
-Фамилия</Description>
+Last name</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="MiddleName">
 <Description>
-Отчество</Description>
+Middle name</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Email">
 <Description>
-Почта</Description>
+Email</Description>
 <Type>%String</Type>
 <Required>1</Required>
 <Parameter name="MAXLEN" value="500"/>
@@ -37,41 +37,41 @@
 
 <Property name="Phone">
 <Description>
-Телефон</Description>
+Phone</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="Skype">
 <Description>
-Скайп</Description>
+Skype</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="Company">
 <Description>
-Компания</Description>
+Organization</Description>
 <Type>Company</Type>
 </Property>
 
 <Property name="CompanyString">
 <Description>
-Короткое название новой компании</Description>
+Organization short name</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="CreatedTS">
 <Description>
-Дата и время создания заявки</Description>
+Timastamp of application creation</Description>
 <Type>%TimeStamp</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Training">
 <Description>
-Обучение, куда идет регистрация</Description>
+Training</Description>
 <Type>Stc.Data.Training</Type>
 <Cardinality>one</Cardinality>
 <Inverse>NewStudents</Inverse>
@@ -85,7 +85,7 @@
 
 <Method name="ConvertToProxyObject">
 <Description>
-Конвертация в proxyObject для JSON </Description>
+Convert to proxyObject (for JSON)</Description>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()
@@ -118,7 +118,7 @@
 
 <Method name="Create">
 <Description>
-Создание заявки</Description>
+Create application</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
 <ReturnType>OrderDirty</ReturnType>
@@ -165,7 +165,7 @@
 
 <Method name="Delete">
 <Description>
-Удаление заявки и локализации</Description>
+Delete application with localization</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>orderId:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>

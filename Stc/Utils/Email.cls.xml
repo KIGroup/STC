@@ -2,7 +2,7 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Utils.Email">
 <Description>
-Работа с почтой</Description>
+Working with email</Description>
 <TimeCreated>63098,81612.618657</TimeCreated>
 
 <UDLText name="T">
@@ -23,7 +23,7 @@ Parameter SMTPPASSWORD = "simplepassword";
 
 <Method name="Send">
 <Description>
-Отправить на указанный ящик - email сообщение - msg с темой - subject</Description>
+Send email</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>email:%String,subject:%String,msg:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>

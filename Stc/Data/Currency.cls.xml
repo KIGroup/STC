@@ -2,13 +2,13 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Currency">
 <Description>
-Валюта</Description>
+Currency</Description>
 <Super>%Persistent,%XML.Adaptor</Super>
 <TimeCreated>63098,14454.630552</TimeCreated>
 
 <Property name="Name">
 <Description>
-Наименование валюты</Description>
+Name of currency</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 <Parameter name="XMLREFERENCE" value="ID"/>
@@ -16,7 +16,7 @@
 
 <Method name="ConvertToProxyObject">
 <Description>
-Конвертация в proxyObject для JSON </Description>
+Convert to proxyObject (for JSON)</Description>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()

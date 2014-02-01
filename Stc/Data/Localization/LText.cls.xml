@@ -2,7 +2,7 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Localization.LText">
 <Description>
-Локализованное свойство</Description>
+Localized property</Description>
 <Super>%Persistent,%XML.Adaptor</Super>
 <TimeCreated>63142,65408.316829</TimeCreated>
 
@@ -15,7 +15,7 @@ GUID = ID</Description>
 
 <Property name="Value">
 <Description>
-Вычисляемое свойство, в зависимости от языка сессии будет возвращена нужная строка</Description>
+Calculated property, returns string according to session's language</Description>
 <Type>%String</Type>
 <Calculated>1</Calculated>
 <SqlComputeCode>set {Value} = ##class({%%CLASSNAME}).GetValueById({%%ID})</SqlComputeCode>
@@ -50,7 +50,7 @@ GUID = ID</Description>
 
 <Method name="GetValueById">
 <Description>
-Поиск для текущего языка для свойства с id</Description>
+Getting string value for current language by id</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%String</ReturnType>
@@ -60,8 +60,9 @@ GUID = ID</Description>
 
 <Method name="Create">
 <Description>
-Создание мультиязычного свойства. Для каждого языка создается запись,
-если не указана функция перевода, то значение будет одинаково на всех языках</Description>
+Create multilanguage property. 
+For each language creates record; if translation function not specified,
+value will be same in all languages.</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>value:%String,translateClassMethod:%String=""</FormalSpec>
 <ReturnType>LText</ReturnType>
@@ -102,7 +103,7 @@ GUID = ID</Description>
 
 <Method name="Delete">
 <Description>
-Удаление обхекта и всех его мультиязычных представлений</Description>
+Delete object from all languages</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -119,7 +120,7 @@ GUID = ID</Description>
 
 <Method name="SetValues">
 <Description>
-Установка мультиязычных значений объекта с ltxtId текущему объекту для определенного языка</Description>
+Set value for current language</Description>
 <FormalSpec>ltxtId:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[

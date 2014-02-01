@@ -2,7 +2,7 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Web.BrokerUser">
 <Description>
-Открытый обработчик запросов для пользователей</Description>
+Public request processor for users</Description>
 <Super>%CSP.REST</Super>
 <TimeCreated>63098,81275.541503</TimeCreated>
 
