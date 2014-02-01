@@ -697,22 +697,15 @@
 				set event.location = training.City.Name.Value_", "_training.Street.Value
 					
 				set domainWebApp = %request.CgiEnvs("HTTP_HOST")_$GET(^Settings("Stc", "WebApp")) 
-					
-				set event.description = ""_
-				"<a href='http://"_training.Course.ProgramUrl_"'>Программа курса</a><br><br>"_
-				"<a href='http://"_domainWebApp_"/stc/index.csp#/orderstudent?training="_training.%Id()_"'>Записаться на обучение</a><br><br>"_
-					
-				"Место проведения:<br>"_
-				training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value_"<br>"_
-				training.Street.Value_", "_training.Room_"<br><br>"_
-				"Преподаватель:<br>"_
-				training.Teacher.LastName.Value_" "_training.Teacher.FirstName.Value_" "_training.Teacher.MiddleName.Value_"<br>"_
-				training.Teacher.Email_"<br><br>"_
-				"Время проведения: "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5)
-					
-				if (training.OtherInfo.Value '= ""){
-					set event.description = event.description_"<br><br>Примечание:<br>"_training.OtherInfo.Value
-				}	
+	
+				set event.description = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("CalendarEvent"),
+									training.Course.ProgramUrl,
+									domainWebApp,
+									training.%Id(),
+									training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value_"<br>"_training.Street.Value_", "_training.Room,
+									training.Teacher.LastName.Value_" "_training.Teacher.FirstName.Value_" "_training.Teacher.MiddleName.Value_"<br>"_training.Teacher.Email,
+									$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5),
+									training.OtherInfo.Value)
 			}
 			else{
 				// Получаем созданное

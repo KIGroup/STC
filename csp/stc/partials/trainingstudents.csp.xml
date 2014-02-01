@@ -6,7 +6,7 @@
 	</div>
 	<div class="span10">
 		<accordion close-others="false">
-		    <accordion-group is-open="true" heading="{{'Информация о курсе'}}">
+		    <accordion-group is-open="true" heading="{{'Информация о курсе'|localize}}">
 				<div class="row-fluid">
 					<div class="span6">
 						<p><span ng-bind="'Курс'|localize"></span>: <span ng-bind="page.training.course.name"></span></p>
@@ -21,7 +21,7 @@
 				</div>
     		</accordion-group>
 			<br>
-		    <accordion-group is-open="true" heading="{{'Слушатели курса'}}">
+		    <accordion-group is-open="true" heading="{{'Слушатели курса'|localize}}">
 				<stcgrid
 					grid="pageStore.trstudents.grid"
 				    table-class="table table-bordered table-hover"
@@ -43,7 +43,7 @@
 				    action-column-visible="true"
 				    forcibly-update="page.studTable.forciblyUpdate"
 				/> 
-				<button type="button" class="btn btn-small btn-success" ng-click="page.exportToCSV()" ng-bind="'Экспорт'|localize" title="Экспорт всех слушателей в файл *.csv"></button>   			
+				<button type="button" class="btn btn-small btn-success" ng-click="page.exportToCSV()" ng-bind="'Экспорт'|localize" title="{{'Экспорт всех слушателей в файл *.csv'|localize}}"></button>   			
 		    </accordion-group>
 		</accordion>
 	</div >

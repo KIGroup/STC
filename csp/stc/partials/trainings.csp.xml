@@ -95,7 +95,7 @@
 						<p><span class="label label-success"   ng-bind="'Событие есть в календаре'|localize" ng-hide="training.selectedItems[0].event==''"></span></p>
 						<p><span class="label label-important" ng-bind="'События нет в календаре'|localize"  ng-show="training.selectedItems[0].event==''"></span></span></p>
 						<label class="checkbox"  style="padding-top: 5px;" >
-					    	<input type="checkbox" ng-click="training.changeStudentsAutoMailing()" ng-model="training.selectedItems[0].isStudentsAutoMailing">{{'Авторассылка студентам'|localize}}
+					    	<input type="checkbox" ng-click="training.changeStudentsAutoMailing()" ng-model="training.selectedItems[0].isStudentsAutoMailing">{{'Авторассылка слушателям'|localize}}
 					    </label>
 					    <label class="checkbox"  style="padding-top: 5px;" >
 					    	<input type="checkbox" ng-click="training.changeTeacherAutoMailing()" ng-model="training.selectedItems[0].isTeacherAutoMailing">{{'Авторассылка преподавателю'|localize}}

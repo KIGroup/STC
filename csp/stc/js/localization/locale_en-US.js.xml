@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/localization/locale_en-US.js" application="/csp/dorabotka/" default="1"><![CDATA[
-//ввв
+<CSP name="stc/js/localization/locale_en-US.js" application="/csp/tnt/" default="1"><![CDATA[
+//вввdfd
 
 localizationModule.constant('StcDictionary', {
   strings: {
+    '(обновить)':'(refresh)',
     '(есть в списке)'                                          : '(is on the list)',
     '(нет в списке)'                                           : '(not in the list)',
     'd MMMM y'                                                 : 'MMMM d, y',
@@ -228,6 +229,7 @@ localizationModule.constant('StcDictionary', {
     'Сотрудник удален.'                                        : 'Employee has been removed.',
     'Сотрудник назначен преподавателем.'                       : 'Employee appointed as a teacher.',
     'Сотрудники'                                               : 'Employees',
+    'Сотрудник'                                                : 'Employee',
     'Сохранить'                                                : 'Save',
     'Статус'                                                   : 'Status',
     'Страница'                                                 : 'Page',
@@ -291,8 +293,30 @@ localizationModule.constant('StcDictionary', {
     'Форма регистрации на обучение компании InterSystems по курсу "': 'Registration form for InterSystems training course "',
     'Форма регистрации на обучение компании InterSystems':'Registration form for InterSystems training courses',
     'Зарегистрироваться на другой курс':'Registration for another course',
-    'Форма регистрации':'Registration form'
-
+    'Форма регистрации':'Registration form',
+    'Авторассылка слушателям'   :'Students automailing',
+    'Авторассылка преподавателю':'Teacher automailing',
+    'Авторассылка'              :'Automailing',
+    'Подгрупп'                  :'Grpoups',
+    'слушателей'                :'students',
+    'Получатели'                :'Recipients',
+    'Тема письма'               :'Subject',
+    'Содержание'                :'Message',
+    'Отправить на адрес'        :'Send to address',
+    'Письмо слушателям'         :'Message for students',
+    'Письмо преподавателю'      :'Message for teacher',
+    'Университеты'              :'Universities',
+    'Университет'               :'University',
+    'Другое'                    :'Other',
+    'Стоимость'                 :'Cost',
+    'Дата создания сертификата' :'Certificate creation date',
+    'Слушатели курса'           :'Training students',
+    'Информация о курсе'        :'Training information',
+    'Удалить'                   :'Delete',
+    'Экспорт всех слушателей в файл *.csv'                      :'Export all students in the *.csv file',
+    'Если событие не создано, то в этой форме данные из обучения. Если данные по умолчанию изменить и создать событие, то при следующей загрузке формы будут отображены данные события, а не обучения.':'If no event is created, the data in this form of training. If you change the default data and create an event, the next time the form is loaded, you will see these events, and not training data.',
+    'Создание сертификатов для слушателей (если еще не созданы)':' Creation all certificates for students (if they not already exists)',
+    'Экспорт всех сертификатов в файл *.csv'                    :'Export all certificates in the *.csv file'
   },
   getTranslate: function(word){
       return this.strings[word] ? this.strings[word] : word;

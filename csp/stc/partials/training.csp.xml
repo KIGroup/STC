@@ -119,8 +119,8 @@
 			    	
 	 			forcibly-update="cert.forciblyUpdate"
 			/>
-			<button type="button" class="btn btn-small btn-primary" ng-click="cert.createAll()" ng-bind="'Обновить'|localize" title="Создание сертификатов для слушателей (если еще не созданы)"></button>
-			<button type="button" class="btn btn-small btn-success" ng-click="cert.exportToCSV()" ng-bind="'Экспорт'|localize" title="Экспорт всех сертификатов в файл *.csv"></button>
+			<button type="button" class="btn btn-small btn-primary" ng-click="cert.createAll()" ng-bind="'Обновить'|localize" title="{{'Создание сертификатов для слушателей (если еще не созданы)'|localize}}"></button>
+			<button type="button" class="btn btn-small btn-success" ng-click="cert.exportToCSV()" ng-bind="'Экспорт'|localize" title="{{'Экспорт всех сертификатов в файл *.csv'|localize}}"></button>
     	</tab>
     	<!-- ============================================ НОВЫЕ СЛУШАТЕЛИ ==================================================-->
     	<tab heading="{{('Новые заявки'|localize) + ' (' + newstud.itemsTotal + ')'}}" active="pageStore.training.tabNewStudActive">
@@ -162,7 +162,7 @@
 				</div>
 
 				<div ng-show="newstud.conflict.id">
-					<p><span class="label label-important" ng-bind="'Внимание!'|localize"></span>&nbsp;&nbsp;<span ng-bind="'В системе уже присутствует сотрудник с email: ' + newstud.conflict.email"></span></p>
+					<p><span class="label label-important" ng-bind="'Внимание!'|localize"></span>&nbsp;&nbsp;<span ng-bind="('В системе уже присутствует сотрудник с email: '|localize) + newstud.conflict.email"></span></p>
 					<p><span class="spnTitle" ng-bind="'Сотрудник'|localize"></span>: <span ng-bind="newstud.conflict.lastName + ' ' + newstud.conflict.firstName + ' ' + newstud.conflict.middleName"></span></p>
 					<p><span class="spnTitle" ng-bind="'Компания'"          ></span>: <span ng-bind="newstud.conflict.company.shortName"></span></p>
 					<p><span class="spnTitle" ng-bind="'Email'"             ></span>: <span ng-bind="newstud.conflict.email"></span></p>
@@ -408,11 +408,11 @@
 				    <div class="row-fluid">
 						<div class="span5">
 							<div class="input-append">
-								<input class="span6" id="appendedInputButton" placeholder="{{'simple@mail.com'}}" type="email" ng-model="other.email.single"><button class="btn" type="submit" ng-click="other.sendEmailToTrainingStudents(true)">Отправить на адрес</button>
+								<input class="span6" id="appendedInputButton" placeholder="{{'simple@mail.com'}}" type="email" ng-model="other.email.single"><button class="btn" type="submit" ng-click="other.sendEmailToTrainingStudents(true)" ng-bind="'Отправить на адрес'|localize"></button>
 							</div>
 						</div>
 						<div class="span7">
-							<button class="btn btn-success btn-small pull-right" type="submit" ng-click="other.sendEmailToTrainingStudents(false)">Отправить</button>
+							<button class="btn btn-success btn-small pull-right" type="submit" ng-click="other.sendEmailToTrainingStudents(false)" ng-bind="'Отправить'|localize"></button>
 							<label class="checkbox pull-right"  style="padding-top: 3px; margin-right: 25px;">
 					    		<input type="checkbox" ng-click="training.changeStudentsAutoMailing()" ng-model="training.data.isStudentsAutoMailing">{{('Авторассылка'|localize) }}
 					    	</label>
@@ -441,7 +441,7 @@
 				    	<div class="span5">
 				    	</div>
 						<div class="span7">
-							<button class="btn btn-success btn-small pull-right" type="submit" ng-click="other.sendEmailToTrainingTeacher()">Отправить</button>
+							<button class="btn btn-success btn-small pull-right" type="submit" ng-click="other.sendEmailToTrainingTeacher()" ng-bind="'Отправить'|localize"></button>
 							<label class="checkbox pull-right"  style="padding-top: 3px; margin-right: 25px;">
 					    		<input type="checkbox" ng-click="training.changeTeacherAutoMailing()" ng-model="training.data.isTeacherAutoMailing">{{('Авторассылка'|localize) }}
 					    	</label>

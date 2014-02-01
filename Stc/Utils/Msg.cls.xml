@@ -63,14 +63,13 @@
 	
 	set ^CacheMsg("Stc", "en", "msgSubjectToTrainingStudents") = "Training"
 	set ^CacheMsg("Stc", "en", "msgToTrainingStudents") = ""_
-	"Hello!<br>"_
-	"Date: %1<br>"_
-	"Course: %2<br>"_
-	"City: %3<br>"_
-	"Street: %4<br>"_
-	"Room: %5<br>"_
-	"Time: %6<br>"_
-	"%7<br>"
+	"Hello! <br>" _
+	"Start date of study: 1%, time: 6% <br>" _
+	"Course: 2% <br>" _
+	"City:% 3 <br>" _
+	"Address:% 4% 5 <br>" _
+	"Teacher: 7% <br>" _
+	"8%"
 	
 	set ^CacheMsg("Stc", "ru", "msgSubjectToNewTrainingStudent") = "Регистрация на курс"
 	set ^CacheMsg("Stc", "ru", "msgToNewTrainingStudent") = ""_
@@ -84,13 +83,13 @@
 	
 	set ^CacheMsg("Stc", "en", "msgSubjectToNewTrainingStudent") = "Registration for course"
 	set ^CacheMsg("Stc", "en", "msgToNewTrainingStudent") = ""_
-	"Hello!<br>"_
-	"Date: %1<br>"_
-	"Course: %2<br>"_
-	"City: %3<br>"_
-	"Street: %4<br>"_
-	"Room: %5<br>"_
-	"Time: %6<br>"
+	"Hello, Your order for training has been adopted. <br>" _
+	"Start date of study: 1%, time: 6% <br>" _
+	"Course: 2% <br>" _
+	"City:% 3 <br>" _
+	"Address:% 4% 5 <br>" _
+	"Teacher: 7% <br>" _
+	"8%"
 	
 	set ^CacheMsg("Stc", "ru", "msgSubjectToTrainingTeacher") = "Слушатели курса"
 	set ^CacheMsg("Stc", "ru", "msgToTrainingTeacher") = ""_
@@ -103,7 +102,33 @@
 	
 	set ^CacheMsg("Stc", "en", "msgSubjectToTrainingTeacher") = "Training Students"
 	set ^CacheMsg("Stc", "en", "msgToTrainingTeacher") = ""_
-	"Hello! Students!"
+	"Hello!<br> Go to <a href='http://%1'> link </ a> for view the list of students. <br>" _
+	"Start date of study: 2%, time: 3% <br>" _
+	"Course: 4% <br>" _
+	"City: 5% <br>" _
+	"Address:% 6% 7 <br>" _
+	"8%"
+	
+	
+	set ^CacheMsg("Stc", "ru", "CalendarEvent") = ""_
+	"<a href='http://%1'>Программа курса</a><br><br>"_
+	"<a href='http://%2/stc/index.csp#/orderstudent?training=%3'>Записаться на обучение</a><br><br>"_
+	"Место проведения:<br>"_
+	"%4<br><br>"_
+	"Преподаватель:<br>"_
+	"%5<br><br>"_
+	"Время проведения: %6<br><br>"_
+	"%7"
+
+	set ^CacheMsg("Stc", "en", "CalendarEvent") = ""_
+	"<a href='http://%1'>Course program</a><br><br>"_
+	"<a href='http://%2/stc/index.csp#/orderstudent?training=%3'>Register for course</a><br><br>"_
+	"Loacation:<br>"_
+	"%4<br><br>"_
+	"Teacher:<br>"_
+	"%5<br><br>"_
+	"Time: %6<br><br>"_
+	"%7"
 	
 	set ^CacheMsg("Stc", "ru", "certificatesReport") = "Сертификаты для [%1] [%2] [%3]"
 	set ^CacheMsg("Stc", "en", "certificatesReport") = "Certificates for [%1] [%2] [%3]"
