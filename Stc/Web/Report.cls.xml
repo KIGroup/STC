@@ -2,7 +2,7 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Web.Report">
 <Description>
-Генерация отчетов</Description>
+Reports</Description>
 <TimeCreated>63138,24459.241313</TimeCreated>
 
 <Parameter name="ContentType">
@@ -15,7 +15,7 @@
 
 <Method name="Certificates">
 <Description>
-Экспорт сертификатов в csv документ для отправки в печать</Description>
+Report, certificates of training</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>lang:%String,trainingId:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -71,7 +71,7 @@
 
 <Method name="Students">
 <Description>
-Экспорт студнетов в csv документ</Description>
+Report, students of training</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>lang:%String,trainingAccessCode:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
