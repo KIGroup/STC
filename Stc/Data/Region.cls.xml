@@ -2,7 +2,7 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Region">
 <Description>
-Страна, край/область или город</Description>
+Country, region or city</Description>
 <Super>%Persistent,%XML.Adaptor</Super>
 <TimeCreated>63098,13287.083739</TimeCreated>
 
@@ -15,7 +15,7 @@ Guid = id</Description>
 
 <Property name="Name">
 <Description>
-Название</Description>
+Name</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 <Parameter name="XMLREFERENCE" value="ID"/>
@@ -23,14 +23,14 @@ Guid = id</Description>
 
 <Property name="ParentRegion">
 <Description>
-Родитель</Description>
+Parent region</Description>
 <Type>Region</Type>
 <Parameter name="XMLREFERENCE" value="ID"/>
 </Property>
 
 <Property name="HLevel">
 <Description>
-Уровень иерархии, 0 - Страна, 1 - край/обл, 2 - населенный пункт</Description>
+Level in hierarchy, 0 - country, 1 - region/territory, 2 - city</Description>
 <Type>%Integer</Type>
 </Property>
 
@@ -46,7 +46,7 @@ Guid = id</Description>
 
 <Method name="ConvertToProxyObject">
 <Description>
-Конвертация в proxyObject для JSON </Description>
+Convert to proxyObject (for JSON)</Description>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()

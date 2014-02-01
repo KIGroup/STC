@@ -2,28 +2,28 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.OrderApproved">
 <Description>
-Чистая заявка, одобрена админом</Description>
+Apllication, approved by admin</Description>
 <ClassType>persistent</ClassType>
 <Super>Stc.Data.Order</Super>
 <TimeCreated>63098,13302.19979</TimeCreated>
 
 <Property name="Company">
 <Description>
-Компания - заказчик</Description>
+Customer organization</Description>
 <Type>Company</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Students">
 <Description>
-Слушатели, которых добавил заказчик</Description>
+Students added by customer</Description>
 <Type>Person</Type>
 <Collection>array</Collection>
 </Property>
 
 <Property name="AccessCode">
 <Description>
-Код доступа к заявке для заказчика для полного заполнения</Description>
+Access code for full filling by customer</Description>
 <Type>%String</Type>
 </Property>
 
@@ -34,7 +34,7 @@
 
 <Method name="Create">
 <Description>
-Создание обработанной заявки из "новой"</Description>
+Create approved application from "new"</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec><![CDATA[dirtyId:%String,&status]]></FormalSpec>
 <ReturnType>Stc.Data.OrderApproved</ReturnType>
@@ -63,7 +63,7 @@
 
 <Method name="ConvertToProxyObject">
 <Description>
-Конвертация в proxyObject для JSON </Description>
+Convert to proxyObject (for JSON)</Description>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()

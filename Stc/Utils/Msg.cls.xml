@@ -5,7 +5,7 @@
 
 <Method name="GetErrorStatus">
 <Description>
-Получить статус ошибки с текстом ошибки по ключу</Description>
+Get error status by key</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>errorKey:%String,additionalMsg:%String=""</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -15,7 +15,7 @@
 
 <Method name="GetMsg">
 <Description>
-Получить локализованное сообщение</Description>
+Get localized error message</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>key</FormalSpec>
 <ReturnType>%String</ReturnType>
@@ -25,16 +25,16 @@
 
 <Method name="Init">
 <Description>
-Записать все сообщения в глобал</Description>
+Write all messages into global</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	
-	// Тема письма
+	// Email subject
 	set ^CacheMsg("Stc", "ru", "emailSubject") = "Заявка на обучение"
 	set ^CacheMsg("Stc", "en", "emailSubject") = "Order for training"
 	
-	// Сообщение заказчику на почту
+	// Customer email text
 	set ^CacheMsg("Stc", "ru", "msgToCompanyContact") = ""_
 	"Здравствуйте, вы оставили заявку на обучение по курсу - '%1', в городе - '%2', дата обучения - '%3'. "_
 	"<br>Вам необходимо перейти по <a href='http://%4/stc/index.csp#/updateorder?code=%5'>ссылке</a> для дальнейшего заполнения вашей заявки, проверить и заполнить реквизиты компании, добавить сотрудников для обучения.<br>"_
@@ -137,7 +137,7 @@
 	set ^CacheMsg("Stc", "en", "studentsReport") = "Students [%1] [%2] [%3]"	
 	
 	
-	// Ошибки
+	// Errors
 	set ^CacheMsg("Stc", "ru", "emailAddNewStudent") = "Слушатель добавлен, но письмо не было отправлено."
 	set ^CacheMsg("Stc", "en", "emailAddNewStudent") = "Student has been added into training, but email was not sent."
 	

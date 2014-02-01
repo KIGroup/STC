@@ -2,74 +2,74 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Order">
 <Description>
-Заявка на обучение</Description>
+Application for training</Description>
 <Super>%Persistent</Super>
 <TimeCreated>63098,13893.822559</TimeCreated>
 
 <Property name="City">
 <Description>
-Город обучения</Description>
+City of training</Description>
 <Type>Region</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Course">
 <Description>
-Курс обучения</Description>
+Training course</Description>
 <Type>Course</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Company">
 <Description>
-Компания</Description>
+Organization</Description>
 <Type>Company</Type>
 </Property>
 
 <Property name="TrainingDate">
 <Description>
-Дата обучения</Description>
+Training date</Description>
 <Type>%Date</Type>
 <Parameter name="FORMAT" value="3"/>
 </Property>
 
 <Property name="CreatedTS">
 <Description>
-Дата и время создания заявки</Description>
+Application creation timestamp</Description>
 <Type>%TimeStamp</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="OrderStatus">
 <Description>
-Статус заявки</Description>
+Application status</Description>
 <Type>OrderStatus</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Latitude">
 <Description>
-Широта</Description>
+Latitude</Description>
 <Type>%Float</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Longitude">
 <Description>
-Долгота</Description>
+Longitutde</Description>
 <Type>%Float</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Partner">
 <Description>
-Партнер</Description>
+Partner</Description>
 <Type>%String</Type>
 </Property>
 
 <Method name="Delete">
 <Description>
-Удаление любой заявки. Удалются все студенты из заявки и локализация для заявки</Description>
+Delete application. Deletes all students and localization</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>

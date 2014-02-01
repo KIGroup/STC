@@ -2,27 +2,27 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.SubGroup">
 <Description>
-Подгруппа оплаченных студентов обучения</Description>
+Payed subgroup of students</Description>
 <Super>%Persistent</Super>
 <TimeCreated>63098,13360.062633</TimeCreated>
 
 <Property name="Payer">
 <Description>
-Компания - плательщик</Description>
+Paying organization</Description>
 <Type>Company</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Students">
 <Description>
-Слушатели</Description>
+Students</Description>
 <Type>Person</Type>
 <Collection>array</Collection>
 </Property>
 
 <Property name="Amount">
 <Description>
-Сумма платежа</Description>
+Pay amount</Description>
 <Type>%Float</Type>
 <InitialExpression>0</InitialExpression>
 <Required>1</Required>
@@ -30,14 +30,14 @@
 
 <Property name="Currency">
 <Description>
-Валюта</Description>
+Currency</Description>
 <Type>Currency</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Discount">
 <Description>
-Скидка</Description>
+Discount</Description>
 <Type>%Float</Type>
 <InitialExpression>0</InitialExpression>
 <Required>1</Required>
@@ -47,35 +47,35 @@
 
 <Property name="SignerFullName">
 <Description>
-ФИО подписанта в родительном падеже</Description>
+Signer full name</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="DocumentInfo">
 <Description>
-Документ основания, устав и проч.</Description>
+Info about documents</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="DateStart">
 <Description>
-Дата создания договора</Description>
+Contract conclusion date</Description>
 <Type>%Date</Type>
 <Parameter name="FORMAT" value="3"/>
 </Property>
 
 <Property name="DateFinish">
 <Description>
-Дата окончания договора</Description>
+Contract expiring date</Description>
 <Type>%Date</Type>
 <Parameter name="FORMAT" value="3"/>
 </Property>
 
 <Method name="ConvertToProxyObject">
 <Description>
-Конвертация в proxyObject для JSON </Description>
+Convert to proxyObject (for JSON)</Description>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()
@@ -116,7 +116,7 @@
 
 <Method name="Create">
 <Description>
-Создание подгруппы в обучении</Description>
+Create subgroup in training</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec><![CDATA[payer:Company,students:%ArrayOfObjects,course:Stc.Data.Course,&status]]></FormalSpec>
 <ReturnType>SubGroup</ReturnType>

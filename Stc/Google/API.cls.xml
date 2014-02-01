@@ -2,17 +2,16 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Google.API">
 <Description>
-Общий класс для доступа к API Google'а.</Description>
+Base class for Google API access</Description>
 <Abstract>1</Abstract>
 <IncludeCode>%callout,%occStatus,%occOptions</IncludeCode>
 <TimeCreated>63145,69487.892963</TimeCreated>
 
 <Method name="Call">
 <Description><![CDATA[
-Метод, осуществляющий обращение к заданному API Google'а. 
-Вызывает API по адресу pUrl (без имени сервера www.googleapis.com), с типом запроса pType, 
-токеном pToken и телом запроса - JSON'ом, сформированным из PObjInput.<br>
-Работает с API, ориентированными на JSON, не на GData.<br>]]></Description>
+Calls API at pUrl (without www.googleapis.com), with method pType, 
+auth token pToken and request body - JSON of PObjInput.<br>
+Work with Google JSON API, not GData.<br>]]></Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>pUrl:%String,pMethod:%String,pToken:%String,pSslConfig:%String,PObjInput:%ZEN.proxyObject="",*PResponse:%ZEN.proxyObject,timeout:%Integer=30</FormalSpec>
 <ReturnType>%Status</ReturnType>
