@@ -2,20 +2,20 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Web.JsonAdmin">
 <Description>
-Обработка BrokerAdmin</Description>
+Handling of BrokerAdmin</Description>
 <Super>Json</Super>
 <TimeCreated>63098,81450.05769</TimeCreated>
 
 <UDLText name="T">
 <Content><![CDATA[
-// ==================================== КУРСЫ ==================================== 
+// ==================================== COURSES ==================================== 
 
 ]]></Content>
 </UDLText>
 
 <Method name="GetCoursesFullInfo">
 <Description>
-Все курсы, полная информация, грид.</Description>
+Get full info about all courses</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -36,7 +36,7 @@
 
 <Method name="SaveCourse">
 <Description>
-Создать / сохранить курс</Description>
+Save or create course</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -63,7 +63,7 @@
 
 <Method name="GetCourse">
 <Description>
-Полчить курс по ИД</Description>
+Get course</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -83,7 +83,7 @@
 
 <Method name="ChangeIsInUseCourse">
 <Description>
-Изменить статус курса, используется или нет.</Description>
+Mark/unmark course as unused</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -112,14 +112,14 @@
 
 <UDLText name="T">
 <Content><![CDATA[
-// ==================================== ЗАЯВКИ ==================================== 
+// ==================================== APPLICATION ==================================== 
 
 ]]></Content>
 </UDLText>
 
 <Method name="GetOrders">
 <Description>
-Все заявки, или по статусу. грид</Description>
+Get all applications (or by status)</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -145,7 +145,7 @@
 
 <Method name="GetOrdersNewStudent">
 <Description>
-Все заявки - от слушателей для обучения</Description>
+Get all applications - from students for given training</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -168,7 +168,7 @@
 
 <Method name="GetDirtyOrder">
 <Description>
-Получить одну необработанную заявку</Description>
+Get not approved application by id</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -188,7 +188,7 @@
 
 <Method name="GetOrderNewStudent">
 <Description>
-Получить одну заявку от слушателя</Description>
+Get application from student by id</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -208,7 +208,7 @@
 
 <Method name="CreateApprovedOrder">
 <Description>
-Создать одобренную заявку из необработанной</Description>
+Create approved application</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -242,7 +242,7 @@
 
 <Method name="SendOrderAccessCode">
 <Description>
-Отправить контакту на почту код доступа к заявке</Description>
+Send access code to contact person's email</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>order:Stc.Data.OrderApproved</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -261,7 +261,7 @@
 
 <Method name="SendEmailToCompanyContactForApprovedOrder">
 <Description>
-Отправить контакту на почту код доступа к заявке</Description>
+Resend email with instructions to organization's contact person</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%String</ReturnType>
 <Implementation><![CDATA[
@@ -280,7 +280,7 @@
 
 <Method name="DeleteOrder">
 <Description>
-Удалить заявку </Description>
+Delete application by id</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -305,7 +305,7 @@
 
 <Method name="DeleteOrderNewStudent">
 <Description>
-Удалить заявку от слушателя </Description>
+Delete application from student by id</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -330,7 +330,7 @@
 
 <Method name="ChangeOrderCompany">
 <Description>
-Сменить компанию у заявки </Description>
+Change organization in application</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -362,7 +362,7 @@
 
 <Method name="ChangeOrderNewStudentCompany">
 <Description>
-Сменить компанию у заявки  от слушателя</Description>
+Change organization of application from student</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -394,14 +394,14 @@
 
 <UDLText name="T">
 <Content><![CDATA[
-// ==================================== КОМАПНИИ ==================================== 
+// ==================================== ORGANIZATIONS ==================================== 
 
 ]]></Content>
 </UDLText>
 
 <Method name="SaveCompany">
 <Description>
-Сохранить компанию</Description>
+Save new organization data</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -428,7 +428,7 @@
 
 <Method name="SaveCompanyFromOrder">
 <Description>
-Создать компанию из заявки</Description>
+Save organization from application</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -473,7 +473,7 @@
 
 <Method name="SaveCompanyFromOrderNewStudent">
 <Description>
-Создать компанию из заявки от слушателя</Description>
+Save organization and contact person from application from student</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -524,7 +524,7 @@
 
 <Method name="ChangeCompanyContact">
 <Description>
-Обновить или заменить контакт компании</Description>
+Change contact person of organization</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -583,7 +583,7 @@
 
 <Method name="GetCompaniesFullInfo">
 <Description>
-Все компании. грид</Description>
+Get all organizations for table, full info</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -610,7 +610,7 @@
 
 <Method name="GetCompany">
 <Description>
-Одна компания, все данные</Description>
+Get organization by id</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -630,7 +630,7 @@
 
 <Method name="DeleteCompany">
 <Description>
-Удалить компанию, если это возможно</Description>
+Delete organization if it is available</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -655,14 +655,14 @@
 
 <UDLText name="T">
 <Content><![CDATA[
-// ==================================== ОБУЧЕНИЯ ==================================== 
+// ==================================== TRAININGS ==================================== 
 
 ]]></Content>
 </UDLText>
 
 <Method name="TrainingCalendarEvent">
 <Description>
-Работа с событием в календаре</Description>
+Working with event in Google Calendar - create, update, delete</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -751,7 +751,7 @@
 
 <Method name="SaveTraining">
 <Description>
-Создание обучения из выбранных заявок | сохранение сущ.</Description>
+Create training from selected applications, create/update subgroups</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -777,7 +777,7 @@
 
 <Method name="DeleteTraining">
 <Description>
-Удалить обучение</Description>
+Delete training</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -814,7 +814,7 @@
 
 <Method name="CompleteTraining">
 <Description>
-Завершение обучения. Открыть обучение, сменить статус, создать сертификаты для всех слушателей</Description>
+Complete training and create certificates for each student</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -852,7 +852,7 @@
 
 <Method name="CreateSubGroupsForTraining">
 <Description>
-Создать подгруппы для обучения. Создаются подгруппы студентов из заявок и добавляются в сущ. обучение</Description>
+Add subgroups, based on selected application to training</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -882,7 +882,7 @@
 
 <Method name="GetTrainings">
 <Description>
-Все обучения. грид</Description>
+Get all trainings for table</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -908,7 +908,7 @@
 
 <Method name="GetTraining">
 <Description>
-Одно обучение по ИД</Description>
+Get training by id</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -928,7 +928,7 @@
 
 <Method name="GetTrainingSubGroups">
 <Description>
-Все подгруппы обучения. грид</Description>
+Get subgroups of training</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -949,7 +949,7 @@
 
 <Method name="GetTrainingStudents">
 <Description>
-Все студенты обучения</Description>
+Get students of trainings</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -1006,7 +1006,7 @@
 
 <Method name="CreateSubGroup">
 <Description>
-Создать подгруппу для обучения. Создается пустая подгруппа, только плательщик укзан.</Description>
+Add subgroup into training</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -1040,7 +1040,7 @@
 
 <Method name="AddNewStudentIntoTraining">
 <Description>
-Добавить сотрудника из заявки в обучение, создать/открыть подгруппу и добавить его туда</Description>
+Add person from application into training, create/open subgroup and add person</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -1120,7 +1120,7 @@
 
 <Method name="DeleteSubGroup">
 <Description>
-Удалить подгруппу из обучения и из БД</Description>
+Delete subgroup from training</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>trainingIdsgroupId</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -1152,7 +1152,7 @@
 
 <Method name="SaveSubGroupPayment">
 <Description>
-Сохранить платеж подгруппы</Description>
+Save pay of subgroup</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -1183,7 +1183,7 @@
 
 <Method name="SaveSubGroupContract">
 <Description>
-Сохранить платеж подгруппы</Description>
+Save contract of subgroup</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -1215,7 +1215,7 @@
 
 <Method name="GetAllCurrencies">
 <Description>
-Все валюты</Description>
+All currencies</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -1227,7 +1227,7 @@
 
 <Method name="GetTrainingCertificates">
 <Description>
-Все сертификаты обучения. грид</Description>
+All certificates of training</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -1250,7 +1250,7 @@
 
 <Method name="CreateTrainingCertificates">
 <Description>
-Создать сертификаты для обучения, если возможно</Description>
+Create all certificates for training</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -1372,14 +1372,14 @@
 
 <UDLText name="T">
 <Content><![CDATA[
-// ==================================== СЕРТИФИКАТЫ ==================================== 
+// ==================================== CERTIFICATES ==================================== 
 
 ]]></Content>
 </UDLText>
 
 <Method name="GetCertificates">
 <Description>
-Все сертификаты. грид</Description>
+Get all certificates for table</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -1405,7 +1405,7 @@
 
 <Method name="PrintCertificate">
 <Description>
-Печать сертификата (Смена статуса)</Description>
+Print certificate</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>number:%String</FormalSpec>
 <Implementation><![CDATA[
@@ -1428,7 +1428,7 @@
 
 <Method name="DeleteCertificate">
 <Description>
-Удаление сертификата</Description>
+Delete certificate</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>number:%String</FormalSpec>
 <Implementation><![CDATA[
@@ -1441,14 +1441,14 @@
 
 <UDLText name="T">
 <Content><![CDATA[
-// ==================================== ПЕРСОНЫ ==================================== 
+// ==================================== PERSONS ==================================== 
 
 ]]></Content>
 </UDLText>
 
 <Method name="SavePerson">
 <Description>
-Сохранить / создать персону</Description>
+Refresh person's data</Description>
 <ClassMethod>1</ClassMethod>
 <Implementation><![CDATA[
 	set status  = $$$OK
@@ -1474,7 +1474,7 @@
 
 <Method name="DeletePerson">
 <Description>
-Удалить сотрудника</Description>
+Delete person </Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -1502,7 +1502,7 @@
 
 <Method name="GetPerson">
 <Description>
-Получить любую персону по ИД</Description>
+Get person by id</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <Implementation><![CDATA[
@@ -1521,7 +1521,7 @@
 
 <Method name="GetPersonByEmail">
 <Description>
-Получить любую персону по email</Description>
+Get person by Email</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>email:%String</FormalSpec>
 <Implementation><![CDATA[
@@ -1542,7 +1542,7 @@
 
 <Method name="GetAllPersons">
 <Description>
-Все персоны, грид</Description>
+Get all persons for table</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -1563,7 +1563,7 @@
 
 <Method name="GetPersonByLastNameOrEmailStartsWith">
 <Description>
-Поиск персон по совпадению фамилии или email</Description>
+All students, search by last name and email</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>word:%String,additionalWhere:%String=""</FormalSpec>
 <Implementation><![CDATA[
@@ -1580,7 +1580,7 @@
 
 <Method name="GetFreeTeachers">
 <Description>
-Все преподаватели, которые не ведут курс. Поиск по совпадению в фамилии/почте</Description>
+Search teachers, that don't teach selected course</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>courseword:%String</FormalSpec>
 <Implementation><![CDATA[
@@ -1592,7 +1592,7 @@
 
 <Method name="GetFreeStudents">
 <Description>
-Все слушатели, которые не входят в группу. Поиск по совпадению в фамилии/почте</Description>
+Search persons, that not in subgroup of trainings</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>sgroupword:%String</FormalSpec>
 <Implementation><![CDATA[
@@ -1604,7 +1604,7 @@
 
 <Method name="GetFreeTrainingStudents">
 <Description>
-Все слушатели, которые не входят обучение. Поиск по совпадению в фамилии/почте</Description>
+Search persons, that not in training</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>trainingword:%String</FormalSpec>
 <Implementation><![CDATA[
@@ -1616,7 +1616,7 @@
 
 <Method name="GetStudentsFromOrders">
 <Description>
-Получить студентов по ид, из нескольких заявок</Description>
+Create all students from given applications</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>orderIdString</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -1638,7 +1638,7 @@
 
 <Method name="DeleteCourseTeacher">
 <Description>
-Удалить связь преподавателя и курса</Description>
+Delete teacher and course link</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>courseIdTeacherId</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -1667,7 +1667,7 @@
 
 <Method name="DeleteTrainingStudent">
 <Description>
-Удалить из обучения студента</Description>
+</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>trainingIdstudentId</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -1690,7 +1690,7 @@
 
 <Method name="DeleteSubGroupStudent">
 <Description>
-Удалить из подгруппы студента</Description>
+</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>sgroupIdstudentId</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -1719,7 +1719,7 @@
 
 <Method name="GetPersonOrders">
 <Description>
-Все заявки, в которых участвует данный сотрудник</Description>
+All application with person</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -1740,7 +1740,7 @@
 
 <Method name="GetPersonTrainings">
 <Description>
-Все обучения, в которых участвует данный сотрудник</Description>
+All trainings with person</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -1763,7 +1763,7 @@
 
 <Method name="GetPersonCourses">
 <Description>
-Все курсы, которые преподает сотрудник</Description>
+All courses, where person is teacher</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -1782,7 +1782,7 @@
 
 <Method name="GetPersonCompanies">
 <Description>
-Все компании, в которых он является контактом (в идеале 1 компания всегда)</Description>
+All organizations, where person is contact person</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -1799,7 +1799,7 @@
 
 <Method name="GetPersonCertificates">
 <Description>
-Все сертификаты сотрудника</Description>
+All certificates of person</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -1818,7 +1818,7 @@
 
 <Method name="CreateSubGroupStudent">
 <Description>
-Создать / добавить слушателя для подгруппы обучения</Description>
+Create / add student into subgroup of training</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -1865,7 +1865,7 @@
 
 <Method name="CreateCourseTeacher">
 <Description>
-Создать / добавить преподавателя в курс (назначить)</Description>
+Assign teacher to course</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -1903,7 +1903,7 @@
 
 <Method name="GetCourseTeachers">
 <Description>
-Все преподаватели курса</Description>
+Get all teachers of course</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>courseId:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -1926,14 +1926,14 @@
 
 <UDLText name="T">
 <Content><![CDATA[
-// ==================================== ДРУГОЕ ==================================== 
+// ==================================== OTHER ==================================== 
 
 ]]></Content>
 </UDLText>
 
 <Method name="CheckAdmin">
 <Description>
-Проверка парав доступа, принудительный вызов окна авторизации. Или выход.</Description>
+Check access, authorization call, if needed</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>isLogin:%Boolean</FormalSpec>
 <ReturnType>%Status</ReturnType>

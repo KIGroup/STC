@@ -2,20 +2,20 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Web.JsonUser">
 <Description>
-Обработка - BrokerUser</Description>
+Handling of BrokerUser</Description>
 <Super>Json</Super>
 <TimeCreated>63098,81469.21022</TimeCreated>
 
 <UDLText name="T">
 <Content><![CDATA[
-// ==================================== КУРСЫ ==================================== 
+// ==================================== COURSES ==================================== 
 
 ]]></Content>
 </UDLText>
 
 <Method name="GetCoursesShortInfo">
 <Description>
-Получить все курсы, коротко</Description>
+Get short info about all courses</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>isInUse:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -31,14 +31,14 @@
 
 <UDLText name="T">
 <Content><![CDATA[
-// ==================================== ЗАЯВКИ ==================================== 
+// ==================================== APPLICATIONS ==================================== 
 
 ]]></Content>
 </UDLText>
 
 <Method name="CreateOrder">
 <Description>
-Создать заявку</Description>
+Create application</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -65,7 +65,7 @@
 
 <Method name="CreateOrderNewStudent">
 <Description>
-Создать заявку для нового слушателя</Description>
+Create application for student</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -92,7 +92,7 @@
 
 <Method name="GetApprovedOrderInfo">
 <Description>
-Получить информацию о заявке по коду доступа</Description>
+Get application by access code</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>code:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -119,7 +119,7 @@
 
 <Method name="FinishEditingOrder">
 <Description>
-Завершить редактирование заявки; смена статуса заявки и кода доступа</Description>
+Finish editing of application</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -152,14 +152,14 @@
 
 <UDLText name="T">
 <Content><![CDATA[
-// ==================================== КОМАПНИИ ==================================== 
+// ==================================== ORGANIZATIONS ==================================== 
 
 ]]></Content>
 </UDLText>
 
 <Method name="GetCompaniesShortInfo">
 <Description>
-Получить все компании, коротко</Description>
+Get short info about all organization</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[    quit ..WriteJsonFromSql("SELECT ID As id, ShortName->Value as name FROM Stc_Data.Company ORDER BY name")
@@ -168,7 +168,7 @@
 
 <Method name="GetCompaniesShortInfoForTraining">
 <Description>
-Получить все компании, коротко. Для обучения</Description>
+Get short info about all organization for training</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -192,7 +192,7 @@
 
 <Method name="SaveCompany">
 <Description>
-Сохранение данных компании из заявки после проверки кода доступа к заявке</Description>
+Save organization</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -223,14 +223,14 @@
 
 <UDLText name="T">
 <Content><![CDATA[
-// ==================================== ПЕРСОНЫ ==================================== 
+// ==================================== PERSONS ==================================== 
 
 ]]></Content>
 </UDLText>
 
 <Method name="GetApprovedOrderStudents">
 <Description>
-Получить студентов заявки по коду доступа</Description>
+Get students of approved application</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -254,7 +254,7 @@
 
 <Method name="GetOrderStudent">
 <Description>
-Получить слушателя из заявки по коду доступа</Description>
+Get application by student</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -280,7 +280,7 @@
 
 <Method name="SaveOrderStudent">
 <Description>
-Создать слушателя для заявки. При совпадении email связать слушателя и заявку</Description>
+Create student for application. If email exist link student with application</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -342,7 +342,7 @@
 
 <Method name="DeleteOrderStudent">
 <Description>
-Удалить слушателя из заявки и из базы(если удаление возможно)</Description>
+Delete student from application (and from database, if possible)</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -377,14 +377,14 @@
 
 <UDLText name="T">
 <Content><![CDATA[
-// ==================================== ДРУГОЕ ==================================== 
+// ==================================== OTHER ==================================== 
 
 ]]></Content>
 </UDLText>
 
 <Method name="GetCitiesStartsWith">
 <Description>
-Получить все города, поиск совпадения</Description>
+Search cities</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>word:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -428,7 +428,7 @@
 
 <Method name="GetTraining">
 <Description>
-Полчить обучение по ИД</Description>
+Get training by id</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -452,7 +452,7 @@
 
 <Method name="GetTrainingStudents">
 <Description>
-Все студенты обучения</Description>
+</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
