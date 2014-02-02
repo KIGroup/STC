@@ -51,10 +51,10 @@ Work with Google JSON API, not GData.<br>]]></Description>
  
   //  s req.WriteRawMode=1
   }
-  set ^temp("delete") = pMethod_" | "_pUrl
+  //set ^temp("delete") = pMethod_" | "_pUrl
   $$$TOE(sc,req.Send($zconvert(pMethod,"u"),pUrl))
   //$$$TOE(sc,req.Send($zconvert(pMethod,"u"),pUrl,1))
-  set ^temp("afterdelete") = "delete success"_pMethod
+  //set ^temp("afterdelete") = "delete success"_pMethod
   
   set json=req.HttpResponse.Data.Read()
   //set ^temp("json") = json

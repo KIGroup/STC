@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllOrdersCtrl.js" application="/csp/six/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllOrdersCtrl.js" application="/csp/tnt/" default="1"><![CDATA[
 'use strict';
 //ddddddd
 
@@ -117,7 +117,7 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
                         {result: '2',   label: $filter('localize')('Не отправлять'),   cssClass: 'btn-primary btn-small', func: function(){acceptOrder(0)}},
                         {result: false, label: $filter('localize')('Отмена'), cssClass: 'btn-small'}]
             
-            UtilsSrvc.openCustomMessageBox('Принять заявку', 'Отправить контактному лицу на email код доступа к заявке для полного заполнения?', btns);
+            UtilsSrvc.openCustomMessageBox('Принять заявку', 'Отправить контактному лицу на email код доступа к заявке, чтобы завершить заполнение?', btns);
         }
         else {
             UtilsSrvc.openMessageBox('Принять заявку', 'Компания, указанная в заявке, не существует. Создать ее?', createCompany);
@@ -137,7 +137,7 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
                 });
         };
 
-        UtilsSrvc.openMessageBox('Отправить письмо', "Отправить контактному лицу на email код доступа к заявке для полного заполнения?", sendEmail);    
+        UtilsSrvc.openMessageBox('Отправить письмо', "Отправить контактному лицу на email код доступа к заявке, чтобы завершить заполнение?", sendEmail);    
     };
 
     // Удалить заявку
