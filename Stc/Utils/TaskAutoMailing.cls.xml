@@ -155,7 +155,7 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 			set status = ##class(Stc.Utils.Email).Send(training.Teacher.Email, ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingTeacher"), msg)
 			//set ^testmail("curator") = ^testmail("curator")_" "_trainingId	
 			if '$$$ISERR(status){
-				set training.IsTeacherAutoMailing = 0
+				set training.IsCuratorAutoMailing = 0
 				do training.%Save()
 			}						
 		}
