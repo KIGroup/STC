@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/TrainingSrvc.js" application="/csp/tnt/" default="1"><![CDATA[
+<CSP name="stc/js/services/TrainingSrvc.js" application="/csp/feb/" default="1"><![CDATA[
 'use strict';
-//dddd
+//dddddde
 
 /*===========================================================================================
 Обучения
@@ -128,21 +128,37 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
         },
         doEvent: function(data){
 	        return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/trainingEvent', data);
-	    },
+	      },
         getEmailContacts: function(trainingId){
           	return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/trainingStudentsEmails/' + trainingId, null);
         },
-        sendEmailToTrainingStudents: function(data){
-          	return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/sendEmailToTrainingStudents', data);
+        sendEmail: function(data){
+          	return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/sendEmail', data);
         },
-        sendEmailToTrainingTeacher: function(data){
-          	return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/sendEmailToTrainingTeacher', data);
+        changeStatusAutoMailing: function(data){
+          	return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/changeTrainingStatusAutoMailing', data);
         },
-        changeStudentsAutoMailing: function(data){
-          	return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/changeTrainingStudentsAutoMailing', data);
+        saveFeedBack: function(data){
+            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/saveFeedBack', data);
         },
-        changeTeacherAutoMailing: function(data){
-          	return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/changeTrainingTeacherAutoMailing', data);
+        /* All training feedbacks */
+        getFeedBacks: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, trainingId){
+            var first = pageSize * (pageCurr - 1) + 1;
+            var obj = {sqlName: sqlName, 
+                       isDown: isDown, 
+                       first: first, 
+                       last: first + pageSize - 1,
+                       searchSqlName: searchSqlName, 
+                       searchText: searchText,
+                       trainingId: trainingId};
+
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/getFeedBacks', obj);
+        },
+        deleteFeedBack: function(id){
+            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/deleteFeedBack/' + id, null); 
+        },
+        getMailPattern: function(type){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/mailPattern/' + type, null);
         }
     }
 });

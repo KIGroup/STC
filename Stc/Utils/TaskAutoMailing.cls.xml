@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Utils.TaskAutoMailing">
+<Super>%SYS.Task.Definition</Super>
+<TimeCreated>63231,11522.229906</TimeCreated>
+
+<Method name="OnTask">
+<Description><![CDATA[
+This method is responsible for executing the task.<br>
+At the scheduled time, the Task Manager creates an instance of this object,
+sets any property values using the stored "settings" for the task, and then
+invokes this method to execute the task.<br>
+In order to execute a real task, override this method in a subclass.]]></Description>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	do ..StudentsAutoMailing()
+	do ..TeacherAutoMailing()
+	do ..CuratorAutoMailing()
+	do ..FeedBackAutoMailing()
+	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="StudentsAutoMailing">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	try{
+		set diffDays = $GET(^Settings("Stc", "StudentsAutoMailingDays"), 2)
+			
+		&sql(DECLARE TrCur CURSOR FOR 
+				SELECT ID
+			 	FROM Stc_Data.Training
+			 	WHERE IsStudentsAutoMailing = 1 AND DATEDIFF(D,{fn NOW()}, DateStart) = :diffDays)	
+			
+		&sql(OPEN TrCur)
+		for  
+		{	
+			&sql(FETCH TrCur INTO :trainingId) 
+			quit:(SQLCODE '= 0)
+			
+			set training = ##class(Stc.Data.Training).%OpenId(trainingId)
+			set msg =  ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudents"),
+							$ZDATE(training.DateStart, 3),
+							training.Course.Name.Value,
+							training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value,
+							training.Street.Value,
+							training.Room,
+							$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5),
+							training.Teacher.LastName.Value_" "_training.Teacher.FirstName.Value,
+							training.OtherInfo.Value)
+			
+
+			set emailList = ..GetStudentEmails(trainingId)
+			if (emailList.Count() > 0){
+				set status = ##class(Stc.Utils.Email).Send(emailList, ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudents"), msg)
+				//set ^testmail("students") = ^testmail("students")_" "_trainingId 
+				if '$$$ISERR(status){
+					set training.IsStudentsAutoMailing = 0
+					do training.%Save()
+				}
+			}						
+		}
+			
+		&sql(CLOSE TrCur)		
+	}
+	catch{}
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="TeacherAutoMailing">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	try{
+		set diffDays = $GET(^Settings("Stc", "TeacherAutoMailingDays"), 4)
+		set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp#/trainingstudents?id=%1&code=%2"
+		
+		&sql(DECLARE Tr2Cur CURSOR FOR 
+				SELECT ID
+			 	FROM Stc_Data.Training
+			 	WHERE IsTeacherAutoMailing = 1 AND DATEDIFF(D,{fn NOW()}, DateStart) = :diffDays)	
+			
+		&sql(OPEN Tr2Cur)
+		for  
+		{	
+			&sql(FETCH Tr2Cur INTO :trainingId) 
+			quit:(SQLCODE '= 0)
+			
+			set training = ##class(Stc.Data.Training).%OpenId(trainingId)
+			
+			set tempUrl = $replace(url, "%1", trainingId)
+			set tempUrl = $replace(tempUrl, "%2", training.AccessCode)
+			
+			set msg =  ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingTeacher"),
+							tempUrl,
+							$ZDATE(training.DateStart, 3),
+							$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5),
+							training.Course.Name.Value,
+							training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value,
+							training.Street.Value,
+							training.Room,
+							training.OtherInfo.Value)
+				
+			set status = ##class(Stc.Utils.Email).Send(training.Teacher.Email, ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingTeacher"), msg)
+			//set ^testmail("teacher") = ^testmail("teacher")_" "_trainingId	
+			if '$$$ISERR(status){
+				set training.IsTeacherAutoMailing = 0
+				do training.%Save()
+			}						
+		}
+			
+		&sql(CLOSE Tr2Cur)
+	}catch{}
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="CuratorAutoMailing">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	try{
+		set diffDays = $GET(^Settings("Stc", "CuratorAutoMailingDays"), 4)
+		set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp#/trainingstudents?id=%1&code=%2"
+			
+		&sql(DECLARE Tr3Cur CURSOR FOR 
+				SELECT ID
+			 	FROM Stc_Data.Training
+			 	WHERE IsCuratorAutoMailing = 1 AND DATEDIFF(D,{fn NOW()}, DateStart) = :diffDays)	
+			
+		&sql(OPEN Tr3Cur)
+		for  
+		{	
+			&sql(FETCH Tr3Cur INTO :trainingId) 
+			quit:(SQLCODE '= 0)
+			
+			set training = ##class(Stc.Data.Training).%OpenId(trainingId)
+			
+			set tempUrl = $replace(url, "%1", trainingId)
+			set tempUrl = $replace(tempUrl, "%2", training.AccessCode)
+			
+			set msg =  ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingTeacher"),
+							tempUrl,
+							$ZDATE(training.DateStart, 3),
+							$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5),
+							training.Course.Name.Value,
+							training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value,
+							training.Street.Value,
+							training.Room,
+							training.OtherInfo.Value)
+				
+			set status = ##class(Stc.Utils.Email).Send(training.Teacher.Email, ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingTeacher"), msg)
+			//set ^testmail("curator") = ^testmail("curator")_" "_trainingId	
+			if '$$$ISERR(status){
+				set training.IsTeacherAutoMailing = 0
+				do training.%Save()
+			}						
+		}
+			
+		&sql(CLOSE Tr3Cur)
+	
+	}catch{}
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="FeedBackAutoMailing">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	try{
+		set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp#/feedback?id=%1&code=%2"
+		
+		&sql(DECLARE Tr4Cur CURSOR FOR 
+				SELECT ID
+			 	FROM Stc_Data.Training
+			 	WHERE IsFeedBackAutoMailing = 1 AND DATEDIFF(D,{fn NOW()}, DateFinish) = 0)	
+			
+		&sql(OPEN Tr4Cur)
+		for  
+		{	
+			&sql(FETCH Tr4Cur INTO :trainingId) 
+			quit:(SQLCODE '= 0)
+			
+			set training = ##class(Stc.Data.Training).%OpenId(trainingId)
+			
+			set tempUrl = $replace(url, "%1", trainingId)
+			set tempUrl = $replace(tempUrl, "%2", $p(training.AccessCode,"-",1)_"-"_$p(training.AccessCode,"-",5))
+			
+			set msg =  ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudentsFeedBack"),
+							tempUrl,
+							training.Course.Name.Value)
+				
+				
+			set emailList = ..GetStudentEmails(trainingId)
+			if (emailList.Count() > 0){
+				set status = ##class(Stc.Utils.Email).Send(emailList, ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudentsFeedBack"), msg)
+				//set ^testmail("feedback") = ^testmail("feedback")_" "_trainingId
+				if '$$$ISERR(status){
+					set training.IsFeedBackAutoMailing = 0
+					do training.%Save()
+				}
+			}								
+		}
+			
+		&sql(CLOSE Tr4Cur)
+	}catch{}
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetStudentEmails">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>trainingId:%String</FormalSpec>
+<ReturnType>%ListOfDataTypes</ReturnType>
+<Implementation><![CDATA[
+	set emailList = ##class(%ListOfDataTypes).%New()
+		
+	&sql(DECLARE StudCur CURSOR FOR 
+		 	 	SELECT Students->Email 
+		 	 	FROM Stc_Data.SubGroup_Students
+		 	 	WHERE SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training = :trainingId))	
+	&sql(OPEN StudCur)
+	for  
+	{	
+		&sql(FETCH StudCur INTO :email) 
+		quit:(SQLCODE '= 0)
+			
+		do emailList.Insert(email)		
+	}
+	&sql(CLOSE StudCur)
+
+	quit emailList
+]]></Implementation>
+</Method>
+</Class>
+</Export>

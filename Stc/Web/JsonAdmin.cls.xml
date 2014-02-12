@@ -697,7 +697,21 @@ Working with event in Google Calendar - create, update, delete</Description>
 				set event.location = training.City.Name.Value_", "_training.Street.Value
 					
 				set domainWebApp = %request.CgiEnvs("HTTP_HOST")_$GET(^Settings("Stc", "WebApp")) 
-	
+				
+				set curatorData = ""
+				if (training.CuratorFullName.Value '= ""){
+					set curatorData = "<br>"_##class(Stc.Utils.Msg).GetMsg("contactPerson")_":<br>"_training.CuratorFullName.Value
+					if (training.CuratorPhone '= ""){
+						set curatorData = curatorData_", "_training.CuratorPhone
+					}
+					set curatorData = curatorData_"<br>"
+				}
+				
+				set otherInfoData = ""
+				if (training.OtherInfo.Value '= ""){
+					set otherInfoData = "<br>"_training.OtherInfo.Value
+				}
+				
 				set event.description = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("CalendarEvent"),
 									training.Course.ProgramUrl,
 									domainWebApp,
@@ -705,7 +719,8 @@ Working with event in Google Calendar - create, update, delete</Description>
 									training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value_"<br>"_training.Street.Value_", "_training.Room,
 									training.Teacher.LastName.Value_" "_training.Teacher.FirstName.Value_" "_training.Teacher.MiddleName.Value_"<br>"_training.Teacher.Email,
 									$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5),
-									training.OtherInfo.Value)
+									curatorData,
+									otherInfoData)
 			}
 			else{
 				// Получаем созданное
@@ -967,6 +982,37 @@ Get students of trainings</Description>
 	}
 
 	quit status
+]]></Implementation>
+</Method>
+
+<Method name="GetTrainingFeedBacks">
+<Description>
+Get training feedbacks. grid</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try{
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
+      	
+      	set whereRequired = "Training = '"_..ParseParameter(params.trainingId)_"'"
+      	
+      	$$$THROWONERROR(status, ..WriteJsonForGrid("SELECT ID FROM Stc_Data.FeedBack", "Stc.Data.FeedBack", params, whereRequired))
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="DeleteFeedBack">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ##class(Stc.Data.FeedBack).%DeleteId(id)
 ]]></Implementation>
 </Method>
 
@@ -1280,7 +1326,7 @@ Create all certificates for training</Description>
 ]]></Implementation>
 </Method>
 
-<Method name="SendEmailToTrainingStudents">
+<Method name="SendEmailFromTraining">
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -1299,26 +1345,7 @@ Create all certificates for training</Description>
 ]]></Implementation>
 </Method>
 
-<Method name="SendEmailToTrainingTeacher">
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set status  = $$$OK
-	
-	try{
-		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
-				
-		$$$THROWONERROR(status, ##class(Stc.Utils.Email).Send(data.emails, $ZCONVERT(data.subject, "I", "UTF8"), $ZCONVERT(data.msg, "I", "UTF8")))
-	}
-	catch ex {
-		set status = ex.AsStatus()
-	}
-	
-    quit status
-]]></Implementation>
-</Method>
-
-<Method name="ChangeTrainingStudentsAutoMailing">
+<Method name="ChangeTrainingStatusAutoMailing">
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -1329,10 +1356,23 @@ Create all certificates for training</Description>
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
-		NEW SQLCODE
-		&sql(UPDATE Stc_Data.Training (IsStudentsAutoMailing) VALUES (:data.isAutoMailing) WHERE ID = :data.id)
+		set training = ##class(Stc.Data.Training).%OpenId(data.id)
+		if (data.type = "students"){
+			set training.IsStudentsAutoMailing = data.isAutoMailing
+		}
+		elseif (data.type = "teacher"){
+			set training.IsTeacherAutoMailing = data.isAutoMailing
+		}
+		elseif (data.type = "curator"){
+			set training.IsCuratorAutoMailing = data.isAutoMailing
+		}
+		elseif (data.type = "feedback"){
+			set training.IsFeedBackAutoMailing = data.isAutoMailing
+		}
 		
-		if (SQLCODE '= 0) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveTraining", " | SQLCODE="_SQLCODE)) 
+		set status = training.%Save()
+		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveTraining", " | "_status)) 
+		
 		TCOMMIT
 	}
 	catch ex {
@@ -1344,29 +1384,33 @@ Create all certificates for training</Description>
 ]]></Implementation>
 </Method>
 
-<Method name="ChangeTrainingTeacherAutoMailing">
+<Method name="GetTrainingEmailPattern">
 <ClassMethod>1</ClassMethod>
+<FormalSpec>type:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set status  = $$$OK
+	set proxy = ##class(%ZEN.proxyObject).%New()
 	
-	try{
-		TSTART
-		
-		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
-		
-		NEW SQLCODE
-		&sql(UPDATE Stc_Data.Training (IsTeacherAutoMailing) VALUES (:data.isAutoMailing) WHERE ID = :data.id)
-		
-		if (SQLCODE '= 0) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveTraining", " | SQLCODE="_SQLCODE)) 
-		TCOMMIT
+	if (type = "students"){
+		set proxy.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudents")
+		set proxy.msg = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudents")
 	}
-	catch ex {
-		TROLLBACK
-		set status = ex.AsStatus()
+	elseif (type = "teacher"){
+		set proxy.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingTeacher")
+		set proxy.msg = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingTeacher")
+	}
+	elseif (type = "curator"){
+		set proxy.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingCurator")
+		set proxy.msg = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingCurator")
+	}
+	elseif (type = "feedback"){
+		set proxy.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudentsFeedBack")
+		set proxy.msg = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudentsFeedBack")
 	}
 	
-    quit status
+	do proxy.%ToJSON()
+	
+	quit $$$OK
 ]]></Implementation>
 </Method>
 

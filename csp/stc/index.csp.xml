@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/index.csp" application="/csp/tnt/" default="1"><![CDATA[
+<CSP name="stc/index.csp" application="/csp/feb/" default="1"><![CDATA[
 <!doctype html>
 
 <html ng-app="mainModule" ng-controller="MainCtrl">
@@ -130,6 +130,7 @@
     <script language="javascript"  src="js/controllers/AllCoursesCtrl.js"></script>    
     <script language="javascript"  src="js/controllers/CourseCtrl.js"></script>
     <script language="javascript"  src="js/controllers/TrainingStudentsCtrl.js"></script>
+     <script language="javascript"  src="js/controllers/FeedBackCtrl.js"></script>
 
     <script language="javascript"  src="js/services/DALSrvc.js"></script>
     <script language="javascript"  src="js/services/YandexSrvc.js"></script>

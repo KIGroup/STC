@@ -120,6 +120,12 @@ Private request processor for administrator</Description>
 	
 	<!-- Get students of trainings -->
 	<Route Method="POST" Url="/json/getTrainingStudents" Call="Stc.Web.JsonAdmin:GetTrainingStudents"/>	
+
+	<!-- Get feed Backs of trainings -->
+	<Route Method="POST" Url="/json/getFeedBacks" Call="Stc.Web.JsonAdmin:GetTrainingFeedBacks"/>	
+	
+	<!-- Delete feedback from training -->
+	<Route Method="DELETE" Url="/json/deleteFeedBack/:id" Call="Stc.Web.JsonAdmin:DeleteFeedBack"/>	
 	
 	<!-- Add subgroup into training -->
 	<Route Method="POST" Url="/json/createSubGroup" Call="Stc.Web.JsonAdmin:CreateSubGroup"/>	
@@ -148,18 +154,18 @@ Private request processor for administrator</Description>
 	<!-- All email's of students of training -->
 	<Route Method="GET" Url="/json/trainingStudentsEmails/:trainingId" Call="Stc.Web.JsonAdmin:GetTrainingStudentsEmails"/>
 	
-	<!-- Send email to all students of training -->
-	<Route Method="POST" Url="/json/sendEmailToTrainingStudents" Call="Stc.Web.JsonAdmin:SendEmailToTrainingStudents"/>
-	
-	<!-- Send email to teacher of training -->
-	<Route Method="POST" Url="/json/sendEmailToTrainingTeacher" Call="Stc.Web.JsonAdmin:SendEmailToTrainingTeacher"/>
+	<!-- Send email from training (to students or teacher or curator or feedback) -->
+	<Route Method="POST" Url="/json/training/sendEmail" Call="Stc.Web.JsonAdmin:SendEmailFromTraining"/>
 	
 	
-	<!-- Change automail status for students -->
-	<Route Method="POST" Url="/json/changeTrainingStudentsAutoMailing" Call="Stc.Web.JsonAdmin:ChangeTrainingStudentsAutoMailing"/>
-
 	<!-- Change automail status for teacher -->
-	<Route Method="POST" Url="/json/changeTrainingTeacherAutoMailing" Call="Stc.Web.JsonAdmin:ChangeTrainingTeacherAutoMailing"/>
+	<Route Method="POST" Url="/json/changeTrainingStatusAutoMailing" Call="Stc.Web.JsonAdmin:ChangeTrainingStatusAutoMailing"/>
+	
+	
+	<!-- Get email pattern from CacheMsg -->
+	<Route Method="GET" Url="/json/mailPattern/:type" Call="Stc.Web.JsonAdmin:GetTrainingEmailPattern"/>
+	
+	
 	
 	<!-- ==================================== CERTIFICATES ================================ -->
 	

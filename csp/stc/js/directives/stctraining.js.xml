@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/directives/stctraining.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/directives/stctraining.js" application="/csp/feb/" default="1"><![CDATA[
 'use strict';
-//ddddddddd
+//dddddddddd
 
 directivesModule.directive('stctraining', function(){
     return {

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/controllers/FeedBackCtrl.js" application="/csp/feb/" default="1"><![CDATA[
+'use strict';
+//
+
+/*===========================================================================================
+
+===========================================================================================*/
+
+controllersModule.controller('FeedBackCtrl', function($scope, $filter, $routeParams, UtilsSrvc, TrainingSrvc){
+    $scope.menu.hide=true;
+    $scope.menu.brandCaption = $filter('localize')('Система учёта курсов');
+    $scope.menu.appTitle = $scope.menu.brandCaption;
+    $scope.page = {training:{}, feedBack:{rating:0}};
+    
+    $scope.page.init = function(){
+        $scope.page.loadTraining();
+    };
+
+    /* Подгрузить обучение */
+    $scope.page.loadTraining = function(){
+        TrainingSrvc.getTrainingForUser($routeParams.id).then(
+            function(data){
+                $scope.page.training = data;
+            },
+            function(response){
+                $scope.page.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            }); 
+    };
+
+    // Save feedback
+    $scope.page.submit = function(){
+        $scope.page.feedBack.access = {id: $routeParams.id, code: $routeParams.code};
+        TrainingSrvc.saveFeedBack($scope.page.feedBack).then(
+            function(data){
+                $scope.page.hide = true;
+                $scope.page.alert = UtilsSrvc.getAlert('Готово!', 'Ваш отзыв принят. Спасибо!', 'success', true);
+            },
+            function(response){
+                $scope.page.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });        
+    };
+
+    $scope.page.init();
+});
+
+]]></CSP>
+</Export>

@@ -16,35 +16,27 @@
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	NEW SQLCODE
-	&sql(UPDATE Stc_Data.Training (IsStudentsAutoMailing, IsTeacherAutoMailing) VALUES (0,0))
+	&sql(UPDATE Stc_Data.Training (IsFeedBackAutoMailing, IsCuratorAutoMailing) VALUES (0,0))
+	
 	
 	w !, "SQLCODE="_SQLCODE
 	
-	NEW SQLCODE
-	&sql(UPDATE Stc_Data.Company (IsUniversity) VALUES (0))
-	
-	w !, "SQLCODE="_SQLCODE
-]]></Implementation>
-</Method>
-
-<Method name="SetTrainingAccessCode">
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	&sql(DECLARE TrCur CURSOR FOR
+	&sql(DECLARE Tr2Cur CURSOR FOR
 			SELECT ID FROM Stc_Data.Training)	
 		
-	&sql(OPEN TrCur)
+	&sql(OPEN Tr2Cur)
 	for  
 	{	
-		&sql(FETCH TrCur INTO :id) 
+		&sql(FETCH Tr2Cur INTO :id) 
 		quit:(SQLCODE '= 0)
 			
 		set training = ##class(Stc.Data.Training).%OpenId(id)
-		set training.AccessCode = $SYSTEM.Util.CreateGUID()
+		set training.CuratorFullName = ##class(Stc.Data.Localization.LText).Create("")
+		set training.CuratorEmail = ""
+		set training.CuratorPhone = ""
 		w training.%Save()
 	}	
-	&sql(CLOSE TrCur)
+	&sql(CLOSE Tr2Cur)
 ]]></Implementation>
 </Method>
 

@@ -66,9 +66,11 @@ Public request processor for users</Description>
 	<!-- Get training by id -->
 	<Route Method="GET" Url="/json/training/:id" Call="Stc.Web.JsonUser:GetTraining"/>
 
-	<!--  -->
+	<!-- All training students for teacher view -->
 	<Route Method="POST" Url="/json/trainingStudents" Call="Stc.Web.JsonUser:GetTrainingStudents"/>
 
+	<!-- Save feedback -->
+	<Route Method="POST" Url="/json/saveFeedBack" Call="Stc.Web.JsonUser:SaveFeedBack"/>
 
 	<!-- Search cities -->
 	<Route Method="GET" Url="/json/citiesStartsWith/:startsWith" Call="Stc.Web.JsonUser:GetCitiesStartsWith"/>

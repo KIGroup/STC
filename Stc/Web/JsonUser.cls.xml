@@ -472,5 +472,47 @@ Get training by id</Description>
 	quit status
 ]]></Implementation>
 </Method>
+
+<Method name="SaveFeedBack">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try{
+		TSTART
+		
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+      	
+      	set training = ##class(Stc.Data.Training).%OpenId(data.access.id)
+      	if ($P(training.AccessCode,"-",1)_"-"_$P(training.AccessCode,"-",5) '= data.access.code){
+      		$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("feedBackErrorCode"))
+      	}
+      	
+      	if (training.FeedBacks.Count() > 50){
+	      	$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("feedBackSpam"))
+      	}
+      	
+      	set fb = ##class(Stc.Data.FeedBack).%New()
+      	set fb.Training = training
+      	set fb.Rating = data.rating
+      	set fb.WhatLiked = $ZCONVERT(data.whatLiked, "I","UTF8")
+      	set fb.WhatImprovements = $ZCONVERT(data.whatImprovements, "I","UTF8")
+      	set fb.WhatHear = $ZCONVERT(data.whatHear, "I","UTF8")
+      	set fb.AboutTeacher = $ZCONVERT(data.aboutTeacher, "I","UTF8")
+      	set status = fb.%Save()
+      	if ($$$ISERR(status)) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("feedBackSave")) 
+      	
+		TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
+		
+		set status = ex.AsStatus()
+	}
+	
+	quit status
+]]></Implementation>
+</Method>
 </Class>
 </Export>

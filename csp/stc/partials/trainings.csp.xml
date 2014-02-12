@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/trainings.csp" application="/csp/tnt/" default="1"><![CDATA[
+<CSP name="stc/partials/trainings.csp" application="/csp/feb/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -82,24 +82,35 @@
 						<p><span class="spnTitle" ng-bind="'Skype'"                                      ></span>: <span ng-bind="training.selectedItems[0].teacher.skype"></span></p>
 						<p><span class="spnTitle" ng-bind="('Подгрупп'|localize)+' / '+('слушателей'|localize)"></span>: <span ng-bind="training.selectedItems[0].sgroups + ' / ' + training.selectedItems[0].students"></span></p>
 						<p><span class="spnTitle" ng-bind="('Новые заявки'|localize)"                    ></span>: <span ng-bind="training.selectedItems[0].newStudents"></span></p>
+						<p><span class="spnTitle" ng-bind="('Отзывы'|localize)"                          ></span>: <span ng-bind="training.selectedItems[0].feedBacks.count"></span></p>
 						<a target="_blank" style="text-decoration: none;" ng-href="{{'#/orderstudent?training=' + training.selectedItems[0].id}}"><i ng-bind="'Заявка на обучение'|localize"></i></a></p>
 					</div>
 					<div class="span6">
 						<p><span class="spnTitle" ng-bind="'Место обучения'|localize"         ></span>: <span ng-bind="training.selectedItems[0].city.name + ', ' + training.selectedItems[0].city.parentName + ', ' + training.selectedItems[0].city.greatParentName"></span></p>
-						<p><span class="spnTitle" ng-bind="'Адрес'|localize"                  ></span>: <span ng-bind="training.selectedItems[0].address.title"></span></p>
-						<p><span class="spnTitle" ng-bind="'Аудитория'|localize"              ></span>: <span ng-bind="training.selectedItems[0].room"></span></p>
-						<p><span class="spnTitle" ng-bind="'Дата начала обучения'|localize"   ></span>: <span ng-bind="training.selectedItems[0].dateStart|convertCacheDate:('d MMMM y'|localize)"></span></p>
-						<p><span class="spnTitle" ng-bind="'Дата окончания обучения'|localize"></span>: <span ng-bind="training.selectedItems[0].dateFinish|convertCacheDate:('d MMMM y'|localize)"></span></p>
+						<p><span class="spnTitle" ng-bind="'Адрес'|localize"                  ></span>: <span ng-bind="training.selectedItems[0].address.title + ', ' + training.selectedItems[0].room"></span></p>
+						<p><span class="spnTitle" ng-bind="'Дата начала / окончания обучения'|localize"   ></span>: <span ng-bind="(training.selectedItems[0].dateStart|convertCacheDate:('d MMMM y'|localize)) + ' / ' + (training.selectedItems[0].dateFinish|convertCacheDate:('d MMMM y'|localize))"></span></p>
 						<p><span class="spnTitle" ng-bind="'Время'|localize"      ></span>: <span ng-bind="training.selectedItems[0].timeStartFinish"></span></p>
 						<p><span class="spnTitle" ng-bind="'Примечание'|localize" ></span>: <span ng-bind="training.selectedItems[0].otherInfo"></span></p>
 						<p><span class="label label-success"   ng-bind="'Событие есть в календаре'|localize" ng-hide="training.selectedItems[0].event==''"></span></p>
 						<p><span class="label label-important" ng-bind="'События нет в календаре'|localize"  ng-show="training.selectedItems[0].event==''"></span></span></p>
-						<label class="checkbox"  style="padding-top: 5px;" >
-					    	<input type="checkbox" ng-click="training.changeStudentsAutoMailing()" ng-model="training.selectedItems[0].isStudentsAutoMailing">{{'Авторассылка слушателям'|localize}}
-					    </label>
-					    <label class="checkbox"  style="padding-top: 5px;" >
-					    	<input type="checkbox" ng-click="training.changeTeacherAutoMailing()" ng-model="training.selectedItems[0].isTeacherAutoMailing">{{'Авторассылка преподавателю'|localize}}
-					    </label>		
+						<div class="row-fluid">
+							<div class="span6">
+								<label class="checkbox"  style="padding-top: 5px;" >
+							    	<input type="checkbox" ng-click="training.changeStatusAutoMailing('students')" ng-model="training.selectedItems[0].isStudentsAutoMailing">{{'Авторассылка слушателям'|localize}}
+							    </label>
+							    <label class="checkbox"  style="padding-top: 5px;" >
+							    	<input type="checkbox" ng-click="training.changeStatusAutoMailing('teacher')" ng-model="training.selectedItems[0].isTeacherAutoMailing">{{'Авторассылка преподавателю'|localize}}
+							    </label>
+					    	</div>
+					    	<div class="span6">
+							    <label class="checkbox"  style="padding-top: 5px;" >
+							    	<input type="checkbox" ng-click="training.changeStatusAutoMailing('curator')" ng-model="training.selectedItems[0].isCuratorAutoMailing">{{'Авторассылка куратору'|localize}}
+							    </label>
+							    <label class="checkbox"  style="padding-top: 5px;" >
+							    	<input type="checkbox" ng-click="training.changeStatusAutoMailing('feedback')" ng-model="training.selectedItems[0].isFeedBackAutoMailing">{{'Авторассылка анкеты'|localize}}
+							    </label>
+							</div>
+					    </div>		
 					</div>
 				</div>
 				</br>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllTrainingsCtrl.js" application="/csp/tnt/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllTrainingsCtrl.js" application="/csp/feb/" default="1"><![CDATA[
 'use strict';
-//ddвdddd
+//ddвd
 
 /*===========================================================================================
 Все обучения
@@ -61,11 +61,13 @@ controllersModule.controller('AllTrainingsCtrl', function($scope, $filter, $loca
                                       calculate: function(item){
                                                     item.isStudentsAutoMailing = item.isStudentsAutoMailing==0 ? false : true;
                                                     item.isTeacherAutoMailing = item.isTeacherAutoMailing==0 ? false : true;
+                                                    item.isCuratorAutoMailing = item.isCuratorAutoMailing==0 ? false : true;
+                                                    item.isFeedBackAutoMailing = item.isFeedBackAutoMailing==0 ? false : true;
                                                     item.status = item.isCompleted == 1 ? $filter('localize')('Завершено') : $filter('localize')('Не завершено');
                                         }}];
 
         $scope.training.status = UtilsSrvc.getPropertyValue($scope.pageStore, 'trainings.status', 'All');
-        $scope.training.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'trainings.grid.pageSize', 10);;
+        $scope.training.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'trainings.grid.pageSize', 7);;
         $scope.training.pageCurr = UtilsSrvc.getPropertyValue($scope.pageStore, 'trainings.grid.pageCurr', 1);;
         $scope.training.itemsTotal = 0;
         $scope.training.selectedItems = [];
@@ -124,18 +126,29 @@ controllersModule.controller('AllTrainingsCtrl', function($scope, $filter, $loca
         UtilsSrvc.openMessageBox('Удалить обучение', $filter('localize')("Удалить обучение по курсу ") + " '" + item.course.name + "'?", deleteTraining);    
     };
 
-    $scope.training.changeStudentsAutoMailing = function(){
-        TrainingSrvc.changeStudentsAutoMailing({id: $scope.training.selectedItems[0].id, isAutoMailing: $scope.training.selectedItems[0].isStudentsAutoMailing}).then(
-            function(data){
-                $scope.training.alert = UtilsSrvc.getAlert('Готово!', 'Изменения сохранены.', 'success', true);
-            },
-            function(response){
-                $scope.training.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
-            });
-    };
     
-    $scope.training.changeTeacherAutoMailing = function(){
-        TrainingSrvc.changeTeacherAutoMailing({id: $scope.training.selectedItems[0].id, isAutoMailing: $scope.training.selectedItems[0].isTeacherAutoMailing}).then(
+    $scope.training.changeStatusAutoMailing = function(type){
+        var isAutoMailing = 0;
+        switch(type){
+            case 'teacher':{
+                isAutoMailing = $scope.training.selectedItems[0].isTeacherAutoMailing;
+                break;
+            }
+            case 'students':{
+                isAutoMailing = $scope.training.selectedItems[0].isStudentsAutoMailing;
+                break;
+            }
+            case 'feedback':{
+                isAutoMailing = $scope.training.selectedItems[0].isFeedBackAutoMailing;
+                break;
+            }
+            case 'curator':{
+                isAutoMailing = $scope.training.selectedItems[0].isCuratorAutoMailing;
+                break;
+            }
+        }
+
+        TrainingSrvc.changeStatusAutoMailing({id: $scope.training.selectedItems[0].id, isAutoMailing: isAutoMailing, type: type}).then(
             function(data){
                 $scope.training.alert = UtilsSrvc.getAlert('Готово!', 'Изменения сохранены.', 'success', true);
             },

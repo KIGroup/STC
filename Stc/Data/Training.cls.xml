@@ -13,6 +13,25 @@ Teacher</Description>
 <Required>1</Required>
 </Property>
 
+<Property name="CuratorFullName">
+<Description>
+Curator full name</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="CuratorEmail">
+<Description>
+Curator full name</Description>
+<Type>%String</Type>
+</Property>
+
+<Property name="CuratorPhone">
+<Description>
+Curator phone</Description>
+<Type>%String</Type>
+</Property>
+
 <Property name="Course">
 <Description>
 Course</Description>
@@ -107,9 +126,23 @@ Automailing to students in n - days before start</Description>
 <InitialExpression>1</InitialExpression>
 </Property>
 
+<Property name="IsFeedBackAutoMailing">
+<Description>
+Automailing to students in after training</Description>
+<Type>%Boolean</Type>
+<InitialExpression>1</InitialExpression>
+</Property>
+
 <Property name="IsTeacherAutoMailing">
 <Description>
 Automailing to teachers in n - days before start</Description>
+<Type>%Boolean</Type>
+<InitialExpression>1</InitialExpression>
+</Property>
+
+<Property name="IsCuratorAutoMailing">
+<Description>
+Automailing to curator in n - days before start</Description>
 <Type>%Boolean</Type>
 <InitialExpression>1</InitialExpression>
 </Property>
@@ -176,18 +209,21 @@ Convert to proxyObject (for JSON)</Description>
 	set proxy.address.point = ..Latitude_" "_..Longitude
 	set proxy.isStudentsAutoMailing = ..IsStudentsAutoMailing
 	set proxy.isTeacherAutoMailing = ..IsTeacherAutoMailing
+	set proxy.isCuratorAutoMailing = ..IsCuratorAutoMailing
+	set proxy.isFeedBackAutoMailing = ..IsFeedBackAutoMailing
 
 	if (shortInfo = 1) quit proxy
 	
-	set proxy.email = ##class(%ZEN.proxyObject).%New()
-	set proxy.email.teacher = ##class(%ZEN.proxyObject).%New()
-	set proxy.email.teacher.msg = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingTeacher")
-	set proxy.email.teacher.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingTeacher")
+	set proxy.curator = ##class(%ZEN.proxyObject).%New() 
+	set proxy.curator.fullName = ..CuratorFullName.Value
+	set proxy.curator.email = ..CuratorEmail
+	set proxy.curator.phone = ..CuratorPhone
 	
-	set proxy.email.students = ##class(%ZEN.proxyObject).%New()
-	set proxy.email.students.msg = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudents")
-	set proxy.email.students.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudents")
+	set proxy.feedBacks = ##class(%ZEN.proxyObject).%New()
+	set proxy.feedBacks.count = ..FeedBacks.Count()
 	
+	set proxy.certificates = 0
+	&sql(SELECT COUNT(ID) INTO :proxy.certificates FROM Stc_Data.Certificate WHERE Training = :proxy.id)
 	
 	set proxy.newStudents = ..NewStudents.Count()
 	set proxy.sgroups = ..SubGroups.Count()
@@ -219,6 +255,10 @@ Create or save modified training</Description>
 <Implementation><![CDATA[
 	if (data.id = ""){
 		set tr = ..%New()
+		set tr.CuratorFullName = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.curator.fullName, "I","UTF8"),"Stc.Data.Localization.Translation;PersonLTextValue")
+		set tr.CuratorEmail = data.curator.email
+		set tr.CuratorPhone = data.curator.phone
+		
 		set tr.Street = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.address.title, "I","UTF8"))
 		set tr.OtherInfo = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.otherInfo, "I","UTF8"))
 		set status = tr.AddSubGroupsFromOrders(data.orders)
@@ -226,6 +266,9 @@ Create or save modified training</Description>
 	}
 	else{
 		set tr = ..%OpenId(data.id)
+		set tr.CuratorFullName.Value = $ZCONVERT(data.curator.fullName, "I","UTF8")
+		set tr.CuratorEmail = data.curator.email
+		set tr.CuratorPhone = data.curator.phone
 		set tr.Street.Value = $ZCONVERT(data.address.title, "I","UTF8")
 		set tr.OtherInfo.Value = $ZCONVERT(data.otherInfo, "I","UTF8")
 	}
@@ -335,6 +378,9 @@ Delete training with applications</Description>
 		if $$$ISERR(st) RETURN st
 	}
 	
+	set st = ##class(Stc.Data.Localization.LText).Delete(training.CuratorFullName.%Id())
+	quit:$$$ISERR(st) st
+	
 	set st = ##class(Stc.Data.Localization.LText).Delete(training.Street.%Id())
 	quit:$$$ISERR(st) st
 	
@@ -399,6 +445,13 @@ Add person to training, subgroup is detirmining automatically</Description>
 	quit status
 ]]></Implementation>
 </Method>
+
+<Property name="FeedBacks">
+<Type>Stc.Data.FeedBack</Type>
+<Cardinality>children</Cardinality>
+<Inverse>Training</Inverse>
+<Relationship>1</Relationship>
+</Property>
 
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
@@ -476,6 +529,21 @@ Add person to training, subgroup is detirmining automatically</Description>
 </Value>
 <Value name="21">
 <Value>IsTeacherAutoMailing</Value>
+</Value>
+<Value name="22">
+<Value>CuratorFullName</Value>
+</Value>
+<Value name="23">
+<Value>CuratorEmail</Value>
+</Value>
+<Value name="24">
+<Value>CuratorPhone</Value>
+</Value>
+<Value name="25">
+<Value>IsFeedBackAutoMailing</Value>
+</Value>
+<Value name="26">
+<Value>IsCuratorAutoMailing</Value>
 </Value>
 </Data>
 </Storage>

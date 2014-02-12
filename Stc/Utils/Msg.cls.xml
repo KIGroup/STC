@@ -51,6 +51,8 @@ Write all messages into global</Description>
 	"------------<br>"_
 	"Best regards, Administrator 'Systems of training courses'"
 	
+	//======================================================================= MAILING
+	// To Students
 	set ^CacheMsg("Stc", "ru", "msgSubjectToTrainingStudents") = "Обучение"
 	set ^CacheMsg("Stc", "ru", "msgToTrainingStudents") = ""_
 	"Здравствуйте!<br>"_
@@ -71,6 +73,7 @@ Write all messages into global</Description>
 	"Teacher: 7% <br>" _
 	"8%"
 	
+	// Registration
 	set ^CacheMsg("Stc", "ru", "msgSubjectToNewTrainingStudent") = "Регистрация на курс"
 	set ^CacheMsg("Stc", "ru", "msgToNewTrainingStudent") = ""_
 	"Здравствуйте! Ваша заявка на обучение принята.<br>"_
@@ -91,6 +94,7 @@ Write all messages into global</Description>
 	"Teacher: 7% <br>" _
 	"8%"
 	
+	// To Teacher
 	set ^CacheMsg("Stc", "ru", "msgSubjectToTrainingTeacher") = "Слушатели курса"
 	set ^CacheMsg("Stc", "ru", "msgToTrainingTeacher") = ""_
 	"Здравствуйте!<br>Перейдите по <a href='http://%1'>ссылке</a> для просмотра списка слушателей курса.<br>"_
@@ -109,6 +113,36 @@ Write all messages into global</Description>
 	"Address:% 6% 7 <br>" _
 	"8%"
 	
+	// To Curator
+	set ^CacheMsg("Stc", "ru", "msgSubjectToTrainingCurator") = "Слушатели курса"
+	set ^CacheMsg("Stc", "ru", "msgToTrainingCurator") = ""_
+	"Здравствуйте!<br>Перейдите по <a href='http://%1'>ссылке</a> для просмотра списка слушателей курса.<br>"_
+	"Дата начала обучения: %2, время: %3<br>"_
+	"Курс: %4<br>"_
+	"Город: %5<br>"_
+	"Адрес: %6%7<br>"_
+	"%8"
+	
+	set ^CacheMsg("Stc", "en", "msgSubjectToTrainingCurator") = "Training Students"
+	set ^CacheMsg("Stc", "en", "msgToTrainingCurator") = ""_
+	"Hello!<br> Go to <a href='http://%1'> link </ a> for view the list of students. <br>" _
+	"Start date of study: 2%, time: 3% <br>" _
+	"Course: 4% <br>" _
+	"City: 5% <br>" _
+	"Address:% 6% 7 <br>" _
+	"8%"
+	
+	// FeedBack
+	set ^CacheMsg("Stc", "ru", "msgSubjectToTrainingStudentsFeedBack") = "Анкета слушателя"
+	set ^CacheMsg("Stc", "ru", "msgToTrainingStudentsFeedBack") = ""_
+	"Здравствуйте!<br>Перейдите по <a href='http://%1'>ссылке</a> для заполнения анкеты, там вы можете оставить свои замечания и предложения по пройденному курсу - '%2'"
+	
+	set ^CacheMsg("Stc", "en", "msgSubjectToTrainingStudentsFeedBack") = "Training Students"
+	set ^CacheMsg("Stc", "en", "msgToTrainingStudentsFeedBack") = ""_
+	"Hello!<br> Go to <a href='http://%1'> link </ a> complete the questionnaire where you can leave your comments and suggestions on the courses - '%2'"
+	
+	//=========================================================================================
+	
 	
 	set ^CacheMsg("Stc", "ru", "CalendarEvent") = ""_
 	"<a href='http://%1'>Программа курса</a><br><br>"_
@@ -117,8 +151,9 @@ Write all messages into global</Description>
 	"%4<br><br>"_
 	"Преподаватель:<br>"_
 	"%5<br><br>"_
-	"Время проведения: %6<br><br>"_
-	"%7"
+	"Время проведения: %6<br>"_
+	"%7"_
+	"%8"
 
 	set ^CacheMsg("Stc", "en", "CalendarEvent") = ""_
 	"<a href='http://%1'>Course program</a><br><br>"_
@@ -127,8 +162,12 @@ Write all messages into global</Description>
 	"%4<br><br>"_
 	"Teacher:<br>"_
 	"%5<br><br>"_
-	"Time: %6<br><br>"_
-	"%7"
+	"Time: %6<br>"_
+	"%7"_
+	"%8"
+	
+	set ^CacheMsg("Stc", "ru", "contactPerson") = "Контактное лицо"
+	set ^CacheMsg("Stc", "en", "contactPerson") = "Contact person"
 	
 	set ^CacheMsg("Stc", "ru", "certificatesReport") = "Сертификаты для [%1] [%2] [%3]"
 	set ^CacheMsg("Stc", "en", "certificatesReport") = "Certificates for [%1] [%2] [%3]"
@@ -138,6 +177,15 @@ Write all messages into global</Description>
 	
 	
 	// Errors
+	set ^CacheMsg("Stc", "ru", "feedBackSpam") = "Слишком много отзывов для этого курса"
+	set ^CacheMsg("Stc", "en", "feedBackSpam") = "Too much feedbacks for this training"
+
+	set ^CacheMsg("Stc", "ru", "feedBackErrorCode") = "Неверный код доступа"
+	set ^CacheMsg("Stc", "en", "feedBackErrorCode") = "Wrong access code"
+	
+	set ^CacheMsg("Stc", "ru", "feedBackSave") = "Отзыв не сохранен."
+	set ^CacheMsg("Stc", "en", "feedBackSave") = "Feedback have not been saved."
+	
 	set ^CacheMsg("Stc", "ru", "emailAddNewStudent") = "Слушатель добавлен, но письмо не было отправлено."
 	set ^CacheMsg("Stc", "en", "emailAddNewStudent") = "Student has been added into training, but email was not sent."
 	
