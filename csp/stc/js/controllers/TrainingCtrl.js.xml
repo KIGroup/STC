@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/TrainingCtrl.js" application="/csp/feb/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/TrainingCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //dddeddddddd
 
@@ -82,6 +82,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
         //============================== ОТЗЫВЫ =======================================================================================
         $scope.feedBack.columns = [
                           {name: 'Оценка',        sqlName: 'Rating',           isSorted: false, isSortable: true, isDown: true,  isSearched: true,  isSearchable: true},
+                          {name: 'Автор',         sqlName: 'Author',           isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
                           {name: 'Понравилось',   sqlName: 'WhatLiked',        isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false},
                           {name: 'Улучшения',     sqlName: 'WhatImprovements', isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false},
                           {name: 'Дополнение',    sqlName: 'WhatHear',         isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false},
@@ -89,6 +90,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
                           {name: 'Дата создания', sqlName: 'CreatedTS',        isSorted: true,  isSortable: true, isDown: false, isSearched: false, isSearchable: false, filter: 'date'}];
 
         $scope.feedBack.properties = [{name:'rating'}, 
+                                     {name: 'author'},
                                      {name:'whatLikedStatus',        calculate: function(item){ item.whatLikedStatus       = item.whatLiked       =='' ? '' : 'Есть отзыв'}},
                                      {name:'whatImprovementsStatus', calculate: function(item){ item.whatImprovementsStatus= item.whatImprovements=='' ? '' : 'Есть отзыв'}},
                                      {name:'whatHearStatus',         calculate: function(item){ item.whatHearStatus        = item.whatHear        =='' ? '' : 'Есть отзыв'}},

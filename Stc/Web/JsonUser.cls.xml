@@ -494,6 +494,7 @@ Get training by id</Description>
       	}
       	
       	set fb = ##class(Stc.Data.FeedBack).%New()
+      	set fb.Author = $ZCONVERT(data.author, "I","UTF8")
       	set fb.Training = training
       	set fb.Rating = data.rating
       	set fb.WhatLiked = $ZCONVERT(data.whatLiked, "I","UTF8")

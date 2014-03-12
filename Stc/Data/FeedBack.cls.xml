@@ -4,6 +4,12 @@
 <Super>%Persistent</Super>
 <TimeCreated>63228,84673.864246</TimeCreated>
 
+<Property name="Author">
+<Description>
+Author of feedback	</Description>
+<Type>%String</Type>
+</Property>
+
 <Property name="Rating">
 <Description>
 Training rating</Description>
@@ -62,6 +68,7 @@ Date time feedback creation </Description>
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()
 	set proxy.id = ..%Id()
+	set proxy.author = ..Author
 	set proxy.rating = ..Rating
 	set proxy.whatLiked = ..WhatLiked
 	set proxy.whatImprovements = ..WhatImprovements
@@ -114,6 +121,9 @@ Date time feedback creation </Description>
 </Value>
 <Value name="8">
 <Value>CreatedTS</Value>
+</Value>
+<Value name="9">
+<Value>Author</Value>
 </Value>
 </Data>
 </Storage>

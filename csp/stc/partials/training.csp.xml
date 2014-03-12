@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/training.csp" application="/csp/feb/" default="1"><![CDATA[
+<CSP name="stc/partials/training.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -471,6 +471,7 @@
 		 	<!-- ============================================ ПОДРОБНОСТИ ОТЗЫВА ==================================================-->
 			<tab heading="{{'Информация'|localize}}">
 				<p><span class="spnTitle" ng-bind="'Оценка'|localize"></span>: <rating value="feedBack.selectedItems[0].rating" readonly="true" on-hover="" on-leave="" required></rating></p>
+				<p ng-hide="feedBack.selectedItems[0].author==''"          ><span class="spnTitle" ng-bind="'Автор'|localize"                               ></span>: <span ng-bind="feedBack.selectedItems[0].author"></span></p>
 				<p ng-hide="feedBack.selectedItems[0].whatLiked==''"       ><span class="spnTitle" ng-bind="'Что понравилось'|localize"                     ></span>: <span ng-bind="feedBack.selectedItems[0].whatLiked"></span></p>
 				<p ng-hide="feedBack.selectedItems[0].whatImprovements==''"><span class="spnTitle" ng-bind="'Что можно улучшить'|localize"                  ></span>: <span ng-bind="feedBack.selectedItems[0].whatImprovements"></span></p>
 				<p ng-hide="feedBack.selectedItems[0].whatHear==''"        ><span class="spnTitle" ng-bind="'Что еще хотелось бы услышать в курсе'|localize"></span>: <span ng-bind="feedBack.selectedItems[0].whatHear"></span></p>
