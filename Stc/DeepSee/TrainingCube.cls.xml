@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.DeepSee.TrainingCube">
+<Description>
+</Description>
+<ProcedureBlock>1</ProcedureBlock>
+<Super>%DeepSee.CubeDefinition</Super>
+<TimeCreated>63245,72855.695693</TimeCreated>
+<DependsOn>Stc.Data.Training</DependsOn>
+
+<Parameter name="DOMAIN">
+<Default>Stc</Default>
+</Parameter>
+
+<XData name="Cube">
+<Description>
+Cube definition from Architect.</Description>
+<XMLNamespace>http://www.intersystems.com/deepsee</XMLNamespace>
+<Data><![CDATA[
+<cube xmlns="http://www.intersystems.com/deepsee" name="TrainingCube" displayName="TrainingCube" disabled="false" abstract="false" sourceClass="Stc.Data.Training" countMeasureName="%COUNT" bucketSize="8" bitmapChunkInMemory="false" precompute="0">
+  <dimension name="Course" displayName="@course@" disabled="false" hasAll="false" allCaption="All Value" allDisplayName="Value" type="data" iKnowType="entity" hidden="false" showHierarchies="default">
+    <hierarchy name="H1" disabled="false">
+      <level sourceProperty="Course.Name" name="Name" displayName="@course@" disabled="false" list="false" useDisplayValue="true" useAsFilter="true">
+        <property sourceProperty="Course.Name.Value" name="Value" displayName="@course@" disabled="false" hidden="false" isName="true" isReference="true" useDisplayValue="false"></property>
+      </level>
+    </hierarchy>
+  </dimension>
+  <dimension name="DateFinish" displayName="@year@" disabled="false" hasAll="false" allCaption="All DateFinish" allDisplayName="DateFinish" sourceProperty="DateFinish" type="time" iKnowType="entity" hidden="false" showHierarchies="default">
+    <hierarchy name="H1" disabled="false">
+      <level name="DateFinish" displayName="@year@" disabled="false" timeFunction="Year" list="false" useDisplayValue="true" useAsFilter="true">
+      </level>
+    </hierarchy>
+  </dimension>
+  <dimension name="Teacher" displayName="@teacher@" disabled="false" hasAll="false" allCaption="All Teacher" allDisplayName="Teacher" type="data" iKnowType="entity" hidden="false" showHierarchies="default">
+    <hierarchy name="H1" disabled="false">
+      <level sourceExpression="%cube.GetTeacherFullName(%source.%ID)" name="Teacher" displayName="@teacher@" disabled="false" timeFunction="Year" list="false" useDisplayValue="true" useAsFilter="true">
+      </level>
+    </hierarchy>
+  </dimension>
+  <measure sourceExpression="%cube.GetStudentsCount(%source.%ID)" name="Students" displayName="@students@" disabled="false" aggregate="SUM" type="number" hidden="false" searchable="false" iKnowSource="string"></measure>
+  <listing name="TeacherStudents" disabled="false" listingType="table" sql="SELECT  stud.Students-&gt;LastName-&gt;Value || &apos; &apos; || ISNULL(stud.Students-&gt;FirstName-&gt;Value,&apos;&apos;) || &apos; &apos; || ISNULL(stud.Students-&gt;MiddleName-&gt;Value,&apos;&apos;) As &quot;Слушатель&quot;, sg.Training-&gt;DateFinish As &quot;Дата обучения&quot;, sg.Training-&gt;Course-&gt;Name-&gt;Value As &quot;Курс&quot;, sg.Training-&gt;City-&gt;Name-&gt;Value As &quot;Город&quot; FROM Stc_Data.SubGroup_Students As stud INNER JOIN Stc_Data.Training_SubGroups as sg ON sg.SubGroups=stud.SubGroup WHERE sg.Training IN (SELECT ID FROM $$$SOURCE WHERE $$$RESTRICT) ORDER BY &quot;Дата обучения&quot;, &quot;Курс&quot;, &quot;Город&quot;, &quot;Слушатель&quot;"></listing>
+  <listing name="CourseStudents" disabled="false" listingType="table" sql="SELECT  stud.Students-&gt;LastName-&gt;Value || &apos; &apos; || ISNULL(stud.Students-&gt;FirstName-&gt;Value,&apos;&apos;) || &apos; &apos; || ISNULL(stud.Students-&gt;MiddleName-&gt;Value,&apos;&apos;) As &quot;Слушатель&quot;, sg.Training-&gt;DateFinish As &quot;Дата обучения&quot;, sg.Training-&gt;City-&gt;Name-&gt;Value As &quot;Город&quot; FROM Stc_Data.SubGroup_Students As stud INNER JOIN Stc_Data.Training_SubGroups as sg ON sg.SubGroups=stud.SubGroup WHERE sg.Training IN (SELECT ID FROM $$$SOURCE WHERE $$$RESTRICT) ORDER BY &quot;Дата обучения&quot;, &quot;Город&quot;, &quot;Слушатель&quot;"></listing>
+</cube>
+]]></Data>
+</XData>
+
+<Method name="GetStudentsCount">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%Integer</FormalSpec>
+<ReturnType>%Integer</ReturnType>
+<Implementation><![CDATA[
+	set count = 0
+	
+	&sql(SELECT COUNT(Students) INTO :count 
+		 FROM Stc_Data.SubGroup_Students
+		 WHERE SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training = :id))
+	
+	quit count
+]]></Implementation>
+</Method>
+
+<Method name="GetTeacherFullName">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%Integer</FormalSpec>
+<ReturnType>%Integer</ReturnType>
+<Implementation><![CDATA[
+	set training = ##class(Stc.Data.Training).%OpenId(id)
+	set fullName = training.Teacher.LastName.Value
+	if (training.Teacher.FirstName.Value '= "-") set fullName = fullName_" "_training.Teacher.FirstName.Value
+	quit fullName
+]]></Implementation>
+</Method>
+
+<Method name="GetCompanies">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%Integer</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set training = ##class(Stc.Data.Training).%OpenId(id)
+	set companies = ""
+	set key = ""
+	for i=1:1:training.SubGroups.Count(){
+		set key = training.SubGroups.Next(key)
+		set companies = companies_training.SubGroups.GetAt(key).Payer.ShortName.Value_","
+	}
+	
+	quit $E(companies,1,*-1)
+]]></Implementation>
+</Method>
+</Class>
+</Export>

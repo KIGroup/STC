@@ -310,5 +310,44 @@ Write all messages into global</Description>
 	//personContainsInTraining
 ]]></Implementation>
 </Method>
+
+<Method name="DeepSeeMsg">
+<Description>
+do ##class(Stc.Utils.Msg).DeepSeeMsg()</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set ^CacheMsg("Stc", "ru", "students") = "Слушатели"
+	set ^CacheMsg("Stc", "en", "students") = "Students"
+	set ^CacheMsg("Stc", "en-us", "students") = ^CacheMsg("Stc", "en", "students")
+	
+	set ^CacheMsg("Stc", "ru", "company") = "Компания"
+	set ^CacheMsg("Stc", "en", "company") = "Company"
+	set ^CacheMsg("Stc", "en-us", "company") = ^CacheMsg("Stc", "en", "company")
+	
+	set ^CacheMsg("Stc", "ru", "course") = "Курс"
+	set ^CacheMsg("Stc", "en", "course") = "Course"
+	set ^CacheMsg("Stc", "en-us", "course") = ^CacheMsg("Stc", "en", "course")
+	
+	set ^CacheMsg("Stc", "ru", "year") = "Год"
+	set ^CacheMsg("Stc", "en", "year") = "Year"
+	set ^CacheMsg("Stc", "en-us", "year") = ^CacheMsg("Stc", "en", "year")
+	
+	set ^CacheMsg("Stc", "ru", "teacher") = "Преподаватель"
+	set ^CacheMsg("Stc", "en", "teacher") = "Teacher"
+	set ^CacheMsg("Stc", "en-us", "teacher") = ^CacheMsg("Stc", "en", "teacher")
+	
+	set ^CacheMsg("Stc", "ru", "city") = "Город"
+	set ^CacheMsg("Stc", "en", "city") = "City"
+	set ^CacheMsg("Stc", "en-us", "city") = ^CacheMsg("Stc", "en", "city")
+	
+	set ^CacheMsg("Stc", "ru", "student") = "Слушатель"
+	set ^CacheMsg("Stc", "en", "student") = "Student"
+	set ^CacheMsg("Stc", "en-us", "student") = ^CacheMsg("Stc", "en", "student")
+	
+	
+	q $$$OK
+]]></Implementation>
+</Method>
 </Class>
 </Export>

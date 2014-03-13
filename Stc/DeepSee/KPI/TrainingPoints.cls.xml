@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.DeepSee.KPI.TrainingPoints">
+<Description>
+Stc.DeepSee.KPI.TrainingPoints</Description>
+<Super>%DeepSee.KPI</Super>
+<TimeCreated>63246,4017.552393</TimeCreated>
+
+<Parameter name="DOMAIN">
+</Parameter>
+
+<Parameter name="RESOURCE">
+</Parameter>
+
+<XData name="KPI">
+<Description>
+Этот блок XData содержит определение KPI</Description>
+<XMLNamespace>http://www.intersystems.com/deepsee/kpi</XMLNamespace>
+<Data><![CDATA[
+<kpi xmlns="http://www.intersystems.com/deepsee/kpi"
+ name="TrainingPointsKPI" sourceType="sql"
+ caption="TrainingPointsKPI"
+ sql=""
+>
+<property name="ID"         columnNo="1"/>
+<property name="Course"     columnNo="2"/>
+<property name="City"       columnNo="3"/>
+<property name="Street"     columnNo="4"/>
+<property name="Room"       columnNo="5"/>
+<property name="DateStart"  columnNo="6"/>
+<property name="DateFinish" columnNo="7"/>
+<property name="Teacher"    columnNo="8"/>
+<property name="StudentsCount"   columnNo="9"/>
+<property name="SubGroupsCount"  columnNo="10"/>
+<property name="Latitude"    columnNo="11"/>
+<property name="Longitude"   columnNo="12"/>
+<property name="IsCompleted" columnNo="13"/>
+
+<filter name="Course" sql="SELECT Name->Value As Name FROM Stc_Data.Course ORDER BY Name"/>
+<filter name="Status" displayName="Status"  displayList="Завершённые,Незавершённые" valueList="1,0"/>
+</kpi>
+]]></Data>
+</XData>
+
+<Method name="%OnGetSQL">
+<Description>
+Return an SQL statement to execute.</Description>
+<FormalSpec><![CDATA[&pSQL:%String]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set whereCondition = ""
+	if (..%filterValues.Status '= "") && (..%filterValues.Course '= ""){
+		set whereCondition = "WHERE tr.IsCompleted="_..%filterValues.Status_" AND tr.Course->Name->Value='"_..%filterValues.Course_"'"
+	} 
+	elseif (..%filterValues.Status '= "") && (..%filterValues.Course = ""){
+		set whereCondition = "WHERE tr.IsCompleted="_..%filterValues.Status
+	}
+	elseif (..%filterValues.Status = "") && (..%filterValues.Course '= ""){
+		set whereCondition = "WHERE tr.Course->Name->Value='"_..%filterValues.Course_"'"
+	}
+	
+	set pSQL = $replace(##class(Stc.DeepSee.KPI.Utils).GetStringFromXData("sql", ..%ClassName(1)), ":WHERECondition", whereCondition)
+	
+	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<XData name="sql">
+<Data><![CDATA[
+<xml><![CDATA[
+SELECT
+tr.ID, 
+tr.Course->Name->Value As Course,
+tr.City->Name->Value As City,
+tr.Street->Value As Street,
+tr.Room As Room,
+TO_CHAR(tr.DateStart,'DD-MM-YYYY'),
+TO_CHAR(tr.DateFinish,'DD-MM-YYYY'),
+tr.Teacher->LastName->Value || ' ' || SUBSTRING(tr.Teacher->FirstName->Value,1,1) || '. ' || SUBSTRING(ISNULL(tr.Teacher->MiddleName->Value,''),1,1) || '., ' || tr.Teacher->Email As Teacher,
+(SELECT COUNT(Students) FROM Stc_Data.SubGroup_Students WHERE SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training = tr.ID)) As StudentsCount,
+(SELECT COUNT(SubGroups) FROM Stc_Data.Training_SubGroups WHERE Training = tr.ID) As SubGroupsCount,
+tr.Latitude,
+tr.Longitude,
+tr.IsCompleted
+FROM Stc_Data.Training as tr
+:WHERECondition
+]]]]><![CDATA[></xml>
+]]></Data>
+</XData>
+</Class>
+</Export>
