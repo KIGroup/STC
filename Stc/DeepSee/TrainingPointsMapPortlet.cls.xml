@@ -4,7 +4,14 @@
 <Super>%DeepSee.Component.Portlet.abstractPortlet</Super>
 <TimeCreated>63246,1484.235656</TimeCreated>
 
-<Parameter name="INCLUDEFILES">
+<UDLText name="T">
+<Content><![CDATA[
+// Parameter INCLUDEFILES = "script:http://maps.google.com/maps/api/js?sensor=false&language=ru";
+
+]]></Content>
+</UDLText>
+
+<Parameter name="XMLTYPE">
 <Description>
 Portlet that displays a clickable google map. Supports 2012.2 and higher versions of Cache.
 Improvements compared to %DeepSee.Component.Widget.map:
@@ -17,10 +24,6 @@ Improvements compared to %DeepSee.Component.Widget.map:
 3) Configurable "onclick" handler for markers and polygons. Configurable "onaddpolygon" and "onaddmarker" handlers.
 4) Drilldown capabilities.
 5) Convenience javascript methods: createInfoWindowAtPosition() and getControl().</Description>
-<Default><![CDATA[script:http://maps.google.com/maps/api/js?sensor=false&language=ru]]></Default>
-</Parameter>
-
-<Parameter name="XMLTYPE">
 <Default>TRAININGPINTSXMLTYPE</Default>
 </Parameter>
 
@@ -353,6 +356,17 @@ Client-side method to render control.</Description>
 	this.syncPolygons();
 	
 	zenPage.dashboardEventHandler('', '', '', 'refresh', '*', '');
+	
+	//============================ Локализация столбцов в виджете-таблице со студунтами ================
+	try{
+		var sc = findScoreCardWidgetByName('TrainingStudents');
+		for(var i=0; i < sc.parent.parent.children[1].children[0].columns.length; i++){
+			sc.parent.parent.children[1].children[0].columns[i].label = dict.localize(sc.parent.parent.children[1].children[0].columns[i].label);
+		}
+	}
+	catch(ex){
+		console.log('Portlet Map Error, renderContents(), localize scorecard columns');
+	}
 ]]></Implementation>
 </Method>
 
@@ -1690,6 +1704,7 @@ Callback for geocoder API.</Description>
 	
 	&html<
 	<script type='text/javascript'>
+	
 	var selectTrTableRow = function(data){
 		data = data.split(';');
 		var portlet = zenPage.getComponent(data[0]);
@@ -1720,7 +1735,7 @@ Callback for geocoder API.</Description>
 	};
 	
 	var changeTraining = function(id){
-		window.open('/csp/feb/stc/index.csp#/training?id='+id,  'trEdit');
+		window.open('/csp/stc/stc/index.csp#/training?id='+id,  'trEdit');
 	};
 	
 	 var findScoreCardWidgetByName = function(name)
@@ -1739,6 +1754,67 @@ Callback for geocoder API.</Description>
 	  	return result;
 	 };
    </script>>
+   
+   
+   set lang = ##class(%MessageDictionary).GetSessionLanguage()
+	
+	// Словарь для контента в окнах
+	&html<<script>
+		var dict = {lang: '#(lang)#',
+					dict:{
+					'Город': 
+						{'ru':'Город', 
+						 'en': 'City'},
+					'Адрес'  : 
+						{'ru': 'Адрес', 
+						 'en': 'Address'},
+					'Дата начала обучения': 
+						{'ru': 'Дата начала обучения', 
+						 'en': 'Training start date'},
+					'Дата окончания обучения': 
+						{'ru': 'Дата окончания обучения', 
+						 'en': 'Training end date'},
+					'Подгрупп / слушателей':
+						{'ru': 'Подгрупп / слушателей', 
+						 'en': 'Sub-groups / students'},
+					'Преподаватель':
+						{'ru': 'Преподаватель', 
+						 'en': 'Teacher'},
+					'Назад': 
+						{'ru': 'Назад', 
+						 'en': 'Back'},
+					'Детали': 
+						{'ru': 'Детали', 
+						 'en': 'Details'},
+					'ФИО': 
+						{'ru': 'ФИО', 
+						 'en': 'Full name'},
+					'Компания': 
+						{'ru': 'Компания', 
+						 'en': 'Company'},
+					'Слушатели курса': 
+						{'ru': 'Слушатели курса', 
+						 'en': 'Students'},	
+					'Вернуться к таблице': 
+						{'ru': 'Вернуться к таблице', 
+						 'en': 'Back to table'},
+					'Открыть в другом окне': 
+						{'ru': 'Открыть в другом окне', 
+						 'en': 'Open in another window'}	
+					}, localize: function(str){
+									var value;
+									
+									try{
+										value = this.dict[str][this.lang];
+									}catch(ex){
+										value = str;
+									}
+									return value ? value : str;
+							   }};
+	</script>>
+	
+	// Подключение google API для текущего языка
+	&html<<script src="http://maps.google.com/maps/api/js?v=3&sensor=false&language=#(lang)#"></script>>
 ]]></Implementation>
 </Method>
 
@@ -1758,19 +1834,25 @@ Callback for geocoder API.</Description>
 <Implementation><![CDATA[
 	try{
 		var sc=findScoreCardWidgetByName('TrainingStudents'); 
-	  	sc.parent.parent.parent.titleDiv.innerHTML = "Слушатели курса - " + marker.data.Course + '. ' + marker.data.City + '.';
-	  	zenPage.dashboardEventHandler(zenThis,'click', marker.data.ID, 'applyFilter', 'TrainingStudents', 'Training');
-		
+	  	sc.parent.parent.parent.titleDiv.innerHTML = dict.localize("Слушатели курса")+" - " + marker.data.Course + '. ' + marker.data.City + '.';
+	  	
+	  	if (marker.data.StudentsCount == 0){
+		  	zenPage.dashboardEventHandler(zenThis,'click', '0', 'applyFilter', 'TrainingStudents', 'Training');
+	  	}
+	  	else{
+	  		zenPage.dashboardEventHandler(zenThis,'click', marker.data.ID, 'applyFilter', 'TrainingStudents', 'Training');
+	  	}
+	  	
 		var content = "<div id='infoWindowContentId' class='infoWindowContent'>" 
 		                + "<span style='font-weight: bold;'>" + marker.data.Course + "</span><br><br>"
-			            + "<span>Город: " + marker.data.City + "</span><br>"
-			            + "<span>Адрес: " + marker.data.Street + (marker.data.Room=='-' ? '' : ('; ' + marker.data.Room)) + "</span><br>"
-			            + "<span>Дата начала обучения: " + marker.data.DateStart + "</span><br>"
-			            + "<span>Дата окончания обучения: " + marker.data.DateFinish + "</span><br>"
-			            + "<span>Преподаватель: " + marker.data.Teacher + "</span><br>"
-			            + "<span>Подгрупп / слушателей: " + marker.data.SubGroupsCount + ' / ' + marker.data.StudentsCount + "</span><br>"
-			            + "<button class='trTableSingle_Btn' title='Вернуться к таблице' style='" + (isBackOn ? '' : 'display: none;') + "' onclick=\"backToTable(\'" + this.index + "\',\'" + marker.data.ID + "\')\">Назад</button>"
-						+ "<button class='trTableSingle_Btn' style='float: right;' title='Открыть в другом окне' onclick='changeTraining("+marker.data.ID+")'>Детали</button>"
+			            + "<span>" + dict.localize("Город") + ": " + marker.data.City + "</span><br>"
+			            + "<span>" + dict.localize("Адрес") + ": " + marker.data.Street + (marker.data.Room=='-' ? '' : ('; ' + marker.data.Room)) + "</span><br>"
+			            + "<span>" + dict.localize("Дата начала обучения") + ": " + marker.data.DateStart + "</span><br>"
+			            + "<span>" + dict.localize("Дата окончания обучения") + ": " + marker.data.DateFinish + "</span><br>"
+			            + "<span>" + dict.localize("Преподаватель") + ": " + marker.data.Teacher + "</span><br>"
+			            + "<span>" + dict.localize("Подгрупп / слушателей") + ": " + marker.data.SubGroupsCount + ' / ' + marker.data.StudentsCount + "</span><br>"
+			            + "<button class='trTableSingle_Btn' title='"+dict.localize("Вернуться к таблице")+"' style='" + (isBackOn ? '' : 'display: none;') + "' onclick=\"backToTable(\'" + this.index + "\',\'" + marker.data.ID + "\')\">"+dict.localize("Назад")+"</button>"
+						+ "<button class='trTableSingle_Btn' style='float: right;' title='"+dict.localize("Открыть в другом окне")+"' onclick='changeTraining("+marker.data.ID+")'>"+dict.localize("Детали")+"</button>"
 					+ "</div>";
 					  
 		this.openInfoWindowAtPosition(marker.position, content);
@@ -1814,9 +1896,9 @@ Callback for geocoder API.</Description>
 		set (id,city)=""
 		
 		set content = ""_
-			"<span style='font-weight: bold;'>Город: %city</span><br><br>"_
+			"<span style='font-weight: bold;'>"_##class(Stc.Utils.Msg).GetMsg("city")_": %city</span><br><br>"_
 		    "<table id='trTable' class='trainingTable' border='1' cellspacing='0'>"_
-		      "<tr id='trTableTrHeader'><th>№</th><th>Курс</th><th>Дата</th><th>Адрес</th></tr>"	
+		      "<tr id='trTableTrHeader'><th>№</th><th>"_##class(Stc.Utils.Msg).GetMsg("course")_"</th><th>"_##class(Stc.Utils.Msg).GetMsg("date")_"</th><th>"_##class(Stc.Utils.Msg).GetMsg("address")_"</th></tr>"	
 			
 		set count = 0
 		&sql(DECLARE TRCur CURSOR FOR 
@@ -1855,77 +1937,6 @@ Callback for geocoder API.</Description>
 	quit content
 ]]></Implementation>
 </Method>
-
-<UDLText name="T">
-<Content><![CDATA[
-/*
-Method GetContentForInfoWindow(trainingId As %String, latitude As %Float, longitude As %Float) As %ZEN.Datatype.string [ ZenMethod ]
-{
-	try{
-		set (id,course,date,teacher,city,street,room)=""
-		
-		set content = ""_
-		"<div id='infoWindowContentId' class='infoWindowContent'>"_
-		  "<div id='trTableMulti' style='*TableMultiStyle'>"_
-		    "<table id='trTable' class='trainingTable' border='1' cellspacing='0'>"_
-		      "<tr id='trTableTrHeader'><th>#</th><th>Course</th><th>Date</th><th>Address</th></tr>"	
-			
-		set count = 0
-		&sql(DECLARE TRCur CURSOR FOR 
-			 SELECT ID, 
-			 	 	Course->Name->Value,
-			 	 	DateStart, 
-			 	 	Teacher->LastName->Value, 
-			 	 	City->Name->Value, 
-			 	 	Street->Value, 
-			 	 	Room 
-			 FROM Stc_Data.Training
-			 WHERE Latitude=:latitude AND Longitude=:longitude)	
-			
-		&sql(OPEN TRCur)
-		for  
-		{	
-			&sql(FETCH TRCur INTO :id, :course, :date, :teacher, :city, :street, :room) 
-			quit:(SQLCODE '= 0)
-			set count = count + 1
-			set date = $REPLACE($ZD(date), "/", "-")
-			if (room="-") set room = ""
-			set content = content_##class(%MessageDictionary).FormatText("<tr title='"_course_"' onclick='selectTrTableRow(""%1"")'><td>%2</td><td>%3</td><td>%4</td><td>%5</td></tr>",
-								 id_";"_course_";"_date_";"_teacher_";"_city_";"_street_";"_room,
-								 count, $E(course,1,25)_"...", date, street_", "_room)		
-			
-		}
-			
-		&sql(CLOSE TRCur)
-		
-		set content = content_"</table></div>"_
-		"<div id='trTableSingle' style='*TableSingleStyle'>"_
-		"<b id='trTableSingle_Course'>%1</b><br>"_
-		"<span id='trTableSingle_Address'>%2</span><br>"_
-		"<span id='trTableSingle_Date'>%3</span><br>"_
-		"<span id='trTableSingle_Teacher'>%4</span><br>"_
-		"<button class='trTableSingle_Btn' onclick='backToTable()'>Назад</button>"_
-		"</div></div>"
-		
-		if (count=1){
-			set content = $REPLACE(content, "*TableSingleStyle", "display: visible;")
-			set content = $REPLACE(content, "*TableMultiStyle", "display: none;")
-			set content = ##class(%MessageDictionary).FormatText(content, course, city_";"_street_";"_room, date, teacher)
-		}
-		else{
-			set content = $REPLACE(content, "*TableSingleStyle", "display: none;")
-			set content = $REPLACE(content, "*TableMultiStyle", "display: visible;")
-		}	
-	}
-	catch(ex){
-		set content = "<div class='infoWindowContent'>"_ex.Name_", "_ex.Location_"</div>"
-	}
-	
-	quit content
-}
-*/
-]]></Content>
-</UDLText>
 
 <XData name="Style">
 <Description>

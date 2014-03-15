@@ -181,6 +181,47 @@ Access code to training for teacher</Description>
 <Unique>1</Unique>
 </Index>
 
+<Method name="BuildCubes">
+<Description>
+Build TrainingCube and SubGroupCube</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	do ##class(%DeepSee.Utils).%BuildCube("TrainingCube",1,0)
+	do ##class(%DeepSee.Utils).%BuildCube("SubGroupCube",1,0)
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="UpdateFacts">
+<Description>
+UpdateFact in TrainingCube and all subgroup facts in SubGroupCube</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>trId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	do ##class(%DeepSee.Utils).%ProcessFact("TrainingCube",trId)
+	
+	&sql(DECLARE TrCur CURSOR FOR 
+		 	 SELECT ID 
+		 	 FROM Stc_Data.Training_SubGroups
+		 	 WHERE Training = :trId)	
+		
+	&sql(OPEN TrCur)
+	for  
+	{	
+		&sql(FETCH TrCur INTO :trSgId) 
+		quit:(SQLCODE '= 0)
+		
+		do ##class(%DeepSee.Utils).%ProcessFact("SubGroupCube",trSgId)	
+	}
+		
+	&sql(CLOSE TrCur)
+	
+	q $$$OK
+]]></Implementation>
+</Method>
+
 <Method name="ConvertToProxyObject">
 <Description>
 Convert to proxyObject (for JSON)</Description>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/YandexSrvc.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/services/YandexSrvc.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //dddddkdddвddddddв
 
@@ -12,7 +12,7 @@ servicesModule.factory('YandexSrvc', function(DALSrvc) {
 	return {
 		// Получить координаты адреса
         getResult: function(string){
-	       return DALSrvc.getPromise('get', 'http://geocode-maps.yandex.ru/1.x/?Lang=' +  StcAppSetting.lang + '&sco=latlong&format=json&geocode=' + string, null);
+	       return DALSrvc.getPromise('get', 'http://geocode-maps.yandex.ru/1.x/?lang=' +  StcAppSetting.lang + '&sco=latlong&format=json&geocode=' + string, null);
         }
     }
 });

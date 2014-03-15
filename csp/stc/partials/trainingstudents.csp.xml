@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/trainingstudents.csp" application="/csp/tnt/" default="1"><![CDATA[
+<CSP name="stc/partials/trainingstudents.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -40,7 +40,7 @@
 				    selected-items="page.studTable.selectedItems"
 				    multi-select-mode="false"
 
-				    action-column-visible="true"
+				    action-column-visible="false"
 				    forcibly-update="page.studTable.forciblyUpdate"
 				/> 
 				<button type="button" class="btn btn-small btn-success" ng-click="page.exportToCSV()" ng-bind="'Экспорт'|localize" title="{{'Экспорт всех слушателей в файл *.csv'|localize}}"></button>   			

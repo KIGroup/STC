@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/localization/locale_en-US.js" application="/csp/tnt/" default="1"><![CDATA[
-//вввdfd
+<CSP name="stc/js/localization/locale_en-US.js" application="/csp/stc/" default="1"><![CDATA[
+//вввdfdвdвd
 
 localizationModule.constant('StcDictionary', {
   strings: {
@@ -317,6 +317,35 @@ localizationModule.constant('StcDictionary', {
     'Если событие не создано, то в этой форме данные из обучения. Если данные по умолчанию изменить и создать событие, то при следующей загрузке формы будут отображены данные события, а не обучения.':'If the event has not been created, the data in this form is retrieved from training. If you change the default data and create an event, the next time the form is loaded, you will see these events, not the training data.',
     'Создание сертификатов для слушателей (если еще не созданы)':'Creates certificates for students (if not created yet)',
     'Экспорт всех сертификатов в файл *.csv'                    :'Export all certificates in the *.csv file',
+    'Аналитика'            :'Analytics',
+    'Авторассылка куратору':'Automailing to curator',
+    'Авторассылка анкеты'  :'Automailing link for feedback',
+    'Отзывы'               :'Feedbacks',
+    'Куратор: ФИО'         :'Curator: Fullname',
+    'Рассылка'             :'Mailing',
+    'Тип'                  :'Type',
+    'Слушатели - напоминание'                   :'Students - reminder',
+    'Слушатели - доступ к анкете'               :'Students - link for feedback',
+    'Преподаватель - доступ к списку слушателей':'Teacher - access to the students list',
+    'Куратор - доступ к списку слушателей'      :'Curator - access to the students list',
+    'Оценка'        :'Rating',
+    'Автор'         :'Author',
+    'Понравилось'   :'Liked',
+    'Улучшения'     :'Improvements',
+    'Дополнение'    :'Other',
+    'О докладчике'  :'About teacher',
+    'Что можно улучшить':'What can be improved',
+    'Что понравилось'   :'What we liked',
+    'Что ещё хотелось бы услышать в курсе':'What else would like to hear in the course',
+    'Комментарии о докладчике'             :' Comments on teacher',
+    'Есть отзыв'               :'There is a review',
+    'Карта точек обучения'     :'Map of training points',
+    'Курсы и слушатели'        :'Courses and students',
+    'Преподаватели и слушатели':'Teachers and students',
+    'Компании и слушатели'     :'Companies and students',
+    'Фамилия И.О. (поле не обязательно для заполнения)':'Last name (not required field)',
+    'Подпись':'Author',
+    'Отзыв о курсе':'Review of the course',    
 
     'О проекте'       :'About',
     'Руководитель'    :'Project manager',

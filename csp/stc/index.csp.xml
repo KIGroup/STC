@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/index.csp" application="/csp/feb/" default="1"><![CDATA[
+<CSP name="stc/index.csp" application="/csp/stc/" default="1"><![CDATA[
 <!doctype html>
 
 <html ng-app="mainModule" ng-controller="MainCtrl">
@@ -66,7 +66,7 @@
 
         // Настройки приложения. Имена веб-приложений для REST, google календарь, язык
         var StcAppSetting = {default: '#($GET(^Settings("Stc", "WebApp")))#',
-	        				 admin: '#($GET(^Settings("Stc", "WebAppAdmin")))#',
+	        				           admin: '#($GET(^Settings("Stc", "WebAppAdmin")))#',
                              user:  '#($GET(^Settings("Stc", "WebAppUser")))#',
                              lang: getLang()};
 
@@ -91,6 +91,15 @@
                   <li ng-show="menu.admin" ng-class="menu.companies.css"   ><a href="#/companies"    ng-bind="menu.companies.name|localize"></a></li>
                   <li ng-show="menu.admin" ng-class="menu.persons.css"     ><a href="#/persons"      ng-bind="menu.persons.name|localize"></a></li>
                   <li ng-show="menu.admin" ng-class="menu.courses.css"     ><a href="#/courses"      ng-bind="menu.courses.name|localize"></a></li>
+                  <li ng-show="menu.admin" ng-class="'dropdown ' + menu.analytics.css">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href=""><span ng-bind="(menu.analytics.name|localize) + ' '"></span><b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                      <li ng-class="{aSelected: menu.analyticsMap.css=='active'}"><a href="#/analytics/pointsmap" ng-bind="menu.analyticsMap.name|localize"></a></li>
+                      <li ng-class="{aSelected: menu.analyticsCourse.css=='active'}"><a href="#/analytics/course"    ng-bind="menu.analyticsCourse.name|localize"></a></li>
+                      <li ng-class="{aSelected: menu.analyticsTeacher.css=='active'}"><a href="#/analytics/teacher"   ng-bind="menu.analyticsTeacher.name|localize"></a></li>
+                      <li ng-class="{aSelected: menu.analyticsCompany.css=='active'}"><a href="#/analytics/company"   ng-bind="menu.analyticsCompany.name|localize"></a></li>
+                    </ul>
+                  </li>
                 </ul>
 
                  <ul class="nav pull-right">
@@ -111,7 +120,6 @@
       <div ng-view>
       </div>
 
-    
     </div>
 
     <script language="javascript"  src="js/controllers/MainCtrl.js"></script>
@@ -131,6 +139,8 @@
     <script language="javascript"  src="js/controllers/CourseCtrl.js"></script>
     <script language="javascript"  src="js/controllers/TrainingStudentsCtrl.js"></script>
      <script language="javascript"  src="js/controllers/FeedBackCtrl.js"></script>
+   <script language="javascript"  src="js/controllers/DeepSeeCtrl.js"></script>
+
 
     <script language="javascript"  src="js/services/DALSrvc.js"></script>
     <script language="javascript"  src="js/services/YandexSrvc.js"></script>

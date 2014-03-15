@@ -42,6 +42,15 @@ Middle name</Description>
 <Parameter name="XMLREFERENCE" value="ID"/>
 </Property>
 
+<Property name="FullName">
+<Description>
+Calculated property, returns string - full name - need for deepsee</Description>
+<Type>%String</Type>
+<Calculated>1</Calculated>
+<SqlComputeCode>set {FullName} = ##class({%%CLASSNAME}).GetFullName({%%ID})</SqlComputeCode>
+<SqlComputed>1</SqlComputed>
+</Property>
+
 <Property name="Email">
 <Description>
 Email</Description>
@@ -192,6 +201,21 @@ Checking before deletion</Description>
 	if (id = "") && (countId < maxOrderCount) quit 1
 	
 	quit 0
+]]></Implementation>
+</Method>
+
+<Method name="GetFullName">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set fullName = "-"
+	
+	&sql(SELECT LastName->Value || ' ' || FirstName->Value INTO :fullName
+	     FROM Stc_Data.Person
+	     WHERE ID = :id)
+	
+	quit fullName
 ]]></Implementation>
 </Method>
 

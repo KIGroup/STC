@@ -340,11 +340,67 @@ do ##class(Stc.Utils.Msg).DeepSeeMsg()</Description>
 	set ^CacheMsg("Stc", "ru", "city") = "Город"
 	set ^CacheMsg("Stc", "en", "city") = "City"
 	set ^CacheMsg("Stc", "en-us", "city") = ^CacheMsg("Stc", "en", "city")
-	
+
+	set ^CacheMsg("Stc", "ru", "datefinish") = "Дата обучения"
+	set ^CacheMsg("Stc", "en", "datefinish") = "Date of training"
+	set ^CacheMsg("Stc", "en-us", "datefinish") = ^CacheMsg("Stc", "en", "datefinish")
+		
 	set ^CacheMsg("Stc", "ru", "student") = "Слушатель"
 	set ^CacheMsg("Stc", "en", "student") = "Student"
 	set ^CacheMsg("Stc", "en-us", "student") = ^CacheMsg("Stc", "en", "student")
 	
+	set ^CacheMsg("Stc", "ru", "status") = "Статус"
+	set ^CacheMsg("Stc", "en", "status") = "Status"
+	set ^CacheMsg("Stc", "en-us", "status") = ^CacheMsg("Stc", "en", "status")
+	
+	set ^CacheMsg("Stc", "ru", "date") = "Дата"
+	set ^CacheMsg("Stc", "en", "date") = "Date"
+	set ^CacheMsg("Stc", "en-us", "date") = ^CacheMsg("Stc", "en", "date")
+	
+	set ^CacheMsg("Stc", "ru", "address") = "Адрес"
+	set ^CacheMsg("Stc", "en", "address") = "Address"
+	set ^CacheMsg("Stc", "en-us", "address") = ^CacheMsg("Stc", "en", "address")
+	
+	set ^CacheMsg("Stc", "ru", "completed") = "Завершённые"
+	set ^CacheMsg("Stc", "en", "completed") = "Completed"
+	set ^CacheMsg("Stc", "en-us", "completed") = ^CacheMsg("Stc", "en", "completed")
+	
+	set ^CacheMsg("Stc", "ru", "uncompleted") = "Незавершённые"
+	set ^CacheMsg("Stc", "en", "uncompleted") = "Uncompleted"
+	set ^CacheMsg("Stc", "en-us", "uncompleted") = ^CacheMsg("Stc", "en", "uncompleted")
+	
+	// Тайтлы виджетов
+	set ^CacheMsg("Stc", "ru", "companyStudentsYears") = "Количество слушателей по компаниям"
+	set ^CacheMsg("Stc", "en", "companyStudentsYears") = "Number of students by company"
+	set ^CacheMsg("Stc", "en-us", "companyStudentsYears") = ^CacheMsg("Stc", "en", "companyStudentsYears")
+	
+	set ^CacheMsg("Stc", "ru", "studentsYearsAll") = "Количество слушателей по годам"
+	set ^CacheMsg("Stc", "en", "studentsYearsAll") = "Number of students by years"
+	set ^CacheMsg("Stc", "en-us", "studentsYearsAll") = ^CacheMsg("Stc", "en", "studentsYearsAll")
+
+	set ^CacheMsg("Stc", "ru", "mapOfTrainingPoints") = "Карта точек обучения"
+	set ^CacheMsg("Stc", "en", "mapOfTrainingPoints") = "Map of training points"
+	set ^CacheMsg("Stc", "en-us", "mapOfTrainingPoints") = ^CacheMsg("Stc", "en", "mapOfTrainingPoints")
+
+	set ^CacheMsg("Stc", "ru", "trainingStudents") = "Слушатели выбранного обучения"
+	set ^CacheMsg("Stc", "en", "trainingStudents") = "Students of selected training"
+	set ^CacheMsg("Stc", "en-us", "trainingStudents") = ^CacheMsg("Stc", "en", "trainingStudents")	
+	
+	set ^CacheMsg("Stc", "ru", "courseStudentsYears") = "Количество слушателей по курсам обучения"
+	set ^CacheMsg("Stc", "en", "courseStudentsYears") = "Number of students by courses"
+	set ^CacheMsg("Stc", "en-us", "courseStudentsYears") = ^CacheMsg("Stc", "en", "courseStudentsYears")
+	
+	set ^CacheMsg("Stc", "ru", "courseStudentsTotal") = "Количество слушателей по курсам обучения за все годы"
+	set ^CacheMsg("Stc", "en", "courseStudentsTotal") = "Number of students by courses for all years"
+	set ^CacheMsg("Stc", "en-us", "courseStudentsTotal") = ^CacheMsg("Stc", "en", "courseStudentsTotal")
+	
+	set ^CacheMsg("Stc", "ru", "teacherStudentsYears") = "Количество слушателей по преподавателям"
+	set ^CacheMsg("Stc", "en", "teacherStudentsYears") = "Number of students by teachers"
+	set ^CacheMsg("Stc", "en-us", "teacherStudentsYears") = ^CacheMsg("Stc", "en", "teacherStudentsYears")
+	
+	set ^CacheMsg("Stc", "ru", "teacherStudentsTotal") = "Количество слушателей по преподавателям за все годы"
+	set ^CacheMsg("Stc", "en", "teacherStudentsTotal") = "Number of students by teachers for all years"
+	set ^CacheMsg("Stc", "en-us", "teacherStudentsTotal") = ^CacheMsg("Stc", "en", "teacherStudentsTotal")
 	
 	q $$$OK
 ]]></Implementation>

@@ -2,13 +2,18 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/controllers/TrainingCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//dddeddddddd
+//dddedddddddd
 
 /*===========================================================================================
 Обучение
 ===========================================================================================*/
 
-controllersModule.controller('TrainingCtrl', function($scope, $route, $location, $filter, $routeParams, UtilsSrvc, OrderSrvc, ReportSrvc, TrainingSrvc, CompanySrvc, PersonSrvc, CertificateSrvc){
+controllersModule.controller('TrainingCtrl', function($scope, $route, $location, $filter, $routeParams, UtilsSrvc, OrderSrvc, ReportSrvc, TrainingSrvc, CompanySrvc, PersonSrvc, CertificateSrvc){    
+    if ($scope.menu.admin){
+    	$scope.menu.brandCaption = 'Система учёта курсов';
+    	$scope.menu.appTitle = 'Система учёта курсов';
+    }
+    	
     $scope.training = {};
     $scope.sgroup = {contract:{}};
     $scope.cert = {};
@@ -91,10 +96,10 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
 
         $scope.feedBack.properties = [{name:'rating'}, 
                                      {name: 'author'},
-                                     {name:'whatLikedStatus',        calculate: function(item){ item.whatLikedStatus       = item.whatLiked       =='' ? '' : 'Есть отзыв'}},
-                                     {name:'whatImprovementsStatus', calculate: function(item){ item.whatImprovementsStatus= item.whatImprovements=='' ? '' : 'Есть отзыв'}},
-                                     {name:'whatHearStatus',         calculate: function(item){ item.whatHearStatus        = item.whatHear        =='' ? '' : 'Есть отзыв'}},
-                                     {name:'aboutTeacherStatus',     calculate: function(item){ item.aboutTeacherStatus    = item.aboutTeacher    =='' ? '' : 'Есть отзыв'}},
+                                     {name:'whatLikedStatus',        calculate: function(item){ item.whatLikedStatus       = item.whatLiked       =='' ? '' : $filter('localize')('Есть отзыв')}},
+                                     {name:'whatImprovementsStatus', calculate: function(item){ item.whatImprovementsStatus= item.whatImprovements=='' ? '' : $filter('localize')('Есть отзыв')}},
+                                     {name:'whatHearStatus',         calculate: function(item){ item.whatHearStatus        = item.whatHear        =='' ? '' : $filter('localize')('Есть отзыв')}},
+                                     {name:'aboutTeacherStatus',     calculate: function(item){ item.aboutTeacherStatus    = item.aboutTeacher    =='' ? '' : $filter('localize')('Есть отзыв')}},
                                      {name:'createdTS', filter: 'date', filterParam: $filter('localize')('d MMMM y, HH:mm:ss')}];
 
         $scope.feedBack.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'feedBack.grid.pageSize', 10);
@@ -746,10 +751,10 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
     //==============================================================================================================================================================================
     // Load all students emails
     $scope.mailing = {selectedType: 'students', types:[
-                                                  {id: 'students', name: 'Слушатели - напоминание'}, 
-                                                  {id: 'feedback', name: 'Слушатели - доступ к анкете'}, 
-                                                  {id: 'teacher',  name: 'Преподаватель - доступ к списку слушателей'},
-                                                  {id: 'curator',  name: 'Куратор - доступ к списку слушателей'}]};
+                                                  {id: 'students', name: $filter('localize')('Слушатели - напоминание')}, 
+                                                  {id: 'feedback', name: $filter('localize')('Слушатели - доступ к анкете')}, 
+                                                  {id: 'teacher',  name: $filter('localize')('Преподаватель - доступ к списку слушателей')},
+                                                  {id: 'curator',  name: $filter('localize')('Куратор - доступ к списку слушателей')}]};
 
     $scope.mailing.loadEmailContacts = function(){
         //console.log('msg: mailing.loadEmailContacts');

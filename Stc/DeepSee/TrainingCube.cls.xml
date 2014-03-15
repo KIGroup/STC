@@ -17,11 +17,11 @@
 Cube definition from Architect.</Description>
 <XMLNamespace>http://www.intersystems.com/deepsee</XMLNamespace>
 <Data><![CDATA[
-<cube xmlns="http://www.intersystems.com/deepsee" name="TrainingCube" displayName="TrainingCube" disabled="false" abstract="false" sourceClass="Stc.Data.Training" countMeasureName="%COUNT" bucketSize="8" bitmapChunkInMemory="false" precompute="0">
+<cube xmlns="http://www.intersystems.com/deepsee" name="TrainingCube" displayName="TrainingCube" description="после компиляции выполните do ##class(Stc.Utils.Msg).DeepSeeMsg() т.к. затираются лейблы" disabled="false" abstract="false" sourceClass="Stc.Data.Training" countMeasureName="%COUNT" bucketSize="8" bitmapChunkInMemory="false" precompute="0">
   <dimension name="Course" displayName="@course@" disabled="false" hasAll="false" allCaption="All Value" allDisplayName="Value" type="data" iKnowType="entity" hidden="false" showHierarchies="default">
     <hierarchy name="H1" disabled="false">
       <level sourceProperty="Course.Name" name="Name" displayName="@course@" disabled="false" list="false" useDisplayValue="true" useAsFilter="true">
-        <property sourceProperty="Course.Name.Value" name="Value" displayName="@course@" disabled="false" hidden="false" isName="true" isReference="true" useDisplayValue="false"></property>
+        <property sourceProperty="Course.Name.Value" name="Value" displayName="@course@" disabled="false" hidden="false" isName="true" isDescription="false" isReference="true" useDisplayValue="false"></property>
       </level>
     </hierarchy>
   </dimension>
@@ -33,7 +33,8 @@ Cube definition from Architect.</Description>
   </dimension>
   <dimension name="Teacher" displayName="@teacher@" disabled="false" hasAll="false" allCaption="All Teacher" allDisplayName="Teacher" type="data" iKnowType="entity" hidden="false" showHierarchies="default">
     <hierarchy name="H1" disabled="false">
-      <level sourceExpression="%cube.GetTeacherFullName(%source.%ID)" name="Teacher" displayName="@teacher@" disabled="false" timeFunction="Year" list="false" useDisplayValue="true" useAsFilter="true">
+      <level sourceProperty="Teacher" name="TeacherFullName" displayName="@teacher@" disabled="false" list="false" useDisplayValue="true" useAsFilter="true">
+        <property sourceProperty="Teacher.FullName" name="FullName" displayName="@teacher@" disabled="false" hidden="false" isName="true" isDescription="false" isReference="true" useDisplayValue="false"></property>
       </level>
     </hierarchy>
   </dimension>

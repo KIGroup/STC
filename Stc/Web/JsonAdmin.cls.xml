@@ -771,19 +771,26 @@ Create training from selected applications, create/update subgroups</Description
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set status  = $$$OK
-	
+	set isNew = 0
 	try{
 		TSTART
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		do ##class(Stc.Data.Training).Save(data, .status)
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus($CASE(data.id = "", 1:"createTraining",:"saveTraining"), " | "_status)) 
+		if (data.id=""){
+			set isNew = 1
+		}
 		
 		TCOMMIT
 	}
 	catch ex {
 		TROLLBACK
 		set status = ex.AsStatus()
+	}
+	
+	if (isNew=1){
+		do ##class(Stc.Data.Training).BuildCubes()
 	}
 	
     quit status
@@ -823,6 +830,10 @@ Delete training</Description>
 		set status = ex.AsStatus()
 	}
 	
+	if (status = $$$OK){
+		do ##class(Stc.Data.Training).BuildCubes()
+	}
+	
 	quit status
 ]]></Implementation>
 </Method>
@@ -834,7 +845,7 @@ Complete training and create certificates for each student</Description>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set status  = $$$OK
-	
+	set trId = ""
 	try{
 		TSTART
 		
@@ -854,12 +865,15 @@ Complete training and create certificates for each student</Description>
 		set status = training.CreateCertificates()
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createCertificate", "| "_status)) 
 		
+		set trId = training.%Id()
 		TCOMMIT
 	}
 	catch ex {
 		TROLLBACK
 		set status = ex.AsStatus()
 	}
+	
+	if (status = $$$OK) do ##class(Stc.Data.Training).UpdateFacts(trId)
 	
     quit status
 ]]></Implementation>
@@ -872,7 +886,7 @@ Add subgroups, based on selected application to training</Description>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set status  = $$$OK
-	
+	set trId = ""
 	try{
 		TSTART
 		
@@ -883,13 +897,15 @@ Add subgroups, based on selected application to training</Description>
 		
 		set status = training.%Save()
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveTraining", "| "_status)) 
-		
+		set trId = training.%Id()
 		TCOMMIT
 	}
 	catch ex {
 		TROLLBACK
 		set status = ex.AsStatus()
 	}
+	
+	if (status = $$$OK) do ##class(Stc.Data.Training).UpdateFacts(trId)
 	
     quit status
 ]]></Implementation>
@@ -1057,7 +1073,7 @@ Add subgroup into training</Description>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set status  = $$$OK
-
+	set trId = ""
 	try{
 		TSTART
 		
@@ -1072,13 +1088,15 @@ Add subgroup into training</Description>
 	
 		set status = training.%Save()
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveTraining", "| "_status)) 
-			
+		set trId = training.%Id()
 		TCOMMIT
 	}
 	catch ex {
 		TROLLBACK
 		set status = ex.AsStatus()
 	}
+	
+	if (status = $$$OK) do ##class(Stc.Data.Training).UpdateFacts(trId)
 	
 	quit status
 ]]></Implementation>
@@ -1091,7 +1109,7 @@ Add person from application into training, create/open subgroup and add person</
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set status  = $$$OK
-
+	set trId = ""
 	try{
 		TSTART
 		
@@ -1152,6 +1170,7 @@ Add person from application into training, create/open subgroup and add person</
 						training.OtherInfo.Value)
 		set status = ##class(Stc.Utils.Email).Send(order.Email, subj, msg)
 		if $$$OK '= status set status = ##class(Stc.Utils.Msg).GetErrorStatus("emailAddNewStudent", "| "_status) 
+		set trId = training.%Id()
 			
 		TCOMMIT
 	}
@@ -1159,6 +1178,8 @@ Add person from application into training, create/open subgroup and add person</
 		TROLLBACK
 		set status = ex.AsStatus()
 	}
+	
+	if (status = $$$OK) do ##class(Stc.Data.Training).UpdateFacts(trId)
 	
 	quit status
 ]]></Implementation>
@@ -1172,7 +1193,7 @@ Delete subgroup from training</Description>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set status  = $$$OK
-
+	set trId = ""
 	try{
 		TSTART
 		
@@ -1184,13 +1205,15 @@ Delete subgroup from training</Description>
 		
 		set status = training.%Save()
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveTraining", "| "_status)) 
-			
+		set trId = training.%Id()	
 		TCOMMIT
 	}
 	catch ex {
 		TROLLBACK
 		set status = ex.AsStatus()
 	}
+	
+	if (status = $$$OK) do ##class(Stc.Data.Training).UpdateFacts(trId)
 	
 	quit status
 ]]></Implementation>
@@ -1728,7 +1751,11 @@ Delete teacher and course link</Description>
 		 					WHERE Training = :trainingId) 
 		 				AND Students = :studentId)
 	
-	quit ..DeleteSubGroupStudent(sgroupId_";"_studentId)
+	set status = ..DeleteSubGroupStudent(sgroupId_";"_studentId)
+
+	if (status = $$$OK) do ##class(Stc.Data.Training).UpdateFacts(trainingId)
+		
+	quit status
 ]]></Implementation>
 </Method>
 
@@ -1867,7 +1894,7 @@ Create / add student into subgroup of training</Description>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set status  = $$$OK
-	
+	set trId = ""
 	try{
 		TSTART
 		
@@ -1894,6 +1921,8 @@ Create / add student into subgroup of training</Description>
 			set status = training.AddPersonIntoTraining(student.%Id())
 			$$$THROWONERROR(status, status)
 			$$$THROWONERROR(status, training.%Save())
+			
+			set trId = training.%Id()
 		}
 		
 		TCOMMIT
@@ -1902,6 +1931,8 @@ Create / add student into subgroup of training</Description>
 		TROLLBACK
 		set status = ex.AsStatus()
 	}
+	
+	if (status = $$$OK) && (trId '= "") do ##class(Stc.Data.Training).UpdateFacts(trId)
 	
 	quit status
 ]]></Implementation>

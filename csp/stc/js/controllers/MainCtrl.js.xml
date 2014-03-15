@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/MainCtrl.js" application="/csp/tnt/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/MainCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//dddddddd
+//ddddddddвd
 
 /*===========================================================================================
 Главный контроллер, работа с языком и меню
@@ -29,12 +29,25 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
         $scope.menu.courses      = {id: 'courses',      name: 'Курсы'};
         $scope.menu.persons      = {id: 'persons',      name: 'Сотрудники'};
         $scope.menu.certificates = {id: 'certificates', name: 'Сертификаты'};
+
+        $scope.menu.analytics    = {id: 'analytics',    name: 'Аналитика'};
+        $scope.menu.analyticsMap = {id: 'analyticsMap', name: 'Карта точек обучения'};
+        $scope.menu.analyticsCourse  = {id: 'analyticsCourse' , name: 'Курсы и слушатели'};
+        $scope.menu.analyticsTeacher = {id: 'analyticsTeacher', name: 'Преподаватели и слушатели'};
+        $scope.menu.analyticsCompany = {id: 'analyticsCompany', name: 'Компании и слушатели'};
+
     };
 
     // Выбор меню - сделать активным пункт
     $scope.menu.selectMenu = function(menuId){
 	    $scope.menu.hide = false;
     	
+    	if ($scope.menu.timeOutIntervalId){
+    		$window.clearTimeout($scope.menu.timeOutIntervalId);
+    	}
+    	
+        $scope.menu.analytics.css = '';
+
     	if ($scope.menu.admin){
     		$scope.menu.brandCaption = 'Система учёта курсов';
     		$scope.menu.appTitle = 'Система учёта курсов';

@@ -37,7 +37,7 @@ Stc.DeepSee.KPI.TrainingPoints</Description>
 <property name="IsCompleted" columnNo="13"/>
 
 <filter name="Course" sql="SELECT Name->Value As Name FROM Stc_Data.Course ORDER BY Name"/>
-<filter name="Status" displayName="Status"  displayList="Завершённые,Незавершённые" valueList="1,0"/>
+<filter name="Status" displayName="Status"/>
 </kpi>
 ]]></Data>
 </XData>
@@ -62,6 +62,27 @@ Return an SQL statement to execute.</Description>
 	set pSQL = $replace(##class(Stc.DeepSee.KPI.Utils).GetStringFromXData("sql", ..%ClassName(1)), ":WHERECondition", whereCondition)
 	
 	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="%OnGetFilterMembers">
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[pFilter:%String,*pMembers:%List,pSearchKey:%String="",pDataSourceName:%String="",&pFilterValues:%String]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    Set status = $$$OK
+
+    Try {
+        If (pFilter = "Status") {
+            Set pMembers($I(pMembers)) = $LB(##class(Stc.Utils.Msg).GetMsg("completed"),1)
+            Set pMembers($I(pMembers)) = $LB(##class(Stc.Utils.Msg).GetMsg("uncompleted"),0)
+        }
+    }
+    Catch(ex) {
+        Set status = ex.AsStatus()
+    }
+
+    Quit status
 ]]></Implementation>
 </Method>
 

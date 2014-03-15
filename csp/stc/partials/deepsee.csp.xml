@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/partials/deepsee.csp" application="/csp/stc/" default="1"><![CDATA[
+<script language="javascript">
+	var onloadFrame = function(frame){
+		
+		try{
+			frame.contentWindow.document.getElementById('contentsOuter').style.cssText += 'border: none';
+			window.document.getElementById('frameRow').style.cssText =  "overflow: hidden; border: 1px solid rgb(218, 218, 218); height: "+(screen.height-200) + 'px;';
+			//frame.width = window.document.body.clientWidth-100;
+		}
+		catch(ex){}
+	};
+
+	var onloadIfChangeLang = function(){
+		$("#ifPanel").attr("src", StcAppSetting.deepSeeCurrentUrl);
+		StcAppSetting.deepSeeCurrentUrl = "";
+	};
+</script>
+<div id="frameRow" class="row-fluid" style="">
+	<iframe name="ifPanel" id="ifPanel" src="" 
+			frameborder="0"
+			width="100%" 
+			height="100%"
+			style=""
+			onload="onloadFrame(this)"></iframe>
+			
+</div>
+
+<iframe name="ifChangeLang" id="ifChangeLang" src="" onload="onloadIfChangeLang()" width="0px" height="0px"></iframe>	
+]]></CSP>
+</Export>

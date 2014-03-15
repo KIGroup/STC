@@ -474,7 +474,7 @@
 				<p ng-hide="feedBack.selectedItems[0].author==''"          ><span class="spnTitle" ng-bind="'Автор'|localize"                               ></span>: <span ng-bind="feedBack.selectedItems[0].author"></span></p>
 				<p ng-hide="feedBack.selectedItems[0].whatLiked==''"       ><span class="spnTitle" ng-bind="'Что понравилось'|localize"                     ></span>: <span ng-bind="feedBack.selectedItems[0].whatLiked"></span></p>
 				<p ng-hide="feedBack.selectedItems[0].whatImprovements==''"><span class="spnTitle" ng-bind="'Что можно улучшить'|localize"                  ></span>: <span ng-bind="feedBack.selectedItems[0].whatImprovements"></span></p>
-				<p ng-hide="feedBack.selectedItems[0].whatHear==''"        ><span class="spnTitle" ng-bind="'Что еще хотелось бы услышать в курсе'|localize"></span>: <span ng-bind="feedBack.selectedItems[0].whatHear"></span></p>
+				<p ng-hide="feedBack.selectedItems[0].whatHear==''"        ><span class="spnTitle" ng-bind="'Что ещё хотелось бы услышать в курсе'|localize"></span>: <span ng-bind="feedBack.selectedItems[0].whatHear"></span></p>
 				<p ng-hide="feedBack.selectedItems[0].aboutTeacher==''"    ><span class="spnTitle" ng-bind="'Комментарии о докладчике'|localize"            ></span>: <span ng-bind="feedBack.selectedItems[0].aboutTeacher"></span></p>
 			</tab>
 		</tabset>

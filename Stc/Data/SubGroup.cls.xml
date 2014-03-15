@@ -6,6 +6,12 @@ Payed subgroup of students</Description>
 <Super>%Persistent</Super>
 <TimeCreated>63098,13360.062633</TimeCreated>
 
+<Parameter name="DSTIME">
+<Description>
+Cube update parameter</Description>
+<Default>auto</Default>
+</Parameter>
+
 <Property name="Payer">
 <Description>
 Paying organization</Description>

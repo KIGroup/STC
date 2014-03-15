@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Web.ChangeLang">
+<Description>
+Данная страница предназначена для смены языка сессии.
+Столкнулся с такой проблемой: при загр. страницы с iframe панелью deepsee отображался внутри другой язык,
+т.е. deepSee не знает что язык сменен (хотя я в брокере каждый раз язык устанавливаю).
+Данный костыль подгружается перед загрузкой панели deepsee, меняет язык - и всё вроде бы хорошо.</Description>
+<Super>%CSP.Page</Super>
+<TimeCreated>63260,55155.894579</TimeCreated>
+
+<Method name="OnPage">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set lang = $Get(%request.Data("Lang",1),"ru")
+	do ##class(%MessageDictionary).SetSessionLanguage(lang)
+	set %session.Language = lang
+	Quit $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

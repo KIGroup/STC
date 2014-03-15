@@ -37,8 +37,12 @@ Return an SQL statement to execute.</Description>
 <FormalSpec><![CDATA[&pSQL:%String]]></FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	if (..%filterValues.Training = "") || (..%filterValues.Training = "NULL") {
+	if (..%filterValues.Training = "") {
 		set pSQL = "SELECT NULL WHERE 1>2"
+		quit $$$OK
+	}
+	elseif (..%filterValues.Training = "0"){
+		set pSQL = "SELECT NULL"
 		quit $$$OK
 	}
 	
@@ -56,7 +60,6 @@ Return an SQL statement to execute.</Description>
 	&sql(SELECT COUNT(SubGroups) INTO :sgroupsCount FROM Stc_Data.Training_SubGroups WHERE Training = :trainingId)
 	if (sgroupsCount = 0){
 		set pSQL = "SELECT NULL"
-		set ^temptr = $ZD($NOW(),3)
 		quit $$$OK
 	}
 	//===============================================	

@@ -17,7 +17,7 @@
 Cube definition from Architect.</Description>
 <XMLNamespace>http://www.intersystems.com/deepsee</XMLNamespace>
 <Data><![CDATA[
-<cube xmlns="http://www.intersystems.com/deepsee" name="SubGroupCube" displayName="SubGroupCube" disabled="false" abstract="false" sourceClass="Stc.Data.TrainingSubGroups" countMeasureName="%COUNT" bucketSize="8" bitmapChunkInMemory="false" precompute="0">
+<cube xmlns="http://www.intersystems.com/deepsee" name="SubGroupCube" displayName="SubGroupCube" description="после компиляции выполните do ##class(Stc.Utils.Msg).DeepSeeMsg() т.к. затираются лейблы" disabled="false" abstract="false" sourceClass="Stc.Data.TrainingSubGroups" countMeasureName="%COUNT" bucketSize="8" bitmapChunkInMemory="false" precompute="0">
   <dimension name="DateFinish" displayName="@year@" disabled="false" hasAll="false" allCaption="All DateFinish" allDisplayName="DateFinish" sourceProperty="Training.DateFinish" type="time" iKnowType="entity" hidden="false" showHierarchies="default">
     <hierarchy name="H1" disabled="false">
       <level name="DateFinish" displayName="@year@" disabled="false" timeFunction="Year" list="false" useDisplayValue="true" useAsFilter="true">
@@ -27,13 +27,13 @@ Cube definition from Architect.</Description>
   <dimension name="ShortName" displayName="@company@" disabled="false" hasAll="false" allCaption="All Value" allDisplayName="Value" type="data" iKnowType="entity" hidden="false" showHierarchies="default">
     <hierarchy name="H1" disabled="false">
       <level sourceProperty="SubGroups.Payer.ShortName" name="ShortName" displayName="@company@" disabled="false" list="false" useDisplayValue="true" useAsFilter="true">
-        <property sourceProperty="SubGroups.Payer.ShortName.Value" name="NameValue" displayName="@company@" disabled="false" hidden="false" isName="true" isReference="true" useDisplayValue="false"></property>
+        <property sourceProperty="SubGroups.Payer.ShortName.Value" name="NameValue" displayName="@company@" disabled="false" hidden="false" isName="true" isDescription="false" isReference="true" useDisplayValue="false"></property>
       </level>
     </hierarchy>
   </dimension>
-  <measure sourceExpression="%cube.GetStudentsCount(%source.%ID)" name="Students" displayName="@students@" disabled="false" aggregate="SUM" type="number" hidden="false" searchable="false" iKnowSource="string"></measure>
+  <measure sourceExpression="%cube.GetStudentsCount(%source.%ID)" name="Students" displayName="@students@" disabled="false" aggregate="SUM" type="integer" hidden="false" searchable="false" iKnowSource="string"></measure>
   <relationship sourceProperty="Training" name="TrainingCubeRelation" disabled="false" relatedCube="TrainingCube" inverse="SubGroups" cardinality="one"></relationship>
-  <listing name="Students" disabled="false" listingType="table" fieldList="SubGroups-&gt;Students-&gt;Email" sql="SELECT   stud.Students-&gt;LastName-&gt;Value || &apos; &apos; || ISNULL(stud.Students-&gt;FirstName-&gt;Value,&apos;&apos;) || &apos; &apos; || ISNULL(stud.Students-&gt;MiddleName-&gt;Value,&apos;&apos;) As &quot;Слушатель&quot;, sg.Training-&gt;DateFinish As &quot;Дата обучения&quot;, sg.Training-&gt;Course-&gt;Name-&gt;Value As &quot;Курс&quot;, sg.Training-&gt;City-&gt;Name-&gt;Value As &quot;Город&quot; FROM Stc_Data.SubGroup_Students As stud INNER JOIN Stc_Data.Training_SubGroups as sg ON sg.SubGroups=stud.SubGroup WHERE stud.SubGroup IN (SELECT SubGroups FROM $$$SOURCE WHERE $$$RESTRICT) ORDER BY &quot;Дата обучения&quot;, &quot;Курс&quot;, &quot;Город&quot;, &quot;Слушатель&quot;"></listing>
+  <listing name="Students" disabled="false" listingType="table" fieldList="SubGroups-&gt;Students-&gt;Email" sql="SELECT TOP 1000 stud.Students-&gt;LastName-&gt;Value || &apos; &apos; || ISNULL(stud.Students-&gt;FirstName-&gt;Value,&apos;&apos;) || &apos; &apos; || ISNULL(stud.Students-&gt;MiddleName-&gt;Value,&apos;&apos;) As &quot;$$$TEXT[&quot;@student/Stc&quot;]&quot;,  sg.Training-&gt;DateFinish As &quot;$$$TEXT[&quot;@datefinish/Stc&quot;]&quot;,  sg.Training-&gt;Course-&gt;Name-&gt;Value As &quot;$$$TEXT[&quot;@course/Stc&quot;]&quot;,  sg.Training-&gt;City-&gt;Name-&gt;Value As &quot;$$$TEXT[&quot;@city/Stc&quot;]&quot;  FROM Stc_Data.SubGroup_Students As stud INNER JOIN Stc_Data.Training_SubGroups as sg ON sg.SubGroups=stud.SubGroup  WHERE stud.SubGroup IN (SELECT SubGroups FROM $$$SOURCE WHERE $$$RESTRICT)  ORDER BY &quot;$$$TEXT[&quot;@datefinish/Stc&quot;]&quot;, &quot;$$$TEXT[&quot;@course/Stc&quot;]&quot;, &quot;$$$TEXT[&quot;@city/Stc&quot;]&quot;, &quot;$$$TEXT[&quot;@student/Stc&quot;]&quot;"></listing>
 </cube>
 ]]></Data>
 </XData>
