@@ -45,6 +45,10 @@ Save or create course</Description>
 	try{
 		TSTART
 		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
+		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
       	
       	do ##class(Stc.Data.Course).Save(data, .status)
@@ -91,6 +95,10 @@ Mark/unmark course as unused</Description>
 	
 	try{
 		TSTART
+		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
       	
@@ -216,6 +224,10 @@ Create approved application</Description>
 	try{
 		TSTART
 		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
+		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 
       	set approved = ##class(Stc.Data.OrderApproved).Create(data.id, .status)
@@ -247,6 +259,10 @@ Send access code to contact person's email</Description>
 <FormalSpec>order:Stc.Data.OrderApproved</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	// Check privilege for Person table
+	set status = ##class(Stc.Data.Person).CheckDeletePrivilege()
+	quit:$$$ISERR(status) status
+		
 	set domainWebApp = %request.CgiEnvs("HTTP_HOST")_$GET(^Settings("Stc", "WebApp")) 
 	
 	// 1 - Курс, 2 - Город, 3 - дата, 4 - домен для системы, 5 - код доступа к заявкe
@@ -267,6 +283,9 @@ Resend email with instructions to organization's contact person</Description>
 <Implementation><![CDATA[
 	set status = $$$OK
 	try{
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		$$$THROWONERROR(status, ..SendOrderAccessCode(##class(Stc.Data.OrderApproved).AccessCodeIdxOpen(data.code)))
 	}
@@ -289,6 +308,8 @@ Delete application by id</Description>
 	
 	try{
 		TSTART
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
 		
 		$$$THROWONERROR(status, ##class(Stc.Data.Order).Delete(id))
 		
@@ -315,6 +336,9 @@ Delete application from student by id</Description>
 	try{
 		TSTART
 		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		$$$THROWONERROR(status, ##class(Stc.Data.OrderNewStudent).Delete(id))
 		
 		TCOMMIT
@@ -338,6 +362,9 @@ Change organization in application</Description>
 	
 	try{
 		TSTART
+		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
       	
@@ -370,6 +397,9 @@ Change organization of application from student</Description>
 	
 	try{
 		TSTART
+		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
       	
@@ -410,6 +440,9 @@ Save new organization data</Description>
 	try{
 		TSTART
 		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
       	
       	set company = ##class(Stc.Data.Company).Save(data, .status)
@@ -436,6 +469,9 @@ Save organization from application</Description>
 	
 	try{
 		TSTART
+		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
       	
@@ -482,6 +518,9 @@ Save organization and contact person from application from student</Description>
 	try{
 		TSTART
 		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
       	
       	// Создание компании
@@ -491,6 +530,7 @@ Save organization and contact person from application from student</Description>
       	// Создание контакта компании
       	set data.company.contact.company = ##class(%ZEN.proxyObject).%New()
       	set data.company.contact.company.id = company.%Id()
+      	set data.company.contact.id = ""
       	
       	if (##class(Stc.Data.Person).EmailIdxExists(data.company.contact.email) = 1){
 	    	set company.Contact = ##class(Stc.Data.Person).EmailIdxOpen(data.company.contact.email)
@@ -532,6 +572,9 @@ Change contact person of organization</Description>
 	
 	try{
 		TSTART
+		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
@@ -640,6 +683,9 @@ Delete organization if it is available</Description>
 	try{
 		TSTART
 		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		$$$THROWONERROR(status, ##class(Stc.Data.Company).Delete(id))
       	
       	TCOMMIT
@@ -670,6 +716,11 @@ Working with event in Google Calendar - create, update, delete</Description>
 	
 	try{
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		
+		if (data.method '= "get"){
+			// Check privilege for Person table
+			$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		}
 		
 		set training = ##class(Stc.Data.Training).%OpenId(data.id,,.status)
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("openTraining", "| "_status))
@@ -775,6 +826,9 @@ Create training from selected applications, create/update subgroups</Description
 	try{
 		TSTART
 		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		do ##class(Stc.Data.Training).Save(data, .status)
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus($CASE(data.id = "", 1:"createTraining",:"saveTraining"), " | "_status)) 
@@ -808,6 +862,9 @@ Delete training</Description>
 	
 	try{
 		TSTART
+		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
 		
 		set (sgroups, certs) = 0
 		
@@ -849,6 +906,9 @@ Complete training and create certificates for each student</Description>
 	try{
 		TSTART
 		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
 		set training = ##class(Stc.Data.Training).%OpenId(data.id,,.status)
@@ -889,6 +949,9 @@ Add subgroups, based on selected application to training</Description>
 	set trId = ""
 	try{
 		TSTART
+		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
@@ -1028,7 +1091,12 @@ Get training feedbacks. grid</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[	quit ##class(Stc.Data.FeedBack).%DeleteId(id)
+<Implementation><![CDATA[
+	// Check privilege for Person table
+	set status = ##class(Stc.Data.Person).CheckDeletePrivilege()
+	quit:$$$ISERR(status) status
+		
+	quit ##class(Stc.Data.FeedBack).%DeleteId(id)
 ]]></Implementation>
 </Method>
 
@@ -1077,6 +1145,9 @@ Add subgroup into training</Description>
 	try{
 		TSTART
 		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
 		set training = ##class(Stc.Data.Training).%OpenId(data.trainingId)
@@ -1112,6 +1183,9 @@ Add person from application into training, create/open subgroup and add person</
 	set trId = ""
 	try{
 		TSTART
+		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
@@ -1197,6 +1271,9 @@ Delete subgroup from training</Description>
 	try{
 		TSTART
 		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		set training = ##class(Stc.Data.Training).%OpenId($p(trainingIdsgroupId,";",1), , .status)
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("openTraining", "| "_status)) 
 		
@@ -1230,6 +1307,9 @@ Save pay of subgroup</Description>
 	try{
 		TSTART
 		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
 		set sg = ##class(Stc.Data.SubGroup).%OpenId(data.id)
@@ -1260,6 +1340,9 @@ Save contract of subgroup</Description>
 
 	try{
 		TSTART
+		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
@@ -1328,6 +1411,9 @@ Create all certificates for training</Description>
 	try{
 		TSTART
 		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
 		set training = ##class(Stc.Data.Training).%OpenId(data.id,,.status)
@@ -1356,6 +1442,9 @@ Create all certificates for training</Description>
 	set status  = $$$OK
 	
 	try{
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 				
 		$$$THROWONERROR(status, ##class(Stc.Utils.Email).Send(data.emails, $ZCONVERT(data.subject, "I", "UTF8"), $ZCONVERT(data.msg, "I", "UTF8")))
@@ -1376,6 +1465,9 @@ Create all certificates for training</Description>
 	
 	try{
 		TSTART
+		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
@@ -1479,6 +1571,9 @@ Print certificate</Description>
 	set status = $$$OK
 	
 	try{
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		set cert = ##class(Stc.Data.Certificate).NumberIdxOpen(number,,.status)
 		$$$THROWONERROR(status, status)
  		
@@ -1499,6 +1594,10 @@ Delete certificate</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>number:%String</FormalSpec>
 <Implementation><![CDATA[
+	// Check privilege for Person table
+	set status = ##class(Stc.Data.Person).CheckDeletePrivilege()
+	quit:$$$ISERR(status) status
+		
 	set status = ##class(Stc.Data.Certificate).NumberIdxDelete(number)
 	if $$$ISERR(status) quit ##class(Stc.Utils.Msg).GetErrorStatus("deleteCertificate", "| "_status)
 	
@@ -1519,9 +1618,11 @@ Refresh person's data</Description>
 <ClassMethod>1</ClassMethod>
 <Implementation><![CDATA[
 	set status  = $$$OK
-	
+
 	try{
 		TSTART
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
@@ -1550,6 +1651,9 @@ Delete person </Description>
 	
 	try{
 		TSTART
+		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
 		
 		if (##class(Stc.Data.Person).IsEditable(id, 1) = 0) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("deletePersonImpossible"))
 	
@@ -1715,6 +1819,9 @@ Delete teacher and course link</Description>
 	try{
 		TSTART
 		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		set course = ##class(Stc.Data.Course).%OpenId($p(courseIdTeacherId,";",1), , .status)
 		$$$THROWONERROR(status, status)
 		do course.Teachers.RemoveAt($p(courseIdTeacherId,";",2))
@@ -1739,6 +1846,10 @@ Delete teacher and course link</Description>
 <FormalSpec>trainingIdstudentId</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	// Check privilege for Person table
+	set status = ##class(Stc.Data.Person).CheckDeletePrivilege()
+	quit:$$$ISERR(status) status
+	
 	set trainingId = $piece(trainingIdstudentId,";",1)
 	set studentId = $piece(trainingIdstudentId,";",2)
 	
@@ -1771,6 +1882,9 @@ Delete teacher and course link</Description>
 	try{
 		TSTART
 
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		set sgroup = ##class(Stc.Data.SubGroup).%OpenId($p(sgroupIdstudentId,";",1), , .status)
 		$$$THROWONERROR(status, status)
 		do sgroup.Students.RemoveAt($p(sgroupIdstudentId,";",2))
@@ -1898,6 +2012,9 @@ Create / add student into subgroup of training</Description>
 	try{
 		TSTART
 		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
 		// Добавляем существующего
@@ -1948,6 +2065,9 @@ Assign teacher to course</Description>
 
 	try{
 		TSTART
+		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
@@ -2014,7 +2134,12 @@ Check access, authorization call, if needed</Description>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	if (isLogin = 1){
-		w "ADMIN"
+		if (##class(Stc.Data.Person).CheckDeletePrivilege() = $$$OK){
+			w "{""privileges"":""all""}"
+		}
+		else{
+			w "{""privileges"":""read""}"
+		}
 		q $$$OK
 	}
 

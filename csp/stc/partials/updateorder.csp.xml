@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/updateorder.csp" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/partials/updateorder.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid" ng-show="ordForm.visible">
 	<div class="span1">
 	</div>
@@ -21,7 +21,7 @@
 						<p><span class="spnTitle" ng-bind="'Место обучения'|localize"       ></span>: <span ng-bind="ordForm.order.city.name + ', ' + ordForm.order.city.parentName + ', ' + ordForm.order.city.greatParentName"></span></p>
 						<p><span class="spnTitle" ng-bind="'Количество слушателей'|localize"></span>: <span ng-bind="ordForm.studTable.items.length"></span></p>
 						<p><span class="spnTitle" ng-bind="'Дата обучения'|localize"        ></span>: <span ng-bind="ordForm.order.date|convertCacheDate:('d MMMM y'|localize)"></span></p>
-						<button class="btn btn-primary btn-small" ng-show="ordForm.order.status.code=='Approved'" ng-disabled="!formCompany.$valid || !formCompany.$pristine" ng-click="ordForm.finishEditing()" ng-bind="'Завершить редактирование'|localize"></button></br></br>
+						<button ng-hide="menu.readOnlyMode" class="btn btn-primary btn-small" ng-show="ordForm.order.status.code=='Approved'" ng-disabled="!formCompany.$valid || !formCompany.$pristine" ng-click="ordForm.finishEditing()" ng-bind="'Завершить редактирование'|localize"></button></br></br>
 						<div ng-hide="formCompany.$valid">
 							<span class="label label-important" ng-bind="'Не все данные компании заполнены!'|localize"></span>
 							</br>
@@ -34,7 +34,7 @@
     		<tab heading="{{'Компания'|localize}}">
     			<form name="formCompany" ng-submit="ordForm.saveCompany()">
 					<stccompany company="ordForm.order.contact.company" required-all="true" disable-short-name="!menu.admin"/>
-					<button class="btn btn-primary btn-small" type="submit" ng-disabled="!formCompany.$dirty" ng-bind="'Сохранить'|localize"></button>
+					<button ng-hide="menu.readOnlyMode" class="btn btn-primary btn-small" type="submit" ng-disabled="!formCompany.$dirty" ng-bind="'Сохранить'|localize"></button>
 				</form>
     		</tab>
     		<tab heading="{{('Слушатели'|localize) + ' (' + ordForm.studTable.itemsTotal + ')'}}" active="ordForm.studTable.active">
@@ -55,7 +55,7 @@
 				    selected-items="ordForm.studTable.selectedItems"
 				    multi-select-mode="ordForm.studTable.multiSelectMode"
 
-				    action-column-visible="ordForm.order.status.code!='Closed'"
+				    action-column-visible="ordForm.order.status.code!='Closed' && !menu.readOnlyMode"
 				    action-column-icon="'icon-plus-sign'"
 				    action-column-title="'Добавить слушателя'|localize"
 				    action-column-method="ordForm.studTable.add()"

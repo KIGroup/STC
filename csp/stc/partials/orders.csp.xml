@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/orders.csp" application="/csp/six/" default="1"><![CDATA[
+<CSP name="stc/partials/orders.csp" application="/csp/stc/" default="1"><![CDATA[
 
 <div class="row-fluid">
 	<div class="span1">
@@ -49,7 +49,7 @@
 		    first-row-action-title="'Открыть заявку'|localize"
 		    first-row-action-method="order.open(item)"
 		    
-		    second-row-action-icon="'icon-remove'"
+		    second-row-action-icon="order.secondRowActionIcon"
 		    second-row-action-title="'Удалить заявку'|localize"
 		    second-row-action-method="order.delete(item)"
 		    forcibly-update="order.forciblyUpdate"
@@ -103,12 +103,12 @@
 																				 && order.selectedItems[0].contact.company.contact.lastName==order.selectedItems[0].contact.lastName 
 																				 && order.selectedItems[0].contact.company.contact.firstName==order.selectedItems[0].contact.firstName 
 																				 && order.selectedItems[0].contact.company.contact.middleName==order.selectedItems[0].contact.middleName)">
-							<div class="btn-group" ng-init="order.contactType='order'">
+							<div ng-hide="menu.readOnlyMode" class="btn-group" ng-init="order.contactType='order'">
 						        <button type="button" class="btn btn-small btnRadio" ng-model="order.contactType" btn-radio="'order'"   ng-bind="'Контакт из заявки'|localize"></button>
 						        <button type="button" class="btn btn-small btnRadio" ng-model="order.contactType" btn-radio="'company'" ng-bind="'Контакт компании'|localize" ></button>
 						    </div>	
-							<button class="btn btn-small" ng-click="order.changeCompanyContact(false)" title="{{'Обновить контакт'|localize}}" ng-show="order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email">&nbsp;<i class="icon-refresh"></i>&nbsp;</button>
-							<button class="btn btn-small" ng-click="order.changeCompanyContact(true)"  title="{{'Заменить контакт'|localize}}" ng-show="order.selectedItems[0].contact.company.contact.email!=order.selectedItems[0].contact.email">&nbsp;<i class="icon-exchange"></i>&nbsp;</button>
+							<button class="btn btn-small" ng-click="order.changeCompanyContact(false)" title="{{'Обновить контакт'|localize}}" ng-show="order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email && !menu.readOnlyMode">&nbsp;<i class="icon-refresh"></i>&nbsp;</button>
+							<button class="btn btn-small" ng-click="order.changeCompanyContact(true)"  title="{{'Заменить контакт'|localize}}" ng-show="order.selectedItems[0].contact.company.contact.email!=order.selectedItems[0].contact.email && !menu.readOnlyMode">&nbsp;<i class="icon-exchange"></i>&nbsp;</button>
 						</div>
 					</div>
 					<div class="span6">
@@ -117,8 +117,8 @@
 						<p><span class="spnTitle" ng-bind="'Количество слушателей'|localize"></span>: <span ng-bind="order.selectedItems[0].studentsNumber"></span></p>
 						<p><span class="spnTitle" ng-bind="'Дата обучения'|localize"        ></span>: <span ng-bind="order.selectedItems[0].date|convertCacheDate:('d MMMM y'|localize)"></span></p>
 						<p><span class="spnTitle" ng-bind="'Дата создания'|localize"        ></span>: <span ng-bind="order.selectedItems[0].createdTS|convertCacheDate:('d MMMM y, HH:mm:ss'|localize)"></span></p>
-						<button class="btn btn-success btn-small" ng-click="order.accept()" 		ng-bind="'Принять заявку'|localize"></button>
-						<button class="btn btn-info btn-small"    ng-click="order.openChangeCompanyDialog()" ng-bind="'Сменить компанию'|localize"></button>
+						<button ng-hide="menu.readOnlyMode" class="btn btn-success btn-small" ng-click="order.accept()" 		ng-bind="'Принять заявку'|localize"></button>
+						<button ng-hide="menu.readOnlyMode" class="btn btn-info btn-small"    ng-click="order.openChangeCompanyDialog()" ng-bind="'Сменить компанию'|localize"></button>
 					</div>
 				</div>
 				
@@ -152,9 +152,9 @@
 						<p><span class="spnTitle" ng-bind="'Количество слушателей'|localize"></span>: <span ng-bind="order.selectedItems[0].studentsNumber"></span></p>
 						<p><span class="spnTitle" ng-bind="'Дата обучения'|localize"        ></span>: <span ng-bind="order.selectedItems[0].date|convertCacheDate:('d MMMM y'|localize)"></span></p>
 						<p><span class="spnTitle" ng-bind="'Дата создания'|localize"        ></span>: <span ng-bind="order.selectedItems[0].createdTS|convertCacheDate:('d MMMM y, HH:mm:ss'|localize)"></span></p>
-						<button ng-show="order.selectedItems[0].status.code!='Closed'"   class="btn btn-info btn-small"    ng-click="order.openChangeCompanyDialog()" ng-bind="'Сменить компанию'|localize"></button>
+						<button ng-show="order.selectedItems[0].status.code!='Closed' && !menu.readOnlyMode"   class="btn btn-info btn-small"    ng-click="order.openChangeCompanyDialog()" ng-bind="'Сменить компанию'|localize"></button>
 						&nbsp;
-						<button ng-show="order.selectedItems[0].status.code=='Approved'" class="btn btn-small"             ng-click="order.sendEmail()" title="{{'Отправить контакту повторно код доступа к заявке'|localize}}" ng-bind="'Отправить код'|localize"></button>
+						<button ng-show="order.selectedItems[0].status.code=='Approved' && !menu.readOnlyMode" class="btn btn-small"             ng-click="order.sendEmail()" title="{{'Отправить контакту повторно код доступа к заявке'|localize}}" ng-bind="'Отправить код'|localize"></button>
 					</div>
 				</div>
 			</tab>
@@ -230,7 +230,7 @@
 							    action-column-visible="false"
 							/>
 							</div>
-							<button class="btn btn-success btn-small" ng-click="training.add()" ng-disabled="training.selectedItems.length==0" ng-bind="'Добавить'|localize"></button>
+							<button ng-hide="menu.readOnlyMode" class="btn btn-success btn-small" ng-click="training.add()" ng-disabled="training.selectedItems.length==0" ng-bind="'Добавить'|localize"></button>
 					    </accordion-group>
 					</accordion>
 				</div>

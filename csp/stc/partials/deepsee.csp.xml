@@ -8,6 +8,7 @@
 			frame.contentWindow.document.getElementById('contentsOuter').style.cssText += 'border: none';
 			window.document.getElementById('frameRow').style.cssText =  "overflow: hidden; border: 1px solid rgb(218, 218, 218); height: "+(screen.height-200) + 'px;';
 			//frame.width = window.document.body.clientWidth-100;
+			window.document.getElementById('imgIfLoader').style.cssText = 'display: none;'
 		}
 		catch(ex){}
 	};
@@ -26,7 +27,9 @@
 			onload="onloadFrame(this)"></iframe>
 			
 </div>
-
-<iframe name="ifChangeLang" id="ifChangeLang" src="" onload="onloadIfChangeLang()" width="0px" height="0px"></iframe>	
+<div style="text-align: center;">
+	<img id="imgIfLoader" src="img/loader.gif"/>
+</div>
+<iframe name="ifChangeLang" frameborder="0" id="ifChangeLang" src="" onload="onloadIfChangeLang()" width="0px" height="0px"></iframe>	
 ]]></CSP>
 </Export>

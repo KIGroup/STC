@@ -28,6 +28,7 @@ mainModule.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/trainingstudents', {templateUrl: 'partials/trainingstudents.csp', controller: 'TrainingStudentsCtrl'});
     $routeProvider.when('/createtraining',   {templateUrl: 'partials/createtraining.csp',   controller: 'CreateTrainingCtrl'});
     $routeProvider.when('/certificates',     {templateUrl: 'partials/certificates.csp',     controller: 'AllCertificatesCtrl'});
+    $routeProvider.when('/settings',     {templateUrl: 'partials/settings.csp',     controller: 'SettingsCtrl'});
     
     $routeProvider.when('/analytics/:type',  {templateUrl: 'partials/deepsee.csp',     controller: 'DeepSeeCtrl'});
      

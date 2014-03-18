@@ -158,6 +158,8 @@ Create application</Description>
 	set order.CreatedTS = $ZDATETIME($NOW(), 3)
 		
 	set status = order.%Save()
+	
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Create", "ID="_order.%Id()_"; LastName="_order.LastName.Value_"; FirstName="_order.FirstName.Value_"; Email="_order.Email)
 		
 	quit order
 ]]></Implementation>

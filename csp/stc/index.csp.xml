@@ -80,7 +80,14 @@
           <div class="navbar-inner">
             <div class="container">
               <a class="brand" href="" ng-bind="menu.brandCaption|localize"></a>
-              
+              <!--
+              <div class="brand" href="" style="padding: 4px;">
+              	<img src="img/brand.gif" width="100px"/>
+              	<div style="display: inline; vertical-align: middle;">
+              	<span style="display: inline-table; margin-top: 1px;">СМК</span>
+              	</div>
+              </div>
+              -->
               <div class="nav-responsive-collapse" ng-hide="menu.hide">
 
                 <ul class="nav">
@@ -91,6 +98,7 @@
                   <li ng-show="menu.admin" ng-class="menu.companies.css"   ><a href="#/companies"    ng-bind="menu.companies.name|localize"></a></li>
                   <li ng-show="menu.admin" ng-class="menu.persons.css"     ><a href="#/persons"      ng-bind="menu.persons.name|localize"></a></li>
                   <li ng-show="menu.admin" ng-class="menu.courses.css"     ><a href="#/courses"      ng-bind="menu.courses.name|localize"></a></li>
+                  <!--<li ng-show="menu.admin" ng-class="menu.settings.css"    ><a href="#/settings"     ng-bind="menu.settings.name|localize"></a></li>-->
                   <li ng-show="menu.admin" ng-class="'dropdown ' + menu.analytics.css">
                     <a class="dropdown-toggle" data-toggle="dropdown" href=""><span ng-bind="(menu.analytics.name|localize) + ' '"></span><b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -140,6 +148,7 @@
     <script language="javascript"  src="js/controllers/TrainingStudentsCtrl.js"></script>
      <script language="javascript"  src="js/controllers/FeedBackCtrl.js"></script>
    <script language="javascript"  src="js/controllers/DeepSeeCtrl.js"></script>
+    <script language="javascript"  src="js/controllers/SettingsCtrl.js"></script>
 
 
     <script language="javascript"  src="js/services/DALSrvc.js"></script>

@@ -60,7 +60,7 @@
 				    	<textarea class="span12" rows="8" ng-model="mailing.email.msg" required></textarea>
 				    </div>
 			    </div>
-			    <div class="row-fluid">
+			    <div class="row-fluid" ng-hide="menu.readOnlyMode">
 					<div class="span5">
 						<div class="input-append">
 							<input class="mailInput" id="appendedInputButton" placeholder="{{'sample@mail.com'}}" type="email" ng-model="mailing.single">
@@ -68,8 +68,8 @@
 						</div>
 					</div>
 					<div class="span7">
-						<button class="btn btn-success btn-small pull-right" type="submit" ng-click="mailing.sendEmail(false)" ng-bind="'Отправить'|localize"></button>
-						<label class="checkbox pull-right"  style="padding-top: 3px; margin-right: 25px;">
+						<button class="btn btn-success btn-small pull-right"  type="submit" ng-click="mailing.sendEmail(false)" ng-bind="'Отправить'|localize"></button>
+						<label ng-hide="menu.readOnlyMode" class="checkbox pull-right"  style="padding-top: 3px; margin-right: 25px;">
 				    		<input type="checkbox" ng-click="mailing.changeStatus()" ng-model="mailing.status">{{('Авторассылка'|localize) }}
 				    	</label>
 					</div>
@@ -95,7 +95,7 @@
 			    selected-items="sgroup.selectedItems"
 			    multi-select-mode="sgroup.multiSelectMode"
 
-			    action-column-visible="true"
+			    action-column-visible="!menu.readOnlyMode"
 			    action-column-icon="'icon-plus-sign'"
 			    action-column-title="'Добавить подгруппу'|localize"
 			    action-column-method="sgroup.add()"
@@ -127,7 +127,7 @@
 			    selected-items="allstud.selectedItems"
 			    multi-select-mode="allstud.multiSelectMode"
 	 			
-				action-column-visible="true"
+				action-column-visible="!menu.readOnlyMode"
 				action-column-icon="'icon-plus-sign'"
 				action-column-title="'Добавить слушателя'|localize"
 				action-column-method="allstud.add()"
@@ -163,7 +163,7 @@
 			    selected-items="cert.selectedItems"
 			    multi-select-mode="cert.multiSelectMode"
 	 			
-	 			action-column-visible="true"
+	 			action-column-visible="!menu.readOnlyMode"
 			    action-column-icon="'icon-ellipsis-horizontal'"
 
 			    first-row-action-icon="'icon-print'"
@@ -176,8 +176,8 @@
 			    	
 	 			forcibly-update="cert.forciblyUpdate"
 			/>
-			<button type="button" class="btn btn-small btn-primary" ng-click="cert.createAll()" ng-bind="'Обновить'|localize" title="{{'Создание сертификатов для слушателей (если еще не созданы)'|localize}}"></button>
-			<button type="button" class="btn btn-small btn-success" ng-click="cert.exportToCSV()" ng-bind="'Экспорт'|localize" title="{{'Экспорт всех сертификатов в файл *.csv'|localize}}"></button>
+			<button type="button" ng-hide="menu.readOnlyMode" class="btn btn-small btn-primary" ng-click="cert.createAll()" ng-bind="'Обновить'|localize" title="{{'Создание сертификатов для слушателей (если еще не созданы)'|localize}}"></button>
+			<button type="button" ng-hide="menu.readOnlyMode" class="btn btn-small btn-success" ng-click="cert.exportToCSV()" ng-bind="'Экспорт'|localize" title="{{'Экспорт всех сертификатов в файл *.csv'|localize}}"></button>
     	</tab>
     	 <!-- ============================================ ОТЗЫВЫ ==================================================-->
     	<tab heading="{{('Отзывы'|localize) + ' (' + training.data.feedBacks.count + ')'}}" select="feedBack.selectTab()" active="pageStore.training.tabFeedBacksActive">
@@ -199,7 +199,7 @@
 			    selected-items="feedBack.selectedItems"
 			    multi-select-mode="feedBack.multiSelectMode"
 	 			
-	 			action-column-visible="true"
+	 			action-column-visible="!menu.readOnlyMode"
 			    action-column-icon="'icon-ellipsis-horizontal'"
 
 			   	first-row-action-icon="'icon-remove'"
@@ -229,7 +229,7 @@
 			    selected-items="newstud.selectedItems"
 			    multi-select-mode="newstud.multiSelectMode"
 	 			
-	 			action-column-visible="true"
+	 			action-column-visible="!menu.readOnlyMode"
 			    action-column-icon="'icon-ellipsis-horizontal'"
 
 			   	first-row-action-icon="'icon-remove'"
@@ -239,7 +239,7 @@
 	 			forcibly-update="newstud.forciblyUpdate"
 			/>
 			
-			<div ng-show="newstud.selectedItems.length!=0 && newstud.items.length!=0">
+			<div ng-show="newstud.selectedItems.length!=0 && newstud.items.length!=0 && !menu.readOnlyMode">
 				<p ng-hide="newstud.selectedItems[0].company.id"><span class="label label-important" ng-bind="'Внимание!'|localize"></span>&nbsp;&nbsp;<span ng-bind="'Компания слушателя не существует, создайте её или смените'"></span></p>
 				
 				<div ng-hide="newstud.conflict.id">
@@ -298,11 +298,12 @@
 							    </div>
 							</div>
 						</div>
-
-					    <button class="btn btn-small btn-success" type="submit" ng-click="training.createEvent()" ng-bind="'Создать'|localize"  ng-hide="training.eventData.event.exists==1"></button>
-						<button class="btn btn-small btn-success" type="submit" ng-click="training.updateEvent()" ng-bind="'Обновить'|localize" ng-show="training.eventData.event.exists==1"></button>
-						<button class="btn btn-small btn-danger"  type="submit" ng-click="training.deleteEvent()" ng-bind="'Удалить'|localize"  ng-show="training.eventData.event.exists==1"></button>
-						<button class="btn btn-small pull-right"  type="button" ng-click="other.help=!other.help" title="{{'Справка'|localize}}">&nbsp;<i class="icon-question"></i>&nbsp;</button>				    					    					
+						<div ng-hide="menu.readOnlyMode" >
+					    	<button class="btn btn-small btn-success" type="submit" ng-click="training.createEvent()" ng-bind="'Создать'|localize"  ng-hide="training.eventData.event.exists==1"></button>
+							<button class="btn btn-small btn-success" type="submit" ng-click="training.updateEvent()" ng-bind="'Обновить'|localize" ng-show="training.eventData.event.exists==1"></button>
+							<button class="btn btn-small btn-danger"  type="submit" ng-click="training.deleteEvent()" ng-bind="'Удалить'|localize"  ng-show="training.eventData.event.exists==1"></button>
+							<button class="btn btn-small pull-right"  type="button" ng-click="other.help=!other.help" title="{{'Справка'|localize}}">&nbsp;<i class="icon-question"></i>&nbsp;</button>				    					    					
+						</div>
 						<br>
 						<br>
 						<pre ng-show="other.help" ng-bind="'Если событие не создано, то в этой форме данные из обучения. Если данные по умолчанию изменить и создать событие, то при следующей загрузке формы будут отображены данные события, а не обучения.'|localize"></pre>
@@ -352,7 +353,7 @@
 						<p><span class="spnTitle" ng-bind="('Скидка'|localize)"          ></span>: <span ng-show="sgroup.selectedItems[0].discount!==''" ng-bind="sgroup.selectedItems[0].discount + ' %'"></span> <span ng-show="sgroup.selectedItems[0].discount===''" ng-bind="'не указана, т.к. сумма к оплате задана вручную'|localize"></span></p>
 						<p><span class="spnTitle" ng-bind="'Сумма к оплате'|localize"    ></span>: <span ng-bind="sgroup.selectedItems[0].amount + ', ' + sgroup.selectedItems[0].currency.name"></span></p>
 						<p><span class="spnTitle" ng-bind="'Сумма c НДС'|localize"       ></span>: <span ng-bind="(sgroup.selectedItems[0].amount*1.18+0.000001).toFixed(2)*1 + ', ' + sgroup.selectedItems[0].currency.name"></span>
-							&nbsp;&nbsp;<a href="#PaymentModal" role="button" data-toggle="modal" ng-click="sgroup.modalPaymentVisible=true" style="color: rgb(83,83,83); text-decoration: none;" onmouseover="this.style.color='black';" onmouseout="this.style.color='rgb(83,83,83)';" title="{{'Редактировать платеж'|localize}}"> <i class="icon-pencil" style="cursor: pointer;"></i> </a>
+							&nbsp;&nbsp;<a ng-hide="menu.readOnlyMode" href="#PaymentModal" role="button" data-toggle="modal" ng-click="sgroup.modalPaymentVisible=true" style="color: rgb(83,83,83); text-decoration: none;" onmouseover="this.style.color='black';" onmouseout="this.style.color='rgb(83,83,83)';" title="{{'Редактировать платеж'|localize}}"> <i class="icon-pencil" style="cursor: pointer;"></i> </a>
 						</p>
 						
 						
@@ -412,7 +413,7 @@
 								    </div>
 								</div>
 							</div>
-				    		<button type="submit" class="btn btn-success btn-small" ng-bind="'Сохранить'|localize" ng-disabled="sgContractForm.$pristine" ng-click="sgroup.formatData()"></button>
+				    		<button type="submit" class="btn btn-success btn-small" ng-bind="'Сохранить'|localize" ng-disabled="sgContractForm.$pristine" ng-click="sgroup.formatData()" ng-hide="menu.readOnlyMode"></button>
 						</div>		
 					</div>
 				</form>
@@ -440,7 +441,7 @@
 					    selected-items="student.selectedItems"
 					    multi-select-mode="student.multiSelectMode"
 
-					    action-column-visible="true"
+					    action-column-visible="!menu.readOnlyMode"
 					    action-column-icon="'icon-plus-sign'"
 					    action-column-title="'Добавить слушателя'|localize"
 					    action-column-method="student.add()"

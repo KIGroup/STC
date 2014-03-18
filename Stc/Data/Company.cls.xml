@@ -153,6 +153,8 @@ Create or save modified organization</Description>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
 <ReturnType>Company</ReturnType>
 <Implementation><![CDATA[
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Save", "ID="_data.id_"; ShortName="_$ZCONVERT(data.shortName, "I","UTF8"))
+	
 	if (data.id '= ""){
 		set company = ..%OpenId(data.id,3,.status)
 		set company.FullName.Value = $ZCONVERT(data.fullName, "I","UTF8")
@@ -180,6 +182,7 @@ Create or save modified organization</Description>
 	set company.IsUniversity = data.status
 	
 	set status = company.%Save()
+	
 	quit company
 ]]></Implementation>
 </Method>
@@ -191,6 +194,8 @@ Delete organization, if it is available</Description>
 <FormalSpec>id</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Delete", "ID="_id)
+	
 	set company = ..%OpenId(id,4,.status)
 	quit:$$$ISERR(status) ##class(Stc.Utils.Msg).GetErrorStatus("openCompany", "| "_status)
 	
@@ -290,6 +295,9 @@ Delete organization, if it is available</Description>
 </Value>
 <Value name="14">
 <Value>OtherInfo</Value>
+</Value>
+<Value name="15">
+<Value>IsUniversity</Value>
 </Value>
 </Data>
 </Storage>

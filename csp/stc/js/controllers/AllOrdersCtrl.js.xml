@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllOrdersCtrl.js" application="/csp/tnt/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllOrdersCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //ddddddd
 
@@ -14,7 +14,13 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
         $scope.pageStore.orders = {grid:{}};
 
     $scope.order = {};
-
+	if ($scope.menu.readOnlyMode){
+		$scope.order.secondRowActionIcon = '';
+	}
+	else{
+		$scope.order.secondRowActionIcon = 'icon-remove';
+	}
+	
    
     $scope.order.init = function(){
         $scope.order.columns = [
@@ -231,19 +237,13 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
                           {name: 'Дата начала',       sqlName: 'DateStart',       isSorted: false, isSortable: true,  isDown: true,  isSearched: false, isSearchable: false},
                           {name: 'Дата окончания',    sqlName: 'DateFinish',      isSorted: false, isSortable: true,  isDown: true,  isSearched: false, isSearchable: false},
                           {name: 'Время',             sqlName: '',                isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false},
-                          {name: 'Оплачено подгрупп', sqlName: '',                isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false},
                           {name: 'Статус',            sqlName: 'IsCompleted',     isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false}];
         
-        $scope.training.properties = [{name: 'course.name'}, {name:'city.name'}, {name: 'dateStart', filter: 'date', filterParam: $filter('localize')('d MMMM y')}, {name: 'dateFinish', filter: 'date', filterParam: $filter('localize')('d MMMM y')}, {name:'timeStartFinish'}, {name: 'isPaidProgress', getCssClass: function(item){
-                                        var css = 'label';
-
-                                        if (item.isPaid == 0)
-                                            css += ' label-important';
-                                        else if (item.isPaid == 1)
-                                            css += ' label-success';
-
-                                        return css;
-                                        }},
+        $scope.training.properties = [{name: 'course.name'}, 
+        			                  {name:'city.name'}, 
+        			                  {name: 'dateStart', filter: 'date', filterParam: $filter('localize')('d MMMM y')}, 
+        			                  {name: 'dateFinish', filter: 'date', filterParam: $filter('localize')('d MMMM y')}, 
+        			                  {name:'timeStartFinish'}, 
                                       {name: 'status', getCssClass: function(item){
                                         var css = 'label';
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllTrainingsCtrl.js" application="/csp/feb/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllTrainingsCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //ddвd
 
@@ -15,7 +15,15 @@ controllersModule.controller('AllTrainingsCtrl', function($scope, $filter, $loca
         $scope.pageStore.trainings = {grid:{}};
 
     $scope.training = {};
-
+	if ($scope.menu.readOnlyMode){
+		$scope.training.secondRowActionIcon = '';
+		$scope.training.actionColumnIcon = 'icon-ellipsis-horizontal';
+	}
+	else{
+		$scope.training.secondRowActionIcon = 'icon-remove';
+		$scope.training.actionColumnIcon = 'icon-plus-sign';
+	}
+	
     $scope.cert = {};
 
     $scope.training.init = function(){

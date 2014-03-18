@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/persons.csp" application="/csp/six/" default="1"><![CDATA[
+<CSP name="stc/partials/persons.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -23,7 +23,7 @@
 		    selected-items="personTable.selectedItems"
 		    multi-select-mode="personTable.multiSelectMode"
 
-		    action-column-visible="true"
+		    action-column-visible="!menu.readOnlyMode"
 		    action-column-icon="'icon-plus-sign'"
 		    action-column-title="'Добавить сотрудника'|localize"
 		    action-column-method="personTable.add()"
@@ -88,7 +88,7 @@
 			    selected-items="orderTable.selectedItems"
 			    multi-select-mode="false"
 
-			    action-column-visible="true"
+			    action-column-visible="!menu.readOnlyMode"
 		    	action-column-icon="'icon-ellipsis-horizontal'"
 
 		    	first-row-action-icon="'icon-eye-open'"
@@ -116,7 +116,7 @@
 			    selected-items="trainingTable.selectedItems"
 			    multi-select-mode="false"
 
-			    action-column-visible="true"
+			    action-column-visible="!menu.readOnlyMode"
 		    	action-column-icon="'icon-ellipsis-horizontal'"
 
 		    	first-row-action-icon="'icon-eye-open'"
@@ -143,7 +143,7 @@
 			    selected-items="certificateTable.selectedItems"
 			    multi-select-mode="false"
 
-			    action-column-visible="true"
+			    action-column-visible="!menu.readOnlyMode"
 		    	action-column-icon="'icon-ellipsis-horizontal'"
 
 		    	first-row-action-icon="'icon-print'"
@@ -170,7 +170,7 @@
 			    selected-items="courseTable.selectedItems"
 			    multi-select-mode="false"
 			    
-			    action-column-visible="true"
+			    action-column-visible="!menu.readOnlyMode"
 		    	action-column-icon="'icon-ellipsis-horizontal'"
 		    	
 		    	first-row-action-icon="'icon-pencil'"
@@ -197,7 +197,7 @@
 			    selected-items="companyTable.selectedItems"
 			    multi-select-mode="false"
 
-			    action-column-visible="true"
+			    action-column-visible="!menu.readOnlyMode"
 		    	action-column-icon="'icon-ellipsis-horizontal'"
 		    	
 		    	first-row-action-icon="'icon-pencil'"

@@ -29,7 +29,7 @@ Send email</Description>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set status = $$$OK
-	
+	/*
 	try
 	{
 		set mail=##class(%Net.MailMessage).%New()
@@ -63,7 +63,7 @@ Send email</Description>
 	catch (ex){
 		set status = ex.AsStatus()
   	}
-  	
+  	*/
 	quit status
 ]]></Implementation>
 </Method>

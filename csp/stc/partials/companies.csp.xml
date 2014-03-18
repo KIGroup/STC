@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/companies.csp" application="/csp/papampam/" default="1"><![CDATA[
+<CSP name="stc/partials/companies.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -36,7 +36,7 @@
 		    selected-items="company.selectedItems"
 		    multi-select-mode="company.multiSelectMode"
 
-		    action-column-visible="true"
+		    action-column-visible="!menu.readOnlyMode"
 		    action-column-icon="'icon-ellipsis-horizontal'"
 		    action-column-title=""
 		    action-column-method=""

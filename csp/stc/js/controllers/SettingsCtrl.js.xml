@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/controllers/SettingsCtrl.js" application="/csp/stc/" default="1"><![CDATA[
+'use strict';
+//d
+
+/*===========================================================================================
+
+===========================================================================================*/
+
+controllersModule.controller('SettingsCtrl', function($scope, UtilsSrvc){
+    $scope.page = {};
+    
+});
+
+]]></CSP>
+</Export>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/trainings.csp" application="/csp/feb/" default="1"><![CDATA[
+<CSP name="stc/partials/trainings.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -38,7 +38,7 @@
 		    multi-select-mode="training.multiSelectMode"
 
 		    action-column-visible="true"
-		    action-column-icon="'icon-plus-sign'"
+		    action-column-icon="training.actionColumnIcon"
 		    action-column-title="'Добавить обучение'|localize"
 		    action-column-method="training.add()"
 
@@ -46,7 +46,7 @@
 		    first-row-action-title="'Окрыть обучение'|localize"
 		    first-row-action-method="training.open(item)"
 		    
-		    second-row-action-icon="'icon-remove'"
+		    second-row-action-icon="training.secondRowActionIcon"
 		    second-row-action-title="'Удалить обучение'|localize"
 		    second-row-action-method="training.remove(item)"
 
@@ -96,18 +96,18 @@
 						<div class="row-fluid">
 							<div class="span6">
 								<label class="checkbox"  style="padding-top: 5px;" >
-							    	<input type="checkbox" ng-click="training.changeStatusAutoMailing('students')" ng-model="training.selectedItems[0].isStudentsAutoMailing">{{'Авторассылка слушателям'|localize}}
+							    	<input type="checkbox" ng-click="training.changeStatusAutoMailing('students')" ng-model="training.selectedItems[0].isStudentsAutoMailing" ng-disabled="menu.readOnlyMode">{{'Авторассылка слушателям'|localize}}
 							    </label>
 							    <label class="checkbox"  style="padding-top: 5px;" >
-							    	<input type="checkbox" ng-click="training.changeStatusAutoMailing('teacher')" ng-model="training.selectedItems[0].isTeacherAutoMailing">{{'Авторассылка преподавателю'|localize}}
+							    	<input type="checkbox" ng-click="training.changeStatusAutoMailing('teacher')" ng-model="training.selectedItems[0].isTeacherAutoMailing" ng-disabled="menu.readOnlyMode">{{'Авторассылка преподавателю'|localize}}
 							    </label>
 					    	</div>
 					    	<div class="span6">
 							    <label class="checkbox"  style="padding-top: 5px;" >
-							    	<input type="checkbox" ng-click="training.changeStatusAutoMailing('curator')" ng-model="training.selectedItems[0].isCuratorAutoMailing">{{'Авторассылка куратору'|localize}}
+							    	<input type="checkbox" ng-click="training.changeStatusAutoMailing('curator')" ng-model="training.selectedItems[0].isCuratorAutoMailing" ng-disabled="menu.readOnlyMode">{{'Авторассылка куратору'|localize}}
 							    </label>
 							    <label class="checkbox"  style="padding-top: 5px;" >
-							    	<input type="checkbox" ng-click="training.changeStatusAutoMailing('feedback')" ng-model="training.selectedItems[0].isFeedBackAutoMailing">{{'Авторассылка анкеты'|localize}}
+							    	<input type="checkbox" ng-click="training.changeStatusAutoMailing('feedback')" ng-model="training.selectedItems[0].isFeedBackAutoMailing" ng-disabled="menu.readOnlyMode">{{'Авторассылка анкеты'|localize}}
 							    </label>
 							</div>
 					    </div>		

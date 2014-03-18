@@ -79,6 +79,20 @@ Skype</Description>
 <Unique>1</Unique>
 </Index>
 
+<Method name="CheckDeletePrivilege">
+<Description>
+Check delete privilege</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	SET SQLCODE=""
+	&sql(%CHECKPRIV DELETE ON Stc_Data.Person)
+	if (SQLCODE = 100) quit ##class(Stc.Utils.Msg).GetErrorStatus("NoDeletePrivilege", " USERNAME="_$USERNAME)
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+
 <Method name="ConvertToProxyObject">
 <Description>
 Convert to proxyObject (for JSON)</Description>
@@ -106,6 +120,8 @@ Create or save modified person</Description>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
 <ReturnType>Stc.Data.Person</ReturnType>
 <Implementation><![CDATA[
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Save", "ID="_data.id_"; LastName="_$ZCONVERT(data.lastName, "I","UTF8")_"; FirstName="_$ZCONVERT(data.firstName, "I","UTF8")_"; MiddleName="_$ZCONVERT(data.middleName, "I","UTF8")_"; Email="_data.email)
+
 	if (data.id '= ""){
 		set person = ..%OpenId(data.id,3,.status)
 		set person.LastName.Value = $ZCONVERT(data.lastName, "I","UTF8")
@@ -141,6 +157,8 @@ Delete person if it is available</Description>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set person = ..%OpenId(personId, 4)
+
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Delete", "ID="_personId_"; LastName="_person.LastName.Value_"; FirstName="_person.FirstName.Value_"; Email="_person.Email)
 	
 	set st = ##class(Stc.Data.Localization.LText).Delete(person.LastName.%Id())
 	quit:$$$ISERR(st) st

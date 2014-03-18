@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/partials/settings.csp" application="/csp/stc/" default="1"><![CDATA[
+<div class="row-fluid">
+	<div class="span1">
+	</div>
+	<div class="span10">
+		<tabset>
+	 		<tab heading="{{'Google'|localize}}" >
+				<accordion close-others="true">
+				    <accordion-group is-open="true" heading="{{'Календарь'|localize}}">
+				    	<form style="margin: 0 0 10px 0;" ng-submit="">
+						    <div class="row-fluid">
+							    <div class="span6">
+								    <div class="control-group">
+									    <label class="control-label" ng-bind="('Идентификатор календаря'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" required>
+									    </div>
+								    </div>
+								    <div class="control-group">
+									    <label class="control-label" ng-bind="('Адрес календаря'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" required>
+									    </div>
+								    </div>
+							    </div>
+							    <div class="span6">
+							    	<div class="control-group">
+									    <label class="control-label" ng-bind="('Имя SSL конфигурации Google'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" required>
+									    </div>
+								    </div>
+								    <div class="control-group">
+									    <label class="control-label" ng-bind="('Refresh token'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" required>
+									    </div>
+								    </div>
+							    </div>
+						    </div>
+					    </form>
+		    		</accordion-group>
+		    	</accordion>
+			</tab>
+	 		<!-- ============================================ ==================================================-->
+	    	<tab heading="{{'Почта'|localize}}" >
+				<accordion close-others="true">
+				    <accordion-group is-open="true" heading="{{'Общие параметры'|localize}}">
+				    	<form style="margin: 0 0 10px 0;" ng-submit="">
+						    <div class="row-fluid">
+							    <div class="span6">
+							    	<div class="control-group">
+									    <label class="control-label" ng-bind="('SMTP server'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" required>
+									    </div>
+								    </div>
+								    <div class="control-group">
+									    <label class="control-label" ng-bind="('SMTP port'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" required>
+									    </div>
+								    </div>
+								    <div class="control-group">
+									    <label class="control-label" ng-bind="('From'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" required>
+									    </div>
+								    </div>
+								    <div class="row-fluid">
+								    	<div class="span6">
+								    		<button class="btn btn-small btn-primary" ng-bind="('Сохранить'|localize)"></button>
+								    	</div>
+								    	<div class="span6">
+								    	</div>
+								    </div>
+							    </div>
+							    <div class="span6">
+							    	
+								    <div class="control-group">
+									    <label class="control-label" ng-bind="('SMTP user'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" required>
+									    </div>
+								    </div>
+								    <div class="control-group">
+									    <label class="control-label" ng-bind="('SMTP password'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" required>
+									    </div>
+								    </div>
+							    </div>
+						    </div>
+					    </form>
+		    		</accordion-group>
+		    		<br>
+				    <accordion-group heading="{{'Подтверждение регистрации слушателя'|localize}}">
+					    <form style="margin: 0 0 10px 0;" ng-submit="">
+						    <div class="row-fluid">
+							    <div class="span7">
+								    <div class="control-group">
+									    <label class="control-label" ng-bind="('Тема письма'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" required>
+									    </div>
+								    </div>
+							    </div>
+							    <div class="span5">
+							    	
+							    </div>
+						    </div>
+						    <div class="control-group">
+							    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
+							    <div class="controls">
+							    	<textarea class="span12" rows="7" required></textarea>
+							    </div>
+						    </div>
+					    </form>
+				    </accordion-group>
+					<br>
+				    <accordion-group heading="{{'Рассылка напоминания слушателям'|localize}}">
+					    <form style="margin: 0 0 10px 0;" ng-submit="">
+						    <div class="row-fluid">
+							    <div class="span7">
+								    <div class="control-group">
+									    <label class="control-label" ng-bind="('Тема письма'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" required>
+									    </div>
+								    </div>
+							    </div>
+							    <div class="span5">
+							    	<div class="control-group">
+									    <label class="control-label" ng-bind="('Рассылка за N дней до начала обучения'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span8" type="text" placeholder="N" required>
+									    </div>
+								    </div>
+							    </div>
+						    </div>
+						    <div class="control-group">
+							    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
+							    <div class="controls">
+							    	<textarea class="span12" rows="7" required></textarea>
+							    </div>
+						    </div>
+					    </form>
+				    </accordion-group>
+				    <br>
+				    <accordion-group heading="{{'Рассылка слушателям анкеты'|localize}}">
+					    <form style="margin: 0 0 10px 0;" ng-submit="">
+						    <div class="row-fluid">
+							    <div class="span7">
+								    <div class="control-group">
+									    <label class="control-label" ng-bind="('Тема письма'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" required>
+									    </div>
+								    </div>
+							    </div>
+							    <div class="span5">
+							    	<div class="control-group">
+									    <label class="control-label" ng-bind="('Рассылка за N дней до начала обучения'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" placeholder="N" required>
+									    </div>
+								    </div>
+							    </div>
+						    </div>
+						    <div class="control-group">
+							    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
+							    <div class="controls">
+							    	<textarea class="span12" rows="7" required></textarea>
+							    </div>
+						    </div>
+					    </form>
+				    </accordion-group>
+				    <br>
+				    <accordion-group heading="{{'Рассылка преподавателю списка слушателей'|localize}}">
+					    <form style="margin: 0 0 10px 0;" ng-submit="">
+						    <div class="row-fluid">
+							    <div class="span7">
+								    <div class="control-group">
+									    <label class="control-label" ng-bind="('Тема письма'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" required>
+									    </div>
+								    </div>
+							    </div>
+							    <div class="span5">
+							    	<div class="control-group">
+									    <label class="control-label" ng-bind="('Рассылка за N дней до начала обучения'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" placeholder="N" required>
+									    </div>
+								    </div>
+							    </div>
+						    </div>
+						    <div class="control-group">
+							    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
+							    <div class="controls">
+							    	<textarea class="span12" rows="7" required></textarea>
+							    </div>
+						    </div>
+					    </form>
+				    </accordion-group>
+				    <br>
+				    <accordion-group heading="{{'Рассылка куратору списка слушателей'|localize}}">
+					    <form style="margin: 0 0 10px 0;" ng-submit="">
+						    <div class="row-fluid">
+							    <div class="span7">
+								    <div class="control-group">
+									    <label class="control-label" ng-bind="('Тема письма'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" required>
+									    </div>
+								    </div>
+							    </div>
+							    <div class="span5">
+							    	<div class="control-group">
+									    <label class="control-label" ng-bind="('Рассылка за N дней до начала обучения'|localize) + '*'"></label>
+									    <div class="controls">
+									    	<input class="span12" type="text" placeholder="N" required>
+									    </div>
+								    </div>
+							    </div>
+						    </div>
+						    <div class="control-group">
+							    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
+							    <div class="controls">
+							    	<textarea class="span12" rows="7" required></textarea>
+							    </div>
+						    </div>
+					    </form>
+				    </accordion-group>
+				</accordion>
+			</tab>
+		</tabset>
+	</div >
+	<div class="span1">
+	</div >
+</div >
+
+<br>
+
+<stcalert data="page.alert" span-right="1" span-middle="10" span-left="1"/>
+]]></CSP>
+</Export>

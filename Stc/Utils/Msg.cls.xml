@@ -307,6 +307,13 @@ Write all messages into global</Description>
 	set ^CacheMsg("Stc", "ru", "personContainsInTraining") = "Слушатель уже есть в этом обучении"
 	set ^CacheMsg("Stc", "en", "personContainsInTraining") = "Student is already in this training"
 	
+	
+	set ^CacheMsg("Stc", "ru", "NoUpdatePrivilege") = "Нет привилегии на обновление!"
+	set ^CacheMsg("Stc", "en", "NoUpdatePrivilege") = "No update privilege!"
+	
+	set ^CacheMsg("Stc", "ru", "NoDeletePrivilege") = "Нет привилегии на удаление!"
+	set ^CacheMsg("Stc", "en", "NoDeletePrivilege") = "No delete privilege!"
+	
 	//personContainsInTraining
 ]]></Implementation>
 </Method>

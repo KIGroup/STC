@@ -12,7 +12,7 @@ servicesModule.factory('YandexSrvc', function(DALSrvc) {
 	return {
 		// Получить координаты адреса
         getResult: function(string){
-	       return DALSrvc.getPromise('get', 'http://geocode-maps.yandex.ru/1.x/?lang=' +  StcAppSetting.lang + '&sco=latlong&format=json&geocode=' + string, null);
+	       return DALSrvc.getPromise('get', 'http://geocode-maps.yandex.ru/1.x/?lang=' +  StcAppSetting.lang + '&format=json&geocode=' + string, null);
         }
     }
 });

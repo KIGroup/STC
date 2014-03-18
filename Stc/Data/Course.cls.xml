@@ -97,6 +97,8 @@ Create or save modified course</Description>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
 <ReturnType>Course</ReturnType>
 <Implementation><![CDATA[
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Save", "ID="_data.id_"; Name="_$ZCONVERT(data.name, "I","UTF8"))
+	
 	if (data.id = ""){
 		set course = ..%New()
 		set course.Name = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.name, "I","UTF8"))

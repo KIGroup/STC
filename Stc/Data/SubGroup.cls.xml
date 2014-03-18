@@ -127,6 +127,8 @@ Create subgroup in training</Description>
 <FormalSpec><![CDATA[payer:Company,students:%ArrayOfObjects,course:Stc.Data.Course,&status]]></FormalSpec>
 <ReturnType>SubGroup</ReturnType>
 <Implementation><![CDATA[
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Create", "PayerID="_payer.%Id()_"; PayerShortName="_payer.ShortName.Value)
+	
 	set sub = ..%New()
 	set sub.Payer = payer
 	set sub.Students = students

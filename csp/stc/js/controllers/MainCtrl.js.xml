@@ -11,6 +11,7 @@
 controllersModule.controller('MainCtrl', function($scope, $window, $location, $cookies, DALSrvc, $filter, UtilsSrvc){
 
     $scope.menu = {admin: ($cookies.admin === 'true'),
+    			   readOnlyMode: ($cookies.readOnlyMode === 'true'),
     			   loginCaption: ($cookies.admin === 'true' ? 'Выход' : 'Вход'),
     			   languages: [{id: 'ru-RU', name: 'Русский'}, 
                                {id: 'en-US', name: 'English'}]};
@@ -27,6 +28,7 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
         $scope.menu.trainings    = {id: 'trainings',    name: 'Обучения'};
         $scope.menu.companies    = {id: 'companies',    name: 'Компании'};
         $scope.menu.courses      = {id: 'courses',      name: 'Курсы'};
+        $scope.menu.settings      = {id: 'settings',     name: 'Параметры'};
         $scope.menu.persons      = {id: 'persons',      name: 'Сотрудники'};
         $scope.menu.certificates = {id: 'certificates', name: 'Сертификаты'};
 
@@ -79,7 +81,16 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
         
         DALSrvc.getPromise('get', StcAppSetting.admin + '/json/checkAdmin/' + ($scope.menu.admin === true ? 0: 1), null).then(
             function(data){
-                $scope.menu.admin = true;
+	            if (data.privileges=='read'){
+	            	$cookies['readOnlyMode'] = 'true';
+	            	$scope.menu.readOnlyMode = true;
+	            }
+	            else{
+	            	$cookies['readOnlyMode'] = 'false';
+	            	$scope.menu.readOnlyMode = false;
+	            }
+	            
+	            $scope.menu.admin = true;
                 $scope.menu.loginCaption = 'Выход';
                 $cookies['admin'] = 'true';
                 $location.path('/trainings');
@@ -87,6 +98,8 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
             function(response){
                 $scope.menu.admin = false;
                 $cookies['admin'] = 'false';
+	            $cookies['readOnlyMode'] = 'false';
+	            $scope.menu.readOnlyMode = false;
                 $scope.menu.loginCaption = 'Вход';
                 $location.path('/createorder');
                 $scope.menu.brandCaption = 'Форма регистрации на обучение компании InterSystems';

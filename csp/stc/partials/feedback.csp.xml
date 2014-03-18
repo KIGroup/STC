@@ -53,7 +53,7 @@
 					</div>
 					<div class="row-fluid">
 						<button class="btn btn-small btn-success" type="submit" ng-bind="('Отправить'|localize)" ng-disabled="page.feedBack.rating==0"></button>	
-						<input type="text" class="span2" style="margin: 0 0 0 12px;" ng-model="page.feedBack.author" placeholder="{{Подпись}}" title="{{Фамилия И.О. (поле не обязательно для заполнения)}}"/>
+						<input type="text" class="span2" style="margin: 0 0 0 12px;" ng-model="page.feedBack.author" placeholder="{{'Подпись'}}" title="{{'Фамилия И.О. (поле не обязательно для заполнения)'}}"/>
 					</div>
 				</form>   			
 		    </accordion-group>

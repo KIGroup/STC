@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/courses.csp" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/partials/courses.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -36,7 +36,7 @@
 		    selected-items="courseTable.selectedItems"
 		    multi-select-mode="courseTable.multiSelectMode"
 
-		    action-column-visible="true"
+		    action-column-visible="!menu.readOnlyMode"
 		    action-column-icon="'icon-plus-sign'"
 		    action-column-title="'Добавить курс'|localize"
 		    action-column-method="courseTable.add()"
@@ -87,7 +87,7 @@
 		    selected-items="teacherTable.selectedItems"
 		    multi-select-mode="teacherTable.multiSelectMode"
 
-		    action-column-visible="true"
+		    action-column-visible="!menu.readOnlyMode"
 		    action-column-icon="'icon-plus-sign'"
 		    action-column-title="'Добавить преподавателя'|localize"
 		    action-column-method="teacherTable.add()"

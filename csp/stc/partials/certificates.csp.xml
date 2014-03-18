@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/certificates.csp" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/partials/certificates.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span1">
 	</div>
@@ -37,7 +37,7 @@
 		    selected-items="cert.selectedItems"
 		    multi-select-mode="cert.multiSelectMode"
  			
- 			action-column-visible="true"
+ 			action-column-visible="!menu.readOnlyMode"
 		    action-column-icon="'icon-ellipsis-horizontal'"
 
 		    first-row-action-icon="'icon-print'"
