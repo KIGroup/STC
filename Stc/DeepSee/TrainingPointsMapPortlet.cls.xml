@@ -1789,9 +1789,9 @@ Callback for geocoder API.</Description>
 					'ФИО': 
 						{'ru': 'ФИО', 
 						 'en': 'Full name'},
-					'Компания': 
-						{'ru': 'Компания', 
-						 'en': 'Company'},
+					'Организация': 
+						{'ru': 'Организация', 
+						 'en': 'Organization'},
 					'Слушатели курса': 
 						{'ru': 'Слушатели курса', 
 						 'en': 'Students'},	
@@ -1915,7 +1915,7 @@ Callback for geocoder API.</Description>
 			
 			set tr = ##class(Stc.Data.Training).%OpenId(id)
 			set city = tr.City.Name.Value
-			set content = content_##class(%MessageDictionary).FormatText("<tr title='"_tr.Course.Name.Value_"' onclick='selectTrTableRow(""%1"")'><td>%2</td><td>%3</td><td>%4</td><td>%5</td></tr>",
+			set content = content_##class(%MessageDictionary).FormatText("<tr title='"_tr.Course.Name.Value_"' onclick='selectTrTableRow(""%1"")'><td>%2</td><td>%3</td><td nowrap>%4</td><td>%5</td></tr>",
 								 portletIndex_";"_id,
 								 count, $E(tr.Course.Name.Value,1,25)_"...", $REPLACE($ZD(tr.DateStart,4),"/","-"), tr.Street.Value)		
 			
@@ -1956,7 +1956,7 @@ Style for the portlet</Description>
 }
 
 .trainingTable{
-	width: 400px;
+	width: 450px;
 	border-color: #dddddd;
 	
 }

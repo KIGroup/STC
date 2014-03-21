@@ -37,7 +37,7 @@ Write all messages into global</Description>
 	// Customer email text
 	set ^CacheMsg("Stc", "ru", "msgToCompanyContact") = ""_
 	"Здравствуйте, вы оставили заявку на обучение по курсу - '%1', в городе - '%2', дата обучения - '%3'. "_
-	"<br>Вам необходимо перейти по <a href='http://%4/stc/index.csp#/updateorder?code=%5'>ссылке</a> для дальнейшего заполнения вашей заявки, проверить и заполнить реквизиты компании, добавить сотрудников для обучения.<br>"_
+	"<br>Вам необходимо перейти по <a href='http://%4/stc/index.csp#/updateorder?code=%5'>ссылке</a> для дальнейшего заполнения вашей заявки, проверить и заполнить реквизиты организации, добавить сотрудников для обучения.<br>"_
 	"Прямая ссылка на вашу заявку: http://%4/stc/index.csp#/updateorder?code=%5<br>"_
 	"Нажмите 'Завершить редактирование', чтобы отправить ее администратору системы для рассмотрения. Доступ к заявке будет закрыт после завершения редактирования.<br>"_
 	"------------<br>"_
@@ -189,14 +189,14 @@ Write all messages into global</Description>
 	set ^CacheMsg("Stc", "ru", "emailAddNewStudent") = "Слушатель добавлен, но письмо не было отправлено."
 	set ^CacheMsg("Stc", "en", "emailAddNewStudent") = "Student has been added into training, but email was not sent."
 	
-	set ^CacheMsg("Stc", "ru", "createCompany") = "Создание компании"
-	set ^CacheMsg("Stc", "en", "createCompany") = "Creation company"
+	set ^CacheMsg("Stc", "ru", "createCompany") = "Создание организации"
+	set ^CacheMsg("Stc", "en", "createCompany") = "Creation organization"
 	
-	set ^CacheMsg("Stc", "ru", "saveCompany") = "Сохранение компании"
-	set ^CacheMsg("Stc", "en", "saveCompany") = "Saving company"
+	set ^CacheMsg("Stc", "ru", "saveCompany") = "Сохранение организации"
+	set ^CacheMsg("Stc", "en", "saveCompany") = "Saving organization"
 	
-	set ^CacheMsg("Stc", "ru", "openCompany") = "Загрузка компании"
-	set ^CacheMsg("Stc", "en", "openCompany") = "Loading company"
+	set ^CacheMsg("Stc", "ru", "openCompany") = "Загрузка организации"
+	set ^CacheMsg("Stc", "en", "openCompany") = "Loading organization"
 	
 	set ^CacheMsg("Stc", "ru", "createPerson") = "Создание сотрудника"
 	set ^CacheMsg("Stc", "en", "createPerson") = "Create employee"
@@ -213,8 +213,8 @@ Write all messages into global</Description>
 	set ^CacheMsg("Stc", "ru", "openPerson") = "Загрузка сотрудника"
 	set ^CacheMsg("Stc", "en", "openPerson") = "Loading employee"
 	
-	set ^CacheMsg("Stc", "ru", "createCompanyContact") = "Создание контакта компании"
-	set ^CacheMsg("Stc", "en", "createCompanyContact") = "Creation company contact"
+	set ^CacheMsg("Stc", "ru", "createCompanyContact") = "Создание контакта организации"
+	set ^CacheMsg("Stc", "en", "createCompanyContact") = "Creation organization contact"
 	
 	set ^CacheMsg("Stc", "ru", "wrongOrderAccessCode") = "Неверный код доступа к заявке"
 	set ^CacheMsg("Stc", "en", "wrongOrderAccessCode") = "Invalid access code for order"
@@ -283,10 +283,10 @@ Write all messages into global</Description>
 	set ^CacheMsg("Stc", "ru", "sendEmail") = "Отправка почты"
 	set ^CacheMsg("Stc", "en", "sendEmail") = "Sending email"
 	
-	set ^CacheMsg("Stc", "ru", "deleteCompany") = "Удаление компании"
+	set ^CacheMsg("Stc", "ru", "deleteCompany") = "Удаление организации"
 	set ^CacheMsg("Stc", "en", "deleteCompany") = "Removing company"
 	
-	set ^CacheMsg("Stc", "ru", "deleteCompanyImpossible") = "Удаление компании невозможно, на неё ссылаются из других таблиц."
+	set ^CacheMsg("Stc", "ru", "deleteCompanyImpossible") = "Удаление организации невозможно, на неё ссылаются из других таблиц."
 	set ^CacheMsg("Stc", "en", "deleteCompanyImpossible") = "Deleting company impossible it is referenced from other tables."
 	
 	set ^CacheMsg("Stc", "ru", "deleteCertificate") = "Удаление сертификата"
@@ -308,11 +308,8 @@ Write all messages into global</Description>
 	set ^CacheMsg("Stc", "en", "personContainsInTraining") = "Student is already in this training"
 	
 	
-	set ^CacheMsg("Stc", "ru", "NoUpdatePrivilege") = "Нет привилегии на обновление!"
-	set ^CacheMsg("Stc", "en", "NoUpdatePrivilege") = "No update privilege!"
-	
-	set ^CacheMsg("Stc", "ru", "NoDeletePrivilege") = "Нет привилегии на удаление!"
-	set ^CacheMsg("Stc", "en", "NoDeletePrivilege") = "No delete privilege!"
+	set ^CacheMsg("Stc", "ru", "NoPrivilege") = "Нет доступа!"
+	set ^CacheMsg("Stc", "en", "NoPrivilege") = "No privileges!"
 	
 	//personContainsInTraining
 ]]></Implementation>
@@ -328,8 +325,8 @@ do ##class(Stc.Utils.Msg).DeepSeeMsg()</Description>
 	set ^CacheMsg("Stc", "en", "students") = "Students"
 	set ^CacheMsg("Stc", "en-us", "students") = ^CacheMsg("Stc", "en", "students")
 	
-	set ^CacheMsg("Stc", "ru", "company") = "Компания"
-	set ^CacheMsg("Stc", "en", "company") = "Company"
+	set ^CacheMsg("Stc", "ru", "company") = "Организация"
+	set ^CacheMsg("Stc", "en", "company") = "Organization"
 	set ^CacheMsg("Stc", "en-us", "company") = ^CacheMsg("Stc", "en", "company")
 	
 	set ^CacheMsg("Stc", "ru", "course") = "Курс"
@@ -376,9 +373,22 @@ do ##class(Stc.Utils.Msg).DeepSeeMsg()</Description>
 	set ^CacheMsg("Stc", "en", "uncompleted") = "Uncompleted"
 	set ^CacheMsg("Stc", "en-us", "uncompleted") = ^CacheMsg("Stc", "en", "uncompleted")
 	
+	set ^CacheMsg("Stc", "ru", "partner") = "Партнёр"
+	set ^CacheMsg("Stc", "en", "partner") = "Partner"
+	set ^CacheMsg("Stc", "en-us", "partner") = ^CacheMsg("Stc", "en", "partner")
+	
+	set ^CacheMsg("Stc", "ru", "univer") = "Университет"
+	set ^CacheMsg("Stc", "en", "univer") = "University"
+	set ^CacheMsg("Stc", "en-us", "partner") = ^CacheMsg("Stc", "en", "univer")
+	
+	set ^CacheMsg("Stc", "ru", "univerOrPartner") = "Университет / Партнёр"
+	set ^CacheMsg("Stc", "en", "univerOrPartner") = "University / Partner"
+	set ^CacheMsg("Stc", "en-us", "univerOrPartner") = ^CacheMsg("Stc", "en", "univerOrPartner")
+	
+	
 	// Тайтлы виджетов
-	set ^CacheMsg("Stc", "ru", "companyStudentsYears") = "Количество слушателей по компаниям"
-	set ^CacheMsg("Stc", "en", "companyStudentsYears") = "Number of students by company"
+	set ^CacheMsg("Stc", "ru", "companyStudentsYears") = "Количество слушателей по организациям"
+	set ^CacheMsg("Stc", "en", "companyStudentsYears") = "Number of students by organization"
 	set ^CacheMsg("Stc", "en-us", "companyStudentsYears") = ^CacheMsg("Stc", "en", "companyStudentsYears")
 	
 	set ^CacheMsg("Stc", "ru", "studentsYearsAll") = "Количество слушателей по годам"

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Web.LoginForm">
+<Description>
+Created using the page template: Default</Description>
+<Super>%ZEN.Component.page</Super>
+<TimeCreated>63265,53967.639909</TimeCreated>
+
+<Parameter name="APPLICATION">
+<Description>
+Имя приложения, которому принадлежит эта страница.</Description>
+</Parameter>
+
+<Parameter name="PAGENAME">
+<Description>
+Отображаемое имя для нового приложения.</Description>
+</Parameter>
+
+<Parameter name="DOMAIN">
+<Description>
+Домен, используемый для локализации.</Description>
+</Parameter>
+
+<Property name="UrlData">
+<Type>%ZEN.Datatype.string</Type>
+<Parameter name="ZENURL" value="urlData"/>
+</Property>
+
+<XData name="Style">
+<Description>
+Этот блок Style содержит определение CSS стиля страницы.</Description>
+<Data><![CDATA[
+<style type="text/css">
+</style>
+]]></Data>
+</XData>
+
+<XData name="Contents">
+<Description>
+Этот XML блок описывает содержимое этой страницы.</Description>
+<XMLNamespace>http://www.intersystems.com/zen</XMLNamespace>
+<Data><![CDATA[
+<page id="content" hidden="true" xmlns="http://www.intersystems.com/zen" title="">
+<loginForm align="center" cellStyle="padding:5px;" id="form"> 
+<text label="User:" name="CacheUserName" value=""/> 
+<password label="Pwd:" name="CachePassword" value=""/> 
+<submit caption="Login"/> 
+</loginForm> 
+</page>
+]]></Data>
+</XData>
+
+<Method name="onloadHandler">
+<Description>
+This client event, if present, is fired when the page is loaded.</Description>
+<Language>javascript</Language>
+<ClientMethod>1</ClientMethod>
+<Implementation><![CDATA[
+	if (zenPage.UrlData == 'admin'){
+		zenPage.getComponentById('content').setHidden(0);	
+		return;
+	}
+	
+	zenPage.getComponentById('form').submit();
+]]></Implementation>
+</Method>
+</Class>
+</Export>

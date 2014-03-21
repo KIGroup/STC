@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/TrainingStudentsCtrl.js" application="/csp/tnt/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/TrainingStudentsCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //ddddddddddded
 
@@ -21,7 +21,7 @@ controllersModule.controller('TrainingStudentsCtrl', function($scope, $location,
                           {name: 'Фамилия',       sqlName: 'Students->LastName->Value',           isSorted: false, isSortable: true, isDown: true,  isSearched: true,   isSearchable: true},
                           {name: 'Имя',           sqlName: 'Students->FirstName->Value',          isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: false},
                           {name: 'Отчество',      sqlName: 'Students->MiddleName->Value',         isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: false},
-                          {name: 'Компания',      sqlName: 'Students->Company->ShortName->Value', isSorted: true,  isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
+                          {name: 'Организация',      sqlName: 'Students->Company->ShortName->Value', isSorted: true,  isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
                           {name: 'Email',         sqlName: 'Students->Email',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
                           {name: 'Телефон',       sqlName: 'Students->Phone',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
                           {name: 'Skype',         sqlName: 'Students->Skype',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: false}];

@@ -247,7 +247,7 @@ Convert to proxyObject (for JSON)</Description>
 	set proxy.room = ..Room
 	set proxy.address = ##class(%ZEN.proxyObject).%New()
 	set proxy.address.title = ..Street.Value
-	set proxy.address.point = ..Latitude_" "_..Longitude
+	set proxy.address.point = ..Longitude_" "_..Latitude
 	set proxy.isStudentsAutoMailing = ..IsStudentsAutoMailing
 	set proxy.isTeacherAutoMailing = ..IsTeacherAutoMailing
 	set proxy.isCuratorAutoMailing = ..IsCuratorAutoMailing

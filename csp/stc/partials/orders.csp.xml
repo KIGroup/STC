@@ -78,8 +78,8 @@
 			<tab heading="{{'Информация'|localize}}">
 				<div class="row-fluid">
 					<div class="span6">
-						<p><span class="spnTitle" ng-bind="'Компания'|localize"         ></span>: <span ng-bind="order.selectedItems[0].contact.company.shortName"></span>&nbsp;&nbsp;<span class="label label-important" ng-hide="order.selectedItems[0].contact.company.id" ng-bind="'Новая компания!'|localize"></span></p>
-						<p><span class="spnTitle" ng-bind="'Веб-сайт компании'|localize"></span>: <a target="_blank" style="text-decoration: none;" ng-href="{{'http://' + order.selectedItems[0].contact.company.site}}" title="{{order.selectedItems[0].contact.company.site}}"><i ng-bind="order.selectedItems[0].contact.company.site.substring(0,25)"></i></a></p>
+						<p><span class="spnTitle" ng-bind="'Организация'|localize"         ></span>: <span ng-bind="order.selectedItems[0].contact.company.shortName"></span>&nbsp;&nbsp;<span class="label label-important" ng-hide="order.selectedItems[0].contact.company.id" ng-bind="'Новая организация'|localize"></span></p>
+						<p><span class="spnTitle" ng-bind="'Веб-сайт организации'|localize"></span>: <a target="_blank" style="text-decoration: none;" ng-href="{{'http://' + order.selectedItems[0].contact.company.site}}" title="{{order.selectedItems[0].contact.company.site}}"><i ng-bind="order.selectedItems[0].contact.company.site.substring(0,25)"></i></a></p>
 						<p><span class="spnTitle" ng-bind="'Партнер'|localize"          ></span>: <span ng-bind="order.selectedItems[0].contact.partner"></span></p>
 						<div ng-show="order.contactType=='order' || (order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email 
 																	&& order.selectedItems[0].contact.company.contact.phone==order.selectedItems[0].contact.phone 
@@ -105,7 +105,7 @@
 																				 && order.selectedItems[0].contact.company.contact.middleName==order.selectedItems[0].contact.middleName)">
 							<div ng-hide="menu.readOnlyMode" class="btn-group" ng-init="order.contactType='order'">
 						        <button type="button" class="btn btn-small btnRadio" ng-model="order.contactType" btn-radio="'order'"   ng-bind="'Контакт из заявки'|localize"></button>
-						        <button type="button" class="btn btn-small btnRadio" ng-model="order.contactType" btn-radio="'company'" ng-bind="'Контакт компании'|localize" ></button>
+						        <button type="button" class="btn btn-small btnRadio" ng-model="order.contactType" btn-radio="'company'" ng-bind="'Контакт организации'|localize" ></button>
 						    </div>	
 							<button class="btn btn-small" ng-click="order.changeCompanyContact(false)" title="{{'Обновить контакт'|localize}}" ng-show="order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email && !menu.readOnlyMode">&nbsp;<i class="icon-refresh"></i>&nbsp;</button>
 							<button class="btn btn-small" ng-click="order.changeCompanyContact(true)"  title="{{'Заменить контакт'|localize}}" ng-show="order.selectedItems[0].contact.company.contact.email!=order.selectedItems[0].contact.email && !menu.readOnlyMode">&nbsp;<i class="icon-exchange"></i>&nbsp;</button>
@@ -118,7 +118,7 @@
 						<p><span class="spnTitle" ng-bind="'Дата обучения'|localize"        ></span>: <span ng-bind="order.selectedItems[0].date|convertCacheDate:('d MMMM y'|localize)"></span></p>
 						<p><span class="spnTitle" ng-bind="'Дата создания'|localize"        ></span>: <span ng-bind="order.selectedItems[0].createdTS|convertCacheDate:('d MMMM y, HH:mm:ss'|localize)"></span></p>
 						<button ng-hide="menu.readOnlyMode" class="btn btn-success btn-small" ng-click="order.accept()" 		ng-bind="'Принять заявку'|localize"></button>
-						<button ng-hide="menu.readOnlyMode" class="btn btn-info btn-small"    ng-click="order.openChangeCompanyDialog()" ng-bind="'Сменить компанию'|localize"></button>
+						<button ng-hide="menu.readOnlyMode" class="btn btn-info btn-small"    ng-click="order.openChangeCompanyDialog()" ng-bind="'Сменить организацию'|localize"></button>
 					</div>
 				</div>
 				
@@ -138,8 +138,8 @@
 			<tab heading="{{'Информация'|localize}}"  active="training.tabInfo">
 				<div class="row-fluid">
 					<div class="span6">
-						<p><span class="spnTitle" ng-bind="'Компания'|localize"         ></span>: <span ng-bind="order.selectedItems[0].contact.company.shortName"></span></p>
-						<p><span class="spnTitle" ng-bind="'Веб-сайт компании'|localize"></span>: <a target="_blank" style="text-decoration: none;" ng-href="{{'http://' + order.selectedItems[0].contact.company.site}}" title="{{order.selectedItems[0].contact.company.site}}"><i ng-bind="order.selectedItems[0].contact.company.site.substring(0,25)"></i></a></p>
+						<p><span class="spnTitle" ng-bind="'Организация'|localize"         ></span>: <span ng-bind="order.selectedItems[0].contact.company.shortName"></span></p>
+						<p><span class="spnTitle" ng-bind="'Веб-сайт организации'|localize"></span>: <a target="_blank" style="text-decoration: none;" ng-href="{{'http://' + order.selectedItems[0].contact.company.site}}" title="{{order.selectedItems[0].contact.company.site}}"><i ng-bind="order.selectedItems[0].contact.company.site.substring(0,25)"></i></a></p>
 						<p><span class="spnTitle" ng-bind="'Партнер'|localize"          ></span>: <span ng-bind="order.selectedItems[0].contact.partner"></span></p>
 						<p><span class="spnTitle" ng-bind="'Контакт'|localize"          ></span>: <span ng-bind="order.selectedItems[0].contact.lastName + ' ' + order.selectedItems[0].contact.firstName + ' ' + order.selectedItems[0].contact.middleName"></span></p>
 						<p><span class="spnTitle" ng-bind="'Email'"                               ></span>: <span ng-bind="order.selectedItems[0].contact.email"></span></p>
@@ -152,7 +152,7 @@
 						<p><span class="spnTitle" ng-bind="'Количество слушателей'|localize"></span>: <span ng-bind="order.selectedItems[0].studentsNumber"></span></p>
 						<p><span class="spnTitle" ng-bind="'Дата обучения'|localize"        ></span>: <span ng-bind="order.selectedItems[0].date|convertCacheDate:('d MMMM y'|localize)"></span></p>
 						<p><span class="spnTitle" ng-bind="'Дата создания'|localize"        ></span>: <span ng-bind="order.selectedItems[0].createdTS|convertCacheDate:('d MMMM y, HH:mm:ss'|localize)"></span></p>
-						<button ng-show="order.selectedItems[0].status.code!='Closed' && !menu.readOnlyMode"   class="btn btn-info btn-small"    ng-click="order.openChangeCompanyDialog()" ng-bind="'Сменить компанию'|localize"></button>
+						<button ng-show="order.selectedItems[0].status.code!='Closed' && !menu.readOnlyMode"   class="btn btn-info btn-small"    ng-click="order.openChangeCompanyDialog()" ng-bind="'Сменить организацию'|localize"></button>
 						&nbsp;
 						<button ng-show="order.selectedItems[0].status.code=='Approved' && !menu.readOnlyMode" class="btn btn-small"             ng-click="order.sendEmail()" title="{{'Отправить контакту повторно код доступа к заявке'|localize}}" ng-bind="'Отправить код'|localize"></button>
 					</div>
@@ -247,13 +247,13 @@
 <div class="modal" id="ChangeCompanyModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="ChangeCompanyModalLabel" aria-hidden="true" ng-show="order.modalChangeCompanyVisible">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"  ng-click="order.modalChangeCompanyVisible=false">×</button>
-    <h3 id="ChangeCompanyModalLabel" ng-bind="'Сменить компанию в заявке'|localize"></h3>
+    <h3 id="ChangeCompanyModalLabel" ng-bind="'Сменить организацию в заявке'|localize"></h3>
   </div>
   <div class="modal-body">
 	<form style="margin: 0 0 10px 0;" ng-submit="">
 		<div class="row-fluid">
 			<div class="control-group">
-			    <label class="control-label" ng-bind="('Компания'|localize) + '*'"></label>
+			    <label class="control-label" ng-bind="('Организация'|localize) + '*'"></label>
 		        <div class="controls">
 	            	<select class="span12" ng-model="order.newOrderCompany" ng-options="comp as comp.name for comp in order.companies" required>
 	            	</select>

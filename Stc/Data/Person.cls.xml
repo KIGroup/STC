@@ -87,7 +87,7 @@ Check delete privilege</Description>
 <Implementation><![CDATA[
 	SET SQLCODE=""
 	&sql(%CHECKPRIV DELETE ON Stc_Data.Person)
-	if (SQLCODE = 100) quit ##class(Stc.Utils.Msg).GetErrorStatus("NoDeletePrivilege", " USERNAME="_$USERNAME)
+	if (SQLCODE = 100) quit ##class(Stc.Utils.Msg).GetErrorStatus("NoPrivilege", " USERNAME="_$USERNAME)
 	
 	quit $$$OK
 ]]></Implementation>

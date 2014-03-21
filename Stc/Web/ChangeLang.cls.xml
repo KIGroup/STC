@@ -16,6 +16,7 @@
 	set lang = $Get(%request.Data("Lang",1),"ru")
 	do ##class(%MessageDictionary).SetSessionLanguage(lang)
 	set %session.Language = lang
+	
 	Quit $$$OK
 ]]></Implementation>
 </Method>

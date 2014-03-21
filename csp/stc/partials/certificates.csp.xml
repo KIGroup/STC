@@ -76,7 +76,7 @@
 					<p><span class="spnTitle" ng-bind="'Номер сертификата'|localize"         ></span>: <span ng-bind="cert.selectedItems[0].number"></span></p>
 					<p><span class="spnTitle" ng-bind="'Дата создания сертификата'|localize" ></span>: <span ng-bind="cert.selectedItems[0].date|convertCacheDate:('d MMMM y'|localize)"></span></p>
 					<p><span class="spnTitle" ng-bind="'Слушатель'|localize"                 ></span>: <span ng-bind="cert.selectedItems[0].student.fullName"></span></p>
-					<p><span class="spnTitle" ng-bind="'Компания'|localize"                  ></span>: <span ng-bind="cert.selectedItems[0].student.company.shortName"></span></p>
+					<p><span class="spnTitle" ng-bind="'Организация'|localize"                  ></span>: <span ng-bind="cert.selectedItems[0].student.company.shortName"></span></p>
 					<p><span class="spnTitle" ng-bind="'Email'"                              ></span>: <span ng-bind="cert.selectedItems[0].student.email"></span></p>
 					<p><span class="spnTitle" ng-bind="'Телефон'|localize"                   ></span>: <span ng-bind="cert.selectedItems[0].student.phone"></span></p>
 					<p><span class="spnTitle" ng-bind="'Skype'"                              ></span>: <span ng-bind="cert.selectedItems[0].student.skype"></span></p>

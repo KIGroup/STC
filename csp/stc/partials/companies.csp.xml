@@ -5,7 +5,7 @@
 	<div class="span1">
 	</div>
 	<div class="span10">
-		<span ng-bind="'Компании'|localize" style="font-weight: bold;"></span>
+		<span ng-bind="'Организации'|localize" style="font-weight: bold;"></span>
 		<div class="btn-group pull-right">
 			<button type="button" class="btn btn-mini btnRadio" ng-model="company.status" btn-radio="'All'" ng-bind="'Все'|localize"></button>
 			<button type="button" class="btn btn-mini btnRadio" ng-model="company.status" btn-radio="1"     ng-bind="'Университеты'|localize"></button>
@@ -42,11 +42,11 @@
 		    action-column-method=""
 
 		    first-row-action-icon="'icon-pencil'"
-		    first-row-action-title="'Редактировать компанию'|localize"
+		    first-row-action-title="'Редактировать организацию'|localize"
 		    first-row-action-method="company.edit(item)"
 		    
 		    second-row-action-icon="'icon-remove'"
-		    second-row-action-title="'Удалить компанию'|localize"
+		    second-row-action-title="'Удалить организацию'|localize"
 		    second-row-action-method="company.delete(item)"
 		    
 		    forcibly-update="company.forciblyUpdate"
@@ -60,7 +60,7 @@
 	<div class="span1">
 	</div>
 	<div class="span10" style="text-align: center;">
-		<i ng-bind="'Выберите компанию для отображения подробной информации.'|localize"></i>
+		<i ng-bind="'Выберите организацию для отображения подробной информации.'|localize"></i>
 	</div>
 	<div class="span1">
 	</div>
@@ -74,10 +74,10 @@
 			<tab heading="{{'Информация'|localize}}">
 				<div class="row-fluid">
 					<div class="span6">
-						<p><span class="spnTitle" ng-bind="'Полное название компании'|localize"></span>: <span ng-bind="company.selectedItems[0].fullName"></span></p>
+						<p><span class="spnTitle" ng-bind="'Полное название организации'|localize"></span>: <span ng-bind="company.selectedItems[0].fullName"></span></p>
 						<p><span class="spnTitle" ng-bind="'Юридический адрес'|localize"       ></span>: <span ng-bind="company.selectedItems[0].legalAddress"></span></p>
 						<p><span class="spnTitle" ng-bind="'Почтовый адрес'|localize"          ></span>: <span ng-bind="company.selectedItems[0].mailAddress"></span></p>
-						<p><span class="spnTitle" ng-bind="'Веб-сайт компании'|localize"       ></span>: <a target="_blank" style="text-decoration: none;" ng-href="{{'http://' + company.selectedItems[0].site}}" title="{{company.selectedItems[0].site}}"><i ng-bind="company.selectedItems[0].site.substring(0,25)"></i></a></p>
+						<p><span class="spnTitle" ng-bind="'Веб-сайт организации'|localize"       ></span>: <a target="_blank" style="text-decoration: none;" ng-href="{{'http://' + company.selectedItems[0].site}}" title="{{company.selectedItems[0].site}}"><i ng-bind="company.selectedItems[0].site.substring(0,25)"></i></a></p>
 						</br>
 						<p><span class="spnTitle" ng-bind="'Контакт'|localize"></span>: <span ng-bind="company.selectedItems[0].contact.lastName + ' ' + company.selectedItems[0].contact.firstName + ' ' + company.selectedItems[0].contact.middleName"></span></p>
 						<p><span class="spnTitle" ng-bind="'Email'"           ></span>: <span ng-bind="company.selectedItems[0].contact.email"></span></p>

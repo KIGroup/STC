@@ -194,5 +194,7 @@ filter: alpha(opacity=60);
     left: 10px;
     top: 11px;
     left: -6px;
-}]]></CSP>
+}
+
+]]></CSP>
 </Export>

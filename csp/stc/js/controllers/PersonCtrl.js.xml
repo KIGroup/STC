@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/PersonCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/PersonCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //dddddddddddвdddd
 
@@ -310,7 +310,7 @@ controllersModule.controller('PersonCtrl', function($scope, $location, $filter, 
     $scope.other.changeCompanyContact = function(){
         PersonSrvc.changeCompanyContact({contact: $scope.personForm.person, companyId: $routeParams.comp, isReplace: 1}).then(
             function(data){
-                $scope.personForm.alert = UtilsSrvc.getAlert('Готово!', 'Контакт компании изменен.', 'success', true);
+                $scope.personForm.alert = UtilsSrvc.getAlert('Готово!', 'Контакт организации изменен.', 'success', true);
             },
             function(response){
                 $scope.personForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);

@@ -26,7 +26,7 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
         $scope.menu.createOrder  = {id: 'createOrder',  name: 'Создать заявку'};
         $scope.menu.orders       = {id: 'orders',       name: 'Заявки'};
         $scope.menu.trainings    = {id: 'trainings',    name: 'Обучения'};
-        $scope.menu.companies    = {id: 'companies',    name: 'Компании'};
+        $scope.menu.companies    = {id: 'companies',    name: 'Организации'};
         $scope.menu.courses      = {id: 'courses',      name: 'Курсы'};
         $scope.menu.settings      = {id: 'settings',     name: 'Параметры'};
         $scope.menu.persons      = {id: 'persons',      name: 'Сотрудники'};
@@ -36,7 +36,7 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
         $scope.menu.analyticsMap = {id: 'analyticsMap', name: 'Карта точек обучения'};
         $scope.menu.analyticsCourse  = {id: 'analyticsCourse' , name: 'Курсы и слушатели'};
         $scope.menu.analyticsTeacher = {id: 'analyticsTeacher', name: 'Преподаватели и слушатели'};
-        $scope.menu.analyticsCompany = {id: 'analyticsCompany', name: 'Компании и слушатели'};
+        $scope.menu.analyticsCompany = {id: 'analyticsCompany', name: 'Организации и слушатели'};
 
     };
 
@@ -107,7 +107,18 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
             });
     }
     
+    $scope.goTo = function(url){
+		 alert('DDDD');
+		 $location.path(url);
+	};
+    
     $scope.menu.init();
+    
+    if (urlData != ""){
+	    var newUrl = urlData.replace(/-q-/g, "?").replace(/-and-/g, "&").replace(/-eq-/g, "=");
+	    console.log(newUrl);
+	    $window.location = StcAppSetting.default + '/stc/index.csp#/' + newUrl;
+    }
 });
 
 ]]></CSP>

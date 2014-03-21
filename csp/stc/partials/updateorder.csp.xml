@@ -9,7 +9,7 @@
     		<tab heading="{{'Заявка'|localize}}">
     			<div class="row-fluid">
 					<div class="span6">
-						<p><span class="spnTitle" ng-bind="'Компания'|localize"></span>: <span ng-bind="ordForm.order.contact.company.shortName"></span></p>
+						<p><span class="spnTitle" ng-bind="'Организация'|localize"></span>: <span ng-bind="ordForm.order.contact.company.shortName"></span></p>
 						<p><span class="spnTitle" ng-bind="'Партнер'|localize" ></span>: <span ng-bind="ordForm.order.contact.partner"></span></p>
 						<p><span class="spnTitle" ng-bind="'Контакт'|localize" ></span>: <span ng-bind="ordForm.order.contact.lastName + ' ' + ordForm.order.contact.firstName + ' ' + ordForm.order.contact.middleName"></span></p>
 						<p><span class="spnTitle" ng-bind="'Email'"            ></span>: <span ng-bind="ordForm.order.contact.email"></span></p>
@@ -23,15 +23,15 @@
 						<p><span class="spnTitle" ng-bind="'Дата обучения'|localize"        ></span>: <span ng-bind="ordForm.order.date|convertCacheDate:('d MMMM y'|localize)"></span></p>
 						<button ng-hide="menu.readOnlyMode" class="btn btn-primary btn-small" ng-show="ordForm.order.status.code=='Approved'" ng-disabled="!formCompany.$valid || !formCompany.$pristine" ng-click="ordForm.finishEditing()" ng-bind="'Завершить редактирование'|localize"></button></br></br>
 						<div ng-hide="formCompany.$valid">
-							<span class="label label-important" ng-bind="'Не все данные компании заполнены!'|localize"></span>
+							<span class="label label-important" ng-bind="'Не все данные организации заполнены!'|localize"></span>
 							</br>
 							</br>
 						</div>
-						<span class="label label-important" ng-show="formCompany.$dirty" ng-bind="'Изменение данных компании не было зафиксировано!'|localize"></span>
+						<span class="label label-important" ng-show="formCompany.$dirty" ng-bind="'Изменение данных организации не было зафиксировано!'|localize"></span>
 					</div>		
 				</div>	
     		</tab>
-    		<tab heading="{{'Компания'|localize}}">
+    		<tab heading="{{'Организация'|localize}}">
     			<form name="formCompany" ng-submit="ordForm.saveCompany()">
 					<stccompany company="ordForm.order.contact.company" required-all="true" disable-short-name="!menu.admin"/>
 					<button ng-hide="menu.readOnlyMode" class="btn btn-primary btn-small" type="submit" ng-disabled="!formCompany.$dirty" ng-bind="'Сохранить'|localize"></button>

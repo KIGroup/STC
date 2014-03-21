@@ -2,7 +2,7 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/controllers/TrainingCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//dddedddddddd
+//dddeddddddddв
 
 /*===========================================================================================
 Обучение
@@ -54,7 +54,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
                           {name: 'Курс',          sqlName: 'Training->Course->Name->Value', isSorted: false, isSortable: true, isDown: true,  isSearched: true,  isSearchable: true},
                           {name: 'Номер',         sqlName: 'Number',                        isSorted: true, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
                           {name: 'Слушатель',     sqlName: 'Student->LastName->Value',      isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
-                          {name: 'Компания',      sqlName: '',                              isSorted: false, isSortable: false,isDown: true,  isSearched: false, isSearchable: false},
+                          {name: 'Организация',      sqlName: '',                              isSorted: false, isSortable: false,isDown: true,  isSearched: false, isSearchable: false},
                           {name: 'Дата создания', sqlName: 'CreatedDate',                   isSorted: false,  isSortable: true, isDown: false, isSearched: false, isSearchable: false, filter: 'date'},
                           {name: 'Статус',        sqlName: 'isPrinted',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true}];
         
@@ -114,7 +114,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
                           {name: 'Фамилия',       sqlName: 'LastName->Value',           isSorted: false, isSortable: true, isDown: true,  isSearched: true, isSearchable: true},
                           {name: 'Имя',           sqlName: 'FirstName->Value',          isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false},
                           {name: 'Отчество',      sqlName: 'MiddleName->Value',         isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false},
-                          {name: 'Компания',      sqlName: 'Company->ShortName->Value', isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
+                          {name: 'Организация',      sqlName: 'Company->ShortName->Value', isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
                           {name: 'Email',         sqlName: 'Email',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
                           {name: 'Телефон',       sqlName: 'Phone',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
                           {name: 'Skype',         sqlName: 'Skype',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: false},
@@ -140,7 +140,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
         //$scope.newstud.forciblyUpdate++;
         
         //============================== СТУДЕНТЫ ПОДГРУППЫ ==========================================================================
-        $scope.student.columns = [{name: 'Фамилия'}, {name: 'Имя'}, {name: 'Отчество'}, {name: 'Компания'}, {name: 'Email'}, {name: 'Телефон'}, {name: 'Skype'}];
+        $scope.student.columns = [{name: 'Фамилия'}, {name: 'Имя'}, {name: 'Отчество'}, {name: 'Организация'}, {name: 'Email'}, {name: 'Телефон'}, {name: 'Skype'}];
         $scope.student.properties = [{name:'lastName'}, {name:'firstName'}, {name:'middleName'}, {name:'company.shortName'}, {name:'email'}, {name:'phone'}, {name:'skype'}];
         $scope.student.pageSize = 100;
         $scope.student.pageCurr = 1;
@@ -154,7 +154,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
                           {name: 'Фамилия',       sqlName: 'Students->LastName->Value',           isSorted: false, isSortable: true, isDown: true,  isSearched: true,   isSearchable: true},
                           {name: 'Имя',           sqlName: 'Students->FirstName->Value',          isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: false},
                           {name: 'Отчество',      sqlName: 'Students->MiddleName->Value',         isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: false},
-                          {name: 'Компания',      sqlName: 'Students->Company->ShortName->Value', isSorted: true,  isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
+                          {name: 'Организация',      sqlName: 'Students->Company->ShortName->Value', isSorted: true,  isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
                           {name: 'Email',         sqlName: 'Students->Email',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
                           {name: 'Телефон',       sqlName: 'Students->Phone',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: true},
                           {name: 'Skype',         sqlName: 'Students->Skype',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false,  isSearchable: false}];
@@ -238,7 +238,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
                 $scope.sgroup.pageTotal = Math.ceil(data.itemsTotal / pageSize);
                 $scope.sgroup.itemsTotal = data.itemsTotal;
                 $scope.sgroup.items = data.items;
-                $scope.training.data.sgroups = data.itemsTotal;;
+                $scope.training.data.sgroups = data.itemsTotal;
 
                 if ($scope.sgroup.selectedItems && $scope.sgroup.items && $scope.sgroup.selectedItems.length == 0 && $scope.sgroup.items.length != 0){
                     $scope.sgroup.selectedItems[0] = $scope.sgroup.items[0];
@@ -532,7 +532,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
                 $scope.newstud.pageTotal = Math.ceil(data.itemsTotal / pageSize);
                 $scope.newstud.itemsTotal = data.itemsTotal;
                 $scope.newstud.items = data.items;
-                $scope.training.newStudents = data.itemsTotal;
+                $scope.training.data.newStudents = data.itemsTotal;
 
                 if ($scope.newstud.selectedItems && $scope.newstud.items && $scope.newstud.selectedItems.length == 0 && $scope.newstud.items.length != 0){
                     $scope.newstud.selectedItems[0] = $scope.newstud.items[0];
@@ -612,7 +612,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
         
         OrderSrvc.changeOrderNewStudentCompany($scope.newstud.selectedItems[0].id, $scope.other.newOrderCompany.id).then(
                 function(data){
-                    $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Произошла смена компании в заявке.', 'success', true);
+                    $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Произошла смена организации в заявке.', 'success', true);
                     $scope.newstud.forciblyUpdate++;
                 },
                 function(response){
@@ -644,7 +644,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
                 $scope.allstud.pageTotal = Math.ceil(data.itemsTotal / pageSize);
                 $scope.allstud.itemsTotal = data.itemsTotal;
                 $scope.allstud.items = data.items;
-                $scope.training.students = data.itemsTotal;
+                $scope.training.data.students = data.itemsTotal;
 
                 if ($scope.allstud.selectedItems && $scope.allstud.items && $scope.allstud.selectedItems.length == 0 && $scope.allstud.items.length != 0){
                     $scope.allstud.selectedItems[0] = $scope.allstud.items[0];

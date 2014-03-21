@@ -31,6 +31,13 @@ Cube definition from Architect.</Description>
       </level>
     </hierarchy>
   </dimension>
+  <dimension name="Type" displayName="@univerOrPartner@" disabled="false" hasAll="false" allCaption="All Type" allDisplayName="Type" type="data" iKnowType="entity" hidden="false" showHierarchies="default">
+    <hierarchy name="H1" disabled="false">
+      <level sourceProperty="SubGroups.Payer.Type.Name" name="Name" displayName="@univerOrPartner@" disabled="false" list="false" useDisplayValue="true" useAsFilter="true">
+        <property sourceProperty="SubGroups.Payer.Type.Name.Value" name="Value" displayName="@univerOrPartner@" disabled="false" hidden="false" isName="true" isDescription="false" isReference="true" useDisplayValue="false"></property>
+      </level>
+    </hierarchy>
+  </dimension>
   <measure sourceExpression="%cube.GetStudentsCount(%source.%ID)" name="Students" displayName="@students@" disabled="false" aggregate="SUM" type="integer" hidden="false" searchable="false" iKnowSource="string"></measure>
   <relationship sourceProperty="Training" name="TrainingCubeRelation" disabled="false" relatedCube="TrainingCube" inverse="SubGroups" cardinality="one"></relationship>
   <listing name="Students" disabled="false" listingType="table" fieldList="SubGroups-&gt;Students-&gt;Email" sql="SELECT TOP 1000 stud.Students-&gt;LastName-&gt;Value || &apos; &apos; || ISNULL(stud.Students-&gt;FirstName-&gt;Value,&apos;&apos;) || &apos; &apos; || ISNULL(stud.Students-&gt;MiddleName-&gt;Value,&apos;&apos;) As &quot;$$$TEXT[&quot;@student/Stc&quot;]&quot;,  sg.Training-&gt;DateFinish As &quot;$$$TEXT[&quot;@datefinish/Stc&quot;]&quot;,  sg.Training-&gt;Course-&gt;Name-&gt;Value As &quot;$$$TEXT[&quot;@course/Stc&quot;]&quot;,  sg.Training-&gt;City-&gt;Name-&gt;Value As &quot;$$$TEXT[&quot;@city/Stc&quot;]&quot;  FROM Stc_Data.SubGroup_Students As stud INNER JOIN Stc_Data.Training_SubGroups as sg ON sg.SubGroups=stud.SubGroup  WHERE stud.SubGroup IN (SELECT SubGroups FROM $$$SOURCE WHERE $$$RESTRICT)  ORDER BY &quot;$$$TEXT[&quot;@datefinish/Stc&quot;]&quot;, &quot;$$$TEXT[&quot;@course/Stc&quot;]&quot;, &quot;$$$TEXT[&quot;@city/Stc&quot;]&quot;, &quot;$$$TEXT[&quot;@student/Stc&quot;]&quot;"></listing>

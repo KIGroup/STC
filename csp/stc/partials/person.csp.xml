@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/person.csp" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/partials/person.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid" ng-show="searchForm.visible">
 	<div class="span4">
 	</div>
@@ -15,7 +15,7 @@
 						<div class="control-group">
 							<label class="control-label" ng-bind="'Фамилия или email'|localize"></label>
 							<div class="controls">
-			                	<input class="span12" type="text" ng-model="searchForm.person" ng-change="searchForm.search(searchForm.person)" placeholder="{{'Фамилия И.О., Email, Компания'|localize}}" typeahead="person as person.text for person in searchForm.persons | filter: {text: $viewValue} | limitTo: 15" required></input>
+			                	<input class="span12" type="text" ng-model="searchForm.person" ng-change="searchForm.search(searchForm.person)" placeholder="{{'Фамилия И.О., Email, Организация'|localize}}" typeahead="person as person.text for person in searchForm.persons | filter: {text: $viewValue} | limitTo: 15" required></input>
 					    	</div>
 						</div>
 					</div>

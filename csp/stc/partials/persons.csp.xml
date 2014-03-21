@@ -59,7 +59,7 @@
 	<div class="span1">
 	</div>
 	<div class="span10" style="text-align: center;">
-		<i ng-bind="'Выбранный сотрудник не указан ни в одной заявке, не проходит обучение, не имеет сертификатов, не преподаватель и не является контактом компании.'|localize"></i>
+		<i ng-bind="'Выбранный сотрудник не указан ни в одной заявке, не проходит обучение, не имеет сертификатов, не преподаватель и не является контактом организации.'|localize"></i>
 	</div>
 	<div class="span1">
 	</div>
@@ -179,7 +179,7 @@
 				/>
 		    </tab>
 
-			<tab heading="{{('Контакт компании'|localize) + ' (' + companyTable.items.length + ')'}}" active="companyTable.active" ng-hide="$parent.companyTable.items.length==0">
+			<tab heading="{{('Контакт организации'|localize) + ' (' + companyTable.items.length + ')'}}" active="companyTable.active" ng-hide="$parent.companyTable.items.length==0">
 				<stcgrid
 			    table-class="table table-bordered"
 			    caption=""
@@ -201,7 +201,7 @@
 		    	action-column-icon="'icon-ellipsis-horizontal'"
 		    	
 		    	first-row-action-icon="'icon-pencil'"
-		    	first-row-action-title="'Редактировать компанию'|localize"
+		    	first-row-action-title="'Редактировать организацию'|localize"
 		    	first-row-action-method="companyTable.edit(item)"
 				/>
 		    </tab>

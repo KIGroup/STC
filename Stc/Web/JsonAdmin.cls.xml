@@ -60,7 +60,9 @@ Save or create course</Description>
 		TROLLBACK
 		set status = ex.AsStatus()
 	}
-
+	
+	if (status = $$$OK) do ##class(Stc.Data.Training).BuildCubes()
+	
 	quit status
 ]]></Implementation>
 </Method>
@@ -455,6 +457,8 @@ Save new organization data</Description>
 		set status = ex.AsStatus()
 	}
 
+	if (status = $$$OK) do ##class(Stc.Data.Training).BuildCubes()
+
 	quit status
 ]]></Implementation>
 </Method>
@@ -636,8 +640,8 @@ Get all organizations for table, full info</Description>
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
       	
       	set whereRequired = ""
-      	if (params.status '= "All"){
-	      	set whereRequired = "IsUniversity = '"_..ParseParameter(params.status)_"'"
+      	if (params.status '= "All") && (params.status=1){
+	      	set whereRequired = "Type->Code = 'Univer'"
 	    }
 	    
 		$$$THROWONERROR(status, ..WriteJsonForGrid("SELECT ID FROM Stc_Data.Company", "Stc.Data.Company", params, whereRequired))
@@ -2116,6 +2120,167 @@ Get all teachers of course</Description>
 	"ORDER BY  lastName"
     
     quit ..WriteJsonFromSql(sql)
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[
+// ==================================== SETTINGS ==================================== 
+
+]]></Content>
+</UDLText>
+
+<Method name="GetGoogleSettings">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>type:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+
+	try{
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+
+		set proxy = ##class(%ZEN.proxyObject).%New()
+		set proxy.type = type
+		
+		if (type = "calendar"){
+			set proxy.data = ##class(%ZEN.proxyObject).%New()
+			set proxy.data.id = $GET(^Settings("Stc","Google","CalendarId"))
+			set proxy.data.src = $GET(^Settings("Stc","GoogleCalendarSrc"))
+			set proxy.data.token = $GET(^Settings("Stc","Google","RefreshToken"))
+			set proxy.ssl = $GET(^Settings("Stc","Google","SslConfig"))
+		}
+		
+		do proxy.%ToJSON()		
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+	
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="SaveGoogleSettings">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>type:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+
+	try{
+		TSTART
+		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		
+		if (data.type = "calendar"){
+			s ^Settings("Stc","Google","CalendarId") = proxy.data.id
+			s ^Settings("Stc","GoogleCalendarSrc") = proxy.data.src
+			s ^Settings("Stc","Google","RefreshToken") = proxy.data.token
+			s ^Settings("Stc","Google","SslConfig") = proxy.ssl
+		}
+		
+		TCOMMIT	
+	}
+	catch ex {
+		TROLLBACK
+		set status = ex.AsStatus()
+	}
+	
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="GetMailSettings">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>type:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+
+	try{
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+
+		set proxy = ##class(%ZEN.proxyObject).%New()
+		set proxy.data = ##class(%ZEN.proxyObject).%New()
+		set proxy.type = type
+		
+		if (type = "settings"){
+			set proxy.data.from = $GET(^Settings("Stc","EmailFrom"))
+			set proxy.data.password = $GET(^Settings("Stc","EmailSMTPPASSWORD"))
+			set proxy.data.port = $GET(^Settings("Stc","EmailSMTPPORT"))
+			set proxy.data.server = $GET(^Settings("Stc","EmailSMTPSERVER"))
+			set proxy.data.user = $GET(^Settings("Stc","EmailSMTPUSER"))
+		}
+		elseif (type = "reminder"){
+			set proxy.data.subj = $GET(^CacheMsg("Stc","ru","msgSubjectToTrainingStudents"))
+			set proxy.data.msg = $GET(^CacheMsg("Stc","ru","msgToTrainingStudents"))
+			set proxy.data.days = $GET(^Settings("Stc", "StudentsAutoMailingDays"), 2)
+		}
+		elseif (type = "feedback"){
+			set proxy.data.subj = $GET(^CacheMsg("Stc","ru","msgSubjectToTrainingStudentsFeedBack"))
+			set proxy.data.msg = $GET(^CacheMsg("Stc","ru","msgToTrainingStudentsFeedBack"))
+		}
+		elseif (type = "teacher"){
+			set proxy.data.subj = $GET(^CacheMsg("Stc","ru","msgSubjectToTrainingTeacher"))
+			set proxy.data.msg = $GET(^CacheMsg("Stc","ru","msgToTrainingTeacher"))
+			set proxy.data.days = $GET(^Settings("Stc", "TeacherAutoMailingDays"), 4)			
+		}
+		elseif (type = "curator"){
+			set proxy.data.subj = $GET(^CacheMsg("Stc","ru","msgSubjectToTrainingCurator"))
+			set proxy.data.msg = $GET(^CacheMsg("Stc","ru","msgToTrainingCurator"))
+			set proxy.data.days = $GET(^Settings("Stc", "CuratorAutoMailingDays"), 4)
+		}
+		elseif (type = "registration"){
+			set proxy.data.subj = $GET(^CacheMsg("Stc","ru","msgSubjectToNewTrainingStudent"))
+			set proxy.data.msg = $GET(^CacheMsg("Stc","ru","msgToNewTrainingStudent"))	
+		}
+		
+		do proxy.%ToJSON()		
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+	
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="SaveMailSettings">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>type:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+
+	try{
+		TSTART
+		
+		// Check privilege for Person table
+		$$$THROWONERROR(status, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		
+		if (data.type = "calendar"){
+			s ^Settings("Stc","Google","CalendarId") = proxy.data.id
+			s ^Settings("Stc","GoogleCalendarSrc") = proxy.data.src
+			s ^Settings("Stc","Google","RefreshToken") = proxy.data.token
+			s ^Settings("Stc","Google","SslConfig") = proxy.ssl
+		}
+		
+		TCOMMIT	
+	}
+	catch ex {
+		TROLLBACK
+		set status = ex.AsStatus()
+	}
+	
+	quit status
 ]]></Implementation>
 </Method>
 

@@ -89,6 +89,7 @@ Dispatch a REST request according to URL and Method</Description>
 <FormalSpec>pUrl:%String,pMethod:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	
 	set lang = $CASE(%request.CgiEnvs("HTTP_ACCEPT_LANGUAGE"), "en":"en", :"ru")
 	do ##class(%MessageDictionary).SetSessionLanguage(lang)
 	set %session.Language = lang

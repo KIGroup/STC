@@ -28,7 +28,7 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
                           {name: 'Город',         sqlName: 'City->Name->Value',         isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
                           {name: 'Дата обучения', sqlName: 'TrainingDate',       isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false},
                           {name: 'Слушатели',     sqlName: 'StudentsNumber',     isSorted: false, isSortable: false,isDown: true,  isSearched: false, isSearchable: false},
-                          {name: 'Компания',      sqlName: 'Company->ShortName->Value', isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
+                          {name: 'Организация',      sqlName: 'Company->ShortName->Value', isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
                           {name: 'Дата создания', sqlName: 'CreatedTS',          isSorted: true,  isSortable: true, isDown: false, isSearched: false, isSearchable: false, filter: 'date'},
                           {name: 'Статус',        sqlName: 'OrderStatus',        isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false}];
         
@@ -126,7 +126,7 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
             UtilsSrvc.openCustomMessageBox('Принять заявку', 'Отправить контактному лицу на email код доступа к заявке, чтобы завершить заполнение?', btns);
         }
         else {
-            UtilsSrvc.openMessageBox('Принять заявку', 'Компания, указанная в заявке, не существует. Создать ее?', createCompany);
+            UtilsSrvc.openMessageBox('Принять заявку', 'Организация, указанная в заявке, не существует. Создать ее?', createCompany);
         }
     };
 
@@ -160,17 +160,17 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
                 });  
         };
 
-        UtilsSrvc.openMessageBox('Удалить заявку', $filter('localize')("Удалить заявку от компании") + " '" + item.contact.company.shortName + "'?", deleteOrder);    
+        UtilsSrvc.openMessageBox('Удалить заявку', $filter('localize')("Удалить заявку от организации") + " '" + item.contact.company.shortName + "'?", deleteOrder);    
     };
 
     // Обновить или заменить контакт компании 
     $scope.order.changeCompanyContact = function(isReplace){
         var msgSuccess = 'Контакт заменен.';
-        var msgWindow = ['Заменить контакт', 'Заменить контакт компании контактом из заявки? Старый контакт компании не будет удален.'];
+        var msgWindow = ['Заменить контакт', 'Заменить контакт организации контактом из заявки? Старый контакт организации не будет удален.'];
 
         if (!isReplace){
             msgSuccess = 'Контакт обновлен.';
-            msgWindow = ['Обновить контакт', 'Заменить данные контакта компании данными контакта из заявки?'];
+            msgWindow = ['Обновить контакт', 'Заменить данные контакта организации данными контакта из заявки?'];
         }
         
         function resolve(){
@@ -212,7 +212,7 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
         
         OrderSrvc.changeOrderCompany($scope.order.selectedItems[0].id, $scope.order.newOrderCompany.id).then(
                 function(data){
-                    $scope.order.alert = UtilsSrvc.getAlert('Готово!', 'Произошла смена компании в заявке.', 'success', true);
+                    $scope.order.alert = UtilsSrvc.getAlert('Готово!', 'Произошла смена организации в заявке.', 'success', true);
                     //$scope.order.selectedItems = [];
                     $scope.order.forciblyUpdate++;
                 },
@@ -226,8 +226,8 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
     // TRAINING
     // Инициализация таблицы для обучения 
     $scope.training.init = function(){
-        $scope.training.orderColumns   = [{name: 'Курс'}, {name: 'Город'}, {name: 'Дата обучения'}, {name: 'Слушатели'}, {name: 'Компания'}, {name: 'Дата создания'}, {name: 'Статус'}];
-        $scope.training.studentColumns = [{name: 'Фамилия'}, {name: 'Имя'}, {name: 'Отчество'}, {name: 'Компания'}, {name: 'Email'}, {name: 'Телефон'}, {name: 'Skype'}];
+        $scope.training.orderColumns   = [{name: 'Курс'}, {name: 'Город'}, {name: 'Дата обучения'}, {name: 'Слушатели'}, {name: 'Организация'}, {name: 'Дата создания'}, {name: 'Статус'}];
+        $scope.training.studentColumns = [{name: 'Фамилия'}, {name: 'Имя'}, {name: 'Отчество'}, {name: 'Организация'}, {name: 'Email'}, {name: 'Телефон'}, {name: 'Skype'}];
         $scope.training.studentProperties = [{name:'lastName'}, {name:'firstName'}, {name:'middleName'}, {name:'company'}, {name:'email'}, {name:'phone'}, {name:'skype'}];
         $scope.training.studentItems = [];
 

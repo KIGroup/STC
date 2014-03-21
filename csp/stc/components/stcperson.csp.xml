@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/components/stcperson.csp" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/components/stcperson.csp" application="/csp/stc/" default="1"><![CDATA[
 <div>
     <div class="control-group">
         <label class="control-label" ng-bind="('Фамилия'|localize) + '*'"></label>
@@ -39,8 +39,8 @@
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label" ng-show="companyDisabled" ng-bind="('Компания'|localize) + '*'"></label>
-        <label class="control-label" ng-hide="companyDisabled">{{('Компания'|localize) + '*'}}  
+        <label class="control-label" ng-show="companyDisabled" ng-bind="('Организация'|localize) + '*'"></label>
+        <label class="control-label" ng-hide="companyDisabled">{{('Организация'|localize) + '*'}}  
             <i class="iSwitcher" ng-click="switchCompany(false)" ng-show="!companySwitchOff && companyExist" ng-bind="'(нет в списке)'|localize"></i>
             <i class="iSwitcher" ng-click="switchCompany(true)" ng-show="!companySwitchOff && !companyExist" ng-bind="'(есть в списке)'|localize"></i>
         </label>
@@ -52,7 +52,7 @@
         </div>
     </div>
     <div class="control-group" ng-hide="companyExist || webSiteOff">
-        <label class="control-label" ng-bind="'Веб-сайт компании'|localize"></label>
+        <label class="control-label" ng-bind="'Веб-сайт организации'|localize"></label>
         <div class="controls">
             <input class="span12" type="text" ng-model="person.company.notexist.site"></input>
         </div>

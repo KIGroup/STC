@@ -240,26 +240,26 @@
 			/>
 			
 			<div ng-show="newstud.selectedItems.length!=0 && newstud.items.length!=0 && !menu.readOnlyMode">
-				<p ng-hide="newstud.selectedItems[0].company.id"><span class="label label-important" ng-bind="'Внимание!'|localize"></span>&nbsp;&nbsp;<span ng-bind="'Компания слушателя не существует, создайте её или смените'"></span></p>
+				<p ng-hide="newstud.selectedItems[0].company.id"><span class="label label-important" ng-bind="'Внимание!'|localize"></span>&nbsp;&nbsp;<span ng-bind="'Организация слушателя не существует, создайте её или смените'"></span></p>
 				
 				<div ng-hide="newstud.conflict.id">
 					<button type="button" class="btn btn-small btn-success" ng-click="newstud.addIntoTraining('create_add')" ng-bind="'Добавить в обучение'|localize" title="{{'Слушатель будет добавлен в обучение'|localize}}" ng-disabled="!newstud.selectedItems[0].company.id"></button>
-					<button type="button" class="btn btn-small btn-info"    ng-click="other.openChangeCompanyDialog()"       ng-bind="'Сменить компанию'|localize"   title="{{'Заменить компанию в заявке на существующую'|localize}}"></button>				
-					<button type="button" class="btn btn-small btn-primary" ng-click="other.createCompany()"                 ng-bind="'Создать компанию'|localize"    title="{{'Создать новую компанию, контактом компании станет слушатель из заявки'|localize}}" ng-hide="newstud.selectedItems[0].company.id"></button>				
+					<button type="button" class="btn btn-small btn-info"    ng-click="other.openChangeCompanyDialog()"       ng-bind="'Сменить организацию'|localize"   title="{{'Заменить организацию в заявке на существующую'|localize}}"></button>				
+					<button type="button" class="btn btn-small btn-primary" ng-click="other.createCompany()"                 ng-bind="'Создать организацию'|localize"    title="{{'Создать новую организацию, контактом организации станет слушатель из заявки'|localize}}" ng-hide="newstud.selectedItems[0].company.id"></button>				
 				</div>
 
 				<div ng-show="newstud.conflict.id">
 					<p><span class="label label-important" ng-bind="'Внимание!'|localize"></span>&nbsp;&nbsp;<span ng-bind="('В системе уже присутствует сотрудник с email: '|localize) + newstud.conflict.email"></span></p>
 					<p><span class="spnTitle" ng-bind="'Сотрудник'|localize"></span>: <span ng-bind="newstud.conflict.lastName + ' ' + newstud.conflict.firstName + ' ' + newstud.conflict.middleName"></span></p>
-					<p><span class="spnTitle" ng-bind="'Компания'"          ></span>: <span ng-bind="newstud.conflict.company.shortName"></span></p>
+					<p><span class="spnTitle" ng-bind="'Организация'"          ></span>: <span ng-bind="newstud.conflict.company.shortName"></span></p>
 					<p><span class="spnTitle" ng-bind="'Email'"             ></span>: <span ng-bind="newstud.conflict.email"></span></p>
 					<p><span class="spnTitle" ng-bind="'Телефон'|localize"  ></span>: <span ng-bind="newstud.conflict.phone"></span></p>
 					<p><span class="spnTitle" ng-bind="'Skype'"             ></span>: <span ng-bind="newstud.conflict.skype"></span></p>
 				
 					<button type="button" class="btn btn-small btn-warning" ng-click="newstud.addIntoTraining('update_add')" ng-bind="'Обновить и добавить в обучение'|localize"     title="{{'Сотрудник из системы будет обновлен и добавлен в обучение'|localize}}" ng-disabled="!newstud.selectedItems[0].company.id"></button>
 					<button type="button" class="btn btn-small btn-success" ng-click="newstud.addIntoTraining('old_add')"    ng-bind="'Не обновлять и добавить в обучение'|localize" title="{{'Сотрудник из системы будет добавлен в обучение'|localize}}"></button>
-					<button type="button" class="btn btn-small btn-info"    ng-click="other.openChangeCompanyDialog()"       ng-bind="'Сменить компанию'|localize"                  title="{{'Заменить компанию в заявке на существующую'|localize}}"></button>				
-					<button type="button" class="btn btn-small btn-primary" ng-click="other.createCompany()"                 ng-bind="'Создать компанию'|localize"                   title="{{'Создать новую компанию, контактом компании станет слушатель из заявки'|localize}}" ng-hide="newstud.selectedItems[0].company.id"></button>				
+					<button type="button" class="btn btn-small btn-info"    ng-click="other.openChangeCompanyDialog()"       ng-bind="'Сменить организацию'|localize"                  title="{{'Заменить организацию в заявке на существующую'|localize}}"></button>				
+					<button type="button" class="btn btn-small btn-primary" ng-click="other.createCompany()"                 ng-bind="'Создать организацию'|localize"                   title="{{'Создать новую организацию, контактом организации станет слушатель из заявки'|localize}}" ng-hide="newstud.selectedItems[0].company.id"></button>				
 				</div>
 			</div>
     	</tab>
@@ -338,7 +338,7 @@
 				<div class="row-fluid" ng-hide="sgroup.items.length==0 || sgroup.selectedItems[0].length==0">
 					<div class="span6">
 						<p><span class="spnTitle" ng-bind="'Плательщик'|localize"              ></span>: <span ng-bind="sgroup.selectedItems[0].payer.shortName"></span></p>
-						<p><span class="spnTitle" ng-bind="'Полное название компании'|localize"></span>: <span ng-bind="sgroup.selectedItems[0].payer.fullName"></span></p>
+						<p><span class="spnTitle" ng-bind="'Полное название организации'|localize"></span>: <span ng-bind="sgroup.selectedItems[0].payer.fullName"></span></p>
 						<p><span class="spnTitle" ng-bind="'Юридический адрес'|localize"       ></span>: <span ng-bind="sgroup.selectedItems[0].payer.legalAddress"></span></p>
 						<p><span class="spnTitle" ng-bind="'Почтовый адрес'|localize"          ></span>: <span ng-bind="sgroup.selectedItems[0].payer.mailAddress"></span></p>
 						<p><span class="spnTitle" ng-bind="'Веб-сайт'|localize"                ></span>: <span ng-bind="sgroup.selectedItems[0].payer.site"></span></p>
@@ -545,7 +545,7 @@
 	<form style="margin: 0 0 10px 0;" ng-submit="">
 		<div class="row-fluid">
 			<div class="control-group">
-			    <label class="control-label" ng-bind="('Компания - плательщик подгруппы'|localize) + '*'"></label>
+			    <label class="control-label" ng-bind="('Организация - плательщик подгруппы'|localize) + '*'"></label>
 		        <div class="controls">
 	            	<select class="span12" ng-model="sgroup.newSubGroupPayer" ng-options="comp as comp.name for comp in sgroup.companies" required>
 	            	</select>
@@ -562,13 +562,13 @@
 <div class="modal" id="ChangeCompanyModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="ChangeCompanyModalLabel" aria-hidden="true" ng-show="other.modalChangeCompanyVisible">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"  ng-click="other.modalChangeCompanyVisible=false">×</button>
-    <h3 id="ChangeCompanyModalLabel" ng-bind="'Сменить компанию в заявке'|localize"></h3>
+    <h3 id="ChangeCompanyModalLabel" ng-bind="'Сменить организацию в заявке'|localize"></h3>
   </div>
   <div class="modal-body">
 	<form style="margin: 0 0 10px 0;" ng-submit="">
 		<div class="row-fluid">
 			<div class="control-group">
-			    <label class="control-label" ng-bind="('Компания'|localize) + '*'"></label>
+			    <label class="control-label" ng-bind="('Организация'|localize) + '*'"></label>
 		        <div class="controls">
 	            	<select class="span12" ng-model="other.newOrderCompany" ng-options="comp as comp.name for comp in sgroup.companies" required>
 	            	</select>

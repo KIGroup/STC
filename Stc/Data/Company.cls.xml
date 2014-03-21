@@ -103,6 +103,12 @@ Other information</Description>
 <Required>1</Required>
 </Property>
 
+<Property name="Type">
+<Description>
+Type of company - univer, partner etc.</Description>
+<Type>Stc.Data.CompanyType</Type>
+</Property>
+
 <Property name="Employees">
 <Description>
 All employees</Description>
@@ -140,7 +146,13 @@ Convert to proxyObject (for JSON)</Description>
 	set proxy.contact = ..Contact.ConvertToProxyObject()
 	
 	set proxy.employeesNumber = ..Employees.Count()
-	set proxy.status = ..IsUniversity
+	
+	if (..Type.Code = "Univer"){
+		set proxy.status = 1
+	}
+	else{
+		set proxy.status = 0
+	}
 	
 	quit proxy
 ]]></Implementation>
@@ -179,7 +191,13 @@ Create or save modified organization</Description>
 	set company.CorrespondentAccount = $ZCONVERT(data.correspondentAccount, "I","UTF8")	
 	set company.KPP = $ZCONVERT(data.kpp, "I","UTF8")
 	set company.WebSite = $REPLACE($REPLACE($ZCONVERT(data.site, "I","UTF8"),"http://",""), "https://","")
-	set company.IsUniversity = data.status
+	//set company.IsUniversity = data.status
+	if (data.status=1){
+		set company.Type = ##class(CompanyType).CodeIdxOpen("Univer")
+	}
+	else{
+		set company.Type = ##class(CompanyType).CodeIdxOpen("Partner")
+	}
 	
 	set status = company.%Save()
 	
@@ -298,6 +316,9 @@ Delete organization, if it is available</Description>
 </Value>
 <Value name="15">
 <Value>IsUniversity</Value>
+</Value>
+<Value name="16">
+<Value>Type</Value>
 </Value>
 </Data>
 </Storage>

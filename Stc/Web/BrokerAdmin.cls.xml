@@ -245,6 +245,20 @@ Private request processor for administrator</Description>
 	<!--  -->
 	<Route Method="DELETE" Url="/json/deleteTrainingStudent/:trainingIdstudentId" Call="Stc.Web.JsonAdmin:DeleteTrainingStudent"/>
 	
+	<!-- ==================================== SETTINGS ==================================== -->
+	<!-- Get settings for google api from globals -->
+	<Route Method="GET" Url="/json/settings/google/:type" Call="Stc.Web.JsonAdmin:GetGoogleSettings"/>
+	
+	<!-- Save settings for google api from client -->
+	<Route Method="POST" Url="/json/settings/google/:type" Call="Stc.Web.JsonAdmin:SaveGoogleSettings"/>
+	
+	
+	<!-- Get settings for mail from globals -->
+	<Route Method="GET" Url="/json/settings/mail/:type" Call="Stc.Web.JsonAdmin:GetMailSettings"/>
+	
+	<!-- Save settings for mail from client -->
+	<Route Method="GET" Url="/json/settings/mail/:type" Call="Stc.Web.JsonAdmin:SaveMailSettings"/>
+	
 	<!-- ==================================== OTHER ==================================== -->
 	
 	<!-- Check access, authorization call, if needed -->
@@ -263,8 +277,7 @@ Dispatch a REST request according to URL and Method</Description>
 <FormalSpec>pUrl:%String,pMethod:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set ^currUser = $USERNAME
-
+	
 	set lang = $CASE(%request.CgiEnvs("HTTP_ACCEPT_LANGUAGE"), "en":"en", :"ru")
 	do ##class(%MessageDictionary).SetSessionLanguage(lang)
 	set %session.Language = lang

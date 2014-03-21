@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllCoursesCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllCoursesCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //вddddddddd
 
@@ -133,7 +133,7 @@ controllersModule.controller('AllCoursesCtrl', function($scope, $location, $filt
                           {name: 'Фамилия'},
                           {name: 'Имя'},
                           {name: 'Отчество'},
-                          {name: 'Компания'},
+                          {name: 'Организация'},
                           {name: 'Email'},
                           {name: 'Телефон'},
                           {name: 'Skype'}];

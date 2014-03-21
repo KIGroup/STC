@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/CompanyCtrl.js" application="/csp/papampam/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/CompanyCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //dddddddfd
 
@@ -15,15 +15,15 @@ controllersModule.controller('CompanyCtrl', function($scope, $routeParams, $time
    
     $scope.compForm.init = function(){
         if ($routeParams.id){
-            $scope.compForm.caption = "Редактирование компании";
+            $scope.compForm.caption = "Редактирование организации";
             $scope.compForm.loadCompany($routeParams.id);
         }
         else if ($routeParams.order){
-            $scope.compForm.caption = "Создание компании из заявки";
+            $scope.compForm.caption = "Создание организации из заявки";
             $scope.compForm.loadDirtyOrder($routeParams.order);
         }
         else if ($routeParams.ordernewstudent){
-            $scope.compForm.caption = "Создание компании из заявки от слушателя";
+            $scope.compForm.caption = "Создание организации из заявки от слушателя";
             $scope.compForm.loadOrderNewStudent($routeParams.ordernewstudent);
         }
     };

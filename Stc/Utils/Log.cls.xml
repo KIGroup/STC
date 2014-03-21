@@ -26,7 +26,6 @@
 <FormalSpec>location:%String,msg:%Text</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	/*
 	try{
 		set log = ..%New()
 		set log.CreatedTS = $ZDT($ZTS,3)
@@ -36,13 +35,6 @@
 	}
 	catch(ex){
 	}
-	*/
-	
-	set createdTS = $ZDT($ZTS,3)
-	
-	NEW SQLCODE
-	&sql(INSERT INTO Stc_Utils.Log (CreatedTS, Location, Msg) Values(:crearedTS, :location, :msg))
-	set ^sqlCode = SQLCODE
 	
 	quit $$$OK
 ]]></Implementation>
