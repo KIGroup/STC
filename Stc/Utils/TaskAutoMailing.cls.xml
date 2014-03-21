@@ -76,7 +76,7 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 <Implementation><![CDATA[
 	try{
 		set diffDays = $GET(^Settings("Stc", "TeacherAutoMailingDays"), 4)
-		set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp#/trainingstudents?id=%1&code=%2"
+		set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp?urlData=trainingstudents-q-id-eq-%1-and-code-eq-%2"
 		
 		&sql(DECLARE Tr2Cur CURSOR FOR 
 				SELECT ID
@@ -124,7 +124,7 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 <Implementation><![CDATA[
 	try{
 		set diffDays = $GET(^Settings("Stc", "CuratorAutoMailingDays"), 4)
-		set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp#/trainingstudents?id=%1&code=%2"
+		set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp?urlData=trainingstudents-q-id-eq-%1-and-code-eq-%2"
 			
 		&sql(DECLARE Tr3Cur CURSOR FOR 
 				SELECT ID
@@ -172,7 +172,7 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	try{
-		set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp#/feedback?id=%1&code=%2"
+		set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp?urlData=feedback-q-id-eq-%1-and-code-eq-%2"
 		
 		&sql(DECLARE Tr4Cur CURSOR FOR 
 				SELECT ID

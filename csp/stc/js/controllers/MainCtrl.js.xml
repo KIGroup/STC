@@ -2,7 +2,7 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/controllers/MainCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//ddddddddвd
+//ddddddddвdd
 
 /*===========================================================================================
 Главный контроллер, работа с языком и меню

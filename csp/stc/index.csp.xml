@@ -12,7 +12,7 @@
 
 	<script>
 	var urlData = '#(%request.Get("urlData"))#';
-	//alert(urlData);
+	
   </script>
 	
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
@@ -84,9 +84,9 @@
         <div class="navbar">
           <div class="navbar-inner">
             <div class="container">
-             <!--
+             
               <a class="brand" href="" ng-bind="menu.brandCaption|localize"></a>
-              
+             <!-- 
               <div class="brand" href="" style="padding: 4px;">
               	<img src="img/brand.gif" width="100px"/>
               	<div style="display: inline; vertical-align: middle;">
@@ -116,7 +116,7 @@
                     </ul>
                   </li>
                 
-                <li ng-show="menu.admin" ng-class="menu.settings.css"    ><a href="#/settings"     ng-bind="menu.settings.name|localize"></a></li>
+                <!--<li ng-show="menu.admin" ng-class="menu.settings.css"    ><a href="#/settings"     ng-bind="menu.settings.name|localize"></a></li>-->
                   
                 </ul>
 
