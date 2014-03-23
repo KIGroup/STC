@@ -10,7 +10,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-	<script>
+	<script language="javascript">
 	var urlData = '#(%request.Get("urlData"))#';
 	
   </script>
@@ -25,10 +25,12 @@
     <script language="javascript"  src="lib/angular/angular.min.js"></script>
     <script language="javascript"  src="lib/angular/angular-resource.min.js"></script>
     <script language="javascript"  src="lib/angular/angular-cookies.min.js"></script>
+    <script language="javascript"  src="lib/angular/angular-sanitize.min.js"></script>
     
     <script language="javascript"  src="js/app.js"></script>  
     	
-   	<script>
+   	<script language="javascript">
+
        	function getLocale() {
       			if (navigator) {
           			if (navigator.language) {
@@ -106,7 +108,7 @@
                   <li ng-show="menu.admin" ng-class="menu.courses.css"     ><a href="#/courses"      ng-bind="menu.courses.name|localize"></a></li>
                   
                   
-                  <li ng-show="menu.admin" ng-class="'dropdown ' + menu.analytics.css">
+                  <li ng-show="menu.admin" class="dropdown" ng-class="'dropdown ' + menu.analytics.css">
                     <a href="#/analytics/pointsmap"><span ng-bind="(menu.analytics.name|localize) + ' '"></span><b class="caret"></b></a>
                     <ul class="dropdown-menu">
                       <li ng-class="{aSelected: menu.analyticsMap.css=='active'}"><a href="#/analytics/pointsmap" ng-bind="menu.analyticsMap.name|localize"></a></li>
@@ -116,7 +118,7 @@
                     </ul>
                   </li>
                 
-                <!--<li ng-show="menu.admin" ng-class="menu.settings.css"    ><a href="#/settings"     ng-bind="menu.settings.name|localize"></a></li>-->
+                <li ng-show="menu.admin && !menu.readOnlyMode" ng-class="menu.settings.css"    ><a href="#/settings"     ng-bind="menu.settings.name|localize"></a></li>
                   
                 </ul>
 
@@ -140,6 +142,14 @@
 
     </div>
 
+   	<script language="javascript">
+ 	jQuery('ul.nav li.dropdown').hover(function() {
+	          jQuery(this).find('.dropdown-menu').stop(true, true).delay(250).show(200);
+            }, function() {
+              jQuery(this).find('.dropdown-menu').stop(true, true).delay(50).hide(50);
+            });
+         
+   </script>
     <script language="javascript"  src="js/controllers/MainCtrl.js"></script>
     <script language="javascript"  src="js/controllers/TrainingCtrl.js"></script>
     <script language="javascript"  src="js/controllers/AllTrainingsCtrl.js"></script>
@@ -172,8 +182,10 @@
     <script language="javascript"  src="js/services/PersonSrvc.js"></script>
     <script language="javascript"  src="js/services/UtilsSrvc.js"></script>
     <script language="javascript"  src="js/services/ReportSrvc.js"></script>
+	<script language="javascript"  src="js/services/SettingsSrvc.js"></script>
 	
 	  <script language="javascript"  src="js/directives/stcalert.js"></script> 
+	  <script language="javascript"  src="js/directives/stcalertlabel.js"></script> 
     <script language="javascript"  src="js/directives/stctraining.js"></script> 
     <script language="javascript"  src="js/directives/stcgrid.js"></script> 
     <script language="javascript"  src="js/directives/stcperson.js"></script> 

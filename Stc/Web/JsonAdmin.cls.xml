@@ -265,7 +265,7 @@ Send access code to contact person's email</Description>
 	set status = ##class(Stc.Data.Person).CheckDeletePrivilege()
 	quit:$$$ISERR(status) status
 		
-	set domainWebApp = %request.CgiEnvs("HTTP_HOST")_$GET(^Settings("Stc", "WebApp")) 
+	set domainWebApp = $GET(^Settings("Stc", "DomainName"))_$GET(^Settings("Stc", "WebApp")) 
 	
 	// 1 - Курс, 2 - Город, 3 - дата, 4 - домен для системы, 5 - код доступа к заявкe
 	set msg = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToCompanyContact"), order.Course.Name.Value, order.City.Name.Value, $ZDATE(order.TrainingDate,3), domainWebApp, order.AccessCode)
@@ -2144,12 +2144,16 @@ Get all teachers of course</Description>
 		set proxy = ##class(%ZEN.proxyObject).%New()
 		set proxy.type = type
 		
-		if (type = "calendar"){
+		if (type = "settings"){
+			set proxy.data = ##class(%ZEN.proxyObject).%New()
+			set proxy.data.token = $GET(^Settings("Stc","Google","RefreshToken"))
+			set proxy.data.ssl = $GET(^Settings("Stc","Google","SslConfig"))
+		}
+		elseif (type = "calendar"){
 			set proxy.data = ##class(%ZEN.proxyObject).%New()
 			set proxy.data.id = $GET(^Settings("Stc","Google","CalendarId"))
 			set proxy.data.src = $GET(^Settings("Stc","GoogleCalendarSrc"))
-			set proxy.data.token = $GET(^Settings("Stc","Google","RefreshToken"))
-			set proxy.ssl = $GET(^Settings("Stc","Google","SslConfig"))
+			set proxy.data.msg = ##class(Stc.Utils.Msg).GetMsg("CalendarEvent")
 		}
 		
 		do proxy.%ToJSON()		
@@ -2177,11 +2181,15 @@ Get all teachers of course</Description>
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
-		if (data.type = "calendar"){
-			s ^Settings("Stc","Google","CalendarId") = proxy.data.id
-			s ^Settings("Stc","GoogleCalendarSrc") = proxy.data.src
-			s ^Settings("Stc","Google","RefreshToken") = proxy.data.token
-			s ^Settings("Stc","Google","SslConfig") = proxy.ssl
+		if (type = "settings"){
+			s ^Settings("Stc","Google","RefreshToken") = data.token
+			s ^Settings("Stc","Google","SslConfig") = data.ssl
+		}
+		elseif (type = "calendar"){
+			s ^Settings("Stc","Google","CalendarId") = data.id
+			s ^Settings("Stc","GoogleCalendarSrc") = data.src
+			s ^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"CalendarEvent") = $ZCONVERT(data.msg, "I","UTF8")
+			
 		}
 		
 		TCOMMIT	
@@ -2218,27 +2226,31 @@ Get all teachers of course</Description>
 			set proxy.data.user = $GET(^Settings("Stc","EmailSMTPUSER"))
 		}
 		elseif (type = "reminder"){
-			set proxy.data.subj = $GET(^CacheMsg("Stc","ru","msgSubjectToTrainingStudents"))
-			set proxy.data.msg = $GET(^CacheMsg("Stc","ru","msgToTrainingStudents"))
+			set proxy.data.subj = $GET(^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgSubjectToTrainingStudents"))
+			set proxy.data.msg = $GET(^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgToTrainingStudents"))
 			set proxy.data.days = $GET(^Settings("Stc", "StudentsAutoMailingDays"), 2)
 		}
 		elseif (type = "feedback"){
-			set proxy.data.subj = $GET(^CacheMsg("Stc","ru","msgSubjectToTrainingStudentsFeedBack"))
-			set proxy.data.msg = $GET(^CacheMsg("Stc","ru","msgToTrainingStudentsFeedBack"))
+			set proxy.data.subj = $GET(^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgSubjectToTrainingStudentsFeedBack"))
+			set proxy.data.msg = $GET(^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgToTrainingStudentsFeedBack"))
 		}
 		elseif (type = "teacher"){
-			set proxy.data.subj = $GET(^CacheMsg("Stc","ru","msgSubjectToTrainingTeacher"))
-			set proxy.data.msg = $GET(^CacheMsg("Stc","ru","msgToTrainingTeacher"))
+			set proxy.data.subj = $GET(^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgSubjectToTrainingTeacher"))
+			set proxy.data.msg = $GET(^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgToTrainingTeacher"))
 			set proxy.data.days = $GET(^Settings("Stc", "TeacherAutoMailingDays"), 4)			
 		}
 		elseif (type = "curator"){
-			set proxy.data.subj = $GET(^CacheMsg("Stc","ru","msgSubjectToTrainingCurator"))
-			set proxy.data.msg = $GET(^CacheMsg("Stc","ru","msgToTrainingCurator"))
+			set proxy.data.subj = $GET(^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgSubjectToTrainingCurator"))
+			set proxy.data.msg = $GET(^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgToTrainingCurator"))
 			set proxy.data.days = $GET(^Settings("Stc", "CuratorAutoMailingDays"), 4)
 		}
 		elseif (type = "registration"){
-			set proxy.data.subj = $GET(^CacheMsg("Stc","ru","msgSubjectToNewTrainingStudent"))
-			set proxy.data.msg = $GET(^CacheMsg("Stc","ru","msgToNewTrainingStudent"))	
+			set proxy.data.subj = $GET(^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgSubjectToNewTrainingStudent"))
+			set proxy.data.msg = $GET(^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgToNewTrainingStudent"))	
+		}
+		elseif (type = "order"){
+			set proxy.data.subj = $GET(^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"emailSubject"))
+			set proxy.data.msg = $GET(^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgToCompanyContact"))	
 		}
 		
 		do proxy.%ToJSON()		
@@ -2266,17 +2278,214 @@ Get all teachers of course</Description>
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
-		if (data.type = "calendar"){
-			s ^Settings("Stc","Google","CalendarId") = proxy.data.id
-			s ^Settings("Stc","GoogleCalendarSrc") = proxy.data.src
-			s ^Settings("Stc","Google","RefreshToken") = proxy.data.token
-			s ^Settings("Stc","Google","SslConfig") = proxy.ssl
+		if (type = "settings"){
+			set ^Settings("Stc","EmailFrom") = data.from
+			set ^Settings("Stc","EmailSMTPPASSWORD") = data.password
+			set ^Settings("Stc","EmailSMTPPORT") = data.port
+			set ^Settings("Stc","EmailSMTPSERVER") = data.server
+			set ^Settings("Stc","EmailSMTPUSER") = data.user
+		}
+		elseif (type = "reminder"){
+			set ^CacheMsg("Stc", ##class(%MessageDictionary).GetSessionLanguage(), "msgSubjectToTrainingStudents") = $ZCONVERT(data.subj, "I","UTF8")
+			set ^CacheMsg("Stc", ##class(%MessageDictionary).GetSessionLanguage(), "msgToTrainingStudents") = $ZCONVERT(data.msg, "I","UTF8")
+			set ^Settings("Stc", "StudentsAutoMailingDays") = data.days
+		}
+		elseif (type = "feedback"){
+			set ^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgSubjectToTrainingStudentsFeedBack") = $ZCONVERT(data.subj, "I","UTF8")
+			set ^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgToTrainingStudentsFeedBack") = $ZCONVERT(data.msg, "I","UTF8")
+		}
+		elseif (type = "teacher"){
+			set ^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgSubjectToTrainingTeacher") = $ZCONVERT(data.subj, "I","UTF8")
+			set ^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgToTrainingTeacher") = $ZCONVERT(data.msg, "I","UTF8")
+			set ^Settings("Stc", "TeacherAutoMailingDays") = data.days			
+		}
+		elseif (type = "curator"){
+			set ^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgSubjectToTrainingCurator") = $ZCONVERT(data.subj, "I","UTF8")
+			set ^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgToTrainingCurator") = $ZCONVERT(data.msg, "I","UTF8")
+			set ^Settings("Stc", "CuratorAutoMailingDays") = data.days
+		}
+		elseif (type = "registration"){
+			set ^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgSubjectToNewTrainingStudent") = $ZCONVERT(data.subj, "I","UTF8")
+			set ^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgToNewTrainingStudent") = $ZCONVERT(data.msg, "I","UTF8")	
+		}
+		elseif (type = "order"){
+			set ^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"emailSubject") = $ZCONVERT(data.subj, "I","UTF8")
+			set ^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgToCompanyContact") = $ZCONVERT(data.msg, "I","UTF8")	
 		}
 		
 		TCOMMIT	
 	}
 	catch ex {
 		TROLLBACK
+		set status = ex.AsStatus()
+	}
+	
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="GetMailPreview">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>type</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+
+	try{
+		&sql(SELECT TOP 1 ID INTO :lastId FROM Stc_Data.Training ORDER BY ID DESC)
+		
+		if (##class(Stc.Data.Training).%ExistsId(92)=1){
+			set training = ##class(Stc.Data.Training).%OpenId(92)
+		}
+		else{
+			&sql(SELECT TOP 1 ID INTO :lastId FROM Stc_Data.Training ORDER BY ID DESC)
+			set training = ##class(Stc.Data.Training).%OpenId(lastId)
+		}
+		
+		set (subj,msg) = ""
+			
+		if (type = "registration"){
+			set subj = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToNewTrainingStudent")
+			set msg = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToNewTrainingStudent"),
+						$ZDATE(training.DateStart, 3),
+						training.Course.Name.Value,
+						training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value,
+						training.Street.Value,
+						training.Room,
+						$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5),
+						training.Teacher.LastName.Value_" "_training.Teacher.FirstName.Value,
+						training.OtherInfo.Value)
+		}
+		elseif (type = "reminder"){
+			set subj = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudents")
+			set msg = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudents"),
+						$ZDATE(training.DateStart, 3),
+						training.Course.Name.Value,
+						training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value,
+						training.Street.Value,
+						training.Room,
+						$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5),
+						training.Teacher.LastName.Value_" "_training.Teacher.FirstName.Value,
+						training.OtherInfo.Value)
+		}
+		elseif (type = "feedback"){
+			set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp?urlData=feedback-q-id-eq-%1-and-code-eq-%2"
+		
+			set tempUrl = $replace(url, "%1", training.%Id())
+			set tempUrl = $replace(tempUrl, "%2", $p(training.AccessCode,"-",1)_"-"_$p(training.AccessCode,"-",5))
+			
+			set subj = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudentsFeedBack")
+			set msg = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudentsFeedBack"),
+							tempUrl,
+							training.Course.Name.Value)
+			
+		}
+		elseif (type = "curator"){
+			set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp?urlData=trainingstudents-q-id-eq-%1-and-code-eq-%2"
+			
+			set tempUrl = $replace(url, "%1", training.%Id())
+			set tempUrl = $replace(tempUrl, "%2", training.AccessCode)
+			
+			set subj = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingCurator")
+			set msg =  ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingCurator"),
+							tempUrl,
+							$ZDATE(training.DateStart, 3),
+							$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5),
+							training.Course.Name.Value,
+							training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value,
+							training.Street.Value,
+							training.Room,
+							training.OtherInfo.Value)
+		}
+		elseif (type = "teacher"){
+			set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp?urlData=trainingstudents-q-id-eq-%1-and-code-eq-%2"
+			
+			set tempUrl = $replace(url, "%1", training.%Id())
+			set tempUrl = $replace(tempUrl, "%2", training.AccessCode)
+			
+			set subj = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingTeacher")
+			set msg =  ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingTeacher"),
+							tempUrl,
+							$ZDATE(training.DateStart, 3),
+							$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5),
+							training.Course.Name.Value,
+							training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value,
+							training.Street.Value,
+							training.Room,
+							training.OtherInfo.Value)
+		}
+		elseif (type = "order"){
+			set domainWebApp = $GET(^Settings("Stc", "DomainName"))_$GET(^Settings("Stc", "WebApp")) 
+			// 1 - Курс, 2 - Город, 3 - дата, 4 - домен для системы, 5 - код доступа к заявкe
+			set msg = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToCompanyContact"), training.Course.Name.Value, training.City.Name.Value, $ZDATE(training.DateStart,3), domainWebApp, training.AccessCode)
+			set subj = ##class(Stc.Utils.Msg).GetMsg("emailSubject")
+		}
+		
+		
+		set proxy = ##class(%ZEN.proxyObject).%New()
+		set proxy.preview = subj_"<br><br>"_msg
+		do proxy.%ToJSON()
+	}	
+	catch ex {
+		set status = ex.AsStatus()
+	}
+	
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="GetGooglePreview">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>type</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status  = $$$OK
+
+	try{
+		&sql(SELECT TOP 1 ID INTO :lastId FROM Stc_Data.Training ORDER BY ID DESC)
+		
+		if (##class(Stc.Data.Training).%ExistsId(92)=1){
+			set training = ##class(Stc.Data.Training).%OpenId(92)
+		}
+		else{
+			&sql(SELECT TOP 1 ID INTO :lastId FROM Stc_Data.Training ORDER BY ID DESC)
+			set training = ##class(Stc.Data.Training).%OpenId(lastId)
+		}
+		
+		set msg = ""
+		
+		if (type = "calendar"){
+			set domainWebApp = %request.CgiEnvs("HTTP_HOST")_$GET(^Settings("Stc", "WebApp")) 
+			set curatorData = ""
+			if (training.CuratorFullName.Value '= ""){
+				set curatorData = "<br>"_##class(Stc.Utils.Msg).GetMsg("contactPerson")_":<br>"_training.CuratorFullName.Value
+				if (training.CuratorPhone '= ""){
+					set curatorData = curatorData_", "_training.CuratorPhone
+				}
+				set curatorData = curatorData_"<br>"
+			}
+				
+			set otherInfoData = ""
+			if (training.OtherInfo.Value '= ""){
+				set otherInfoData = "<br>"_training.OtherInfo.Value
+			}
+				
+			set msg = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("CalendarEvent"),
+									training.Course.ProgramUrl,
+									domainWebApp,
+									training.%Id(),
+									training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value_"<br>"_training.Street.Value_", "_training.Room,
+									training.Teacher.LastName.Value_" "_training.Teacher.FirstName.Value_" "_training.Teacher.MiddleName.Value_"<br>"_training.Teacher.Email,
+									$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5),
+									curatorData,
+									otherInfoData)
+		}	
+		
+		set proxy = ##class(%ZEN.proxyObject).%New()
+		set proxy.preview = msg
+		do proxy.%ToJSON()
+	}	
+	catch ex {
 		set status = ex.AsStatus()
 	}
 	
@@ -2319,7 +2528,7 @@ Check access, authorization call, if needed</Description>
             
     Set %session.EndSession=1
 
-	
+	do %session.Logout()	
  	quit $$$OK
 ]]></Implementation>
 </Method>

@@ -142,7 +142,7 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 			set tempUrl = $replace(url, "%1", trainingId)
 			set tempUrl = $replace(tempUrl, "%2", training.AccessCode)
 			
-			set msg =  ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingTeacher"),
+			set msg =  ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingCurator"),
 							tempUrl,
 							$ZDATE(training.DateStart, 3),
 							$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5),
@@ -152,7 +152,7 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 							training.Room,
 							training.OtherInfo.Value)
 				
-			set status = ##class(Stc.Utils.Email).Send(training.Teacher.Email, ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingTeacher"), msg)
+			set status = ##class(Stc.Utils.Email).Send(training.Teacher.Email, ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingCurator"), msg)
 			//set ^testmail("curator") = ^testmail("curator")_" "_trainingId	
 			if '$$$ISERR(status){
 				set training.IsCuratorAutoMailing = 0

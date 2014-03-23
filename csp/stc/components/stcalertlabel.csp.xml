@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/components/stcalertlabel.csp" application="/csp/stc/" default="1"><![CDATA[
+<label ng-show="data.visible" ng-class="'label label-' + data.cssClass" ng-bind="data.msg" style="margin-left: 5px; margin-bottom: 4px;"></label>]]></CSP>
+</Export>

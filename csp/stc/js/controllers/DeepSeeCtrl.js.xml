@@ -40,7 +40,7 @@ controllersModule.controller('DeepSeeCtrl', function($scope, $routeParams, $wind
         	$window.document.getElementsByName("ifPanel")[0].width = window.document.body.clientWidth-18;
     	}
     	catch(ex){};
-    }, 3000);
+    }, 2000);
 
 
 });

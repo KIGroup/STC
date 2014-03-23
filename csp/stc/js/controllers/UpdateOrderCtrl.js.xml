@@ -11,6 +11,11 @@
 controllersModule.controller('UpdateOrderCtrl', function($scope, $location, $filter, $routeParams, OrderSrvc, CompanySrvc, PersonSrvc, UtilsSrvc){
     if ($scope.menu.active) $scope.menu.active.css = "menuAfterActive";
     
+    if ($scope.menu.admin==false){
+    	$scope.menu.brandCaption ='Система учёта курсов';
+    	$scope.menu.appTitle = $scope.menu.brandCaption;
+    }
+    
     $scope.ordForm = {order: {}, studTable: {}, visible: false};
 
     // Инит

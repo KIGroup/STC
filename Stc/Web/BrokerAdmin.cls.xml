@@ -257,7 +257,13 @@ Private request processor for administrator</Description>
 	<Route Method="GET" Url="/json/settings/mail/:type" Call="Stc.Web.JsonAdmin:GetMailSettings"/>
 	
 	<!-- Save settings for mail from client -->
-	<Route Method="GET" Url="/json/settings/mail/:type" Call="Stc.Web.JsonAdmin:SaveMailSettings"/>
+	<Route Method="POST" Url="/json/settings/mail/:type" Call="Stc.Web.JsonAdmin:SaveMailSettings"/>
+	
+	<!-- Get preview of settings for mail from last training -->
+	<Route Method="GET" Url="/json/settings/mail/preview/:type" Call="Stc.Web.JsonAdmin:GetMailPreview"/>
+	
+	<!-- Get preview of settings for google from last training -->
+	<Route Method="GET" Url="/json/settings/google/preview/:type" Call="Stc.Web.JsonAdmin:GetGooglePreview"/>
 	
 	<!-- ==================================== OTHER ==================================== -->
 	

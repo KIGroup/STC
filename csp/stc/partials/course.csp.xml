@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/course.csp" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/partials/course.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span4">
 	</div>
@@ -48,7 +48,7 @@
 						    <div class="control-group">
 						        <div class="controls">
 						            <button type="submit" class="btn btn-primary btn-small" ng-bind="courseForm.actionName|localize"></button>
-						            <button type="submit" class="btn btn-small" ng-click="courseForm.cancel()" ng-bind="'Назад'|localize"></button>
+						            <button class="btn btn-small" ng-click="courseForm.cancel()" ng-bind="'Назад'|localize"></button>
 						        </div>
 						    </div>    		    		    
 						</form>

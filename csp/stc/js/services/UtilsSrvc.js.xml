@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/UtilsSrvc.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/services/UtilsSrvc.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //ddвddddв
 
@@ -33,6 +33,11 @@ servicesModule.factory('UtilsSrvc', function($dialog, $filter) {
                     msg: $filter('localize')(msg),
                     cssClass: 'alert alert-' + eventType,
                     visible: visible};
+    	},
+    	getAlertLabel: function(msg, eventType){
+        	return {msg: $filter('localize')(msg),
+                    cssClass: eventType,
+                    visible: true};
     	},
         getIndexes: function(array, objField, valueField){
             var indexes = [];

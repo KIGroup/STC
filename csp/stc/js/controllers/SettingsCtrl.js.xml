@@ -2,15 +2,175 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/controllers/SettingsCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//d
+//ddd
 
 /*===========================================================================================
-
+SettingsCtrl - all settings for google, mail
 ===========================================================================================*/
 
-controllersModule.controller('SettingsCtrl', function($scope, UtilsSrvc){
-    $scope.page = {};
+controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsSrvc, UtilsSrvc){
+    $scope.page = {google:{
+                      settings: {},
+                      calendar: {}
+                   }, 
+                   mail:{
+                      settings: {},
+                      order: {},
+                      reminder: {},
+                      feedback: {},
+                      teacher: {},
+                      curator: {},
+                      registration:{}
+                   }
+                 };
     
+    //================================================================================================================================================================
+    // GOOGLE                                                                                                                                                   GOOGLE
+    //================================================================================================================================================================
+    // Load settings for google tab by type (calendar etc.)
+    $scope.page.google.load = function(type){
+        SettingsSrvc.getGoogle(type).then(
+                function(data){
+                    $scope.page.google[data.type] = data.data;
+                },
+                function(response){      
+                    $scope.page.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });
+    };
+
+    // Save settings for google tab by type (calendar etc.)
+    $scope.page.google.save = function(type, form){
+        SettingsSrvc.saveGoogle($scope.page.google[type], type).then(
+                function(data){
+                    form.$setPristine();
+                    $scope.page.google[type].alertLabel = UtilsSrvc.getAlertLabel('Сохранение завершено', 'success');
+                },
+                function(response){      
+                    $scope.page.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });
+    };
+
+    // Load settings for google tab by type (calendar etc.)
+    $scope.page.google.cancel = function(type, form){
+        $scope.page.google.load(type);
+        form.$setPristine();
+    };
+
+    // Show help dialog window
+    $scope.page.google.showHelp = function(type){
+        var msg = '';
+
+        switch(type){
+            case 'calendar':{
+              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - ссылка на программу курса, %2 - домен + порт, %3 - идентификатор обучения, %4 - место обучения, %5 - преподаватель, %6 - время, %7 - контактное лицо, %8 - примечание.';
+              break;
+            }
+        }
+    //<a href='http://%1'>Программа курса</a><br><br><a href='http://%2/stc/index.csp#/orderstudent?training=%3'>Записаться на обучение</a><br><br>Место проведения:<br>%4<br><br>Преподаватель:<br>%5<br><br>Время проведения: %6<br>%7%8
+        UtilsSrvc.openCustomMessageBox('Справка', msg, [{result: '1', label: $filter('localize')('Закрыть'),  cssClass: 'btn-small', func: null}]);    
+    };
+
+    // Show preview for google tab as html
+    $scope.page.google.showPreview = function(type){
+    SettingsSrvc.getGooglePreview(type).then(
+                function(data){
+                  $scope.page.google[type].preview = data.preview;
+                  $scope.page.google[type].previewIsVisible = true;
+                },
+                function(response){      
+                    $scope.page.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });  
+    };
+
+
+    //================================================================================================================================================================
+    // MAIL                                                                                                                                                       MAIL
+    //================================================================================================================================================================
+    // Load settings for mail tab by type (reminder, feedback and etc.)
+    $scope.page.mail.load = function(type){
+        SettingsSrvc.getMail(type).then(
+                function(data){
+                    $scope.page.mail[data.type] = data.data;
+                },
+                function(response){      
+                    $scope.page.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });
+    };
+
+    // Save settings for mail tab by type (reminder, feedback and etc.)
+    $scope.page.mail.save = function(type, form){
+		SettingsSrvc.saveMail($scope.page.mail[type], type).then(
+                function(data){
+                    form.$setPristine(); 
+                    $scope.page.mail[type].alertLabel = UtilsSrvc.getAlertLabel('Сохранение завершено', 'success');
+                },
+                function(response){      
+                    $scope.page.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });
+    };
+
+    // Load settings for mail tab by type (reminder, feedback and etc.)
+    $scope.page.mail.cancel = function(type, form){
+        $scope.page.mail.load(type);
+        form.$setPristine();
+    };
+
+    // Show help dialog window
+    $scope.page.mail.showHelp = function(type){
+        var msg = '';
+
+        switch(type){
+            case 'registration':{
+              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - дата начала обучения, %2 - курс, %3 - город, %4 - улица, %5 - аудитория, %6 - время, %7 - преподаватель, %8 - примечание.';
+              break;
+            }
+            case 'reminder':{
+              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - дата начала обучения, %2 - курс, %3 - город, %4 - улица, %5 - аудитория, %6 - время, %7 - преподаватель, %8 - примечание.';
+              break;
+            }
+            case 'feedback':{
+              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - url анкеты, %2 - курс.';
+              break;
+            }
+            case 'teacher':{
+              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - url для доступа к списку слушателей, %2 - дата начала обучения, %3 - время, %4 - курс, %5 - город, %6 - улица, %7 - аудитория, %8 - примечание.';
+              break;
+            }
+            case 'curator':{
+              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - url для доступа к списку слушателей, %2 - дата начала обучения, %3 - время, %4 - курс, %5 - город, %6 - улица, %7 - аудитория, %8 - примечание.';
+              break;
+            }
+            case 'order':{
+              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - курс, %2 - город, %3 - дата обучения, %4 - домен, %5 - код доступа к заявке.';
+              break;
+            }
+        }
+		    UtilsSrvc.openCustomMessageBox('Справка', msg, [{result: '1', label: $filter('localize')('Закрыть'),  cssClass: 'btn-small', func: null}]);    
+    };
+
+    // Show preview for mail tab as html
+    $scope.page.mail.showPreview = function(type){
+		SettingsSrvc.getMailPreview(type).then(
+                function(data){
+	                $scope.page.mail[type].preview = data.preview;
+              		$scope.page.mail[type].previewIsVisible = true;
+                },
+                function(response){      
+                    $scope.page.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });  
+    };
+
+    
+    // Load all settings
+	$scope.page.google.load('settings');
+    $scope.page.google.load('calendar');
+    $scope.page.mail.load('settings');
+    $scope.page.mail.load('order');
+    $scope.page.mail.load('reminder');
+    $scope.page.mail.load('registration');
+    $scope.page.mail.load('feedback');
+    $scope.page.mail.load('teacher');
+    $scope.page.mail.load('curator');
 });
 
 ]]></CSP>
