@@ -3,6 +3,10 @@
 <Class name="Stc.Utils.Msg">
 <TimeCreated>63147,18153.813301</TimeCreated>
 
+<Parameter name="DOMAIN">
+<Default>Stc</Default>
+</Parameter>
+
 <Method name="GetErrorStatus">
 <Description>
 Get error status by key</Description>
@@ -321,105 +325,76 @@ do ##class(Stc.Utils.Msg).DeepSeeMsg()</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set ^CacheMsg("Stc", "ru", "students") = "Слушатели"
-	set ^CacheMsg("Stc", "en", "students") = "Students"
-	set ^CacheMsg("Stc", "en-us", "students") = ^CacheMsg("Stc", "en", "students")
 	
-	set ^CacheMsg("Stc", "ru", "company") = "Организация"
-	set ^CacheMsg("Stc", "en", "company") = "Organization"
-	set ^CacheMsg("Stc", "en-us", "company") = ^CacheMsg("Stc", "en", "company")
+	// ------- Дашборды -----------------
+	// Курсы
+	do ..AddDeepSeeMsg("Курсы и слушатели", "Courses and students")
+	do ..AddDeepSeeMsg("Количество слушателей по курсам за все годы", "Number of students by courses for all years")
 	
-	set ^CacheMsg("Stc", "ru", "course") = "Курс"
-	set ^CacheMsg("Stc", "en", "course") = "Course"
-	set ^CacheMsg("Stc", "en-us", "course") = ^CacheMsg("Stc", "en", "course")
+	do ..AddDeepSeeMsg("Курсы и обучения", "Courses and trainings")
+	do ..AddDeepSeeMsg("Количество обучений по курсам за все годы", "Number of trainings by courses for all years")
 	
-	set ^CacheMsg("Stc", "ru", "year") = "Год"
-	set ^CacheMsg("Stc", "en", "year") = "Year"
-	set ^CacheMsg("Stc", "en-us", "year") = ^CacheMsg("Stc", "en", "year")
+	// Организации
+	do ..AddDeepSeeMsg("Организации и слушатели", "Organizations and students")
+	do ..AddDeepSeeMsg("Количество слушателей по организациям за все годы", "Number of students by organizations for all years")
 	
-	set ^CacheMsg("Stc", "ru", "teacher") = "Преподаватель"
-	set ^CacheMsg("Stc", "en", "teacher") = "Teacher"
-	set ^CacheMsg("Stc", "en-us", "teacher") = ^CacheMsg("Stc", "en", "teacher")
+	do ..AddDeepSeeMsg("Организации и обучения", "Organizations and trainings")
+	do ..AddDeepSeeMsg("Количество обучений по организациям за все годы", "Number of trainings by organizations for all years")
 	
-	set ^CacheMsg("Stc", "ru", "city") = "Город"
-	set ^CacheMsg("Stc", "en", "city") = "City"
-	set ^CacheMsg("Stc", "en-us", "city") = ^CacheMsg("Stc", "en", "city")
+	// Преподаватели
+	do ..AddDeepSeeMsg("Преподаватели и слушатели", "Teachers and students")
+	do ..AddDeepSeeMsg("Количество слушателей по преподавателям за все годы", "Number of students by teachers for all years")
+	
+	do ..AddDeepSeeMsg("Преподаватели и обучения", "Teachers and trainings")
+	do ..AddDeepSeeMsg("Количество обучений по преподавателям за все годы", "Number of trainings by teachers for all years")
+	// ---------------------------------
 
-	set ^CacheMsg("Stc", "ru", "datefinish") = "Дата обучения"
-	set ^CacheMsg("Stc", "en", "datefinish") = "Date of training"
-	set ^CacheMsg("Stc", "en-us", "datefinish") = ^CacheMsg("Stc", "en", "datefinish")
+	
+	do ..AddDeepSeeMsg("Количество слушателей по годам", "Number of students by years")
+	do ..AddDeepSeeMsg("Количество обучений по годам", "Number of trainings by years")
+	
+	
+	do ..AddDeepSeeMsg("Адрес", "Address")
+	do ..AddDeepSeeMsg("Год", "Year")
+	do ..AddDeepSeeMsg("Город", "City")
+	do ..AddDeepSeeMsg("Дата начала", "Start date")
+	do ..AddDeepSeeMsg("Дата обучения", "Date of training")
+	do ..AddDeepSeeMsg("Дата окончания", "End date")
+	do ..AddDeepSeeMsg("Дата", "Date")
+	do ..AddDeepSeeMsg("Завершённые", "Completed")
+	do ..AddDeepSeeMsg("Карта точек обучения", "Map of training points")
+	do ..AddDeepSeeMsg("Количество обучений", "Trainings count")
+	do ..AddDeepSeeMsg("Перейти к обучениям", "Go to trainings")
+	do ..AddDeepSeeMsg("Перейти к слушателям", "Go to students")
 		
-	set ^CacheMsg("Stc", "ru", "student") = "Слушатель"
-	set ^CacheMsg("Stc", "en", "student") = "Student"
-	set ^CacheMsg("Stc", "en-us", "student") = ^CacheMsg("Stc", "en", "student")
 	
-	set ^CacheMsg("Stc", "ru", "status") = "Статус"
-	set ^CacheMsg("Stc", "en", "status") = "Status"
-	set ^CacheMsg("Stc", "en-us", "status") = ^CacheMsg("Stc", "en", "status")
-	
-	set ^CacheMsg("Stc", "ru", "date") = "Дата"
-	set ^CacheMsg("Stc", "en", "date") = "Date"
-	set ^CacheMsg("Stc", "en-us", "date") = ^CacheMsg("Stc", "en", "date")
-	
-	set ^CacheMsg("Stc", "ru", "address") = "Адрес"
-	set ^CacheMsg("Stc", "en", "address") = "Address"
-	set ^CacheMsg("Stc", "en-us", "address") = ^CacheMsg("Stc", "en", "address")
-	
-	set ^CacheMsg("Stc", "ru", "completed") = "Завершённые"
-	set ^CacheMsg("Stc", "en", "completed") = "Completed"
-	set ^CacheMsg("Stc", "en-us", "completed") = ^CacheMsg("Stc", "en", "completed")
-	
-	set ^CacheMsg("Stc", "ru", "uncompleted") = "Незавершённые"
-	set ^CacheMsg("Stc", "en", "uncompleted") = "Uncompleted"
-	set ^CacheMsg("Stc", "en-us", "uncompleted") = ^CacheMsg("Stc", "en", "uncompleted")
-	
-	set ^CacheMsg("Stc", "ru", "partner") = "Партнёр"
-	set ^CacheMsg("Stc", "en", "partner") = "Partner"
-	set ^CacheMsg("Stc", "en-us", "partner") = ^CacheMsg("Stc", "en", "partner")
-	
-	set ^CacheMsg("Stc", "ru", "univer") = "Университет"
-	set ^CacheMsg("Stc", "en", "univer") = "University"
-	set ^CacheMsg("Stc", "en-us", "partner") = ^CacheMsg("Stc", "en", "univer")
-	
-	set ^CacheMsg("Stc", "ru", "univerOrPartner") = "Университет / Партнёр"
-	set ^CacheMsg("Stc", "en", "univerOrPartner") = "University / Partner"
-	set ^CacheMsg("Stc", "en-us", "univerOrPartner") = ^CacheMsg("Stc", "en", "univerOrPartner")
-	
-	
-	// Тайтлы виджетов
-	set ^CacheMsg("Stc", "ru", "companyStudentsYears") = "Количество слушателей по организациям"
-	set ^CacheMsg("Stc", "en", "companyStudentsYears") = "Number of students by organization"
-	set ^CacheMsg("Stc", "en-us", "companyStudentsYears") = ^CacheMsg("Stc", "en", "companyStudentsYears")
-	
-	set ^CacheMsg("Stc", "ru", "studentsYearsAll") = "Количество слушателей по годам"
-	set ^CacheMsg("Stc", "en", "studentsYearsAll") = "Number of students by years"
-	set ^CacheMsg("Stc", "en-us", "studentsYearsAll") = ^CacheMsg("Stc", "en", "studentsYearsAll")
+	do ..AddDeepSeeMsg("Курс", "Course")
+	do ..AddDeepSeeMsg("Незавершённые", "Uncompleted")
+	do ..AddDeepSeeMsg("Организация", "Organization")
+	do ..AddDeepSeeMsg("Партнёр", "Partner")
+	do ..AddDeepSeeMsg("Подгруппы", "Sub-groups")
+	do ..AddDeepSeeMsg("Преподаватель", "Teacher")
+	do ..AddDeepSeeMsg("Слушатели выбранного обучения", "Students of selected training")
+	do ..AddDeepSeeMsg("Слушатели", "Students")
+	do ..AddDeepSeeMsg("Обучения", "Trainings")
+	do ..AddDeepSeeMsg("Слушатель", "Student")
+	do ..AddDeepSeeMsg("Статус", "Status")
+	do ..AddDeepSeeMsg("Телефон", "Phone")
+	do ..AddDeepSeeMsg("Тип организации", "Type of organization")
+	do ..AddDeepSeeMsg("Университет", "University")
 
-	set ^CacheMsg("Stc", "ru", "mapOfTrainingPoints") = "Карта точек обучения"
-	set ^CacheMsg("Stc", "en", "mapOfTrainingPoints") = "Map of training points"
-	set ^CacheMsg("Stc", "en-us", "mapOfTrainingPoints") = ^CacheMsg("Stc", "en", "mapOfTrainingPoints")
-
-	set ^CacheMsg("Stc", "ru", "trainingStudents") = "Слушатели выбранного обучения"
-	set ^CacheMsg("Stc", "en", "trainingStudents") = "Students of selected training"
-	set ^CacheMsg("Stc", "en-us", "trainingStudents") = ^CacheMsg("Stc", "en", "trainingStudents")	
-	
-	set ^CacheMsg("Stc", "ru", "courseStudentsYears") = "Количество слушателей по курсам обучения"
-	set ^CacheMsg("Stc", "en", "courseStudentsYears") = "Number of students by courses"
-	set ^CacheMsg("Stc", "en-us", "courseStudentsYears") = ^CacheMsg("Stc", "en", "courseStudentsYears")
-	
-	set ^CacheMsg("Stc", "ru", "courseStudentsTotal") = "Количество слушателей по курсам обучения за все годы"
-	set ^CacheMsg("Stc", "en", "courseStudentsTotal") = "Number of students by courses for all years"
-	set ^CacheMsg("Stc", "en-us", "courseStudentsTotal") = ^CacheMsg("Stc", "en", "courseStudentsTotal")
-	
-	set ^CacheMsg("Stc", "ru", "teacherStudentsYears") = "Количество слушателей по преподавателям"
-	set ^CacheMsg("Stc", "en", "teacherStudentsYears") = "Number of students by teachers"
-	set ^CacheMsg("Stc", "en-us", "teacherStudentsYears") = ^CacheMsg("Stc", "en", "teacherStudentsYears")
-	
-	set ^CacheMsg("Stc", "ru", "teacherStudentsTotal") = "Количество слушателей по преподавателям за все годы"
-	set ^CacheMsg("Stc", "en", "teacherStudentsTotal") = "Number of students by teachers for all years"
-	set ^CacheMsg("Stc", "en-us", "teacherStudentsTotal") = ^CacheMsg("Stc", "en", "teacherStudentsTotal")
-	
 	q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="AddDeepSeeMsg">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>rusString:%String,engString:%String</FormalSpec>
+<Implementation><![CDATA[
+	set code = $ZCRC(rusString, 7)
+	set ^CacheMsg("Stc", "ru", code) = rusString
+	set ^CacheMsg("Stc", "en", code) = engString
+	set ^CacheMsg("Stc", "en-us", code) = engString
 ]]></Implementation>
 </Method>
 </Class>

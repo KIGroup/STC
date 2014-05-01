@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/directives/stcperson.js" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/js/directives/stcperson.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //dddd
 
@@ -16,18 +16,21 @@ directivesModule.directive('stcperson', function(){
             companyDisabled: '=',
             allDisabled: '=',
             companySwitchOff: '=',
-            webSiteOff: '='    
+            webSiteOff: '=',
+            companyExist: '@'    
         },
         controller: function($scope){
-            $scope.companyExist = true;
-
-            $scope.switchCompany = function(exist){
+           	console.log($scope.companyExist);
+           	
+           	$scope.switchCompany = function(exist){
                 $scope.companyExist = exist;
-
-                if (exist && $scope.person.company)
-                    $scope.person.company.notexist = '';
-                else if ($scope.person.company)
-                    $scope.person.company.exist = '';
+				
+				if ($scope.person){
+	                if (exist && $scope.person.company)
+	                    $scope.person.company.notexist = '';
+	                else if ($scope.person.company)
+	                    $scope.person.company.exist = '';
+				}
             };
 	   	}
     }

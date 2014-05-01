@@ -1759,7 +1759,7 @@ Callback for geocoder API.</Description>
    set lang = ##class(%MessageDictionary).GetSessionLanguage()
 	
 	// Словарь для контента в окнах
-	&html<<script>
+	&html<<script language="javascript">
 		var dict = {lang: '#(lang)#',
 					dict:{
 					'Город': 
@@ -1789,6 +1789,9 @@ Callback for geocoder API.</Description>
 					'ФИО': 
 						{'ru': 'ФИО', 
 						 'en': 'Full name'},
+					'Телефон': 
+						{'ru': 'Телефон', 
+						 'en': 'Phone'},
 					'Организация': 
 						{'ru': 'Организация', 
 						 'en': 'Organization'},
@@ -1880,6 +1883,32 @@ Callback for geocoder API.</Description>
 ]]></Implementation>
 </Method>
 
+<Method name="getAllFiltersValues">
+<Language>javascript</Language>
+<ClientMethod>1</ClientMethod>
+<Implementation><![CDATA[
+	var result;
+	
+	try{		
+		var filterState = this.parent.parent.filterState;
+		
+		result = "Year*" + (filterState.Year ? filterState.Year : "") 
+			   + ";Status*" + (filterState.Status ? filterState.Status : "")
+			   + ";Course*" + (filterState.Course ? filterState.Course : "")
+			   + ";Teacher*" + (filterState.Teacher ? filterState.Teacher : "")
+			   + ";Company*" + (filterState.Company ? filterState.Company : "")
+			   + ";CompanyType*" + (filterState.CompanyType ? filterState.CompanyType : "");
+		
+		console.log(result);
+	}
+	catch(ex){
+		console.log(ex);
+	}
+	
+	return result;
+]]></Implementation>
+</Method>
+
 <UDLText name="T">
 <Content><![CDATA[
 // =====================================================================================================================
@@ -1888,7 +1917,7 @@ Callback for geocoder API.</Description>
 </UDLText>
 
 <Method name="FindTrainingNeighbors">
-<FormalSpec>portletIndex:%Integer,trainingId:%String,latitude:%Float,longitude:%Float</FormalSpec>
+<FormalSpec>filterValues:%String,portletIndex:%Integer,trainingId:%String,latitude:%Float,longitude:%Float</FormalSpec>
 <ReturnType>%ZEN.Datatype.string</ReturnType>
 <ZenMethod>1</ZenMethod>
 <Implementation><![CDATA[
@@ -1901,6 +1930,58 @@ Callback for geocoder API.</Description>
 		      "<tr id='trTableTrHeader'><th>№</th><th>"_##class(Stc.Utils.Msg).GetMsg("course")_"</th><th>"_##class(Stc.Utils.Msg).GetMsg("date")_"</th><th>"_##class(Stc.Utils.Msg).GetMsg("address")_"</th></tr>"	
 			
 		set count = 0
+		
+		set filterValues = $LISTFROMSTRING(filterValues, ";")
+		
+		set sql = ##class(Stc.DeepSee.KPI.TrainingPoints).GetSql(
+				  $P($LIST(filterValues,1),"*",2),
+				  $P($LIST(filterValues,2),"*",2),
+				  $P($LIST(filterValues,3),"*",2),
+				  $P($LIST(filterValues,4),"*",2),
+				  $P($LIST(filterValues,5),"*",2),
+				  $P($LIST(filterValues,6),"*",2))
+		
+		set idxWHEREends = $FIND(sql, "FROM Stc_Data.Training as tr WHERE")
+		
+		if (idxWHEREends = 0){
+			set sql = "SELECT tr.ID FROM Stc_Data.Training as tr WHERE tr.Latitude="_latitude_" AND tr.Longitude="_longitude
+		}
+		else{
+			set sql = "SELECT tr.ID FROM Stc_Data.Training as tr WHERE tr.Latitude="_latitude_" AND tr.Longitude="_longitude_" "_
+					   "AND "_$EXTRACT(sql, idxWHEREends, *)
+		}
+		
+		set sql = sql_" ORDER BY tr.DateStart DESC"
+		set ^temp("sql") = sql
+		
+		set statement = ##class(%SQL.Statement).%New()
+		set st = statement.%Prepare(sql)
+		
+		set resultSet = statement.%Execute()
+		
+		while (resultSet.%Next() '= 0) 
+		{
+			set id = resultSet.%GetData(1)
+			
+			set count = count + 1
+			
+			set tr = ##class(Stc.Data.Training).%OpenId(id)
+			set city = tr.City.Name.Value
+			set content = content_##class(%MessageDictionary).FormatText("<tr title='"_tr.Course.Name.Value_"' onclick='selectTrTableRow(""%1"")'><td>%2</td><td>%3</td><td nowrap>%4</td><td>%5</td></tr>",
+								 portletIndex_";"_id,
+								 count, $E(tr.Course.Name.Value,1,25)_"...", $REPLACE($ZD(tr.DateStart,4),"/","-"), tr.Street.Value)
+		}
+		
+		do statement.%Close()
+		
+		if (count = 1){
+			set content = ""
+		}
+		else{
+			set content = $REPLACE(content_"</table>", "%city", city)
+		}
+		
+		/*
 		&sql(DECLARE TRCur CURSOR FOR 
 			 SELECT ID
 			 FROM Stc_Data.Training
@@ -1929,6 +2010,7 @@ Callback for geocoder API.</Description>
 		else{
 			set content = $REPLACE(content_"</table>", "%city", city)
 		}
+		*/
 	}
 	catch(ex){
 		set content = "<div class='infoWindowContent'>"_ex.Name_", "_ex.Location_"</div>"

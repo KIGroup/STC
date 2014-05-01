@@ -43,7 +43,7 @@
 		    action-column-method="training.add()"
 
 		    first-row-action-icon="'icon-eye-open'"
-		    first-row-action-title="'Окрыть обучение'|localize"
+		    first-row-action-title="'Открыть обучение'|localize"
 		    first-row-action-method="training.open(item)"
 		    
 		    second-row-action-icon="training.secondRowActionIcon"

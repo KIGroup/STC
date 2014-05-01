@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/orderstudent.csp" application="/csp/tnt/" default="1"><![CDATA[
+<CSP name="stc/partials/orderstudent.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span2">
 	</div>
@@ -27,6 +27,7 @@
 						companies="ordForm.companies"
 						company-switch-off="false"
 						web-site-off="true"
+						company-exist="true"
 					/>
 					<div>
 						<div class="control-group">

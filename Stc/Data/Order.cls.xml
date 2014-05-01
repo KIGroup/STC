@@ -10,7 +10,6 @@ Application for training</Description>
 <Description>
 City of training</Description>
 <Type>Region</Type>
-<Required>1</Required>
 </Property>
 
 <Property name="Course">
@@ -51,14 +50,12 @@ Application status</Description>
 <Description>
 Latitude</Description>
 <Type>%Float</Type>
-<Required>1</Required>
 </Property>
 
 <Property name="Longitude">
 <Description>
 Longitutde</Description>
 <Type>%Float</Type>
-<Required>1</Required>
 </Property>
 
 <Property name="Partner">

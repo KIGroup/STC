@@ -42,8 +42,8 @@ Created using the page template: Default</Description>
 <Data><![CDATA[
 <page id="content" hidden="true" xmlns="http://www.intersystems.com/zen" title="">
 <loginForm align="center" cellStyle="padding:5px;" id="form"> 
-<text label="User:" name="CacheUserName" value=""/> 
-<password label="Pwd:" name="CachePassword" value=""/> 
+<text id="userName" label="User:" name="CacheUserName" value=""/> 
+<password id="userPass" label="Pwd:" name="CachePassword" value=""/> 
 <submit caption="Login"/> 
 </loginForm> 
 </page>
@@ -56,10 +56,13 @@ This client event, if present, is fired when the page is loaded.</Description>
 <Language>javascript</Language>
 <ClientMethod>1</ClientMethod>
 <Implementation><![CDATA[
-	if (zenPage.UrlData == 'admin'){
+	//zenPage.getComponentById('userName').setProperty('value','');
+	//zenPage.getComponentById('userPass').setProperty('value','');
+	
+	//if (zenPage.UrlData == 'admin'){
 		zenPage.getComponentById('content').setHidden(0);	
-		return;
-	}
+		return;	
+	//}
 	
 	zenPage.getComponentById('form').submit();
 ]]></Implementation>

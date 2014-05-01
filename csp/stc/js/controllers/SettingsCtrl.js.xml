@@ -9,6 +9,7 @@ SettingsCtrl - all settings for google, mail
 ===========================================================================================*/
 
 controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsSrvc, UtilsSrvc){
+    $scope.menu.selectMenu('settings');
     $scope.page = {google:{
                       settings: {},
                       calendar: {}

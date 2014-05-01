@@ -42,7 +42,8 @@
 				      companies="personForm.companies" 
 				      company-disabled="personForm.companyDisabled" 
 				      all-disabled="personForm.disabled"
-				      company-switch-off="true"/>
+				      company-switch-off="true"
+				      company-exist="true"/>
 					<button class="btn btn-primary" type="submit" ng-bind="personForm.actionName|localize"></button>
 					<button class="btn" type="button" ng-bind="'Очистить'|localize" ng-show="personForm.showClear" ng-click="personForm.clear()"></button>
 					<button class="btn" type="button" ng-bind="'Назад'|localize" ng-click="personForm.back()"></button>

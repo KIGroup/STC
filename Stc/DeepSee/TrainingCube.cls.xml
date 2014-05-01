@@ -18,29 +18,29 @@ Cube definition from Architect.</Description>
 <XMLNamespace>http://www.intersystems.com/deepsee</XMLNamespace>
 <Data><![CDATA[
 <cube xmlns="http://www.intersystems.com/deepsee" name="TrainingCube" displayName="TrainingCube" description="после компиляции выполните do ##class(Stc.Utils.Msg).DeepSeeMsg() т.к. затираются лейблы" disabled="false" abstract="false" sourceClass="Stc.Data.Training" countMeasureName="%COUNT" bucketSize="8" bitmapChunkInMemory="false" precompute="0">
-  <dimension name="Course" displayName="@course@" disabled="false" hasAll="false" allCaption="All Value" allDisplayName="Value" type="data" iKnowType="entity" hidden="false" showHierarchies="default">
+  <dimension name="Course" displayName="Курс" disabled="false" hasAll="false" allCaption="All Value" allDisplayName="Value" type="data" iKnowType="entity" hidden="false" showHierarchies="default">
     <hierarchy name="H1" disabled="false">
-      <level sourceProperty="Course.Name" name="Name" displayName="@course@" disabled="false" list="false" useDisplayValue="true" useAsFilter="true">
-        <property sourceProperty="Course.Name.Value" name="Value" displayName="@course@" disabled="false" hidden="false" isName="true" isDescription="false" isReference="true" useDisplayValue="false"></property>
+      <level sourceProperty="Course.Name" name="CourseName" displayName="Курс" disabled="false" list="false" useDisplayValue="true" useAsFilter="true">
+        <property sourceProperty="Course.Name.Value" name="Value" displayName="Курс" disabled="false" hidden="false" isName="true" isDescription="false" isReference="true" useDisplayValue="false"></property>
       </level>
     </hierarchy>
   </dimension>
-  <dimension name="DateFinish" displayName="@year@" disabled="false" hasAll="false" allCaption="All DateFinish" allDisplayName="DateFinish" sourceProperty="DateFinish" type="time" iKnowType="entity" hidden="false" showHierarchies="default">
+  <dimension name="Year" displayName="Год" disabled="false" hasAll="false" allCaption="All DateFinish" allDisplayName="DateFinish" sourceProperty="DateFinish" type="time" iKnowType="entity" hidden="false" showHierarchies="default">
     <hierarchy name="H1" disabled="false">
-      <level name="DateFinish" displayName="@year@" disabled="false" timeFunction="Year" list="false" useDisplayValue="true" useAsFilter="true">
+      <level name="Year" displayName="Год" disabled="false" timeFunction="Year" list="false" useDisplayValue="true" useAsFilter="true">
       </level>
     </hierarchy>
   </dimension>
-  <dimension name="Teacher" displayName="@teacher@" disabled="false" hasAll="false" allCaption="All Teacher" allDisplayName="Teacher" type="data" iKnowType="entity" hidden="false" showHierarchies="default">
+  <dimension name="Teacher" displayName="Преподаватель" disabled="false" hasAll="false" allCaption="All Teacher" allDisplayName="Teacher" type="data" iKnowType="entity" hidden="false" showHierarchies="default">
     <hierarchy name="H1" disabled="false">
-      <level sourceProperty="Teacher" name="TeacherFullName" displayName="@teacher@" disabled="false" list="false" useDisplayValue="true" useAsFilter="true">
-        <property sourceProperty="Teacher.FullName" name="FullName" displayName="@teacher@" disabled="false" hidden="false" isName="true" isDescription="false" isReference="true" useDisplayValue="false"></property>
+      <level sourceProperty="Teacher" name="TeacherFullName" displayName="Преподаватель" disabled="false" list="false" useDisplayValue="true" useAsFilter="true">
+        <property sourceProperty="Teacher.FullName" name="FullName" displayName="Преподаватель" disabled="false" hidden="false" isName="true" isDescription="false" isReference="true" useDisplayValue="false"></property>
       </level>
     </hierarchy>
   </dimension>
-  <measure sourceExpression="%cube.GetStudentsCount(%source.%ID)" name="Students" displayName="@students@" disabled="false" aggregate="SUM" type="number" hidden="false" searchable="false" iKnowSource="string"></measure>
-  <listing name="TeacherStudents" disabled="false" listingType="table" sql="SELECT  stud.Students-&gt;LastName-&gt;Value || &apos; &apos; || ISNULL(stud.Students-&gt;FirstName-&gt;Value,&apos;&apos;) || &apos; &apos; || ISNULL(stud.Students-&gt;MiddleName-&gt;Value,&apos;&apos;) As &quot;Слушатель&quot;, sg.Training-&gt;DateFinish As &quot;Дата обучения&quot;, sg.Training-&gt;Course-&gt;Name-&gt;Value As &quot;Курс&quot;, sg.Training-&gt;City-&gt;Name-&gt;Value As &quot;Город&quot; FROM Stc_Data.SubGroup_Students As stud INNER JOIN Stc_Data.Training_SubGroups as sg ON sg.SubGroups=stud.SubGroup WHERE sg.Training IN (SELECT ID FROM $$$SOURCE WHERE $$$RESTRICT) ORDER BY &quot;Дата обучения&quot;, &quot;Курс&quot;, &quot;Город&quot;, &quot;Слушатель&quot;"></listing>
-  <listing name="CourseStudents" disabled="false" listingType="table" sql="SELECT  stud.Students-&gt;LastName-&gt;Value || &apos; &apos; || ISNULL(stud.Students-&gt;FirstName-&gt;Value,&apos;&apos;) || &apos; &apos; || ISNULL(stud.Students-&gt;MiddleName-&gt;Value,&apos;&apos;) As &quot;Слушатель&quot;, sg.Training-&gt;DateFinish As &quot;Дата обучения&quot;, sg.Training-&gt;City-&gt;Name-&gt;Value As &quot;Город&quot; FROM Stc_Data.SubGroup_Students As stud INNER JOIN Stc_Data.Training_SubGroups as sg ON sg.SubGroups=stud.SubGroup WHERE sg.Training IN (SELECT ID FROM $$$SOURCE WHERE $$$RESTRICT) ORDER BY &quot;Дата обучения&quot;, &quot;Город&quot;, &quot;Слушатель&quot;"></listing>
+  <measure sourceProperty="%ID" name="Trainings" displayName="Обучения" disabled="false" aggregate="COUNT" type="integer" hidden="false" searchable="false" iKnowSource="string"></measure>
+  <relationship name="SubGroupCubeRelation" disabled="false" relatedCube="SubGroupCube" inverse="TrainingCubeRelation" cardinality="many"></relationship>
+  <listing name="Trainings" displayName="Обучения" disabled="false" listingType="table" sql="SELECT trTab.Course-&gt;Name-&gt;Value As &quot;$$$TEXT[&quot;Курс/Stc&quot;]&quot;,  trTab.City-&gt;Name-&gt;Value As &quot;$$$TEXT[&quot;Город/Stc&quot;]&quot;,  trTab.DateStart As &quot;$$$TEXT[&quot;Дата начала/Stc&quot;]&quot;,  trTab.DateFinish As &quot;$$$TEXT[&quot;Дата окончания/Stc&quot;]&quot;,  (SELECT COUNT(SubGroups) FROM Stc_Data.Training_SubGroups WHERE Training = trTab.ID) As &quot;$$$TEXT[&quot;Подгруппы/Stc&quot;]&quot;,  (SELECT COUNT(Students) FROM Stc_Data.SubGroup_Students as sgStuds INNER JOIN Stc_Data.Training_SubGroups As trSubs ON trSubs.Training = trTab.ID AND sgStuds.SubGroup=trSubs.SubGroups) As &quot;$$$TEXT[&quot;Слушатели/Stc&quot;]&quot;  FROM Stc_Data.Training as trTab WHERE trTab.ID IN (SELECT ID FROM $$$SOURCE WHERE $$$RESTRICT) ORDER BY &quot;$$$TEXT[&quot;Дата окончания/Stc&quot;]&quot;, &quot;$$$TEXT[&quot;Город/Stc&quot;]&quot;, &quot;$$$TEXT[&quot;Курс/Stc&quot;]&quot; "></listing>
 </cube>
 ]]></Data>
 </XData>
@@ -52,9 +52,10 @@ Cube definition from Architect.</Description>
 <Implementation><![CDATA[
 	set count = 0
 	
-	&sql(SELECT COUNT(Students) INTO :count 
-		 FROM Stc_Data.SubGroup_Students
-		 WHERE SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training = :id))
+	&sql(SELECT COUNT(sgStudents.Students) INTO :count 
+		 FROM Stc_Data.SubGroup_Students as sgStudents INNER JOIN 
+		 	  Stc_Data.Training_SubGroups as trSubGroups ON trSubGroups.SubGroups = sgStudents.SubGroup
+		 WHERE trSubGroups.Training = :id)
 	
 	quit count
 ]]></Implementation>
@@ -82,10 +83,22 @@ Cube definition from Architect.</Description>
 	set key = ""
 	for i=1:1:training.SubGroups.Count(){
 		set key = training.SubGroups.Next(key)
-		set companies = companies_training.SubGroups.GetAt(key).Payer.ShortName.Value_","
+		//set companies = companies_training.SubGroups.GetAt(key).Payer.ShortName.Value_","
+		set companies = companies_training.SubGroups.GetAt(key).Payer.%Id()_","
 	}
 	
 	quit $E(companies,1,*-1)
+]]></Implementation>
+</Method>
+
+<Method name="GetCompanyNameById">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%Integer</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set name = "--"
+	&sql(SELECT ShortName->Value INTO :name FROM Stc_Data.Company WHERE ID = :id)
+	quit name
 ]]></Implementation>
 </Method>
 </Class>

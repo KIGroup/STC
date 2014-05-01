@@ -2,8 +2,8 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/controllers/AllOrdersCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//ddddddd
-
+//dddddddcdcd
+ 
 /*===========================================================================================
 Все заявки
 ===========================================================================================*/
@@ -25,18 +25,18 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
     $scope.order.init = function(){
         $scope.order.columns = [
                           {name: 'Курс',          sqlName: 'Course->Name->Value',       isSorted: false, isSortable: true, isDown: true,  isSearched: true,  isSearchable: true},
-                          {name: 'Город',         sqlName: 'City->Name->Value',         isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
-                          {name: 'Дата обучения', sqlName: 'TrainingDate',       isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false},
+                          {name: 'Организация',   sqlName: 'Company->ShortName->Value', isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
+                        /*{name: 'Город',         sqlName: 'City->Name->Value',         isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
+                          {name: 'Дата обучения', sqlName: 'TrainingDate',       isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false},*/
                           {name: 'Слушатели',     sqlName: 'StudentsNumber',     isSorted: false, isSortable: false,isDown: true,  isSearched: false, isSearchable: false},
-                          {name: 'Организация',      sqlName: 'Company->ShortName->Value', isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
                           {name: 'Дата создания', sqlName: 'CreatedTS',          isSorted: true,  isSortable: true, isDown: false, isSearched: false, isSearchable: false, filter: 'date'},
                           {name: 'Статус',        sqlName: 'OrderStatus',        isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false}];
         
         $scope.order.properties = [{name:'course.name'}, 
-                                   {name:'city.name'}, 
-                                   {name:'date', filter: 'date', filterParam: $filter('localize')('d MMMM y')}, 
+                                   {name:'contact.company.shortName'},
+                                 /*{name:'city.name'}, 
+                                   {name:'date', filter: 'date', filterParam: $filter('localize')('d MMMM y')},*/ 
                                    {name:'studentsNumber'}, 
-                                   {name:'contact.company.shortName'}, 
                                    {name:'createdTS', filter: 'date', filterParam: $filter('localize')('d MMMM y, HH:mm:ss')}, 
                                    {name:'status.name', getCssClass: function(item){
                                         var code = UtilsSrvc.getPropertyValue(item, 'status.code');
@@ -147,7 +147,7 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
     };
 
     // Удалить заявку
-    $scope.order.delete = function(item){
+    $scope.order.deleteOrder = function(item){
         function deleteOrder(){
             OrderSrvc.deleteOrder(item.id).then(
                 function(data){
@@ -163,7 +163,7 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
         UtilsSrvc.openMessageBox('Удалить заявку', $filter('localize')("Удалить заявку от организации") + " '" + item.contact.company.shortName + "'?", deleteOrder);    
     };
 
-    // Обновить или заменить контакт компании 
+    // Обновить или заменить контакт компании  
     $scope.order.changeCompanyContact = function(isReplace){
         var msgSuccess = 'Контакт заменен.';
         var msgWindow = ['Заменить контакт', 'Заменить контакт организации контактом из заявки? Старый контакт организации не будет удален.'];
@@ -207,8 +207,10 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
 
     $scope.order.changeCompany = function(){
         $scope.order.modalChangeCompanyVisible = false;
-        if (!$scope.order.newOrderCompany || !$scope.order.newOrderCompany.id)
+        if (!$scope.order.newOrderCompany || !$scope.order.newOrderCompany.id){
+            console.log($scope.order.newOrderCompany);
             return;
+        }
         
         OrderSrvc.changeOrderCompany($scope.order.selectedItems[0].id, $scope.order.newOrderCompany.id).then(
                 function(data){
@@ -226,7 +228,7 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
     // TRAINING
     // Инициализация таблицы для обучения 
     $scope.training.init = function(){
-        $scope.training.orderColumns   = [{name: 'Курс'}, {name: 'Город'}, {name: 'Дата обучения'}, {name: 'Слушатели'}, {name: 'Организация'}, {name: 'Дата создания'}, {name: 'Статус'}];
+        $scope.training.orderColumns   = [{name: 'Курс'},  {name: 'Организация'}, {name: 'Слушатели'}, {name: 'Дата создания'}, {name: 'Статус'}];
         $scope.training.studentColumns = [{name: 'Фамилия'}, {name: 'Имя'}, {name: 'Отчество'}, {name: 'Организация'}, {name: 'Email'}, {name: 'Телефон'}, {name: 'Skype'}];
         $scope.training.studentProperties = [{name:'lastName'}, {name:'firstName'}, {name:'middleName'}, {name:'company'}, {name:'email'}, {name:'phone'}, {name:'skype'}];
         $scope.training.studentItems = [];
@@ -304,11 +306,8 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
 
         orderIdString = orderIdString.substring(0, orderIdString.length-1);
 
-        $scope.training.data.city = $scope.order.selectedItems[0].city;
         $scope.training.data.course.id = $scope.order.selectedItems[0].course.id;
         $scope.training.data.orders = orderIdString.split(',');
-
-        $scope.training.dateStart = $scope.order.selectedItems[0].date;            
 
         OrderSrvc.getStudentsFromOrders(orderIdString).then(
             function(data){

@@ -86,9 +86,9 @@
         <div class="navbar">
           <div class="navbar-inner">
             <div class="container">
-             
+              
               <a class="brand" href="" ng-bind="menu.brandCaption|localize"></a>
-             <!-- 
+            <!-- 
               <div class="brand" href="" style="padding: 4px;">
               	<img src="img/brand.gif" width="100px"/>
               	<div style="display: inline; vertical-align: middle;">

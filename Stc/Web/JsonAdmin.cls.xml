@@ -2395,6 +2395,7 @@ Get all teachers of course</Description>
 							training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value,
 							training.Street.Value,
 							training.Room,
+							training.Teacher.FullName_", "_training.Teacher.Phone_", "_training.Teacher.Email_training.Teacher.Skype,
 							training.OtherInfo.Value)
 		}
 		elseif (type = "teacher"){
@@ -2413,6 +2414,8 @@ Get all teachers of course</Description>
 							training.Street.Value,
 							training.Room,
 							training.OtherInfo.Value)
+							
+							
 		}
 		elseif (type = "order"){
 			set domainWebApp = $GET(^Settings("Stc", "DomainName"))_$GET(^Settings("Stc", "WebApp")) 

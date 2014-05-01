@@ -45,7 +45,7 @@
             <i class="iSwitcher" ng-click="switchCompany(true)" ng-show="!companySwitchOff && !companyExist" ng-bind="'(есть в списке)'|localize"></i>
         </label>
         <div class="controls">
-            <select class="span12" ng-show="companyExist" ng-required="companyExist" ng-model="person.company.exist.id" ng-options="company.id as company.name for company in companies" ng-disabled="companyDisabled || allDisabled">
+            <select class="span12" ng-show="companyExist" ng-required="companyExist==true" ng-model="person.company.exist.id" ng-options="company.id as company.name for company in companies" ng-disabled="companyDisabled || allDisabled">
                 <option value=""></option>
             </select>
             <input class="span12" ng-hide="companyExist" type="text" ng-model="person.company.notexist.name" ng-required="!companyExist"></input>

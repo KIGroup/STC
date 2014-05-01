@@ -80,7 +80,7 @@ Convert to proxyObject (for JSON)</Description>
 	
 	set proxy.id = ..%Id()
 	set proxy.status = ..OrderStatus.ConvertToProxyObject()
-	set proxy.city = ..City.ConvertToProxyObject()
+	//set proxy.city = ..City.ConvertToProxyObject()
 	set proxy.course = ..Course.ConvertToProxyObject()
 	
 	set proxy.contact = ##class(%ZEN.proxyObject).%New()
@@ -90,7 +90,7 @@ Convert to proxyObject (for JSON)</Description>
 	set proxy.contact.email = ..Email
 	set proxy.contact.phone = ..Phone
 	set proxy.contact.skype = ..Skype
-	set proxy.contact.partner = ..Partner
+	//set proxy.contact.partner = ..Partner
 	
 	set proxy.contact.company = ##class(%ZEN.proxyObject).%New()
 
@@ -103,7 +103,7 @@ Convert to proxyObject (for JSON)</Description>
 		set proxy.contact.company.site = ..CompanySite	
 	}
 	
-	set proxy.date = $ZDATE(..TrainingDate, 3)
+	//set proxy.date = $ZDATE(..TrainingDate, 3)
 	set proxy.createdTS = ..CreatedTS
 	set proxy.studentsNumber = ..StudentsNumber
 	
@@ -120,22 +120,22 @@ Create "new" application</Description>
 <Implementation><![CDATA[
 	set order = ..%New()
 	
-	set order.City = ##class(Region).%OpenId(data.city.id)
+	//set order.City = ##class(Region).%OpenId(data.city.id)
 	set order.Course = ##class(Course).%OpenId(data.course.id)
 		
 	set order.FirstName = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.contact.firstName, "I","UTF8"), "Stc.Data.Localization.Translation;PersonLTextValue")
 	set order.LastName = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.contact.lastName, "I","UTF8"), "Stc.Data.Localization.Translation;PersonLTextValue")
 	set order.MiddleName = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.contact.middleName, "I","UTF8"), "Stc.Data.Localization.Translation;PersonLTextValue")
 		
-	set order.TrainingDate = $ZDATEH(data.date, 15)
+	//set order.TrainingDate = $ZDATEH(data.date, 15)
 	set order.StudentsNumber = data.studentsNumber
 	set order.Email = $ZCONVERT(data.contact.email, "I","UTF8")
 	set order.Phone = $ZCONVERT(data.contact.phone, "I","UTF8")
 	set order.Skype = $ZCONVERT(data.contact.skype, "I","UTF8")
-	set order.Partner = $ZCONVERT(data.contact.partner, "I","UTF8")
+	//set order.Partner = $ZCONVERT(data.contact.partner, "I","UTF8")
 		
-	set order.Longitude = $p(data.point, " ", 1)
-	set order.Latitude = $p(data.point, " ", 2)
+	//set order.Longitude = $p(data.point, " ", 1)
+	//set order.Latitude = $p(data.point, " ", 2)
 		
 	if (data.contact.company.exist) set order.Company = ##class(Company).%OpenId(data.contact.company.exist.id)
 		

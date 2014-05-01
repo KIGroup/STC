@@ -162,7 +162,7 @@ Finish editing of application</Description>
 Get short info about all organization</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[    quit ..WriteJsonFromSql("SELECT ID As id, ShortName->Value as name FROM Stc_Data.Company ORDER BY name")
+<Implementation><![CDATA[    quit ..WriteJsonFromSql("SELECT ID As id, ShortName->Value as name, Type->Code as code FROM Stc_Data.Company ORDER BY name")
 ]]></Implementation>
 </Method>
 

@@ -25,6 +25,7 @@ Stc.DeepSee.KPI.TrainingStudents</Description>
 <property name="FullName" displayName="FullName" columnNo="1"/>
 <property name="Company" displayName="Company" columnNo="2"/>
 <property name="Email" displayName="Email" columnNo="3"/>
+<property name="Phone" displayName="Phone" columnNo="4"/>
 
 <filter name="Training" displayName="Training" filterProperty=""/>
 </kpi>
@@ -76,7 +77,8 @@ Return an SQL statement to execute.</Description>
 SELECT 
 Students->LastName->Value || ' ' || SUBSTRING(Students->FirstName->Value,1,1) || '. ' || SUBSTRING(ISNULL(Students->MiddleName->Value,''),1,1) || '. ' As FullName,
 Students->Company->ShortName->Value As Company,
-Students->Email
+Students->Email,
+Students->Phone
 FROM Stc_Data.SubGroup_Students
 WHERE SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training = :trainingId)
 ORDER BY Company, FullName

@@ -37,7 +37,11 @@ Stc.DeepSee.KPI.TrainingPoints</Description>
 <property name="IsCompleted" columnNo="13"/>
 
 <filter name="Course" sql="SELECT Name->Value As Name FROM Stc_Data.Course ORDER BY Name"/>
-<filter name="Status" displayName="Status"/>
+<filter name="CompanyType" sql="SELECT Name->Value As Name FROM Stc_Data.CompanyType"/>
+<filter name="Status"/>
+<filter name="Year" sql="SELECT DISTINCT DATEPART('YEAR',DateStart) as Name FROM Stc_Data.Training ORDER BY Name"/>
+<filter name="Teacher" sql="SELECT DISTINCT %EXACT(Teacher->FullName) as FullName FROM Stc_Data.Training ORDER BY FullName"/>
+<filter name="Company" sql="SELECT DISTINCT %EXACT(SubGroups->Payer->ShortName->Value) as ShortName FROM Stc_Data.Training_SubGroups ORDER BY ShortName"/>
 </kpi>
 ]]></Data>
 </XData>
@@ -48,20 +52,67 @@ Return an SQL statement to execute.</Description>
 <FormalSpec><![CDATA[&pSQL:%String]]></FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set whereCondition = ""
-	if (..%filterValues.Status '= "") && (..%filterValues.Course '= ""){
-		set whereCondition = "WHERE tr.IsCompleted="_..%filterValues.Status_" AND tr.Course->Name->Value='"_..%filterValues.Course_"'"
-	} 
-	elseif (..%filterValues.Status '= "") && (..%filterValues.Course = ""){
-		set whereCondition = "WHERE tr.IsCompleted="_..%filterValues.Status
-	}
-	elseif (..%filterValues.Status = "") && (..%filterValues.Course '= ""){
-		set whereCondition = "WHERE tr.Course->Name->Value='"_..%filterValues.Course_"'"
-	}
-	
-	set pSQL = $replace(##class(Stc.DeepSee.KPI.Utils).GetStringFromXData("sql", ..%ClassName(1)), ":WHERECondition", whereCondition)
-	
+	set pSQL = ..GetSql(..%filterValues.Year, ..%filterValues.Status, ..%filterValues.Course, ..%filterValues.Teacher, ..%filterValues.Company, ..%filterValues.CompanyType)
+	set ^temp("kpisql") = pSQL
 	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetSql">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>year,status,course,teacher,company,companyType</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set whereCondition = ""
+	
+	// ГОД
+	if (year '= "")	set whereCondition = ..GetSqlConditionForFilter(whereCondition, "DATEPART('YEAR', tr.DateStart) "_..GetMultiValueFromFilter(year))
+	
+	// СТАТУС
+	if (status '= "") set whereCondition = ..GetSqlConditionForFilter(whereCondition, "tr.IsCompleted = "_status)
+	
+	// КУРС
+	if (course '= "") set whereCondition = ..GetSqlConditionForFilter(whereCondition, "tr.Course->Name->Value "_..GetMultiValueFromFilter(course))
+		
+	// ПРЕПОДАВАТЕЛЬ
+	if (teacher '= "") set whereCondition = ..GetSqlConditionForFilter(whereCondition, "tr.Teacher->FullName "_..GetMultiValueFromFilter(teacher))
+	
+	// ОРГАНИЗАЦИЯ
+	if (company '= "") set whereCondition = ..GetSqlConditionForFilter(whereCondition, "0 < (SELECT COUNT(SubGroups) FROM Stc_Data.Training_SubGroups WHERE Training = tr.ID AND SubGroups->Payer->ShortName->Value "_..GetMultiValueFromFilter(company))
+	
+	// ТИП ОРГАНИЗАЦИИ
+	if (companyType '= "") set whereCondition = ..GetSqlConditionForFilter(whereCondition, "0 < (SELECT COUNT(SubGroups) FROM Stc_Data.Training_SubGroups WHERE Training = tr.ID AND SubGroups->Payer->Type->Name->Value='"_companyType_"')")
+	
+	
+	quit $replace(##class(Stc.DeepSee.KPI.Utils).GetStringFromXData("sql", ..%ClassName(1)), ":WHERECondition", whereCondition)
+]]></Implementation>
+</Method>
+
+<Method name="GetSqlConditionForFilter">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>whereCondition,customCondition</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	if (whereCondition = ""){
+		quit "WHERE "_customCondition
+	}
+	
+	quit whereCondition_" AND "_customCondition
+]]></Implementation>
+</Method>
+
+<Method name="GetMultiValueFromFilter">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set not = ""
+	if ($FIND(value, "%NOT") '= 0){
+			set not = "NOT"
+			set value = $REPLACE(value, "%NOT ", "")
+	}
+	
+	quit not_" IN ('"_$REPLACE($REPLACE($REPLACE(value,"{",""),"}",""), ",", "','")_"')"
 ]]></Implementation>
 </Method>
 
@@ -97,14 +148,13 @@ tr.Street->Value As Street,
 tr.Room As Room,
 TO_CHAR(tr.DateStart,'DD-MM-YYYY'),
 TO_CHAR(tr.DateFinish,'DD-MM-YYYY'),
-tr.Teacher->LastName->Value || ' ' || SUBSTRING(tr.Teacher->FirstName->Value,1,1) || '. ' || SUBSTRING(ISNULL(tr.Teacher->MiddleName->Value,''),1,1) || '., ' || tr.Teacher->Email As Teacher,
+tr.Teacher->FullName ||', '|| tr.Teacher->Email As Teacher,
 (SELECT COUNT(Students) FROM Stc_Data.SubGroup_Students WHERE SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training = tr.ID)) As StudentsCount,
 (SELECT COUNT(SubGroups) FROM Stc_Data.Training_SubGroups WHERE Training = tr.ID) As SubGroupsCount,
 tr.Latitude,
 tr.Longitude,
 tr.IsCompleted
-FROM Stc_Data.Training as tr
-:WHERECondition
+FROM Stc_Data.Training as tr :WHERECondition
 ]]]]><![CDATA[></xml>
 ]]></Data>
 </XData>

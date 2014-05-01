@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/localization/filter.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/localization/filter.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //
 /*===========================================================================================
@@ -8,7 +8,8 @@
 ===========================================================================================*/
 
 localizationModule.filter('localize', function(StcDictionary) {
-    return function(input) {  
+    return function(input) {
+	    //console.log('call localize');  
         return StcDictionary.getTranslate(input);
     }
 });
