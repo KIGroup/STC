@@ -79,22 +79,36 @@
 				<div class="row-fluid">
 					<div class="span6">
 						<p><span class="spnTitle" ng-bind="'Организация'|localize"         ></span>: <span ng-bind="order.selectedItems[0].contact.company.shortName"></span>&nbsp;&nbsp;<span class="label label-important" ng-hide="order.selectedItems[0].contact.company.id" ng-bind="'Новая организация'|localize"></span></p>
-						<p><span class="spnTitle" ng-bind="'Веб-сайт организации'|localize"></span>: <a target="_blank" style="text-decoration: none;" ng-href="{{'http://' + order.selectedItems[0].contact.company.site}}" title="{{order.selectedItems[0].contact.company.site}}"><i ng-bind="order.selectedItems[0].contact.company.site.substring(0,25)"></i></a></p>
+						<p ng-hide="order.selectedItems[0].contact.company.site==''"><span class="spnTitle" ng-bind="'Веб-сайт организации'|localize"></span>: <a target="_blank" style="text-decoration: none;" ng-href="{{'http://' + order.selectedItems[0].contact.company.site}}" title="{{order.selectedItems[0].contact.company.site}}"><i ng-bind="order.selectedItems[0].contact.company.site.substring(0,25)"></i></a></p>
 						<div ng-show="order.contactType=='order' || (order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email 
 																	&& order.selectedItems[0].contact.company.contact.phone==order.selectedItems[0].contact.phone 
 																	&& order.selectedItems[0].contact.company.contact.skype==order.selectedItems[0].contact.skype)">
-							<p><span class="spnTitle" ng-bind="'Контакт'|localize"></span>: <span ng-bind="order.selectedItems[0].contact.lastName + ' ' + order.selectedItems[0].contact.firstName + ' ' + order.selectedItems[0].contact.middleName"></span></p>
+							<p style="padding-top: 10px;"><span class="spnTitle" ng-bind="'Контакт'|localize"></span>: <span ng-bind="order.selectedItems[0].contact.lastName + ' ' + order.selectedItems[0].contact.firstName + ' ' + order.selectedItems[0].contact.middleName"></span></p>
+							<p>
+								<span><i class="icon-envelope" style="font-size: 0.9em;"></i> {{order.selectedItems[0].contact.email}}</span>
+								<span ng-hide="order.selectedItems[0].contact.phone==''" style="padding-left:12px"><i class="icon-phone"></i> {{order.selectedItems[0].contact.phone}}</span>
+								<span ng-hide="order.selectedItems[0].contact.skype==''" style="padding-left:12px"><i class="icon-skype"></i> {{order.selectedItems[0].contact.skype}}</span>
+							</p>
+							<!--
 							<p><span class="spnTitle" ng-bind="'Email'"           ></span>: <span ng-bind="order.selectedItems[0].contact.email"></span></p>
 							<p><span class="spnTitle" ng-bind="'Телефон'|localize"></span>: <span ng-bind="order.selectedItems[0].contact.phone"></span></p>
 							<p><span class="spnTitle" ng-bind="'Skype'"           ></span>: <span ng-bind="order.selectedItems[0].contact.skype"></span></p>
+							-->
 						</div>
 						<div ng-show="order.contactType=='company' && !(order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email 
 																	&& order.selectedItems[0].contact.company.contact.phone==order.selectedItems[0].contact.phone 
 																	&& order.selectedItems[0].contact.company.contact.skype==order.selectedItems[0].contact.skype)">
 							<p><span class="spnTitle" ng-bind="'Контакт'|localize"></span>: <span ng-bind="order.selectedItems[0].contact.company.contact.lastName + ' ' + order.selectedItems[0].contact.company.contact.firstName + ' ' + order.selectedItems[0].contact.company.contact.middleName"></span></p>
+							<p>
+								<span><i class="icon-envelope" style="font-size: 0.9em;"></i> {{order.selectedItems[0].contact.company.contact.email}}</span>
+								<span ng-hide="order.selectedItems[0].contact.company.contact.phone==''" style="padding-left:12px"><i class="icon-phone"></i> {{order.selectedItems[0].contact.company.contact.phone}}</span>
+								<span ng-hide="order.selectedItems[0].contact.company.contact.skype==''" style="padding-left:12px"><i class="icon-skype"></i> {{order.selectedItems[0].contact.company.contact.skype}}</span>
+							</p>
+							<!--
 							<p><span class="spnTitle" ng-bind="'Email'"           ></span>: <span ng-bind="order.selectedItems[0].contact.company.contact.email"></span></p>
 							<p><span class="spnTitle" ng-bind="'Телефон'|localize"></span>: <span ng-bind="order.selectedItems[0].contact.company.contact.phone"></span></p>
 							<p><span class="spnTitle" ng-bind="'Skype'"           ></span>: <span ng-bind="order.selectedItems[0].contact.company.contact.skype"></span></p>
+							-->
 						</div>
 						<div ng-show="order.selectedItems[0].contact.company.id && !(order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email 
 																				 && order.selectedItems[0].contact.company.contact.phone==order.selectedItems[0].contact.phone 
@@ -135,12 +149,19 @@
 			<tab heading="{{'Информация'|localize}}"  active="training.tabInfo">
 				<div class="row-fluid">
 					<div class="span6">
-						<p><span class="spnTitle" ng-bind="'Организация'|localize"         ></span>: <span ng-bind="order.selectedItems[0].contact.company.shortName"></span></p>
-						<p><span class="spnTitle" ng-bind="'Веб-сайт организации'|localize"></span>: <a target="_blank" style="text-decoration: none;" ng-href="{{'http://' + order.selectedItems[0].contact.company.site}}" title="{{order.selectedItems[0].contact.company.site}}"><i ng-bind="order.selectedItems[0].contact.company.site.substring(0,25)"></i></a></p>
-						<p><span class="spnTitle" ng-bind="'Контакт'|localize"          ></span>: <span ng-bind="order.selectedItems[0].contact.lastName + ' ' + order.selectedItems[0].contact.firstName + ' ' + order.selectedItems[0].contact.middleName"></span></p>
+						<p><span class="spnTitle" ng-bind="'Организация'|localize"></span>: <span ng-bind="order.selectedItems[0].contact.company.shortName"></span></p>
+						<p ng-hide="order.selectedItems[0].contact.company.site==''"><span class="spnTitle" ng-bind="'Веб-сайт организации'|localize"></span>: <a target="_blank" style="text-decoration: none;" ng-href="{{'http://' + order.selectedItems[0].contact.company.site}}" title="{{order.selectedItems[0].contact.company.site}}"><i ng-bind="order.selectedItems[0].contact.company.site.substring(0,25)"></i></a></p>
+						<p style="padding-top: 10px;"><span class="spnTitle" ng-bind="'Контакт'|localize"></span>: <span ng-bind="order.selectedItems[0].contact.lastName + ' ' + order.selectedItems[0].contact.firstName + ' ' + order.selectedItems[0].contact.middleName"></span></p>
+						<p>
+							<span><i class="icon-envelope" style="font-size: 0.9em;"></i> {{order.selectedItems[0].contact.email}}</span>
+							<span ng-hide="order.selectedItems[0].contact.phone==''" style="padding-left:12px"><i class="icon-phone"></i> {{order.selectedItems[0].contact.phone}}</span>
+							<span ng-hide="order.selectedItems[0].contact.skype==''" style="padding-left:12px"><i class="icon-skype"></i> {{order.selectedItems[0].contact.skype}}</span>
+						</p>
+						<!--
 						<p><span class="spnTitle" ng-bind="'Email'"                               ></span>: <span ng-bind="order.selectedItems[0].contact.email"></span></p>
 						<p><span class="spnTitle" ng-bind="'Телефон'|localize"          ></span>: <span ng-bind="order.selectedItems[0].contact.phone"></span></p>
 						<p><span class="spnTitle" ng-bind="'Skype'"                               ></span>: <span ng-bind="order.selectedItems[0].contact.skype"></span></p>
+						-->
 					</div>
 					<div class="span6">
 						<p><span class="spnTitle" ng-bind="'Курс'|localize"                 ></span>: <span ng-bind="order.selectedItems[0].course.name"></span></p>

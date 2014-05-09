@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/company.csp" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/partials/company.csp" application="/csp/stc/" default="1"><![CDATA[
 <stcalert data="alert" span-right="1" span-middle="10" span-left="1"/>
 
 <div ng-show="compForm.visible">
@@ -43,9 +43,16 @@
 						<div class="accordion-inner">
 							<form class="form" ng-submit="">
 								<p><span class="spnTitle" ng-bind="'ФИО'|localize"    ></span>: <span ng-bind="compForm.company.contact.lastName + ' ' + compForm.company.contact.firstName + ' ' + compForm.company.contact.middleName"></span></p>
+								<p>
+									<span><i class="icon-envelope" style="font-size: 0.9em;"></i> {{compForm.company.contact.email}}</span>
+									<span ng-hide="compForm.company.contact.phone==''" style="padding-left:12px"><i class="icon-phone"></i> {{compForm.company.contact.phone}}</span>
+									<span ng-hide="compForm.company.contact.skype==''" style="padding-left:12px"><i class="icon-skype"></i> {{compForm.company.contact.skype}}</span>
+								</p>
+								<!--
 								<p><span class="spnTitle" ng-bind="'Email'"           ></span>: <span ng-bind="compForm.company.contact.email"></span></p>
 								<p><span class="spnTitle" ng-bind="'Телефон'|localize"></span>: <span ng-bind="compForm.company.contact.phone"></span></p>
 								<p><span class="spnTitle" ng-bind="'Skype'"           ></span>: <span ng-bind="compForm.company.contact.skype"></span></p>
+								-->
 								<button class="btn btn-small" type="submit" ng-show="compForm.company.id" ng-click="compForm.editContact()" ng-bind="'Редактировать'|localize"></button>
 								<button class="btn btn-small" type="submit" ng-show="compForm.company.id" ng-click="compForm.changeContact()" ng-bind="'Заменить'|localize"></button>
 							</form>

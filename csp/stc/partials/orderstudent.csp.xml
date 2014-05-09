@@ -25,9 +25,9 @@
 					<stcperson
 						person="ordForm.order.contact"
 						companies="ordForm.companies"
-						company-switch-off="false"
+						company-switch-off="true"
 						web-site-off="true"
-						company-exist="true"
+						company-exist="false"
 					/>
 					<div>
 						<div class="control-group">

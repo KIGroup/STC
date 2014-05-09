@@ -75,12 +75,24 @@
 			<tab heading="{{'Информация'|localize}}">
 				<div class="row-fluid" >
 					<div class="span6">
-						<p><span class="spnTitle" ng-bind="'Курс'|localize"                              ></span>: <span ng-bind="training.selectedItems[0].course.name"></span></p>
-						<p><span class="spnTitle" ng-bind="'Преподаватель'|localize"                     ></span>: <span ng-bind="training.selectedItems[0].teacher.lastName + ' ' + training.selectedItems[0].teacher.firstName + ' ' + training.selectedItems[0].teacher.middleName"></span></p>
+						<p><span class="spnTitle" ng-bind="'Курс'|localize"></span>: <span ng-bind="training.selectedItems[0].course.name"></span></p>
+						<p style="padding-top: 10px;"><span class="spnTitle" ng-bind="'Преподаватель'|localize"></span>: <span ng-bind="training.selectedItems[0].teacher.lastName + ' ' + training.selectedItems[0].teacher.firstName + ' ' + training.selectedItems[0].teacher.middleName"></span></p>
+						<p>
+							<span><i class="icon-envelope" style="font-size: 0.9em;"></i> {{training.selectedItems[0].teacher.email}}</span>
+							<span ng-hide="training.selectedItems[0].teacher.phone==''" style="padding-left:12px"><i class="icon-phone"></i> {{training.selectedItems[0].teacher.phone}}</span>
+							<span ng-hide="training.selectedItems[0].teacher.skype==''" style="padding-left:12px"><i class="icon-skype"></i> {{training.selectedItems[0].teacher.skype}}</span>
+						</p>
+						<p ng-hide="training.selectedItems[0].curator.fullName==''" style="padding-top: 12px;"><span class="spnTitle" ng-bind="'Куратор'|localize"></span>: <span ng-bind="training.selectedItems[0].curator.fullName"></span></p>
+						<p ng-hide="training.selectedItems[0].curator.fullName==''">
+							<span><i class="icon-envelope" style="font-size: 0.9em;"></i> {{training.selectedItems[0].curator.email}}</span>
+							<span ng-hide="training.selectedItems[0].curator.phoneSecret==''" style="padding-left:12px"><i class="icon-phone"></i> {{training.selectedItems[0].curator.phoneSecret}}</span>
+						</p>
+						<!--
 						<p><span class="spnTitle" ng-bind="'Email'"                                      ></span>: <span ng-bind="training.selectedItems[0].teacher.email"></span></p>
 						<p><span class="spnTitle" ng-bind="'Телефон'|localize"                           ></span>: <span ng-bind="training.selectedItems[0].teacher.phone"></span></p>
 						<p><span class="spnTitle" ng-bind="'Skype'"                                      ></span>: <span ng-bind="training.selectedItems[0].teacher.skype"></span></p>
-						<p><span class="spnTitle" ng-bind="('Подгрупп'|localize)+' / '+('слушателей'|localize)"></span>: <span ng-bind="training.selectedItems[0].sgroups + ' / ' + training.selectedItems[0].students"></span></p>
+						-->
+						<p style="padding-top: 10px;"><span class="spnTitle" ng-bind="('Подгрупп'|localize)+' / '+('слушателей'|localize)"></span>: <span ng-bind="training.selectedItems[0].sgroups + ' / ' + training.selectedItems[0].students"></span></p>
 						<p><span class="spnTitle" ng-bind="('Новые заявки'|localize)"                    ></span>: <span ng-bind="training.selectedItems[0].newStudents"></span></p>
 						<p><span class="spnTitle" ng-bind="('Отзывы'|localize)"                          ></span>: <span ng-bind="training.selectedItems[0].feedBacks.count"></span></p>
 						<a target="_blank" style="text-decoration: none;" ng-href="{{'#/orderstudent?training=' + training.selectedItems[0].id}}"><i ng-bind="'Заявка на обучение'|localize"></i></a></p>
@@ -90,7 +102,7 @@
 						<p><span class="spnTitle" ng-bind="'Адрес'|localize"                  ></span>: <span ng-bind="training.selectedItems[0].address.title + ', ' + training.selectedItems[0].room"></span></p>
 						<p><span class="spnTitle" ng-bind="'Дата начала / окончания обучения'|localize"   ></span>: <span ng-bind="(training.selectedItems[0].dateStart|convertCacheDate:('d MMMM y'|localize)) + ' / ' + (training.selectedItems[0].dateFinish|convertCacheDate:('d MMMM y'|localize))"></span></p>
 						<p><span class="spnTitle" ng-bind="'Время'|localize"      ></span>: <span ng-bind="training.selectedItems[0].timeStartFinish"></span></p>
-						<p><span class="spnTitle" ng-bind="'Примечание'|localize" ></span>: <span ng-bind="training.selectedItems[0].otherInfo"></span></p>
+						<p ng-hide="training.selectedItems[0].otherInfo==''"><span class="spnTitle" ng-bind="'Примечание'|localize" ></span>: <span ng-bind="training.selectedItems[0].otherInfo"></span></p>
 						<p><span class="label label-success"   ng-bind="'Событие есть в календаре'|localize" ng-hide="training.selectedItems[0].event==''"></span></p>
 						<p><span class="label label-important" ng-bind="'События нет в календаре'|localize"  ng-show="training.selectedItems[0].event==''"></span></span></p>
 						<div class="row-fluid">

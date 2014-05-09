@@ -19,36 +19,7 @@
         </div>
 
         <div class="row-fluid">
-            <div class="span5">
-                <div class="control-group">
-                    <label class="control-label" ng-bind="('Куратор: ФИО'|localize)"></label>
-                    <div class="controls">
-                        <div class="row-fluid">
-                            <input class="span12" type="text"  ng-model="training.curator.fullName"></input>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="span4">
-                <div class="control-group">
-                    <label class="control-label" ng-bind="('Email'|localize)"></label>
-                    <div class="controls">
-                        <input class="span12" type="text"  ng-model="training.curator.email"></input>
-                    </div>
-                </div>
-            </div>
-            <div class="span3">
-                <div class="control-group">
-                    <label class="control-label" ng-bind="('Телефон'|localize) + '*'"></label>
-                    <div class="controls">
-                        <input class="span12" type="text"  ng-model="training.curator.phone"></input>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row-fluid">
-            <div class="span8">
+            <div class="span6">
                 <div class="control-group">
                     <label class="control-label" ng-bind="('Дата начала / окончания обучения'|localize) + '*'"></label>
                     <div class="controls">
@@ -65,6 +36,16 @@
             </div>
             <div class="span4">
                 <div class="control-group">
+                    <label class="control-label" ng-bind="('Время проведения'|localize) + '*'"></label>
+                    <div class="controls">
+                        <input class="input" class="span6" type="text" placeholder="{{'ЧЧ:MM'|localize}}" title="{{'Время начала'|localize}}" pattern="([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" ng-model="training.timeStart" required></input>
+                        <!--&nbsp;&nbsp;-->
+                        <input class="input" class="span6" type="text" placeholder="{{'ЧЧ:MM'|localize}}" title="{{'Время окончания'|localize}}" pattern="([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" ng-model="training.timeFinish" required></input>
+                    </div>
+                </div>
+            </div>
+            <div class="span2">
+                <div class="control-group">
                     <label class="control-label" ng-bind="('Аудитория'|localize) + '*'"></label>
                     <div class="controls">
                         <input class="span12" type="text"  ng-model="training.room" required></input>
@@ -72,14 +53,48 @@
                 </div>
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label" ng-bind="('Время начала / окончания обучения'|localize) + '*'"></label>
-            <div class="controls">
-                <input class="input" style="width: 2.7em;" type="text" placeholder="{{'ЧЧ:MM'|localize}}" pattern="([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" ng-model="training.timeStart" required></input>
-                &nbsp;&nbsp;
-                <input class="input" style="width: 2.7em;" type="text" placeholder="{{'ЧЧ:MM'|localize}}" pattern="([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" ng-model="training.timeFinish" required></input>
+
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="control-group">
+                    <label class="control-label" ng-bind="('Куратор: ФИО'|localize)"></label>
+                    <div class="controls">
+                        <div class="row-fluid">
+                            <input class="span12" type="text"  ng-model="training.curator.fullName"></input>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <div class="row-fluid">
+            <div class="span4">
+                <div class="control-group">
+                    <label class="control-label" ng-bind="('Email'|localize)"></label>
+                    <div class="controls">
+                        <input class="span12" type="email"  ng-model="training.curator.email"></input>
+                    </div>
+                </div>
+            </div>
+            <div class="span4">
+                <div class="control-group">
+                    <label class="control-label" ng-bind="('Публичный телефон'|localize) + ''"></label>
+                    <div class="controls">
+                        <input class="span12" type="text"  ng-model="training.curator.phone"></input>
+                    </div>
+                </div>
+            </div>
+            <div class="span4">
+                <div class="control-group">
+                    <label class="control-label" ng-bind="('Непубличный телефон'|localize) + ''"></label>
+                    <div class="controls">
+                        <input class="span12" type="text"  ng-model="training.curator.phoneSecret"></input>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <button class="btn btn-success btn-small" type="submit" ng-show="!$parent.menu.readOnlyMode" ng-bind="btnSubmitName|localize" ng-click="formatDate()" ng-disabled="formName.$pristine"></button>
    		<button class="btn btn-small btn-primary" type="button" ng-show="btnAdditionVisible && !$parent.menu.readOnlyMode" ng-click="btnAdditionAction()" ng-bind="btnAdditionName|localize"></button>
     </div>
@@ -110,7 +125,7 @@
         <div class="control-group">
             <label class="control-label" ng-bind="'Примечание'|localize"></label>
             <div class="controls">
-                <textarea class="span12" rows="3" ng-model="training.otherInfo"></textarea>
+                <textarea class="span12" rows="5" ng-model="training.otherInfo"></textarea>
             </div>
         </div> 
     </div>

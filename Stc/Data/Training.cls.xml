@@ -32,6 +32,12 @@ Curator phone</Description>
 <Type>%String</Type>
 </Property>
 
+<Property name="CuratorPhoneSecret">
+<Description>
+Curator secret phone</Description>
+<Type>%String</Type>
+</Property>
+
 <Property name="Course">
 <Description>
 Course</Description>
@@ -259,6 +265,7 @@ Convert to proxyObject (for JSON)</Description>
 	set proxy.curator.fullName = ..CuratorFullName.Value
 	set proxy.curator.email = ..CuratorEmail
 	set proxy.curator.phone = ..CuratorPhone
+	set proxy.curator.phoneSecret = ..CuratorPhoneSecret
 	
 	set proxy.feedBacks = ##class(%ZEN.proxyObject).%New()
 	set proxy.feedBacks.count = ..FeedBacks.Count()
@@ -311,12 +318,14 @@ Create or save modified training</Description>
 	else{
 		set tr = ..%OpenId(data.id)
 		set tr.CuratorFullName.Value = $ZCONVERT(data.curator.fullName, "I","UTF8")
-		set tr.CuratorEmail = data.curator.email
-		set tr.CuratorPhone = data.curator.phone
 		set tr.Street.Value = $ZCONVERT(data.address.title, "I","UTF8")
 		set tr.OtherInfo.Value = $ZCONVERT(data.otherInfo, "I","UTF8")
 	}
 	
+	set tr.CuratorEmail = data.curator.email
+	set tr.CuratorPhone = data.curator.phone
+	set tr.CuratorPhoneSecret = data.curator.phoneSecret
+		
 	set tr.DateFinish = $ZDATEH(data.dateFinish, 15)
 	set tr.DateStart = $ZDATEH(data.dateStart, 15)
 	set tr.TimeFinish = ##class(%Library.Time).DisplayToLogical(data.timeFinish)
@@ -587,6 +596,9 @@ Add person to training, subgroup is detirmining automatically</Description>
 </Value>
 <Value name="26">
 <Value>IsCuratorAutoMailing</Value>
+</Value>
+<Value name="27">
+<Value>CuratorPhoneSecret</Value>
 </Value>
 </Data>
 </Storage>

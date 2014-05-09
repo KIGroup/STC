@@ -51,7 +51,7 @@
             <input class="span12" ng-hide="companyExist" type="text" ng-model="person.company.notexist.name" ng-required="!companyExist"></input>
         </div>
     </div>
-    <div class="control-group" ng-hide="companyExist || webSiteOff">
+    <div class="control-group" ng-hide="companyExist==true || webSiteOff==true">
         <label class="control-label" ng-bind="'Веб-сайт организации'|localize"></label>
         <div class="controls">
             <input class="span12" type="text" ng-model="person.company.notexist.site"></input>

@@ -94,6 +94,15 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 			set tempUrl = $replace(url, "%1", trainingId)
 			set tempUrl = $replace(tempUrl, "%2", training.AccessCode)
 			
+			set curatorData = ""
+			if (training.CuratorFullName.Value '= ""){
+				set curatorData = ##class(Stc.Utils.Msg).GetMsg("Curator")_": "_training.CuratorFullName.Value_", "_training.CuratorEmail_", "_training.CuratorPhoneSecret
+			
+				if (training.OtherInfo.Value '= ""){
+					set curatorData = "<br>"_curatorData
+				}
+			}
+			
 			set msg =  ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingTeacher"),
 							tempUrl,
 							$ZDATE(training.DateStart, 3),
@@ -102,7 +111,8 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 							training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value,
 							training.Street.Value,
 							training.Room,
-							training.OtherInfo.Value)
+							training.OtherInfo.Value,
+							curatorData)
 				
 			set status = ##class(Stc.Utils.Email).Send(training.Teacher.Email, ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingTeacher"), msg)
 			//set ^testmail("teacher") = ^testmail("teacher")_" "_trainingId	
@@ -150,7 +160,7 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 							training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value,
 							training.Street.Value,
 							training.Room,
-							training.Teacher.FullName_", "_training.Teacher.Phone_", "_training.Teacher.Email_training.Teacher.Skype,
+							training.Teacher.FullName_", "_training.Teacher.Phone_", "_training.Teacher.Email_", "_training.Teacher.Skype,
 							training.OtherInfo.Value)
 				
 			set status = ##class(Stc.Utils.Email).Send(training.Teacher.Email, ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingCurator"), msg)

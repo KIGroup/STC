@@ -869,9 +869,17 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
                       break;
                     }
                     case 'teacher':{
+	                    var curatorData = '';
+	                    if ($scope.training.data.curator.fullName != ''){
+	                    	curatorData = $filter('localize')('Куратор') + ': ' + $scope.training.data.curator.fullName + ', ' + $scope.training.data.curator.email + ', ' + $scope.training.data.curator.phoneSecret;
+	                    	if ($scope.training.data.otherInfo != ''){
+	                    		curatorData = '\n' + curatorData;
+	                    	}
+	                    }
+	                    
                         $scope.mailing.status = $scope.training.data.isTeacherAutoMailing==0 ? false : true;
                         $scope.mailing.email.msg = data.msg
-                                                      .replace("%1", $location.host() + ":" + $location.port() + StcAppSetting.default + "/stc/index.csp?urlData=trainingstudents-q-id-eq-"+$scope.training.data.id + "-and-code-eq-"+$scope.training.data.accessCode)
+                                                      .replace("%1", $location.host() + ":" + $location.port() + StcAppSetting['default'] + "/stc/index.csp?urlData=trainingstudents-q-id-eq-"+$scope.training.data.id + "-and-code-eq-"+$scope.training.data.accessCode)
                                                       .replace("%2", $filter('convertCacheDate')($scope.training.data.dateStart, $filter('localize')('d MMMM y')))
                                                       .replace("%4", $scope.training.data.course.name)
                                                       .replace("%5", $scope.training.data.city.name + ', ' + $scope.training.data.city.parentName + ', ' + $scope.training.data.city.greatParentName)
@@ -879,27 +887,29 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
                                                       .replace("%7", $scope.training.data.room)
                                                       .replace("%3", $scope.training.data.timeStart + ' - ' + $scope.training.data.timeFinish)
                                                       .replace("%8", $scope.training.data.otherInfo)
+                                                      .replace("%9", curatorData)
                                                       .replace(/<br>/g, "\n");
                       break;
                     }
                     case 'curator':{
                       $scope.mailing.status = $scope.training.data.isCuratorAutoMailing==0 ? false : true;
                       $scope.mailing.email.msg = data.msg
-                                                      .replace("%1", $location.host() + ":" + $location.port() + StcAppSetting.default + "/stc/index.csp?urlData=trainingstudents-q-id-eq-"+$scope.training.data.id + "-and-code="+$scope.training.data.accessCode)
+                                                      .replace("%1", $location.host() + ":" + $location.port() + StcAppSetting['default'] + "/stc/index.csp?urlData=trainingstudents-q-id-eq-"+$scope.training.data.id + "-and-code="+$scope.training.data.accessCode)
                                                       .replace("%2", $filter('convertCacheDate')($scope.training.data.dateStart, $filter('localize')('d MMMM y')))
                                                       .replace("%4", $scope.training.data.course.name)
                                                       .replace("%5", $scope.training.data.city.name + ', ' + $scope.training.data.city.parentName + ', ' + $scope.training.data.city.greatParentName)
                                                       .replace("%6", $scope.training.data.address.title)
                                                       .replace("%7", $scope.training.data.room)
                                                       .replace("%3", $scope.training.data.timeStart + ' - ' + $scope.training.data.timeFinish)
-                                                      .replace("%8", $scope.training.data.otherInfo)
+                                                      .replace("%8", $scope.training.data.teacher.lastName+' '+$scope.training.data.teacher.firstName + ', ' + $scope.training.data.teacher.phone + ', ' + $scope.training.data.teacher.email)
+                                                      .replace("%9", $scope.training.data.otherInfo)
                                                       .replace(/<br>/g, "\n");
                       break;
                     }
                     case 'feedback':{
                       $scope.mailing.status = $scope.training.data.isFeedBackAutoMailing==0 ? false : true;
                       $scope.mailing.email.msg = data.msg
-                                                      .replace("%1", $location.host() + ":" + $location.port() + StcAppSetting.default + "/stc/index.csp?urlData=feedback-q-id-eq-"+$scope.training.data.id + "-and-code="+$scope.training.data.accessCode.split('-')[0]+'-'+$scope.training.data.accessCode.split('-')[4])
+                                                      .replace("%1", $location.host() + ":" + $location.port() + StcAppSetting['default'] + "/stc/index.csp?urlData=feedback-q-id-eq-"+$scope.training.data.id + "-and-code="+$scope.training.data.accessCode.split('-')[0]+'-'+$scope.training.data.accessCode.split('-')[4])
                                                       .replace("%2", $scope.training.data.course.name)
                                                       .replace(/<br>/g, "\n");
                   

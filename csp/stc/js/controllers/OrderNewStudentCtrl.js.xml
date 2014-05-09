@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/OrderNewStudentCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/OrderNewStudentCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //dedddddd
 
@@ -69,7 +69,7 @@ controllersModule.controller('OrderNewStudentCtrl', function($scope, $filter, $r
 
     $scope.ordForm.init();
     $scope.ordForm.loadTraining();
-    $scope.ordForm.loadCompanies();
+    //$scope.ordForm.loadCompanies();
   });
 
 ]]></CSP>

@@ -267,8 +267,8 @@ Send access code to contact person's email</Description>
 		
 	set domainWebApp = $GET(^Settings("Stc", "DomainName"))_$GET(^Settings("Stc", "WebApp")) 
 	
-	// 1 - Курс, 2 - Город, 3 - дата, 4 - домен для системы, 5 - код доступа к заявкe
-	set msg = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToCompanyContact"), order.Course.Name.Value, order.City.Name.Value, $ZDATE(order.TrainingDate,3), domainWebApp, order.AccessCode)
+	// 1 - Курс,  2 - домен для системы, 3 - код доступа к заявкe
+	set msg = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToCompanyContact"), order.Course.Name.Value, domainWebApp, order.AccessCode)
 	
 	set status = ##class(Stc.Utils.Email).Send(order.Company.Contact.Email, ##class(Stc.Utils.Msg).GetMsg("emailSubject"), msg)
 	
@@ -2404,6 +2404,15 @@ Get all teachers of course</Description>
 			set tempUrl = $replace(url, "%1", training.%Id())
 			set tempUrl = $replace(tempUrl, "%2", training.AccessCode)
 			
+			set curatorData = ""
+			if (training.CuratorFullName.Value '= ""){
+				set curatorData = ##class(Stc.Utils.Msg).GetMsg("Curator")_": "_training.CuratorFullName.Value_", "_training.CuratorEmail_", "_training.CuratorPhoneSecret
+			
+				if (training.OtherInfo.Value '= ""){
+					set curatorData = "<br>"_curatorData
+				}
+			}
+			
 			set subj = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingTeacher")
 			set msg =  ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingTeacher"),
 							tempUrl,
@@ -2413,16 +2422,18 @@ Get all teachers of course</Description>
 							training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value,
 							training.Street.Value,
 							training.Room,
-							training.OtherInfo.Value)
+							training.OtherInfo.Value,
+							curatorData)
 							
 							
 		}
 		elseif (type = "order"){
 			set domainWebApp = $GET(^Settings("Stc", "DomainName"))_$GET(^Settings("Stc", "WebApp")) 
-			// 1 - Курс, 2 - Город, 3 - дата, 4 - домен для системы, 5 - код доступа к заявкe
-			set msg = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToCompanyContact"), training.Course.Name.Value, training.City.Name.Value, $ZDATE(training.DateStart,3), domainWebApp, training.AccessCode)
+			// 1 - Курс,  2 - домен для системы, 3 - код доступа к заявкe
+			set msg = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToCompanyContact"), training.Course.Name.Value, domainWebApp, training.AccessCode)
 			set subj = ##class(Stc.Utils.Msg).GetMsg("emailSubject")
 		}
+		
 		
 		
 		set proxy = ##class(%ZEN.proxyObject).%New()

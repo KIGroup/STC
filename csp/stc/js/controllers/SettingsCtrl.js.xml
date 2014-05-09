@@ -134,7 +134,7 @@ controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsS
               break;
             }
             case 'teacher':{
-              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - url для доступа к списку слушателей, %2 - дата начала обучения, %3 - время, %4 - курс, %5 - город, %6 - улица, %7 - аудитория, %8 - примечание.';
+              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - url для доступа к списку слушателей, %2 - дата начала обучения, %3 - время, %4 - курс, %5 - город, %6 - улица, %7 - аудитория, %8 - примечание, %9 - куратор';
               break;
             }
             case 'curator':{
@@ -142,7 +142,7 @@ controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsS
               break;
             }
             case 'order':{
-              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - курс, %2 - город, %3 - дата обучения, %4 - домен, %5 - код доступа к заявке.';
+              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - курс, %2 - домен, %3 - код доступа к заявке.';
               break;
             }
         }

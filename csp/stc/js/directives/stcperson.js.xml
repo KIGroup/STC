@@ -17,12 +17,10 @@ directivesModule.directive('stcperson', function(){
             allDisabled: '=',
             companySwitchOff: '=',
             webSiteOff: '=',
-            companyExist: '@'    
+            companyExist: '='    
         },
         controller: function($scope){
-           	console.log($scope.companyExist);
-           	
-           	$scope.switchCompany = function(exist){
+          $scope.switchCompany = function(exist){
                 $scope.companyExist = exist;
 				
 				if ($scope.person){

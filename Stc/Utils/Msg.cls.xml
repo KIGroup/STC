@@ -33,6 +33,8 @@ Write all messages into global</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	set ^CacheMsg("Stc", "ru", "Curator") = "Куратор"
+	set ^CacheMsg("Stc", "en", "Curator") = "Curator"
 	
 	// Email subject
 	set ^CacheMsg("Stc", "ru", "emailSubject") = "Заявка на обучение"
@@ -106,7 +108,7 @@ Write all messages into global</Description>
 	"Курс: %4<br>"_
 	"Город: %5<br>"_
 	"Адрес: %6%7<br>"_
-	"%8"
+	"%8<br>%9"
 	
 	set ^CacheMsg("Stc", "en", "msgSubjectToTrainingTeacher") = "Training Students"
 	set ^CacheMsg("Stc", "en", "msgToTrainingTeacher") = ""_
@@ -115,7 +117,7 @@ Write all messages into global</Description>
 	"Course: 4% <br>" _
 	"City: 5% <br>" _
 	"Address:% 6% 7 <br>" _
-	"8%"
+	"8%<br>%9"
 	
 	// To Curator
 	set ^CacheMsg("Stc", "ru", "msgSubjectToTrainingCurator") = "Слушатели курса"
@@ -125,7 +127,8 @@ Write all messages into global</Description>
 	"Курс: %4<br>"_
 	"Город: %5<br>"_
 	"Адрес: %6%7<br>"_
-	"%8"
+	"Преподаватель: %8<br>"_	
+	"%9"
 	
 	set ^CacheMsg("Stc", "en", "msgSubjectToTrainingCurator") = "Training Students"
 	set ^CacheMsg("Stc", "en", "msgToTrainingCurator") = ""_
@@ -134,7 +137,8 @@ Write all messages into global</Description>
 	"Course: 4% <br>" _
 	"City: 5% <br>" _
 	"Address:% 6% 7 <br>" _
-	"8%"
+	"Teacher: 8%"_
+	"9%"
 	
 	// FeedBack
 	set ^CacheMsg("Stc", "ru", "msgSubjectToTrainingStudentsFeedBack") = "Анкета слушателя"
@@ -366,7 +370,9 @@ do ##class(Stc.Utils.Msg).DeepSeeMsg()</Description>
 	do ..AddDeepSeeMsg("Количество обучений", "Trainings count")
 	do ..AddDeepSeeMsg("Перейти к обучениям", "Go to trainings")
 	do ..AddDeepSeeMsg("Перейти к слушателям", "Go to students")
-		
+	
+	do ..AddDeepSeeMsg("Анализ обучений", "Analysis of trainings")
+	do ..AddDeepSeeMsg("Анализ по слушателям", "Analysis of students")		
 	
 	do ..AddDeepSeeMsg("Курс", "Course")
 	do ..AddDeepSeeMsg("Незавершённые", "Uncompleted")
