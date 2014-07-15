@@ -185,13 +185,13 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
         		
                 if (data.isCompleted == 0){
                     $scope.training.btnAdditionName = 'Завершить';
-                    $scope.training.btnAdditionAction = $scope.training.complete;
-                    $scope.training.btnAdditionVisible = true;
                 }
                 else{
-                    $scope.training.btnAdditionVisible = false;
+                    $scope.training.btnAdditionName = 'Заново открыть';
                 }
-
+				
+				$scope.training.btnAdditionAction = $scope.training.complete;
+                $scope.training.btnAdditionVisible = true;
                 //$scope.sgroup.forciblyUpdate++;
                 //$scope.allstud.forciblyUpdate++;
 

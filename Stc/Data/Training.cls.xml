@@ -187,6 +187,20 @@ Access code to training for teacher</Description>
 <Unique>1</Unique>
 </Index>
 
+<Method name="CheckDeletePrivilege">
+<Description>
+Check delete privilege</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	SET SQLCODE=""
+	&sql(%CHECKPRIV DELETE ON Stc_Data.Training)
+	if (SQLCODE = 100) quit ##class(Stc.Utils.Msg).GetErrorStatus("NoPrivilege", " USERNAME="_$USERNAME)
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+
 <Method name="BuildCubes">
 <Description>
 Build TrainingCube and SubGroupCube</Description>

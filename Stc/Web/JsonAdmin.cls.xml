@@ -13,27 +13,6 @@ Handling of BrokerAdmin</Description>
 ]]></Content>
 </UDLText>
 
-<Method name="GetCoursesFullInfo">
-<Description>
-Get full info about all courses</Description>
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set status = $$$OK
-	
-	try{
-		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
-      
-      	$$$THROWONERROR(status, ..WriteJsonForGrid("SELECT ID FROM Stc_Data.Course", "Stc.Data.Course", params, "IsInUse = "_..ParseParameter(params.isInUse)))
-	}
-	catch ex {
-		set status = ex.AsStatus()
-	}
-
-	quit status
-]]></Implementation>
-</Method>
-
 <Method name="SaveCourse">
 <Description>
 Save or create course</Description>
@@ -899,7 +878,7 @@ Delete training</Description>
 ]]></Implementation>
 </Method>
 
-<Method name="CompleteTraining">
+<Method name="ChangeTrainingStatus">
 <Description>
 Complete training and create certificates for each student</Description>
 <ClassMethod>1</ClassMethod>
@@ -918,16 +897,16 @@ Complete training and create certificates for each student</Description>
 		set training = ##class(Stc.Data.Training).%OpenId(data.id,,.status)
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("openTraining", "| "_status)) 
 		
-		if (training.IsCompleted = 1) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("isAlreadyCompletedTraining", "| "_status))
-		
-		set training.IsCompleted = 1
+		set training.IsCompleted = 'training.IsCompleted
 		set status = training.%Save()
 		
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveTraining", "| "_status)) 
 		
-		// Создать сертификаты для каждого студента из каждой подгруппы в обучении
-		set status = training.CreateCertificates()
-		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createCertificate", "| "_status)) 
+		if (training.IsCompleted){
+			// Создать сертификаты для каждого студента из каждой подгруппы в обучении
+			set status = training.CreateCertificates()
+			if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createCertificate", "| "_status)) 
+		}
 		
 		set trId = training.%Id()
 		TCOMMIT

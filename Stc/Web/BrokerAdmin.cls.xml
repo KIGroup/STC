@@ -104,7 +104,7 @@ Private request processor for administrator</Description>
 	<Route Method="DELETE" Url="/json/deleteTraining/:id" Call="Stc.Web.JsonAdmin:DeleteTraining"/>	
 	
 	<!-- Complete training and create certificates for each student -->
-	<Route Method="POST" Url="/json/completeTraining" Call="Stc.Web.JsonAdmin:CompleteTraining"/>	
+	<Route Method="POST" Url="/json/completeTraining" Call="Stc.Web.JsonAdmin:ChangeTrainingStatus"/>	
 	
 	<!-- Add subgroups, based on selected application to training -->
 	<Route Method="POST" Url="/json/createSubGroupsForTraining" Call="Stc.Web.JsonAdmin:CreateSubGroupsForTraining"/>	

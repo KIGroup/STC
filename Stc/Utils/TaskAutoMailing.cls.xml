@@ -162,8 +162,8 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 							training.Room,
 							training.Teacher.FullName_", "_training.Teacher.Phone_", "_training.Teacher.Email_", "_training.Teacher.Skype,
 							training.OtherInfo.Value)
-				
-			set status = ##class(Stc.Utils.Email).Send(training.Teacher.Email, ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingCurator"), msg)
+			
+			set status = ##class(Stc.Utils.Email).Send(training.CuratorEmail, ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingCurator"), msg)
 			//set ^testmail("curator") = ^testmail("curator")_" "_trainingId	
 			if '$$$ISERR(status){
 				set training.IsCuratorAutoMailing = 0

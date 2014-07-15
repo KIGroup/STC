@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/CourseTeacherSrvc.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/services/CourseTeacherSrvc.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //dddв
 
@@ -25,7 +25,7 @@ servicesModule.factory('CourseTeacherSrvc', function(DALSrvc) {
                        searchText: searchText,
                        isInUse: isInUse};
 
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/allCoursesFullInfo', obj);
+            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/allCoursesFullInfo', obj);
 		},
 		/* Изменить статус курса */
 		changeIsInUse: function(courseId){
@@ -38,6 +38,10 @@ servicesModule.factory('CourseTeacherSrvc', function(DALSrvc) {
 		/*  */
 		getCourse: function(id){
 			return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/getCourse/' + id, null);
+		},
+		/* Schedule */
+		getSchedule: function(){
+			return DALSrvc.getPromise('get', StcAppSetting.user + '/json/schedule', null);
 		}
 	}
 });

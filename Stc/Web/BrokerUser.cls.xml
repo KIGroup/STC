@@ -19,6 +19,8 @@ Public request processor for users</Description>
 	<!-- Get short info about all courses -->
 	<Route Method="GET" Url="/json/allCoursesShortInfo/:isInUse" Call="Stc.Web.JsonUser:GetCoursesShortInfo"/>
 	
+	<!-- Get full info about all courses -->
+	<Route Method="POST" Url="/json/allCoursesFullInfo" Call="Stc.Web.JsonUser:GetCoursesFullInfo"/>
 	
 	<!-- ==================================== APPLICATIONS ==================================== -->
 	
@@ -77,6 +79,9 @@ Public request processor for users</Description>
 	
 	<!-- Report, students of training -->
 	<Route Method="GET" Url="/text/:lang/students/:trainingAccessCode" Call="Stc.Web.Report:Students"/>
+	
+	<!-- Schedule, course and trainings -->
+	<Route Method="GET" Url="/json/schedule" Call="Stc.Web.JsonUser:GetSchedule"/>
 	
 </Routes>
 ]]></Data>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/partials/scheduleframe.csp" application="/csp/stc/" default="1"><![CDATA[
+<b ng-bind="'Календарь ближайших курсов'|localize" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; color: #000; margin-top: 5px;"></b>
+<div style="height: 264px; width: 578px; overflow-x: auto; border-bottom: 1px solid #dddddd; border-top: 1px solid #dddddd; margin-top: 10px;">
+    <stcschedule ng-repeat="course in page.courses" course="course" ng-style="course.style"/>
+</div>]]></CSP>
+</Export>

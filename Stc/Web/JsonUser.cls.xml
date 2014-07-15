@@ -29,6 +29,27 @@ Get short info about all courses</Description>
 ]]></Implementation>
 </Method>
 
+<Method name="GetCoursesFullInfo">
+<Description>
+Get full info about all courses</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try{
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
+      
+      	$$$THROWONERROR(status, ..WriteJsonForGrid("SELECT ID FROM Stc_Data.Course", "Stc.Data.Course", params, "IsInUse = "_..ParseParameter(params.isInUse)))
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+
+	quit status
+]]></Implementation>
+</Method>
+
 <UDLText name="T">
 <Content><![CDATA[
 // ==================================== APPLICATIONS ==================================== 
@@ -441,6 +462,7 @@ Get training by id</Description>
 		set proxy.teacher = ""
 		set proxy.curator = ""
 		set proxy.cost = ""
+		
 		do proxy.%ToJSON()
 	}
 	catch ex {
@@ -514,6 +536,62 @@ Get training by id</Description>
 	}
 	
 	quit status
+]]></Implementation>
+</Method>
+
+<Method name="GetSchedule">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	set proxy.courses = ##class(%ListOfObjects).%New()
+	
+	&sql(DECLARE ScheduleCourseCur CURSOR FOR 
+		 	 SELECT ID, 
+		 	 (SELECT COUNT(ID)FROM Stc_Data.Training WHERE Course = course.ID AND IsCompleted = 0) As IsNotCompletedCount,
+		 	 (SELECT COUNT(ID)FROM Stc_Data.Training WHERE Course = course.ID) As TotalCount
+			 FROM Stc_Data.Course as course
+			 WHERE IsInUse = 1
+			 ORDER BY IsNotCompletedCount DESC, TotalCount DESC)	
+		
+	&sql(OPEN ScheduleCourseCur)
+	for  
+	{	
+		&sql(FETCH ScheduleCourseCur INTO :courseId, :isNotCompletedCount, :totalCount) 
+		quit:(SQLCODE '= 0)
+		
+		set course = ##class(Stc.Data.Course).%OpenId(courseId).ConvertToProxyObject()
+		set course.trainings = ##class(%ListOfObjects).%New()
+		
+		// Course trainings	
+		&sql(DECLARE ScheduleTrainingCur CURSOR FOR 
+		 	 SELECT ID, City->Name->Value, DateStart, DateFinish
+		 	 FROM Stc_Data.Training 
+		 	 WHERE Course = :courseId AND IsCompleted = 0
+		 	 ORDER BY DateStart)
+		
+		&sql(OPEN ScheduleTrainingCur)
+		for  
+		{	
+			&sql(FETCH ScheduleTrainingCur INTO :trId, :cityName, :dateStart,  :dateFinish) 
+			quit:(SQLCODE '= 0)
+			
+			set training = ##class(%ZEN.proxyObject).%New()
+			set training.id = trId
+			set training.city = ##class(%ZEN.proxyObject).%New()
+			set training.city.name = cityName
+			set training.dateStart = $ZD(dateStart, 3)
+			set training.dateFinish = $ZD(dateFinish, 3) 
+			
+			do course.trainings.Insert(training)	
+		}
+		&sql(CLOSE ScheduleTrainingCur)
+		
+		do proxy.courses.Insert(course)		
+	}
+	&sql(CLOSE ScheduleCourseCur)
+	
+	quit proxy.%ToJSON()
 ]]></Implementation>
 </Method>
 </Class>

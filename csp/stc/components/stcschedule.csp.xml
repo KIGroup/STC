@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/components/stcschedule.csp" application="/csp/stc/" default="1"><![CDATA[
+<table id="scheduleTable" class="table table-bordered" style="margin: 0 0 13px 0; border-radius: 0px; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; color: #000;">
+   <tbody>
+      <tr>
+   		<td ng-bind="course.name" colspan="5" style="font-weight: bold; border-radius: 0px;"></td>
+      </tr>
+      <tr>
+   		<td ng-bind="'Продолжительность' + ': ' + course.days + ' д. (' + course.hours + ' ч.)'" colspan="3"></td>
+   		<td ng-bind="'Программа »'" class="cellLink" style="width: 115px; text-align: center;" ng-click="openProgram(course.programUrl)" title="Открыть программу курса"></td>
+   		<td ng-bind="'Оформить заявку »'" class="cellLink" style="width: 125px; text-align: center;" ng-click="createOrder(course.id)" title="Оформить заявку на новое обучение"></td>
+      </tr>
+      <tr>
+   		<td style="padding: 0; border-radius: 0px;" colspan="5">
+   			<table class="table table-bordered" style="margin: 0; border: none">
+   			   <tr>
+   		   		<td style="border-left: none; height: 3px; padding: 0;"></td>
+   			   </tr>
+   			   <tr ng-repeat="tr in course.trainings">
+   		   		  <td ng-bind="'•'" style="width: 5%; border-left: none; color: rgb(5, 20, 48); text-align: center;"></td>
+   		   		<td ng-bind="tr.city.name" style="color: rgb(5, 20, 48); border-left: none;"></td>
+   		   		<td ng-bind="tr.dateStart|convertCacheDate:('d MMMM y'|localize)" style="width: 115px; color: rgb(5, 20, 48);"></td>
+   		   		<td ng-bind="'Присоединиться »'" class="cellLink" style="width: 125px; text-align: center;" title="Присоединиться к данному курсу" ng-click="join(tr.id)"></td>
+   			   </tr>
+               <tr ng-show="course.trainings.length==0">
+                  <td ng-bind="'Нет доступных тренингов'" colspan="5" style="border-left: none; font-style:italic; color: rgb(5, 20, 48);"></td>
+               </tr>
+   			</table>
+   		</td>
+      </tr>
+   </tbody>
+</table>
+]]></CSP>
+</Export>

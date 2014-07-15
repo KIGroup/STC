@@ -98,7 +98,7 @@
 						<div ng-show="order.contactType=='company' && !(order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email 
 																	&& order.selectedItems[0].contact.company.contact.phone==order.selectedItems[0].contact.phone 
 																	&& order.selectedItems[0].contact.company.contact.skype==order.selectedItems[0].contact.skype)">
-							<p><span class="spnTitle" ng-bind="'Контакт'|localize"></span>: <span ng-bind="order.selectedItems[0].contact.company.contact.lastName + ' ' + order.selectedItems[0].contact.company.contact.firstName + ' ' + order.selectedItems[0].contact.company.contact.middleName"></span></p>
+							<p style="padding-top: 10px;"><span class="spnTitle" ng-bind="'Контакт'|localize"></span>: <span ng-bind="order.selectedItems[0].contact.company.contact.lastName + ' ' + order.selectedItems[0].contact.company.contact.firstName + ' ' + order.selectedItems[0].contact.company.contact.middleName"></span></p>
 							<p>
 								<span><i class="icon-envelope" style="font-size: 0.9em;"></i> {{order.selectedItems[0].contact.company.contact.email}}</span>
 								<span ng-hide="order.selectedItems[0].contact.company.contact.phone==''" style="padding-left:12px"><i class="icon-phone"></i> {{order.selectedItems[0].contact.company.contact.phone}}</span>

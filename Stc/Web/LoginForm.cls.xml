@@ -56,13 +56,13 @@ This client event, if present, is fired when the page is loaded.</Description>
 <Language>javascript</Language>
 <ClientMethod>1</ClientMethod>
 <Implementation><![CDATA[
-	//zenPage.getComponentById('userName').setProperty('value','');
-	//zenPage.getComponentById('userPass').setProperty('value','');
+	zenPage.getComponentById('userName').setProperty('value','ilson');
+	zenPage.getComponentById('userPass').setProperty('value','podolko');
 	
-	//if (zenPage.UrlData == 'admin'){
+	if (zenPage.UrlData == 'admin'){
 		zenPage.getComponentById('content').setHidden(0);	
 		return;	
-	//}
+	}
 	
 	zenPage.getComponentById('form').submit();
 ]]></Implementation>
