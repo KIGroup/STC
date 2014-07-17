@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/TrainingSrvc.js" application="/csp/feb/" default="1"><![CDATA[
+<CSP name="stc/js/services/TrainingSrvc.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //dddddde
 
@@ -159,7 +159,28 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
         },
         getMailPattern: function(type){
             return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/mailPattern/' + type, null);
-        }
+        },
+        getUrlForCreateGoogleCalendarEvent: function(text, dates, location, details){
+	    	return 'https://www.google.com/calendar/render?action=TEMPLATE&hl=ru' + 
+                                    '&text=' + text +
+                                    '&dates=' + dates +
+                                    '&location=' + location +
+                                    '&details=' +  
+                                                '<a href="' + details.courseProgramUrl + '" target="_blank">Программа курса</a>%0A%0A' +
+                                                '<a href="' + 'http://' + window.location.host + StcAppSetting.default + '/stc/index.csp?urlData=orderstudent-q-training-eq-' + details.trainingId + '" target="_blank">Присоединиться</a>%0A%0A' +
+                                                'Место проведения:' + '%0A' + 
+                                                details.city + '%0A' +
+                                                details.address + '%0A%0A' +
+                                                'Время:' + '%0A' + 
+                                                details.time + '%0A%0A' +
+                                                'Преподаватель:' + '%0A' +
+                                                details.teacher + '%0A%0A' + 
+                                                'Контактное лицо:' + '%0A' +
+                                                details.curator +
+                                                (details.otherInfo == "" ? "" : 'Примечание: %0A' + details.otherInfo) 
+                                                '&sf=true&output=xml';
+	    }
+        
     }
 });
   

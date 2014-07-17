@@ -2,13 +2,13 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/controllers/OrderNewStudentCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//dedddddd
+//dedddd
 
 /*===========================================================================================
 Создание заявки для одного слушателя
 ===========================================================================================*/
 
-controllersModule.controller('OrderNewStudentCtrl', function($scope, $filter, $routeParams, OrderSrvc, TrainingSrvc, CompanySrvc, UtilsSrvc){
+controllersModule.controller('OrderNewStudentCtrl', function($scope, $timeout, $filter, $routeParams, OrderSrvc, TrainingSrvc, CompanySrvc, UtilsSrvc){
     $scope.menu.hide = true;
     $scope.ordForm = {order:{}};
 
@@ -37,7 +37,22 @@ controllersModule.controller('OrderNewStudentCtrl', function($scope, $filter, $r
     $scope.ordForm.loadTraining = function(){
         TrainingSrvc.getTrainingForUser($scope.ordForm.order.trainingId).then(
             function(data){
-                $scope.ordForm.training = data;
+                $scope.ordForm.training = data;    
+                $scope.ordForm.training.dates = UtilsSrvc.getTwoDate(data.dateStart, data.dateFinish);
+                $scope.ordForm.training.urlAddGoogleCalendarEvent = TrainingSrvc.getUrlForCreateGoogleCalendarEvent(
+                                        data.course.name + '. '+ data.city.name,
+                                        data.dateGoogleCalendar,
+                                        data.city.name + ', ' + data.address.title,
+                                        {
+                                            courseProgramUrl: 'http://' + data.course.programUrl,
+                                            city: data.city.name + ', ' + data.city.parentName + ', ' + data.city.greatParentName,
+                                            address: data.address.title + ', '+ data.room,
+                                            time: data.timeStart + ' - ' + data.timeFinish,
+                                            teacher: data.teacher.lastName + ' ' + data.teacher.firstName + ', ' + data.teacher.email,
+                                            curator: data.curator.fullName + ', ' + data.curator.phone + ', ' + data.curator.email,
+                                            otherInfo: data.otherInfo   
+                                        });
+
                 $scope.menu.brandCaption = $filter('localize')('Форма регистрации на обучение компании InterSystems по курсу "') + data.course.name + '" ';
             	$scope.menu.appTitle = $scope.menu.brandCaption;
             },

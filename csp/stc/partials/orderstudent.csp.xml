@@ -2,55 +2,66 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/partials/orderstudent.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid">
-	<div class="span2">
-	</div>
-	<div class="span8">
-	
 	<div class="row-fluid">
-	<div class="span2">
-	</div>
-	<div class="span8">
-		<accordion close-others="false">
-		    <accordion-group is-open="true" heading="{{ordForm.trainingCaption}}">
-				<p><span ng-bind="'Курс'|localize"></span>: <span ng-bind="ordForm.training.course.name"></span></p>
-				<p><span ng-bind="'Город'|localize"></span>: <span ng-bind="ordForm.training.city.name + ', ' + ordForm.training.city.parentName + ', ' + ordForm.training.city.greatParentName"></span></p>
-				<p><span ng-bind="'Адрес'|localize"></span>: <span ng-bind="ordForm.training.address.title"></span></p>
-				<p ng-hide="ordForm.training.room=='-'||ordForm.training.room==''"><span ng-bind="'Аудитория'|localize"></span>: <span ng-bind="ordForm.training.room"></span></p>
-				<p><span ng-bind="'Дата начала'|localize"></span>: <span ng-bind="ordForm.training.dateStart|convertCacheDate:('d MMMM y'|localize)"></span></p>
-				<p><span ng-bind="'Дата окончания'|localize"></span>: <span ng-bind="ordForm.training.dateFinish|convertCacheDate:('d MMMM y'|localize)"></span></p>
-    		</accordion-group>
-
-		    <accordion-group is-open="true" heading="{{ordForm.orderCaption}}">
-    			<form class="form" ng-submit="ordForm.submit()" style="margin: 0 0 10px 0;" >
-					<stcperson
-						person="ordForm.order.contact"
-						companies="ordForm.companies"
-						company-switch-off="true"
-						web-site-off="true"
-						company-exist="false"
-					/>
-					<div>
-						<div class="control-group">
-					        <div class="controls">
-					            <button type="submit" class="btn btn-success btn-small" ng-bind="'Зарегистрироваться'|localize"      ng-click="ordForm.formatData()" ng-disabled="ordForm.btnDisabled"></button>
-					            <button type="button" class="btn btn-small"             ng-bind="'Очистить'|localize"     ng-click="ordForm.clear()"      ng-show="ordForm.btnClearShow"></button>
-					        </div>
-					    </div>
+		<div class="span1">
+		</div>
+		<div class="span5">
+			<accordion close-others="false">
+			    <accordion-group is-open="true" heading="{{ordForm.orderCaption}}">
+	    			<form class="form" ng-submit="ordForm.submit()" style="margin: 0 0 10px 0;" >
+						<stcperson
+							person="ordForm.order.contact"
+							companies="ordForm.companies"
+							company-switch-off="true"
+							web-site-off="true"
+							company-exist="false"
+						/>
+						<div>
+							<div class="control-group">
+						        <div class="controls">
+						            <button type="submit" class="btn btn-success btn-small" ng-bind="'Зарегистрироваться'|localize"      ng-click="ordForm.formatData()" ng-disabled="ordForm.btnDisabled"></button>
+						            <button type="button" class="btn btn-small"             ng-bind="'Очистить'|localize"     ng-click="ordForm.clear()"      ng-show="ordForm.btnClearShow"></button>
+						        </div>
+						    </div>
+						</div>
+					</form>
+			    </accordion-group>
+			</accordion>
+		</div>
+		<div class="span5">
+			<accordion close-others="false">
+			    <accordion-group is-open="true" heading="{{ordForm.trainingCaption}}">
+					<p><span ng-bind="'Курс'|localize"></span>: <span ng-bind="ordForm.training.course.name"></span></p>
+					<p>
+						<a ng-href="{{'http://' + ordForm.training.course.programUrl}}" class="cellLink" target="_blank" ng-bind="'Программа курса »'"></a>
+                        &nbsp;&nbsp;&nbsp;
+						<a ng-href="{{ordForm.training.urlAddGoogleCalendarEvent}}" class="cellLink" target="_blank" ng-bind="'Копировать мой календарь »'"></a></p>
+					<br>
+					<p><span ng-bind="'Город'|localize"></span>: <span ng-bind="ordForm.training.city.name + ', ' + ordForm.training.city.parentName + ', ' + ordForm.training.city.greatParentName"></span></p>
+					<p><span ng-bind="'Адрес'|localize"></span>: <span ng-bind="ordForm.training.address.title"></span></p>
+					<p ng-hide="ordForm.training.room=='-'||ordForm.training.room==''"><span ng-bind="'Аудитория'|localize"></span>: <span ng-bind="ordForm.training.room"></span></p>
+					<p><span ng-bind="'Дата'|localize"></span>: <span ng-bind="ordForm.training.dates"></span></p>
+					<p><span ng-bind="'Время'|localize"></span>: <span ng-bind="ordForm.training.timeStartFinish"></span></p>
+					<br>
+					<p style="margin-bottom: 0px"><span ng-bind="'Преподаватель'|localize"></span>: <span ng-bind="ordForm.training.teacher.lastName + ' ' + ordForm.training.teacher.firstName"></span></p>
+					<p><span class="unselectable" style="color: white;" ng-bind="'Преподаватель:'|localize"></span> <span ng-bind="ordForm.training.teacher.email"></span></p>
+					<br>
+					<div ng-hide="ordForm.training.curator.fullName==''">
+						<p style="margin-bottom: 0px"><span ng-bind="'Контактное лицо'|localize"></span>: <span ng-bind="ordForm.training.curator.fullName"></span></p>
+						<p ng-hide="ordForm.training.curator.phone==''" style="margin-bottom: 0px"><span class="unselectable" style="color: white;" ng-bind="'Контактное лицо:'|localize"></span> <span ng-bind="ordForm.training.curator.phone"></span></p>
+						<p ng-hide="ordForm.training.curator.email==''"><span class="unselectable" style="color: white;" ng-bind="'Контактное лицо:'|localize"></span> <span ng-bind="ordForm.training.curator.email"></span></p>
 					</div>
-				</form>
-		    </accordion-group>
-		</accordion>
-	</div >
-	<div class="span2">
-	</div >
-	</div >
-	
-	<stcalert data="ordForm.alert" span-right="2" span-middle="8" span-left="2"/>
-		
-	</div >
-	<div class="span2">
+					<br>
+					<p style="padding-top: 8px;" ng-hide="ordForm.training.otherInfo==''"><span ng-bind="'Примечание'|localize"></span>: <span ng-bind="ordForm.training.otherInfo"></span></p>
+				</accordion-group>
+			</accordion>
+		</div>
+		<div class="span1">
+		</div >
 	</div >
 </div >
+
+<stcalert data="ordForm.alert" span-right="1" span-middle="10" span-left="1"/>
 
 <br>
 ]]></CSP>

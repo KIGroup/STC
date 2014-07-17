@@ -57,6 +57,17 @@ servicesModule.factory('UtilsSrvc', function($dialog, $filter) {
 	        	
 	        return $filter('date')(date, 'dd-MM-y');
 	    },
+	    getTwoDate: function(start, finish){
+	    	var startText = $filter('convertCacheDate')(start, $filter('localize')('d MMMM y'));
+            var finishText = $filter('convertCacheDate')(finish, $filter('localize')('d MMMM y'));
+				
+			var startYearBorder = startText.indexOf(" ", 3);
+			if (startYearBorder > 0){
+				startText = startText.substring(0, startYearBorder); 	
+			}
+				
+            return startText + ' - ' +  finishText;
+	    },
         getPropertyValue: function (item, propertyStr, defaultValue){
             var value;
             defaultValue = defaultValue ? defaultValue : '';

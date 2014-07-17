@@ -12,7 +12,6 @@
 
 	<script language="javascript">
 	var urlData = '#(%request.Get("urlData"))#';
-	
   </script>
 	
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
@@ -54,6 +53,35 @@
   	    	  return matches ? decodeURIComponent(matches[1]) : undefined
   		  }
   		
+        function setCookie(name, value, options) {
+            options = options || {};
+   
+            var expires = options.expires;
+   
+            if (typeof expires == "number" && expires) {
+              var d = new Date();
+              d.setTime(d.getTime() + expires*1000);
+              expires = options.expires = d;
+            }
+            if (expires && expires.toUTCString) {
+              options.expires = expires.toUTCString();
+            }
+           
+            value = encodeURIComponent(value);
+           
+            var updatedCookie = name + "=" + value;
+           
+            for(var propName in options) {
+              updatedCookie += "; " + propName;
+              var propValue = options[propName];   
+              if (propValue !== true) {
+                updatedCookie += "=" + propValue;
+               }
+            }
+           
+            document.cookie = updatedCookie;
+        }
+
   	    function getLang(){
             var lang = getCookie('lang');
             
@@ -71,7 +99,12 @@
             return 'ru-RU';
         }
 
-
+		    var urlDataCookie = getCookie('urlDataCookie');
+        if (urlDataCookie){
+           setCookie('urlDataCookie', '', {expires: 1});
+       		 window.location = urlDataCookie;
+       	}
+       	
         // Настройки приложения. Имена веб-приложений для REST, google календарь, язык
         var StcAppSetting = {default: '#($GET(^Settings("Stc", "WebApp")))#',
 	        				           admin: '#($GET(^Settings("Stc", "WebAppAdmin")))#',

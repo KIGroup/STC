@@ -2,7 +2,7 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/directives/stcschedule.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//sddddd
+//sdd
 
 directivesModule.directive('stcschedule', function(){
     return {
@@ -13,19 +13,16 @@ directivesModule.directive('stcschedule', function(){
         scope: {
             course: '='
         },
-        controller: function($scope, $window){           
-            $scope.openProgram = function(url){
-                $window.open('http://' + url, '_blank');
-            };
-
-            $scope.createOrder = function(courseId){
-                var host = window.location.host;
-                $window.open('http://' + host + StcAppSetting.default + '/stc/index.csp#/createorder?course=' + courseId, '_blank');
-            };
-
-            $scope.join = function(trainingId){
-                var host = window.location.host;
-                $window.open('http://' + host + StcAppSetting.default + '/stc/index.csp#/orderstudent?training=' + trainingId, '_blank');
+        controller: function($scope, $filter){           
+            
+            $scope.onClickTraining = function(tr){
+                tr.detailsVisible = !tr.detailsVisible;
+                if (tr.detailsVisible){
+                    tr.headStyle = {color : 'rgb(175, 5, 5)'}    
+                }
+                else{
+                    tr.headStyle = {};
+                } 
             };  
 	   	}
     }

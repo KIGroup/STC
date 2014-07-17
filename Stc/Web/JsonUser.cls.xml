@@ -459,9 +459,14 @@ Get training by id</Description>
 	try{
 		set proxy = ..GetProxyObject("Stc.Data.Training", id)
 		set proxy.accessCode = ""
-		set proxy.teacher = ""
-		set proxy.curator = ""
+		set proxy.teacher.phone = ""
+		set proxy.teacher.skype = ""
+		set proxy.teacher.company = ""
+		set proxy.curator.phoneSecret = ""
 		set proxy.cost = ""
+		set proxy.dateGoogleCalendar = $REPLACE(proxy.dateStart_"/"_$ZD($ZDH(proxy.dateFinish,3)+1, 3), "-", "")
+			
+		&sql(SELECT ProgramUrl INTO :proxy.course.programUrl FROM Stc_Data.Course WHERE ID = :proxy.course.id)
 		
 		do proxy.%ToJSON()
 	}
@@ -548,16 +553,16 @@ Get training by id</Description>
 	
 	&sql(DECLARE ScheduleCourseCur CURSOR FOR 
 		 	 SELECT ID, 
-		 	 (SELECT COUNT(ID)FROM Stc_Data.Training WHERE Course = course.ID AND IsCompleted = 0) As IsNotCompletedCount,
+		 	 ISNULL((SELECT MIN(DateStart)FROM Stc_Data.Training WHERE Course = course.ID AND IsCompleted = 0),'11/11/2099') As MinTrainingDate,
 		 	 (SELECT COUNT(ID)FROM Stc_Data.Training WHERE Course = course.ID) As TotalCount
-			 FROM Stc_Data.Course as course
+		 	 FROM Stc_Data.Course as course
 			 WHERE IsInUse = 1
-			 ORDER BY IsNotCompletedCount DESC, TotalCount DESC)	
+			 ORDER BY MinTrainingDate, TotalCount DESC)	
 		
 	&sql(OPEN ScheduleCourseCur)
 	for  
 	{	
-		&sql(FETCH ScheduleCourseCur INTO :courseId, :isNotCompletedCount, :totalCount) 
+		&sql(FETCH ScheduleCourseCur INTO :courseId, :minTrainingDate, :totalCount) 
 		quit:(SQLCODE '= 0)
 		
 		set course = ##class(Stc.Data.Course).%OpenId(courseId).ConvertToProxyObject()
@@ -565,7 +570,7 @@ Get training by id</Description>
 		
 		// Course trainings	
 		&sql(DECLARE ScheduleTrainingCur CURSOR FOR 
-		 	 SELECT ID, City->Name->Value, DateStart, DateFinish
+		 	 SELECT ID
 		 	 FROM Stc_Data.Training 
 		 	 WHERE Course = :courseId AND IsCompleted = 0
 		 	 ORDER BY DateStart)
@@ -573,23 +578,37 @@ Get training by id</Description>
 		&sql(OPEN ScheduleTrainingCur)
 		for  
 		{	
-			&sql(FETCH ScheduleTrainingCur INTO :trId, :cityName, :dateStart,  :dateFinish) 
+			&sql(FETCH ScheduleTrainingCur INTO :trId) 
 			quit:(SQLCODE '= 0)
 			
-			set training = ##class(%ZEN.proxyObject).%New()
-			set training.id = trId
-			set training.city = ##class(%ZEN.proxyObject).%New()
-			set training.city.name = cityName
-			set training.dateStart = $ZD(dateStart, 3)
-			set training.dateFinish = $ZD(dateFinish, 3) 
+			set trObj = ##class(Stc.Data.Training).%OpenId(trId)
+			set trProxy = ##class(%ZEN.proxyObject).%New()
+			set trProxy.id = trId
+			set trProxy.city = trObj.City.ConvertToProxyObject()
+			set trProxy.dateStart = $ZD(trObj.DateStart, 3)
+			set trProxy.dateFinish = $ZD(trObj.DateFinish, 3)
+			set trProxy.dateGoogleCalendar = $REPLACE($ZD(trObj.DateStart, 3)_"/"_$ZD(trObj.DateFinish+1, 3), "-", "")
 			
-			do course.trainings.Insert(training)	
+			set trProxy.timeStart = $e(##class(%Library.Time).LogicalToDisplay(trObj.TimeStart), 1, 5)
+			set trProxy.timeFinish = $e(##class(%Library.Time).LogicalToDisplay(trObj.TimeFinish), 1, 5) 
+			set trProxy.street = trObj.Street.Value
+			set trProxy.room = trObj.Room
+			set trProxy.otherInfo = trObj.OtherInfo.Value
+			set trProxy.teacherFullName = trObj.Teacher.FullName
+			set trProxy.teacherEmail = trObj.Teacher.Email
+			set trProxy.curatorFullName = trObj.CuratorFullName.Value
+			set trProxy.curatorPhone = trObj.CuratorPhone
+			set trProxy.curatorEmail = trObj.CuratorEmail
+		
+			do course.trainings.Insert(trProxy)	
 		}
 		&sql(CLOSE ScheduleTrainingCur)
 		
 		do proxy.courses.Insert(course)		
 	}
 	&sql(CLOSE ScheduleCourseCur)
+	
+	
 	
 	quit proxy.%ToJSON()
 ]]></Implementation>
