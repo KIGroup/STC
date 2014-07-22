@@ -3308,7 +3308,7 @@ angular.module("template/datepicker/popup.html", []).run(["$templateCache", func
 angular.module("template/dialog/message.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/dialog/message.html",
     "<div class=\"modal-header\">\n" +
-    "	<h3>{{ title }}</h3>\n" +
+    "	<h4>{{ title }}</h4>\n" +
     "</div>\n" +
     "<div class=\"modal-body\" ng-bind-html-unsafe=\"message\">\n" +
     "</div>\n" +

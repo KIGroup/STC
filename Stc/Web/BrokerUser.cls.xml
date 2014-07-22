@@ -63,6 +63,22 @@ Public request processor for users</Description>
 	<Route Method="POST" Url="/json/getOrderStudent" Call="Stc.Web.JsonUser:GetOrderStudent"/>
 	
 	
+	<!-- ==================================== MAILING SUBSCRIPTION ==================================== -->
+	<!-- -->
+	<Route Method="POST" Url="/json/mailing/subscription" Call="Stc.Web.JsonUser:CreateMailingSubscription"/>
+	
+	<!-- -->
+	<Route Method="POST" Url="/json/mailing/subscription/:code" Call="Stc.Web.JsonUser:UpdateMailingSubscription"/>
+	
+	<!-- -->
+	<Route Method="DELETE" Url="/json/mailing/subscription/:code" Call="Stc.Web.JsonUser:DeleteMailingSubscription"/>
+	
+	<!-- -->
+	<Route Method="GET" Url="/json/mailing/subscription/:code" Call="Stc.Web.JsonUser:GetMailingSubscription"/>
+	
+	<!-- -->
+	<Route Method="POST" Url="/json/mailing/subscription/confirmation/:code" Call="Stc.Web.JsonUser:ConfirmMailingSubscription"/>
+	
 	<!-- ==================================== OTHER ==================================== -->
 	
 	<!-- Get training by id -->

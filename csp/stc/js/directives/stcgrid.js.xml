@@ -227,6 +227,9 @@ directivesModule.directive('stcgrid', function(){
                 if (filter == 'date'){
                     value = $filter('convertCacheDate')(value, filterParam);
                 }
+                else if (filter == 'dateUTC'){
+                    value = $filter('convertCacheDate')(value, filterParam, true);
+                }
                 else if (filter == 'time' && value && value.length >= 5){
                     value = value.substring(0, 5);
                 }

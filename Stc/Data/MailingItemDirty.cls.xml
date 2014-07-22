@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.MailingItemDirty">
+<Super>%Persistent,MailingItem</Super>
+<TimeCreated>63388,39362.069005</TimeCreated>
+
+<Index name="AccessCodeIdx">
+<Properties>AccessCode</Properties>
+<Unique>1</Unique>
+</Index>
+</Class>
+</Export>

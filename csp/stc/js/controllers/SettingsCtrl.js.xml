@@ -2,7 +2,7 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/controllers/SettingsCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//ddd
+//dddd
 
 /*===========================================================================================
 SettingsCtrl - all settings for google, mail
@@ -16,6 +16,7 @@ controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsS
                    }, 
                    mail:{
                       settings: {},
+                      operators: {items:[{email:{}}]},
                       order: {},
                       reminder: {},
                       feedback: {},
@@ -116,6 +117,11 @@ controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsS
         form.$setPristine();
     };
 
+ 	$scope.page.mail.removeOperator = function(idx, form){
+        $scope.page.mail.operators.items.splice(idx, 1);
+        form.$setDirty();
+    };
+    
     // Show help dialog window
     $scope.page.mail.showHelp = function(type){
         var msg = '';
@@ -163,9 +169,10 @@ controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsS
 
     
     // Load all settings
-	$scope.page.google.load('settings');
+	  $scope.page.google.load('settings');
     $scope.page.google.load('calendar');
     $scope.page.mail.load('settings');
+    $scope.page.mail.load('operators');
     $scope.page.mail.load('order');
     $scope.page.mail.load('reminder');
     $scope.page.mail.load('registration');

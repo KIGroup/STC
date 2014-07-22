@@ -33,6 +33,16 @@ mainModule.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/analytics/:type', {templateUrl: 'partials/deepsee.csp',       controller: 'DeepSeeCtrl'});
     $routeProvider.when('/scheduleframe',   {templateUrl: 'partials/scheduleframe.csp', controller: 'ScheduleFrameCtrl'});
     
+    $routeProvider.when('/mailing/groups', {templateUrl: 'partials/mailinggroups.csp', controller: 'AllMailingGroupsCtrl'});
+    $routeProvider.when('/mailing/group', {templateUrl: 'partials/mailinggroup.csp', controller: 'MailingGroupCtrl'});
+    $routeProvider.when('/mailing/group/:id', {templateUrl: 'partials/mailinggroup.csp', controller: 'MailingGroupCtrl'});
+    $routeProvider.when('/mailing/group/:gId/item', {templateUrl: 'partials/mailingitem.csp', controller: 'MailingItemCtrl'});
+    $routeProvider.when('/mailing/group/:gId/item/:iId', {templateUrl: 'partials/mailingitem.csp', controller: 'MailingItemCtrl'});
+    
+    $routeProvider.when('/mailing/subscription', {templateUrl: 'partials/mailingsubscription.csp', controller: 'MailingSubscriptionCtrl'});
+    $routeProvider.when('/mailing/subscription/:accessCode', {templateUrl: 'partials/mailingsubscription.csp', controller: 'MailingSubscriptionCtrl'});
+    $routeProvider.when('/mailing/subscription/confirmation/:confirmCode', {templateUrl: 'partials/mailingsubscription.csp', controller: 'MailingSubscriptionCtrl'});
+    
     $routeProvider.otherwise({redirectTo: '/createorder'});
   }]);]]></CSP>
 </Export>

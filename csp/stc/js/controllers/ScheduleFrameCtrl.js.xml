@@ -56,6 +56,7 @@ controllersModule.controller('ScheduleFrameCtrl', function($scope, $window, $fil
                                         training.dateGoogleCalendar,
                                         training.city.name + ', ' + training.street,
                                         {
+	                                        trainingId: training.id,
                                             courseProgramUrl: course.programUrl,
                                             city: training.city.name + ', ' + training.city.parentName + ', ' + training.city.greatParentName,
                                             address: training.address,

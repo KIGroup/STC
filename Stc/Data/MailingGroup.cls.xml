@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.MailingGroup">
+<Super>%Persistent</Super>
+<TimeCreated>63387,80192.527554</TimeCreated>
+
+<Property name="Name">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Description">
+<Type>%Text</Type>
+<Required>1</Required>
+<Parameter name="MAXLEN" value="5000"/>
+</Property>
+
+<Property name="AccessCode">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Index name="AccessCodeIdx">
+<Properties>AccessCode</Properties>
+<Unique>1</Unique>
+</Index>
+
+<Method name="ConvertToProxyObject">
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	set proxy.id = ..%Id()
+	set proxy.code = ..AccessCode
+	set proxy.name = ..Name
+	set proxy.description = ..Description
+	
+	&sql(SELECT COUNT(ID) INTO :proxy.itemsCount FROM Stc_Data.MailingItemApproved WHERE MGroup = :proxy.id)
+	
+	quit proxy
+]]></Implementation>
+</Method>
+
+<Method name="Save">
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[data:%RegisteredObject,&st=$$$OK]]></FormalSpec>
+<ReturnType>MailingGroup</ReturnType>
+<Implementation><![CDATA[
+	#dim group As MailingGroup = ""
+	
+	if (data.id = ""){
+		set group = ..%New()
+		set group.AccessCode = $SYSTEM.Util.CreateGUID()
+	}
+	else{
+		set group = ..%OpenId(data.id)
+	}
+	
+	set group.Name = $ZCVT(data.name, "I", "UTF8")
+	set group.Description = $ZCVT(data.description, "I", "UTF8")
+	
+	set st = group.%Save()
+	
+	quit group
+]]></Implementation>
+</Method>
+
+<Method name="GetAnnouncementGroup">
+<ClassMethod>1</ClassMethod>
+<ReturnType>MailingGroup</ReturnType>
+<Implementation><![CDATA[
+	if (..AccessCodeIdxExists("Announcement")){
+		quit ..AccessCodeIdxOpen("Announcement")
+	}
+	
+	set gr = ..%New()
+	set gr.Name = "Подписка на анонсы"
+	set gr.Description = "Подписка на анонсы"
+	set gr.AccessCode = "Announcement"
+	do gr.%Save()
+	
+	quit gr
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.MailingGroupD</DataLocation>
+<DefaultData>MailingGroupDefaultData</DefaultData>
+<IdLocation>^Stc.Data.MailingGroupD</IdLocation>
+<IndexLocation>^Stc.Data.MailingGroupI</IndexLocation>
+<StreamLocation>^Stc.Data.MailingGroupS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="MailingGroupDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Name</Value>
+</Value>
+<Value name="3">
+<Value>Description</Value>
+</Value>
+<Value name="4">
+<Value>AccessCode</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

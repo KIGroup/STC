@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/partials/mailinggroup.csp" application="/csp/stc/" default="1"><![CDATA[
+<div class="row-fluid">
+	<div class="span4">
+	</div>
+	<div class="span4">
+		<div class="accordion">
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" ng-bind="groupForm.caption|localize"></a>
+				</div>
+				<div class="accordion-body">
+					<div class="accordion-inner">
+						<form name="form" ng-submit="groupForm.submit()">
+							<div class="control-group">
+						        <label class="control-label" ng-bind="('Название'|localize) + '*'"></label>
+						        <div class="controls">
+						            <input class="span12" type="text" ng-model="groupForm.group.name" required></input>
+						        </div>
+						    </div>
+						    <div class="control-group">
+						        <label class="control-label" ng-bind="('Описание'|localize) + '*'"></label>
+						        <div class="controls">
+						            <textarea class="span12" rows="5" ng-model="groupForm.group.description" required></textarea>
+						        </div>
+						    </div>
+						    <div class="control-group">
+						        <div class="controls">
+						            <button type="submit" class="btn btn-primary btn-small" ng-bind="groupForm.actionName|localize" ng-disabled="form.$pristine"></button>
+						            <button type="button" class="btn btn-small" ng-click="groupForm.cancel()" ng-bind="'Назад'|localize"></button>
+						        </div>
+						    </div>    		    		    
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="span4">
+	</div>
+</div>
+<stcalert data="groupForm.alert" span-right="4" span-middle="4" span-left="4"/>]]></CSP>
+</Export>

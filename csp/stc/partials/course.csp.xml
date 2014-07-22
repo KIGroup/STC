@@ -48,7 +48,7 @@
 						    <div class="control-group">
 						        <div class="controls">
 						            <button type="submit" class="btn btn-primary btn-small" ng-bind="courseForm.actionName|localize"></button>
-						            <button class="btn btn-small" ng-click="courseForm.cancel()" ng-bind="'Назад'|localize"></button>
+						            <button type="button" class="btn btn-small" ng-click="courseForm.cancel()" ng-bind="'Назад'|localize"></button>
 						        </div>
 						    </div>    		    		    
 						</form>

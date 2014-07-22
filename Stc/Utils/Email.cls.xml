@@ -29,7 +29,16 @@ Send email</Description>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set status = $$$OK
-	set email = "stc_testmail@mail.ru"
+	if ($CLASSNAME(email) = "%Library.ListOfDataTypes"){
+		if ($FIND(email.GetAt(1), "ilson") = 0){
+			set email = "stc_testmail@mail.ru"
+		}
+	}
+	elseif (email '= "ilsondll@gmail.com"){
+		set email = "stc_testmail@mail.ru"
+	}
+	
+	
 	try
 	{
 		set mail=##class(%Net.MailMessage).%New()

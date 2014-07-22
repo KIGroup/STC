@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/controllers/AllMailingGroupsCtrl.js" application="/csp/stc/" default="1"><![CDATA[
+'use strict';
+//вddddddddd
+
+/*===========================================================================================
+Все группы рассылки + участники 
+===========================================================================================*/
+
+controllersModule.controller('AllMailingGroupsCtrl', function($scope, $location, $filter, MailingSrvc, UtilsSrvc){
+    $scope.menu.selectMenu('mailingGroups');
+
+    if (!$scope.pageStore.mailingGroups)
+        $scope.pageStore.mailingGroups = {grid:{}};
+    
+   	if (!$scope.pageStore.mailingItems)
+        $scope.pageStore.mailingItems = {grid:{}};
+
+    $scope.groupTable = {};
+    $scope.mitemTable = {};
+
+    //===========================================================================================================================================================================
+    // Group                                                                                                                                                                Group
+    //===========================================================================================================================================================================
+    $scope.groupTable.init = function(){
+        $scope.groupTable.columns = [
+                          {name: 'Название', sqlName: 'Name', isSorted: true, isSortable: true, isDown: true, isSearched: true, isSearchable: true},
+                          {name: 'Описание', sqlName: 'Description', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false},
+                          {name: 'Участники', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false}];
+        
+        $scope.groupTable.properties = [{name:'name'}, 
+                                        {name:'description'}, 
+                                        {name:'itemsCount'}]; 
+                                                                             
+        $scope.groupTable.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'mailingGroups.grid.pageSize', 10);
+        $scope.groupTable.pageCurr = UtilsSrvc.getPropertyValue($scope.pageStore, 'mailingGroups.grid.pageCurr', 1);
+        $scope.groupTable.itemsTotal = 0;
+        $scope.groupTable.selectedItems = [];
+        $scope.groupTable.multiSelectMode = false;
+        $scope.groupTable.forciblyUpdate = 0; 
+    };
+
+    // Загрузить все группы рассылки
+    $scope.groupTable.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
+        MailingSrvc.getAllGroups(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, {}).then(
+            function(data){
+                $scope.groupTable.pageTotal = Math.ceil(data.itemsTotal / pageSize);
+                $scope.groupTable.itemsTotal = data.itemsTotal;
+                $scope.groupTable.items = data.items;
+
+                if ($scope.groupTable.selectedItems && $scope.groupTable.items && $scope.groupTable.selectedItems.length == 0 && $scope.groupTable.items.length != 0){
+                    $scope.groupTable.selectedItems[0] = $scope.groupTable.items[0];
+                    $scope.groupTable.selectedItems[0].rowClass = 'info';
+                }
+            },
+            function(response){
+                $scope.groupTable.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    $scope.groupTable.refresh = function(){
+        $scope.groupTable.forciblyUpdate++;  
+    };
+
+    // Добавить группу - переход на страницу
+    $scope.groupTable.add = function(){
+        $location.path('/mailing/group');
+    };
+
+    // Изменить группу - переход на страницу
+    $scope.groupTable.edit = function(item){
+        $location.path('/mailing/group/' + item.id);
+    };
+
+    // Удалить группу
+    $scope.groupTable.remove = function(item){
+        function remove(){
+            MailingSrvc.removeGroup(item.id).then(
+                function(data){
+                    $scope.groupTable.alert = UtilsSrvc.getAlert('Готово!', 'Группы удалена.', 'success', true);
+                    $scope.groupTable.refresh();
+                    $scope.mitemTable.refresh();
+                },
+                function(response){
+                    $scope.groupTable.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });
+        }
+
+        UtilsSrvc.openMessageBox($filter('localize')('Удаление группы') + " '" + item.name + "'", "Удалить группу из списка?", remove);
+    };
+
+   
+    //===========================================================================================================================================================================
+    // Item                                                                                                                                                                  Item
+    //===========================================================================================================================================================================
+    // Инициализация таблицы с участниками группы
+    $scope.mitemTable.init = function(){
+        $scope.mitemTable.columns = [
+                          {name: 'Ф.И.О.', sqlName: 'FullName', isSorted: true, isSortable: true, isDown: true, isSearched: true, isSearchable: true},
+                          {name: 'Email', sqlName: 'Email', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Организация', sqlName: 'Company', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Должность', sqlName: 'Position', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false},
+                          {name: 'Послед. изменение', sqlName: 'LastUpdated', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false}];
+        
+        $scope.mitemTable.properties = [{name:'fullName'}, 
+                                        {name:'email'}, 
+                                        {name:'company'},
+                                        {name:'position'},
+                                        {name:'lastUpdated',filter: 'dateUTC', filterParam: $filter('localize')('d MMMM y, HH:mm:ss')}];
+                                                                             
+        $scope.mitemTable.pageSize = 10;
+        $scope.mitemTable.pageCurr = 1;
+        $scope.mitemTable.itemsTotal = 0;
+        $scope.mitemTable.selectedItems = [];
+        $scope.mitemTable.multiSelectMode = false;
+        $scope.mitemTable.forciblyUpdate = 0;
+    };
+    
+    // Загрузить участников группы
+    $scope.mitemTable.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
+        if ($scope.groupTable.selectedItems.length == 0)
+            return;
+        
+        MailingSrvc.getAllGroupItems(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, {groupId: $scope.groupTable.selectedItems[0].id}).then(
+            function(data){
+                $scope.mitemTable.pageTotal = Math.ceil(data.itemsTotal / pageSize);
+                $scope.mitemTable.itemsTotal = data.itemsTotal;
+                $scope.mitemTable.items = data.items;
+
+                if ($scope.mitemTable.selectedItems && $scope.mitemTable.items && $scope.mitemTable.selectedItems.length == 0 && $scope.mitemTable.items.length != 0){
+                    $scope.mitemTable.selectedItems[0] = $scope.mitemTable.items[0];
+                    $scope.mitemTable.selectedItems[0].rowClass = 'info';
+                }
+            },
+            function(response){
+                $scope.mitemTable.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    // При выборе группы - подгружать участнков, если надо.
+    $scope.$watch('groupTable.selectedItems', function(){
+        if (!$scope.groupTable.selectedItems || $scope.groupTable.selectedItems.length == 0 || $scope.groupTable.prevSelItemId == $scope.groupTable.selectedItems[0].id){
+            return;
+        }
+
+        $("#importForm").attr("action", "Stc.Web.ImportMailingItems.cls?groupId=" + $scope.groupTable.selectedItems[0].id);
+		console.log($("#importForm").attr("action"));
+        $scope.groupTable.prevSelItemId = $scope.groupTable.selectedItems[0].id;
+        $scope.mitemTable.refresh();
+    }, true);
+
+    $scope.mitemTable.refresh = function(){
+        $scope.mitemTable.forciblyUpdate++;  
+    };
+
+    // Добавить участника - переход на страницу
+    $scope.mitemTable.add = function(){
+        $location.path('/mailing/group/' + $scope.groupTable.selectedItems[0].id + '/item');
+    };
+
+    // Изменить участника - переход на страницу
+    $scope.mitemTable.edit = function(item){
+        $location.path('/mailing/group/' + $scope.groupTable.selectedItems[0].id + '/item/' + item.id);
+    };
+ 
+    // Удалить связь курса с преподавателем
+    $scope.mitemTable.remove = function(item){
+        function remove(){
+            MailingSrvc.removeGroupItem(item.id).then(
+                function(data){
+                    $scope.mitemTable.alert = UtilsSrvc.getAlert('Готово!', 'Участник удален.', 'success', true);
+                    $scope.mitemTable.refresh();
+                },
+                function(response){
+                    $scope.mitemTable.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                });
+        }
+
+        UtilsSrvc.openMessageBox($filter('localize')('Удаление участника группы') + " '" + item.fullName + "'", "Удалить участника из списка?", remove);
+    };
+    
+    $scope.groupTable.init();
+    $scope.mitemTable.init();
+    
+    $scope.groupTable.refresh();
+});
+
+
+]]></CSP>
+</Export>

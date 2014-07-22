@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/controllers/MailingGroupCtrl.js" application="/csp/stc/" default="1"><![CDATA[
+'use strict';
+//dddddfd
+
+/*===========================================================================================
+Группа рассылки, создание и изменение
+===========================================================================================*/
+
+controllersModule.controller('MailingGroupCtrl', function($scope, $routeParams, $location, MailingSrvc, UtilsSrvc){
+    $scope.groupForm = {};
+    
+    $scope.groupForm.init = function(){
+        if (!isNaN(parseInt($routeParams.id))){
+            $scope.groupForm.caption = 'Редактирование группы';
+            $scope.groupForm.actionName = 'Сохранить';
+            $scope.groupForm.loadData();    
+        }
+        else{
+            $scope.groupForm.caption = 'Добавление группы';
+            $scope.groupForm.actionName = 'Добавить';
+        }
+    };
+
+    // Загрузить курс
+    $scope.groupForm.loadData = function(){
+        MailingSrvc.getGroup($routeParams.id).then(
+            function(data){
+                $scope.groupForm.group = data;
+            },
+            function(response){
+                 $scope.groupForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            }); 
+    };
+
+    // Сохранить / создать курс
+    $scope.groupForm.submit = function(){
+        MailingSrvc.saveGroup($scope.groupForm.group).then(
+            function(data){
+	            if (!$scope.groupForm.group.id){
+                	$scope.groupForm.alert = UtilsSrvc.getAlert('Готово!', 'Группа создана.', 'success', true);
+                	$scope.groupForm.group = {};
+	            }
+                else{
+                	$scope.groupForm.alert = UtilsSrvc.getAlert('Готово!', 'Изменения сохранены.', 'success', true);
+                }
+                
+                $scope.form.$setPristine();
+            },
+            function(response){
+                $scope.groupForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            }); 
+    };
+
+    // Отмена - возврат на страницу курсов
+    $scope.groupForm.cancel = function(){
+        $location.path('/mailing/groups');
+    };
+    
+    $scope.groupForm.init();
+});
+    
+
+]]></CSP>
+</Export>

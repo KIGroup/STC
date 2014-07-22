@@ -265,6 +265,35 @@ Private request processor for administrator</Description>
 	<!-- Get preview of settings for google from last training -->
 	<Route Method="GET" Url="/json/settings/google/preview/:type" Call="Stc.Web.JsonAdmin:GetGooglePreview"/>
 	
+	
+	<!-- ==================================== MAILING GROUPS AND ITEMS ==================================== -->
+	<!-- Get mailing groups for table -->
+	<Route Method="POST" Url="/json/mailing/groups" Call="Stc.Web.JsonAdmin:GetMailingGroupsForGrid"/>
+	
+	<!-- Save mailing group -->
+	<Route Method="POST" Url="/json/mailing/group" Call="Stc.Web.JsonAdmin:SaveMailingGroup"/>
+
+	<!-- Get mailing groups for combobox -->
+	<Route Method="GET" Url="/json/mailing/group" Call="Stc.Web.JsonAdmin:GetMailingGroups"/>
+	
+	<!-- Get mailing group by ID -->
+	<Route Method="GET" Url="/json/mailing/group/:id" Call="Stc.Web.JsonAdmin:GetMailingGroup"/>
+	
+	<!-- Delete mailing group by ID -->
+	<Route Method="DELETE" Url="/json/mailing/group/:id" Call="Stc.Web.JsonAdmin:DeleteMailingGroup"/>
+	
+	<!-- Get mailing items in the group for table  -->
+	<Route Method="POST" Url="/json/mailing/group/items" Call="Stc.Web.JsonAdmin:GetMailingGroupItemsForGrid"/>
+	
+	<!-- Save mailing item -->
+	<Route Method="POST" Url="/json/mailing/group/item" Call="Stc.Web.JsonAdmin:SaveMailingItem"/>
+	
+	<!-- Get mailing item by ID -->
+	<Route Method="GET" Url="/json/mailing/group/item/:id" Call="Stc.Web.JsonAdmin:GetMailingItem"/>
+	
+	<!-- Delete mailing item by ID -->
+	<Route Method="DELETE" Url="/json/mailing/group/item/:id" Call="Stc.Web.JsonAdmin:DeleteMailingItem"/>
+	
 	<!-- ==================================== OTHER ==================================== -->
 	
 	<!-- Check access, authorization call, if needed -->

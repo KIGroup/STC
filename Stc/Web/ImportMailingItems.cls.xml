@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Web.ImportMailingItems">
+<Super>%CSP.Page</Super>
+<TimeCreated>63389,2455.997366</TimeCreated>
+
+<Method name="OnPage">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	&html<<html><head></head><body style='font-family: Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #333; margin: 0;'>>
+	
+	set result = ##class(%ZEN.proxyObject).%New()
+	set result.success = 0
+	set result.errorMessages = ##class(%ListOfObjects).%New()
+	
+	try{
+		TSTART
+		
+		set fileName = %request.MimeData("FileStream", 1).FileName
+		set stream = %request.MimeData("FileStream", 1)
+		
+		set group = ##class(Stc.Data.MailingGroup).%OpenId(%request.Get("groupId")).ConvertToProxyObject()
+		
+		while 'stream.AtEnd {
+			set line = stream.ReadLine()
+			if ($FIND(line,";") = 0) continue
+			
+			set propList = $LISTFROMSTRING(line, ";")
+			
+			set data = ##class(%ZEN.proxyObject).%New()
+			set data.fullName = $LIST(propList,1)
+			set data.email = $LIST(propList,2)
+			set data.company = $LIST(propList,3)
+			set data.position = $LIST(propList,4)
+			set data.group = group
+			
+			do ##class(Stc.Data.MailingItemApproved).Save(data, .st)
+			
+			if $$$ISOK(st){
+				set result.success = result.success + 1
+			}
+			else{
+				set error = ##class(%ZEN.proxyObject).%New()
+				set error.status = $system.Status.GetErrorText(st)
+				set error.line = line
+				do result.errorMessages.Insert(error)
+			}
+		}
+		
+		TCOMMIT
+	}catch(ex){
+		TROLLBACK
+		set st = ex.AsStatus()	
+	}
+
+	w "Записей импортировано успешно: "_result.success
+		
+	if (result.errorMessages.Count() '= 0){
+		w "<br><br>Список ошибочных записей: "
+		for i=1:1:result.errorMessages.Count(){
+			w "<br>"_i_". "_result.errorMessages.GetAt(i).line
+			w "<br>"_result.errorMessages.GetAt(i).status
+			w "<br>"
+		}
+	}
+	&html<</body></html>>
+	Quit $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

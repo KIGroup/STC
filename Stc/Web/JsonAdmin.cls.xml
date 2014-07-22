@@ -2204,6 +2204,17 @@ Get all teachers of course</Description>
 			set proxy.data.server = $GET(^Settings("Stc","EmailSMTPSERVER"))
 			set proxy.data.user = $GET(^Settings("Stc","EmailSMTPUSER"))
 		}
+		elseif (type = "operators"){
+			set emailList = $LISTFROMSTRING($GET(^Settings("Stc","OperatorEmails")), ",")
+			set items = ##class(%ListOfObjects).%New()
+			for i=1:1:$LISTLENGTH(emailList){
+				set item = ##class(%ZEN.proxyObject).%New()
+				set item.email = $LIST(emailList, i)
+				do items.Insert(item)	
+			}
+			
+			set proxy.data.items = items
+		}
 		elseif (type = "reminder"){
 			set proxy.data.subj = $GET(^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgSubjectToTrainingStudents"))
 			set proxy.data.msg = $GET(^CacheMsg("Stc",##class(%MessageDictionary).GetSessionLanguage(),"msgToTrainingStudents"))
@@ -2263,6 +2274,13 @@ Get all teachers of course</Description>
 			set ^Settings("Stc","EmailSMTPPORT") = data.port
 			set ^Settings("Stc","EmailSMTPSERVER") = data.server
 			set ^Settings("Stc","EmailSMTPUSER") = data.user
+		}
+		elseif (type = "operators"){
+			set emails = ""
+			for i=1:1:data.items.Count(){
+				set emails = emails_data.items.GetAt(i).email_","
+			}
+			set ^Settings("Stc","OperatorEmails") = $E(emails, 1, *-1)
 		}
 		elseif (type = "reminder"){
 			set ^CacheMsg("Stc", ##class(%MessageDictionary).GetSessionLanguage(), "msgSubjectToTrainingStudents") = $ZCONVERT(data.subj, "I","UTF8")
@@ -2488,10 +2506,232 @@ Get all teachers of course</Description>
 
 <UDLText name="T">
 <Content><![CDATA[
+// ==================================== MAILING GROUPS AND ITEMS ==================================== 
+
+]]></Content>
+</UDLText>
+
+<Method name="GetMailingGroupsForGrid">
+<Description>
+Get mailing groups for table</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
+      	
+		$$$THROWONERROR(st, ..WriteJsonForGrid("SELECT ID FROM Stc_Data.MailingGroup", "Stc.Data.MailingGroup", params))
+    }
+	catch ex {
+		set st = ex.AsStatus()
+	}
+
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="SaveMailingGroup">
+<Description>
+Save mailing group</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		TSTART
+		
+		// Check privilege for Person table
+		$$$THROWONERROR(st, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
+		$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+      	
+      	do ##class(Stc.Data.MailingGroup).Save(data, .st)
+      	if $$$ISERR(st) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus($CASE(data.id = "", 1:"createMailingGroup",:"saveMailingGroup"), "| "_st)) 
+		
+		TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
+		set st = ex.AsStatus()
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="GetMailingGroups">
+<Description>
+Get mailing groups </Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[    quit ..WriteJsonFromSql("SELECT ID As id, Name as name FROM Stc_Data.MailingGroup ORDER BY name")
+]]></Implementation>
+</Method>
+
+<Method name="GetMailingGroup">
+<Description>
+Get mailing group by ID</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		do ..GetProxyObject("Stc.Data.MailingGroup", id).%ToJSON()
+	}
+	catch ex {
+		set st = ex.AsStatus()
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="DeleteMailingGroup">
+<Description>
+Delete mailing group by ID</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		TSTART
+		
+		set SQLCODE = ""
+		&sql(DELETE FROM Stc_Data.MailingItemApproved WHERE MGroup = :id)
+		
+		if (SQLCODE '= 0) && (SQLCODE '= 100){
+			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("DeleteMailingApprovedItemsError", " SQLCODE="_SQLCODE))
+		}
+		
+		$$$THROWONERROR(st, ##class(Stc.Data.MailingGroup).%DeleteId(id))
+		
+		TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
+		set st = ex.AsStatus()
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="GetMailingGroupItemsForGrid">
+<Description>
+Get mailing items in the group for table</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
+      	
+		$$$THROWONERROR(st, ..WriteJsonForGrid("SELECT ID FROM Stc_Data.MailingItemApproved", "Stc.Data.MailingItemApproved", params, "MGroup = "_..ParseParameter(params.other.groupId)))
+    }
+	catch ex {
+		set st = ex.AsStatus()
+	}
+
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="SaveMailingItem">
+<Description>
+Save mailing item</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		TSTART
+		
+		// Check privilege for Person table
+		$$$THROWONERROR(st, ##class(Stc.Data.Person).CheckDeletePrivilege())
+		
+		$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+      	
+      	do ##class(Stc.Data.MailingItemApproved).Save(data, .st)
+      	if $$$ISERR(st) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus($CASE(data.id = "", 1:"createMailingItem",:"saveMailingItem"), "| "_st)) 
+		
+		TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
+		set st = ex.AsStatus()
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="GetMailingItem">
+<Description>
+Get mailing item by ID</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		do ..GetProxyObject("Stc.Data.MailingItemApproved", id).%ToJSON()
+	}
+	catch ex {
+		set st = ex.AsStatus()
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="DeleteMailingItem">
+<Description>
+Delete mailing group by ID</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ##class(Stc.Data.MailingItemApproved).%DeleteId(id)
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[
 // ==================================== OTHER ==================================== 
 
 ]]></Content>
 </UDLText>
+
+<Method name="SendEmailToOperators">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>subject:%String,msg:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set items = ##class(%ListOfDataTypes).%New()
+	
+	try{
+		set emailList = $LISTFROMSTRING($GET(^Settings("Stc","OperatorEmails")), ",")
+		set items = ##class(%ListOfDataTypes).%New()
+		for i=1:1:$LISTLENGTH(emailList){
+			do items.Insert($LIST(emailList, i))	
+		}
+	}
+	catch(ex){
+		return ex.AsStatus()
+	}
+	
+	quit ##class(Stc.Utils.Email).Send(items, subject, msg)
+]]></Implementation>
+</Method>
 
 <Method name="CheckAdmin">
 <Description>

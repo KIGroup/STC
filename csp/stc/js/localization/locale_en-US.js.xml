@@ -257,6 +257,7 @@ localizationModule.constant('StcDictionary', {
     'Экспорт сертификатов'                                     : 'Export certificates',
     'Юридический адрес'                                        : 'Legal address',
     'Язык системы'                                             : 'System language',
+    'Язык':'Lang',
     
     'Все слушатели'          :'All Students',
     'Новые заявки'           :'New orders',
@@ -380,6 +381,46 @@ localizationModule.constant('StcDictionary', {
 	'Сумма с НДС' : 'Amount with NDS',
 	'Удалить обучение' : 'Remove training',
 	'Удалить отзыв' : 'Remove feedback',
+	
+	'Выберите группу для отображения подробной информации.' : 'Select a group to display detailed information.',
+	'Выберите файл' : 'Select file',
+	'Группа' : 'Group',
+	'Группы рассылки' : 'Mailing groups',
+	'Добавить адрес' : 'Add address',
+	'Добавить группу' : 'Add group',
+	'Добавить участника' : 'Add mailing item',
+	'Добавление группы' : 'Add group',
+	'Добавление участника' : 'Add mailing item',
+	'Должность' : 'Position',
+	'Ещё' : 'Other',
+	'Импортировать записи из файла' : 'Import items from file',
+	'Обзор' : 'Browse',
+	'Обновить таблицы' : 'Refresh tables',
+	'Оповещение администраторов системы' : 'Notification system operators',
+	'Отмена / изменение подписки' : 'Abolition / change subscription',
+	'Отменить подписку' : 'Unsubscribe',
+	'Оформление подписки' : 'Subscribing',
+	'Параметры системы' : 'System settings',
+	'Подписка на анонсы обучающих курсов InterSystems' : 'Subscribe for announcements of InterSystems training courses',
+	'Послед. изменение' : 'Last updated',
+	'Почтовые адреса для оповещения о новых заявках' : 'Mail address for notifications of new orders',
+	'Редактирование группы' : 'Editing mailing group',
+	'Редактирование участника' : 'Editiong mailing item',
+	'Редактировать группу' : 'Edit group',
+	'Редактировать участника' : 'Edit item',
+	'Удаление группы' : 'Remove group',
+	'Удаление участника группы' : 'Remove item',
+	'Удалить группу' : 'Remove group',
+	'Удалить группу из списка?' : 'Remove group from list',
+	'Удалить участника' : 'Remove item',
+	'Удалить участника из списка?' : 'Remove item from list',
+	'Участники группы' : 'Mailing items',
+	'Участники' : 'Items count',
+	'Ф.И.О.' : 'Full name',
+	'Подписаться': 'Subscribe',
+	'Активация подписки завершена':'Subscription Activation completed',
+	'На указанный адрес было отправлено письмо, для активации подписки перейдите по ссылке в письме.':'At the address was sent a mail, to activate your subscription go to link in the mail.',
+	'Подписка отменена':'Unsubscribe completed',
 
 
     'О проекте'       :'About',
@@ -395,11 +436,11 @@ localizationModule.constant('StcDictionary', {
     'Институт Космических и Информационных Технологий':'Institute of Space and Information Technologies'
   },
   getTranslate: function(word){
-      /*
+      
       if (!this.strings[word]){
       		console.log("'"+word+"' : '',");
       }
-      */
+     
       //console.log('call localize=' + word);
       return this.strings[word] ? this.strings[word] : word;
   }

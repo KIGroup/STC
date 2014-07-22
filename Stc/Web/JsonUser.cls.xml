@@ -70,9 +70,20 @@ Create application</Description>
 	    
 	   	$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.order,1))
        
-       	do ##class(Stc.Data.OrderDirty).Create(order, .status)
+       	set order = ##class(Stc.Data.OrderDirty).Create(order, .status)
        	if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createDirtyOrder", "| "_status))
-       	
+       	/*
+       	#dim order As Stc.Data.OrderDirty
+       	set subject = "STC. Новая заявка на обучение от организации - """_order.CompanyString_""""
+       	set msg = "Курс: "_order.Course.Name.Value_"<br>"_
+       	          "Контактное лицо: "_order.LastName.Value_" "_order.FirstName.Value_" "_order.MiddleName.Value_", "_order.Email_", "_order.Phone_"<br>"_
+       	          "Организация: """_order.CompanyString_"""<br>"_
+       	          "Количество слушателей: "_order.StudentsNumber_"<br>"_
+       	          "Заявка создана: "_order.CreatedTS_"<br>"_
+       	          "<a href='http://"_$GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp#/orders' target='_blank'>Страница заявок</a>"
+     
+     	do ##class(Stc.Web.JsonAdmin).SendEmailToOperators(subject, msg)
+     	*/ 	
        	TCOMMIT
    	}
    	catch ex {
@@ -97,9 +108,21 @@ Create application for student</Description>
 	    
 	   	$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.order,1))
        
-       	do ##class(Stc.Data.OrderNewStudent).Create(order, .status)
+       	set order = ##class(Stc.Data.OrderNewStudent).Create(order, .status)
        	if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createDirtyOrder", "| "_status))
-       	
+       	/*
+       	#dim order As Stc.Data.OrderNewStudent
+       	set subject = "STC. Новая заявка на присоединение к курсу от слушателя - """_order.LastName.Value_""""
+       	set msg = "Город: "_order.Training.City.Name.Value_"<br>"_
+       			  "Курс: "_order.Training.Course.Name.Value_"<br>"_
+       			  "Дата начала: "_$ZD(order.Training.DateStart, 3)_"<br><br>"_
+       			  "Слушатель: "_order.LastName.Value_" "_order.FirstName.Value_" "_order.MiddleName.Value_", "_order.Email_", "_order.Phone_"<br>"_
+       	          "Организация: """_order.CompanyString_"""<br>"_
+       	          "Заявка создана: "_order.CreatedTS_"<br>"_
+       	          "<a href='http://"_$GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp#/training?id="_order.Training.%Id()_"' target='_blank'>Страница обучения</a>"
+     
+     	do ##class(Stc.Web.JsonAdmin).SendEmailToOperators(subject, msg)
+     	*/
        	TCOMMIT
    	}
    	catch ex {
@@ -611,6 +634,202 @@ Get training by id</Description>
 	
 	
 	quit proxy.%ToJSON()
+]]></Implementation>
+</Method>
+
+<Method name="CreateMailingSubscription">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		TSTART
+		
+		$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		
+		// Check email for exists subscription in the announcement group
+		set group = ##class(Stc.Data.MailingGroup).GetAnnouncementGroup()
+		set groupId = group.%Id()
+		set existsApprovedId = ""
+		&sql(SELECT ID INTO :existsApprovedId FROM Stc_Data.MailingItemApproved WHERE Email = :data.email AND MGroup = :groupId)
+		
+		if (existsApprovedId '= ""){
+			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("SubscriptionAlreadyExists"))
+		}
+			
+		// Check email for exists order for subscription
+		set existsDirtyId = ""
+		&sql(SELECT ID INTO :existsDirtyId FROM Stc_Data.MailingItemDirty WHERE Email = :data.email)
+		
+		// Id for update data
+		set data.id = existsDirtyId
+		set data.group = ##class(%ZEN.proxyObject).%New()
+		set data.group.id = group.%Id()
+		
+		set item = ##class(Stc.Data.MailingItemDirty).Save(data, .st)
+		$$$THROWONERROR(st, st)
+		
+		set url = "http://"_$GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp#/mailing/subscription/confirmation/"_$system.Encryption.Base64Encode(item.AccessCode)
+		
+		set mailSubject = ##class(Stc.Utils.Msg).GetMsg("subjectConfirmationSubscription")
+		set mailMsg = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgConfirmationSubscription"), url)
+		
+		set st = ##class(Stc.Utils.Email).Send(item.Email, mailSubject, mailMsg)
+		if $$$ISERR(st){
+			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("SendSubscriptionConfirmationCodeError", "| "_st))
+		}
+		
+		TCOMMIT
+	}
+	catch(ex){
+		TROLLBACK
+		set st = ex.AsStatus()
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="ConfirmMailingSubscription">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>code:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		TSTART
+		
+		set code = $system.Encryption.Base64Decode(code)
+		
+		if (##class(Stc.Data.MailingItemDirty).AccessCodeIdxExists(code) = $$$NO){
+			if (##class(Stc.Data.MailingItemApproved).AccessCodeIdxExists(code) = $$$YES){
+				$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("SubscriptionAlreadyExists"))
+			}
+			else{ 
+				$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("WrongConfirmationCode"))
+			}
+		}
+		
+		set dirtyItem = ##class(Stc.Data.MailingItemDirty).AccessCodeIdxOpen(code)
+		
+		set approvedItem = ##class(Stc.Data.MailingItemApproved).%New()
+		set approvedItem.FullName = dirtyItem.FullName
+		set approvedItem.Email = dirtyItem.Email
+		set approvedItem.Company = dirtyItem.Company
+		set approvedItem.Position = dirtyItem.Position
+		set approvedItem.AccessCode = dirtyItem.AccessCode
+		set approvedItem.MGroup = dirtyItem.MGroup
+		set approvedItem.LastUpdated = $ZDT($ZTS, 3)
+		
+		$$$THROWONERROR(st, approvedItem.%Save())
+		
+		$$$THROWONERROR(st, ##class(Stc.Data.MailingItemDirty).AccessCodeIdxDelete(code))
+		
+		TCOMMIT
+	}
+	catch(ex){
+		TROLLBACK
+		set st = ex.AsStatus()
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="DeleteMailingSubscription">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>code:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		TSTART
+		
+		set code = $system.Encryption.Base64Decode(code)
+		
+		if (##class(Stc.Data.MailingItemApproved).AccessCodeIdxExists(code) = $$$NO){
+			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("WrongAccessCode"))
+		}
+		
+		$$$THROWONERROR(st, ##class(Stc.Data.MailingItemApproved).AccessCodeIdxDelete(code))
+		
+		TCOMMIT
+	}
+	catch(ex){
+		TROLLBACK
+		set st = ex.AsStatus()
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="UpdateMailingSubscription">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>code:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		TSTART
+		
+		set code = $system.Encryption.Base64Decode(code)
+		
+		if (##class(Stc.Data.MailingItemApproved).AccessCodeIdxExists(code) = $$$NO){
+			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("WrongAccessCode"))
+		}
+		
+		$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		
+		set oldObj = ##class(Stc.Data.MailingItemApproved).AccessCodeIdxOpen(code)
+		set data.id = oldObj.%Id()
+		set data.email = oldObj.Email
+		set data.group = ##class(Stc.Data.MailingGroup).GetAnnouncementGroup().ConvertToProxyObject()
+		kill oldObj
+		
+		do ##class(Stc.Data.MailingItemApproved).Save(data, .st)
+		$$$THROWONERROR(st, st)
+		
+		TCOMMIT
+	}
+	catch(ex){
+		TROLLBACK
+		set st = ex.AsStatus()
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="GetMailingSubscription">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>code:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		set code = $system.Encryption.Base64Decode(code)
+		
+		if (##class(Stc.Data.MailingItemApproved).AccessCodeIdxExists(code) = $$$NO){
+			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("WrongAccessCode"))
+		}
+		
+		set proxy = ##class(Stc.Data.MailingItemApproved).AccessCodeIdxOpen(code).ConvertToProxyObject()
+		set proxy.accessCode = ""
+		set proxy.group = ""
+		
+		do proxy.%ToJSON()
+	}
+	catch(ex){
+		set st = ex.AsStatus()
+	}
+	
+	quit st
 ]]></Implementation>
 </Method>
 </Class>

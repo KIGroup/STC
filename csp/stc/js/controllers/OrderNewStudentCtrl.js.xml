@@ -44,6 +44,7 @@ controllersModule.controller('OrderNewStudentCtrl', function($scope, $timeout, $
                                         data.dateGoogleCalendar,
                                         data.city.name + ', ' + data.address.title,
                                         {
+	                                        trainingId: data.id,
                                             courseProgramUrl: 'http://' + data.course.programUrl,
                                             city: data.city.name + ', ' + data.city.parentName + ', ' + data.city.greatParentName,
                                             address: data.address.title + ', '+ data.room,

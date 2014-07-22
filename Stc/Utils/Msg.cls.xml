@@ -23,7 +23,7 @@ Get localized error message</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>key</FormalSpec>
 <ReturnType>%String</ReturnType>
-<Implementation><![CDATA[	quit $GET(^CacheMsg("Stc", $$$SessionLanguage, key), "---")
+<Implementation><![CDATA[	quit $GET(^CacheMsg("Stc", $$$SessionLanguage, key), "- "_key_" -")
 ]]></Implementation>
 </Method>
 
@@ -33,6 +33,7 @@ Write all messages into global</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	/*
 	set ^CacheMsg("Stc", "ru", "Curator") = "Куратор"
 	set ^CacheMsg("Stc", "en", "Curator") = "Curator"
 	
@@ -173,6 +174,27 @@ Write all messages into global</Description>
 	"Time: %6<br>"_
 	"%7"_
 	"%8"
+	*/
+	// Mailing
+	set ^CacheMsg("Stc", "ru", "subjectConfirmationSubscription") = "Активация подписки на анонсы обучающих курсов InterSystems"
+	set ^CacheMsg("Stc", "en", "subjectConfirmationSubscription") = "Activate subscription to announcements of InterSystems training courses"
+	
+	set ^CacheMsg("Stc", "ru", "msgConfirmationSubscription") = "Здравствуйте, для активации подписки перейдите по <a href='%1' target='_blank'>ссылке</a>."
+	set ^CacheMsg("Stc", "en", "msgConfirmationSubscription") = "Hello, for activation your subscription you need go to <a href='%1' target='_blank'>link</ a>."
+	
+	set ^CacheMsg("Stc", "ru", "SubscriptionAlreadyExists") = "Подписка уже оформлена"
+	set ^CacheMsg("Stc", "en", "SubscriptionAlreadyExists") = "Subscription already exists"
+	
+	set ^CacheMsg("Stc", "ru", "SendSubscriptionConfirmationCodeError") = "Отправка кода активации завершилась неудачей"
+	set ^CacheMsg("Stc", "en", "SendSubscriptionConfirmationCodeError") = "Sending an activation code failed"
+	
+	set ^CacheMsg("Stc", "ru", "WrongConfirmationCode") = "Неверный код активации"
+	set ^CacheMsg("Stc", "en", "WrongConfirmationCode") = "Wrong activation code"
+	
+	set ^CacheMsg("Stc", "ru", "WrongAccessCode") = "Неверный код доступа"
+	set ^CacheMsg("Stc", "en", "WrongAccessCode") = "Wrong access code"
+	/*
+	
 	
 	set ^CacheMsg("Stc", "ru", "contactPerson") = "Контактное лицо"
 	set ^CacheMsg("Stc", "en", "contactPerson") = "Contact person"
@@ -319,7 +341,7 @@ Write all messages into global</Description>
 	set ^CacheMsg("Stc", "ru", "NoPrivilege") = "Нет доступа!"
 	set ^CacheMsg("Stc", "en", "NoPrivilege") = "No privileges!"
 	
-	//personContainsInTraining
+	*/
 ]]></Implementation>
 </Method>
 
