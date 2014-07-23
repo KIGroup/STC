@@ -410,6 +410,10 @@ do ##class(Stc.Utils.Msg).DeepSeeMsg()</Description>
 	do ..AddDeepSeeMsg("Телефон", "Phone")
 	do ..AddDeepSeeMsg("Тип организации", "Type of organization")
 	do ..AddDeepSeeMsg("Университет", "University")
+	
+	do ..AddDeepSeeMsg("Количество слушателей", "Number of students")
+	do ..AddDeepSeeMsg("Количество слушателей в заявках по курсам", "Number of students in orders for courses")
+	do ..AddDeepSeeMsg("Количество заявок по курсам", "The number of orders for courses")
 
 	q $$$OK
 ]]></Implementation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/OrderSrvc.js" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/js/services/OrderSrvc.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //dвdddвd
 
@@ -128,6 +128,10 @@ servicesModule.factory('OrderSrvc', function(DALSrvc) {
         /* Отправить повторно контакту письмо */
         sendEmail: function(orderCode){
             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/sendEmailToCompanyContactForApprovedOrder', {code: orderCode});
+        },
+        /* Закрыть заявку */
+        closeOrder: function(id){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/approvedorder/' + id + '/close', null);
         }
 
     }

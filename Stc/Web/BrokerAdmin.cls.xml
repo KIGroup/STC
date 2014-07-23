@@ -68,6 +68,10 @@ Private request processor for administrator</Description>
 	<!-- Resend email with instructions to organization's contact person -->
 	<Route Method="POST" Url="/json/sendEmailToCompanyContactForApprovedOrder" Call="Stc.Web.JsonAdmin:SendEmailToCompanyContactForApprovedOrder"/>
 	
+	
+	<!-- Change order status to "close" -->
+	<Route Method="POST" Url="/json/approvedorder/:id/close" Call="Stc.Web.JsonAdmin:CloseOrder"/>
+	
 	<!-- ==================================== ORGANIZATIONS ==================================== -->
 	
 	<!-- Get organization by id -->

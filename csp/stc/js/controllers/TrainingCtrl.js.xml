@@ -93,7 +93,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
                           {name: 'Дополнение',    sqlName: 'WhatHear',         isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false},
                           {name: 'О докладчике',  sqlName: 'AboutTeacher',     isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
                           {name: 'Дата создания', sqlName: 'CreatedTS',        isSorted: true,  isSortable: true, isDown: false, isSearched: false, isSearchable: false, filter: 'date'}];
-
+ 
         $scope.feedBack.properties = [{name:'rating'}, 
                                      {name: 'author'},
                                      {name:'whatLikedStatus',        calculate: function(item){ item.whatLikedStatus       = item.whatLiked       =='' ? '' : $filter('localize')('Есть отзыв')}},
@@ -185,13 +185,13 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
         		
                 if (data.isCompleted == 0){
                     $scope.training.btnAdditionName = 'Завершить';
+                	$scope.training.btnAdditionVisible = true;
                 }
                 else{
-                    $scope.training.btnAdditionName = 'Заново открыть';
+                    $scope.training.btnAdditionVisible = false;
                 }
 				
-				$scope.training.btnAdditionAction = $scope.training.complete;
-                $scope.training.btnAdditionVisible = true;
+				        $scope.training.btnAdditionAction = $scope.training.complete;
                 //$scope.sgroup.forciblyUpdate++;
                 //$scope.allstud.forciblyUpdate++;
 
@@ -217,14 +217,18 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
 
     // Завершить обучение и создать сертификаты
     $scope.training.complete = function(){
-        TrainingSrvc.completeTraining($scope.training.data.id).then(
-            function(data){
-                $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Обучение завершено.', 'success', true);
-               	$route.reload();
-            },
-            function(response){
-                $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
-            });
+        function complete (){
+          TrainingSrvc.completeTraining($scope.training.data.id).then(
+              function(data){
+                  $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Обучение завершено.', 'success', true);
+                  $route.reload();
+              },
+              function(response){
+                  $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+              });
+        }
+
+         UtilsSrvc.openMessageBox('Завершение обучения', $filter('localize')("Завершить обучение и создать сертификаты для слушателей?"), complete);  
     };
 
     //===============================================================================================================================================================================

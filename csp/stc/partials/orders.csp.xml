@@ -11,7 +11,7 @@
 			<button type="button" class="btn btn-mini btnRadio" ng-model="order.status" btn-radio="'All'"       ng-bind="'Все'|localize"></button>
 			<button type="button" class="btn btn-mini btnRadio" ng-model="order.status" btn-radio="'New'"       ng-bind="'Новые'|localize"></button>
 			<button type="button" class="btn btn-mini btnRadio" ng-model="order.status" btn-radio="'Approved'"  ng-bind="'Одобренные'|localize"></button>
-			<button type="button" class="btn btn-mini btnRadio" ng-model="order.status" btn-radio="'Completed'" ng-bind="'Заполненные'|localize"></button>
+			<!--<button type="button" class="btn btn-mini btnRadio" ng-model="order.status" btn-radio="'Completed'" ng-bind="'Заполненные'|localize"></button>-->
 			<button type="button" class="btn btn-mini btnRadio" ng-model="order.status" btn-radio="'Closed'"    ng-bind="'Закрытые'|localize"></button>
 		</div>
 	</div>
@@ -38,20 +38,16 @@
 
 		    selectable="true"
 		    selected-items="order.selectedItems"
-		    multi-select-mode="order.multiSelectMode"
+		    multi-select-mode="false"
 
 		    action-column-visible="order.actionColumnVisible"
 		    action-column-icon="'icon-ellipsis-horizontal'"
 		    action-column-title=""
 		    action-column-method=""
 
-		    first-row-action-icon="'icon-eye-open'"
-		    first-row-action-title="'Открыть заявку'|localize"
-		    first-row-action-method="order.open(item)"
-		    
-		    second-row-action-icon="order.secondRowActionIcon"
-		    second-row-action-title="'Удалить заявку'|localize"
-		    second-row-action-method="order.deleteOrder(item)"
+		    first-row-action-icon="order.secondRowActionIcon"
+		    first-row-action-title="'Удалить заявку'|localize"
+		    first-row-action-method="order.deleteOrder(item)"
 		    forcibly-update="order.forciblyUpdate"
 		/>
 	</div>
@@ -89,11 +85,6 @@
 								<span ng-hide="order.selectedItems[0].contact.phone==''" style="padding-left:12px"><i class="icon-phone"></i> {{order.selectedItems[0].contact.phone}}</span>
 								<span ng-hide="order.selectedItems[0].contact.skype==''" style="padding-left:12px"><i class="icon-skype"></i> {{order.selectedItems[0].contact.skype}}</span>
 							</p>
-							<!--
-							<p><span class="spnTitle" ng-bind="'Email'"           ></span>: <span ng-bind="order.selectedItems[0].contact.email"></span></p>
-							<p><span class="spnTitle" ng-bind="'Телефон'|localize"></span>: <span ng-bind="order.selectedItems[0].contact.phone"></span></p>
-							<p><span class="spnTitle" ng-bind="'Skype'"           ></span>: <span ng-bind="order.selectedItems[0].contact.skype"></span></p>
-							-->
 						</div>
 						<div ng-show="order.contactType=='company' && !(order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email 
 																	&& order.selectedItems[0].contact.company.contact.phone==order.selectedItems[0].contact.phone 
@@ -104,11 +95,6 @@
 								<span ng-hide="order.selectedItems[0].contact.company.contact.phone==''" style="padding-left:12px"><i class="icon-phone"></i> {{order.selectedItems[0].contact.company.contact.phone}}</span>
 								<span ng-hide="order.selectedItems[0].contact.company.contact.skype==''" style="padding-left:12px"><i class="icon-skype"></i> {{order.selectedItems[0].contact.company.contact.skype}}</span>
 							</p>
-							<!--
-							<p><span class="spnTitle" ng-bind="'Email'"           ></span>: <span ng-bind="order.selectedItems[0].contact.company.contact.email"></span></p>
-							<p><span class="spnTitle" ng-bind="'Телефон'|localize"></span>: <span ng-bind="order.selectedItems[0].contact.company.contact.phone"></span></p>
-							<p><span class="spnTitle" ng-bind="'Skype'"           ></span>: <span ng-bind="order.selectedItems[0].contact.company.contact.skype"></span></p>
-							-->
 						</div>
 						<div ng-show="order.selectedItems[0].contact.company.id && !(order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email 
 																				 && order.selectedItems[0].contact.company.contact.phone==order.selectedItems[0].contact.phone 
@@ -157,97 +143,14 @@
 							<span ng-hide="order.selectedItems[0].contact.phone==''" style="padding-left:12px"><i class="icon-phone"></i> {{order.selectedItems[0].contact.phone}}</span>
 							<span ng-hide="order.selectedItems[0].contact.skype==''" style="padding-left:12px"><i class="icon-skype"></i> {{order.selectedItems[0].contact.skype}}</span>
 						</p>
-						<!--
-						<p><span class="spnTitle" ng-bind="'Email'"                               ></span>: <span ng-bind="order.selectedItems[0].contact.email"></span></p>
-						<p><span class="spnTitle" ng-bind="'Телефон'|localize"          ></span>: <span ng-bind="order.selectedItems[0].contact.phone"></span></p>
-						<p><span class="spnTitle" ng-bind="'Skype'"                               ></span>: <span ng-bind="order.selectedItems[0].contact.skype"></span></p>
-						-->
 					</div>
 					<div class="span6">
 						<p><span class="spnTitle" ng-bind="'Курс'|localize"                 ></span>: <span ng-bind="order.selectedItems[0].course.name"></span></p>
-						<p><span class="spnTitle" ng-bind="'Количество слушателей'|localize"></span>: <span ng-bind="order.selectedItems[0].studentsNumber"></span></p>
+						<p  ng-hide="order.selectedItems[0].status.code=='Closed'"><span class="spnTitle" ng-bind="'Количество слушателей'|localize"></span>: <span ng-bind="order.selectedItems[0].studentsNumber"></span></p>
 						<p><span class="spnTitle" ng-bind="'Дата создания'|localize"        ></span>: <span ng-bind="order.selectedItems[0].createdTS|convertCacheDate:('d MMMM y, HH:mm:ss'|localize)"></span></p>
 						<button ng-show="order.selectedItems[0].status.code!='Closed' && !menu.readOnlyMode"   class="btn btn-info btn-small"    ng-click="order.openChangeCompanyDialog()" ng-bind="'Сменить организацию'|localize"></button>
-						&nbsp;
-						<button ng-show="order.selectedItems[0].status.code=='Approved' && !menu.readOnlyMode" class="btn btn-small"             ng-click="order.sendEmail()" title="{{'Отправить контакту повторно код доступа к заявке'|localize}}" ng-bind="'Отправить код'|localize"></button>
+						<button ng-show="order.selectedItems[0].status.code!='Closed' && !menu.readOnlyMode"   class="btn btn-inverse btn-small"   ng-click="order.closeOrder()" ng-bind="'Закрыть заявку'|localize"></button>
 					</div>
-				</div>
-			</tab>
-			<tab heading="{{'Заявки для обучения'|localize}}" disabled="order.selectedItems[0].status.code!='Completed'" active="training.tabOrders">
-				<div class="row-fluid" ng-show="order.selectedItems.length==0">
-					<i style="margin-left: 33%;" ng-bind="'Выберите заявки, слушатели которых войдут в обучение.'|localize"></i>
-				</div>
-				<div ng-hide="order.selectedItems.length==0">
-					<stcgrid
-					    table-class="table table-bordered"
-					    caption="Выбранные заявки"
-					    columns="training.orderColumns"
-					    items="training.orders"
-					    properties="order.properties"
-					    update-items=""
-
-					    page-curr="1"
-					    page-total="1"
-					    page-size="100"
-					    navigator-visible="false"
-
-					    selectable="false"
-					    selected-items="training.selectedOrderItems"
-					    multi-select-mode="false"
-
-					    action-column-visible="false"
-					   
-					/>
-				    <stcgrid
-					    table-class="table table-bordered"
-					    caption="Слушатели из заявок"
-					    columns="training.studentColumns"
-					    items="training.studentItems"
-					    properties="training.studentProperties"
-					    update-items=""
-
-					    page-curr="1"
-					    page-total="1"
-					    page-size="100"
-					    navigator-visible="false"
-
-					    selectable="false"
-					    selected-items="training.selectedStudentItems"
-					    multi-select-mode="false"
-
-					    action-column-visible="false"
-					/>
-					<accordion close-others="true">
-						<accordion-group heading="{{'Создать обучение'|localize}}" is-open="training.accordionCreate">
-					    	<form style="margin: 0 0 10px 0;" ng-submit="training.create()">
-								<stctraining training="training.data" date-start="training.dateStart" date-finish="training.dateFinish" edit-mode="false" lang="menu.lang"/>
-							</form>
-					    </accordion-group>
-					    <accordion-group heading="{{'Добавить в обучение'|localize}}" is-open="training.accordionAdd">
-					    	<div ng-show="training.accordionAdd">
-					    	 <stcgrid
-							    table-class="table table-bordered table-hover"
-							    caption=""
-							    columns="training.columns"
-							    items="training.items"
-							    properties="training.properties"
-							    update-items="training.loadItems(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText)"
-
-							    page-curr="training.pageCurr"
-							    page-total="training.pageTotal"
-							    page-size="training.pageSize"
-							    navigator-visible="true"
-
-							    selectable="true"
-							    selected-items="training.selectedItems"
-							    multi-select-mode="training.multiSelectMode"
-
-							    action-column-visible="false"
-							/>
-							</div>
-							<button ng-hide="menu.readOnlyMode" class="btn btn-success btn-small" ng-click="training.add()" ng-disabled="training.selectedItems.length==0" ng-bind="'Добавить'|localize"></button>
-					    </accordion-group>
-					</accordion>
 				</div>
 			</tab>
 		</tabset>

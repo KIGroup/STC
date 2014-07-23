@@ -24,7 +24,7 @@ controllersModule.controller('ScheduleFrameCtrl', function($scope, $window, $fil
 					data.courses[0].style = {borderTop: 'none'};
 				}
 
-                var host_appName = window.location.host + StcAppSetting.default;
+                var host_appName = window.location.host + StcAppSetting.defaultApp;
 
                 for(var i=0; i < $scope.page.courses.length; i++){
                     var course = $scope.page.courses[i];

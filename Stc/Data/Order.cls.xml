@@ -71,21 +71,7 @@ Delete application. Deletes all students and localization</Description>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	if (##class(OrderApproved).%ExistsId(id) = $$$OK){
-		set order = ..%OpenId(id,4)
-		set key = ""
-		for i=1:1:order.Students.Count(){
-			set key = order.Students.Next(key)
-			do order.Students.RemoveAt(key)
-			
-			if (##class(Stc.Data.Person).IsEditable(key, 1) = 1){
-				set st = ##class(Person).Delete(key)
-
-				if $$$ISERR(st) RETURN st
-			}
-		}
-	}
-	elseif (##class(OrderDirty).%ExistsId(id) = $$$OK){
+	if (##class(OrderDirty).%ExistsId(id) = $$$OK){
 		set order = ..%OpenId(id,4)
 		
 		set st = ##class(Stc.Data.Localization.LText).Delete(order.LastName.%Id())

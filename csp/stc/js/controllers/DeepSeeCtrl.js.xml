@@ -9,25 +9,29 @@
 
 controllersModule.controller('DeepSeeCtrl', function($scope, $routeParams, $window){
 	$scope.page = {};
-	$("#ifChangeLang").attr("src", StcAppSetting.default + "/Stc.Web.ChangeLang.cls?Lang="+StcAppSetting.lang.substring(0,2));
+	$("#ifChangeLang").attr("src", StcAppSetting.defaultApp + "/Stc.Web.ChangeLang.cls?Lang="+StcAppSetting.lang.substring(0,2));
 	
 	
 	switch($routeParams.type){
 		case 'pointsmap':
 			$scope.menu.selectMenu('analyticsMap');
-			StcAppSetting.deepSeeCurrentUrl = StcAppSetting.default + '/_DeepSee.UserPortal.DashboardViewer.zen?DASHBOARD=StcDashboards/TrainingPointsMap.dashboard&EMBED=1';
+			StcAppSetting.deepSeeCurrentUrl = StcAppSetting.defaultApp + '/_DeepSee.UserPortal.DashboardViewer.zen?DASHBOARD=StcDashboards/TrainingPointsMap.dashboard&EMBED=1';
 			break;
 		case 'course':
 			$scope.menu.selectMenu('analyticsCourse');
-			StcAppSetting.deepSeeCurrentUrl = StcAppSetting.default + '/_DeepSee.UserPortal.DashboardViewer.zen?DASHBOARD=StcDashboards/CourseStudents.dashboard&EMBED=1';
+			StcAppSetting.deepSeeCurrentUrl = StcAppSetting.defaultApp + '/_DeepSee.UserPortal.DashboardViewer.zen?DASHBOARD=StcDashboards/CourseStudents.dashboard&EMBED=1';
 			break;
 		case 'teacher':
 			$scope.menu.selectMenu('analyticsTeacher');
-			StcAppSetting.deepSeeCurrentUrl = StcAppSetting.default + '/_DeepSee.UserPortal.DashboardViewer.zen?DASHBOARD=StcDashboards/TeacherStudents.dashboard&EMBED=1';
+			StcAppSetting.deepSeeCurrentUrl = StcAppSetting.defaultApp + '/_DeepSee.UserPortal.DashboardViewer.zen?DASHBOARD=StcDashboards/TeacherStudents.dashboard&EMBED=1';
 			break;
 		case 'company':
 			$scope.menu.selectMenu('analyticsCompany');
-			StcAppSetting.deepSeeCurrentUrl = StcAppSetting.default + '/_DeepSee.UserPortal.DashboardViewer.zen?DASHBOARD=StcDashboards/CompanyStudents.dashboard&EMBED=1';
+			StcAppSetting.deepSeeCurrentUrl = StcAppSetting.defaultApp + '/_DeepSee.UserPortal.DashboardViewer.zen?DASHBOARD=StcDashboards/CompanyStudents.dashboard&EMBED=1';
+			break;
+		case 'order':
+			$scope.menu.selectMenu('analyticsCompany');
+			StcAppSetting.deepSeeCurrentUrl = StcAppSetting.defaultApp + '/_DeepSee.UserPortal.DashboardViewer.zen?DASHBOARD=StcDashboards/OrdersApproved.dashboard&EMBED=1';
 			break;
 	}
 	

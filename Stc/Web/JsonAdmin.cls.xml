@@ -403,6 +403,29 @@ Change organization of application from student</Description>
 ]]></Implementation>
 </Method>
 
+<Method name="CloseOrder">
+<Description>
+Change status approved order to "close"</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st  = $$$OK
+	
+	try{
+		set order = ##class(Stc.Data.OrderApproved).%OpenId(id)
+		set order.OrderStatus = ##class(Stc.Data.OrderStatus).CodeIdxOpen("Closed")
+		set st = order.%Save()
+		do ##class(Stc.Data.OrderApproved).SynchronizeCube()
+	}
+	catch ex {
+		set st = ex.AsStatus()
+	}
+	
+    quit st
+]]></Implementation>
+</Method>
+
 <UDLText name="T">
 <Content><![CDATA[
 // ==================================== ORGANIZATIONS ==================================== 
@@ -897,7 +920,7 @@ Complete training and create certificates for each student</Description>
 		set training = ##class(Stc.Data.Training).%OpenId(data.id,,.status)
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("openTraining", "| "_status)) 
 		
-		set training.IsCompleted = 'training.IsCompleted
+		set training.IsCompleted = $$$YES
 		set status = training.%Save()
 		
 		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveTraining", "| "_status)) 
@@ -908,7 +931,11 @@ Complete training and create certificates for each student</Description>
 			if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createCertificate", "| "_status)) 
 		}
 		
-		set trId = training.%Id()
+		// Close orders
+		do ##class(Stc.Data.OrderApproved).CloseOrdersByTraining(training.%Id()) 
+		
+		set trId = training.%Id() 
+		
 		TCOMMIT
 	}
 	catch ex {
@@ -916,7 +943,10 @@ Complete training and create certificates for each student</Description>
 		set status = ex.AsStatus()
 	}
 	
-	if (status = $$$OK) do ##class(Stc.Data.Training).UpdateFacts(trId)
+	if (status = $$$OK) {
+		do ##class(Stc.Data.OrderApproved).SynchronizeCube()
+		do ##class(Stc.Data.Training).UpdateFacts(trId)
+	}
 	
     quit status
 ]]></Implementation>

@@ -106,7 +106,7 @@
        	}
        	
         // Настройки приложения. Имена веб-приложений для REST, google календарь, язык
-        var StcAppSetting = {default: '#($GET(^Settings("Stc", "WebApp")))#',
+        var StcAppSetting = {defaultApp: '#($GET(^Settings("Stc", "WebApp")))#',
 	        				           admin: '#($GET(^Settings("Stc", "WebAppAdmin")))#',
                              user:  '#($GET(^Settings("Stc", "WebAppUser")))#',
                              lang: getLang()};
@@ -145,10 +145,11 @@
                   <li ng-show="menu.admin" class="dropdown" ng-class="'dropdown ' + menu.analytics.css">
                     <a href="#/analytics/pointsmap"><span ng-bind="(menu.analytics.name|localize) + ' '"></span><b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                      <li ng-class="{aSelected: menu.analyticsMap.css=='active'}"><a href="#/analytics/pointsmap" ng-bind="menu.analyticsMap.name|localize"></a></li>
-                      <li ng-class="{aSelected: menu.analyticsCourse.css=='active'}"><a href="#/analytics/course"    ng-bind="menu.analyticsCourse.name|localize"></a></li>
+                      <li ng-class="{aSelected: menu.analyticsMap.css=='active'}"    ><a href="#/analytics/pointsmap" ng-bind="menu.analyticsMap.name|localize"></a></li>
+                      <li ng-class="{aSelected: menu.analyticsCourse.css=='active'}" ><a href="#/analytics/course"    ng-bind="menu.analyticsCourse.name|localize"></a></li>
                       <li ng-class="{aSelected: menu.analyticsTeacher.css=='active'}"><a href="#/analytics/teacher"   ng-bind="menu.analyticsTeacher.name|localize"></a></li>
                       <li ng-class="{aSelected: menu.analyticsCompany.css=='active'}"><a href="#/analytics/company"   ng-bind="menu.analyticsCompany.name|localize"></a></li>
+                      <li ng-class="{aSelected: menu.analyticsOrder.css=='active'}"  ><a href="#/analytics/order"     ng-bind="menu.analyticsOrder.name|localize"></a></li>
                     </ul>
                   </li>
                   

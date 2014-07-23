@@ -167,7 +167,7 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
                                     '&location=' + location +
                                     '&details=' +  
                                                 '<a href="' + details.courseProgramUrl + '" target="_blank">Программа курса</a>%0A%0A' +
-                                                '<a href="' + 'http://' + window.location.host + StcAppSetting.default + '/stc/index.csp?urlData=orderstudent-q-training-eq-' + details.trainingId + '" target="_blank">Присоединиться</a>%0A%0A' +
+                                                '<a href="' + 'http://' + window.location.host + StcAppSetting.defaultApp + '/stc/index.csp?urlData=orderstudent-q-training-eq-' + details.trainingId + '" target="_blank">Присоединиться</a>%0A%0A' +
                                                 'Место проведения:' + '%0A' + 
                                                 details.city + '%0A' +
                                                 details.address + '%0A%0A' +

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Document name="StcDashboards-CompanyStudents.dashboard.DFI">
+<dashboard xmlns="http://www.intersystems.com/deepsee/library" name="CompanyStudents" folderName="StcDashboards" title="Организации и слушатели" description="" keywords="" owner="" shared="true" public="true" locked="false" resource="%DeepSee_PortalEdit" timeCreated="2014-03-12T06:59:23.647Z" createdBy="ilson" category="" bookCover="" scheme="" worklistCount="0" snapTo="true" snapGrid="true" gridRows="10" gridCols="10" canResize="true" canModify="true" showTitleBar="true" companyName="" companyLogo="" companyStyle="">
+  <widget name="CompanyYears_Students" type="pivot" subtype="barChartStacked" subtypeClass="barChart" title="$$$Организации и слушатели/Stc" dataSource="STCTables/CompanyYears_StudentsCount.pivot" dataLink="" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="0" homeColL="0" colSpanL="6" rowSpanL="10" showToolbar="true" theme="" dataColorList="">
+    <control name="" action="applyFilter" target="" targetProperty="[Year].[H1].[Year]" location="widget" type="auto" controlClass="" label="$$$Год/Stc" title="" value="&amp;[NOW]" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="applyFilter" target="*" targetProperty="[TrainingCubeRelation].[Course].[H1].[CourseName]" location="widget" type="auto" controlClass="" label="$$$Курс/Stc" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="applyFilter" target="*" targetProperty="[TrainingCubeRelation].[Teacher].[H1].[TeacherFullName]" location="widget" type="auto" controlClass="" label="$$$Преподаватель/Stc" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="applyFilter" target="" targetProperty="[Company].[H1].[CompanyShortName]" location="widget" type="auto" controlClass="" label="$$$Организация/Stc" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="applyFilter" target="*" targetProperty="[CompanyType].[H1].[Name]" location="widget" type="dropdown" controlClass="" label="$$$Тип организации/Stc" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="showListing" target="" targetProperty="Students" location="widget" type="auto" controlClass="" label="" title="Отобразить / скрыть список слушателей" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <property name="analyzer">0</property>
+    <property name="chartToggle">table</property>
+    <property name="excel">1</property>
+    <override name="barChart">{legendVisible:'false',xAxis:{majorGridLines:false,_type:'axis'},yAxisList:[{_type:'axis'}],chartPivot:true,chartStacked:true,_type:'barChart'}</override>
+    <override name="pivot">{cellWidth:50,columnTotals:true,crossJoinRowLimit:2000,currListingPage:1,currPage:1,listingFields:[],listingSelect:'multi',pivotVariables:{},rowTotals:true,_type:'pivotTable'}</override>
+  </widget>
+  <widget name="CompanyTotal_Students" type="pivot" subtype="barChart" subtypeClass="barChart" title="$$$Количество слушателей по годам/Stc" dataSource="STCTables/Year_Students.pivot" dataLink="" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="0" homeColL="6" colSpanL="4" rowSpanL="10" showToolbar="true" theme="" dataColorList="">
+    <control name="" action="showListing" target="" targetProperty="Students" location="widget" type="auto" controlClass="" label="" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="viewDashboard" target="" targetProperty="StcDashboards/CompanyTrainings.dashboard" location="widget" type="auto" controlClass="" label="$$$Анализ обучений/Stc" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <property name="analyzer">0</property>
+    <property name="legendPos">none</property>
+    <override name="barChart">{legendVisible:'false',valueLabelsVisible:true,xAxis:{_type:'axis'},yAxisList:[{_type:'axis'}],chartPivot:true,_type:'barChart'}</override>
+    <override name="legend">{hidden:true,legendLabels:'Слушатели',legendPosition:'right',_type:'chartLegend'}</override>
+  </widget>
+</dashboard>
+</Document></Export>

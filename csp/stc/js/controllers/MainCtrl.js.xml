@@ -37,6 +37,7 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
         $scope.menu.analyticsCourse  = {id: 'analyticsCourse' , name: 'Курсы'};
         $scope.menu.analyticsTeacher = {id: 'analyticsTeacher', name: 'Преподаватели'};
         $scope.menu.analyticsCompany = {id: 'analyticsCompany', name: 'Организации'};
+        $scope.menu.analyticsOrder = {id: 'analyticsOrder', name: 'Заявки'};
 
 		$scope.menu.other = {id: 'other', name: 'Ещё'};
 		$scope.menu.mailingGroups = {id: 'mailingGroups', name: 'Группы рассылки'};
@@ -120,7 +121,7 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
     if (urlData != ""){
 	    var newUrl = urlData.replace(/-q-/g, "?").replace(/-and-/g, "&").replace(/-eq-/g, "=");
 	    console.log(newUrl);
-	    $window.location = StcAppSetting.default + '/stc/index.csp#/' + newUrl;
+	    $window.location = StcAppSetting.defaultApp + '/stc/index.csp#/' + newUrl;
     }
 });
 
