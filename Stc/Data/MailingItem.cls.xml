@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.MailingItem">
+<Description>
+MailingItem (subscriber)</Description>
 <Abstract>1</Abstract>
 <TimeCreated>63387,80584.270425</TimeCreated>
 

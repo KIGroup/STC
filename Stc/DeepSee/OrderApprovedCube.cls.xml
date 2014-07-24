@@ -33,6 +33,7 @@ Cube definition from Architect.</Description>
     </hierarchy>
   </dimension>
   <measure sourceProperty="StudentsNumber" name="StudentsNumber" displayName="Количество слушателей" disabled="false" aggregate="SUM" type="integer" hidden="false" searchable="false"></measure>
+  <listing name="Orders" disabled="false" listingType="table" fieldList="SELECT ord.ID FROM Stc_Data.OrderApproved as ord WHERE ord.ID IN (SELECT ID FROM $$$SOURCE WHERE $$$RESTRICT)" sql="SELECT * FROM $$$SOURCE WHERE $$$RESTRICT"></listing>
 </cube>
 ]]></Data>
 </XData>

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.MailingItemApproved">
+<Description>
+MailingItem - Approved, not spam</Description>
 <Super>%Persistent,MailingItem</Super>
 <TimeCreated>63388,39489.590838</TimeCreated>
 
@@ -8,5 +10,41 @@
 <Properties>AccessCode</Properties>
 <Unique>1</Unique>
 </Index>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.MailingItemApprovedD</DataLocation>
+<DefaultData>MailingItemApprovedDefaultData</DefaultData>
+<IdLocation>^Stc.Data.MailingItemApprovedD</IdLocation>
+<IndexLocation>^Stc.Data.MailingItemApprovedI</IndexLocation>
+<StreamLocation>^Stc.Data.MailingItemApprovedS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="MailingItemApprovedDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>AccessCode</Value>
+</Value>
+<Value name="3">
+<Value>FullName</Value>
+</Value>
+<Value name="4">
+<Value>Email</Value>
+</Value>
+<Value name="5">
+<Value>Company</Value>
+</Value>
+<Value name="6">
+<Value>Position</Value>
+</Value>
+<Value name="7">
+<Value>LastUpdated</Value>
+</Value>
+<Value name="8">
+<Value>MGroup</Value>
+</Value>
+</Data>
+</Storage>
 </Class>
 </Export>

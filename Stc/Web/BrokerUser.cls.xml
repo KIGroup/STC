@@ -14,90 +14,67 @@ Public request processor for users</Description>
 <XData name="UrlMap">
 <Data><![CDATA[
 <Routes>
-	<!-- ==================================== COURSES ==================================== -->
+	<!-- ==================================== COURSES ======================================================== -->
 		
 	<!-- Get short info about all courses -->
-	<Route Method="GET" Url="/json/allCoursesShortInfo/:isInUse" Call="Stc.Web.JsonUser:GetCoursesShortInfo"/>
+	<Route Method="GET"  Url="/json/course/isInUse/:isInUse" Call="Stc.Web.JsonUser:GetCoursesShortInfo"/>
 	
 	<!-- Get full info about all courses -->
-	<Route Method="POST" Url="/json/allCoursesFullInfo" Call="Stc.Web.JsonUser:GetCoursesFullInfo"/>
+	<Route Method="POST" Url="/json/course/grid" Call="Stc.Web.JsonUser:GetCoursesFullInfoForGrid"/>
 	
-	<!-- ==================================== APPLICATIONS ==================================== -->
+	
+	<!-- ==================================== APPLICATIONS =================================================== -->
 	
 	<!-- Create application -->
-	<Route Method="POST" Url="/json/createOrder" Call="Stc.Web.JsonUser:CreateOrder"/>
+	<Route Method="POST" Url="/json/orderDirty" Call="Stc.Web.JsonUser:CreateOrderDirty"/>
 	
 	<!-- Create application for student -->
-	<Route Method="POST" Url="/json/createOrderNewStudent" Call="Stc.Web.JsonUser:CreateOrderNewStudent"/>
-	
-	<!-- Get application by access code -->
-	<Route Method="GET" Url="/json/approvedOrderInfo/:code" Call="Stc.Web.JsonUser:GetApprovedOrderInfo"/>
-	
-	<!-- Finish editing of application -->
-	<Route Method="POST" Url="/json/finishEditingOrder" Call="Stc.Web.JsonUser:FinishEditingOrder"/>
+	<Route Method="POST" Url="/json/orderNewStudent" Call="Stc.Web.JsonUser:CreateOrderNewStudent"/>
 	
 	
-	<!-- ==================================== ORGANIZATIONS ==================================== -->
+	<!-- ==================================== ORGANIZATIONS ================================================== -->
 	
 	<!-- Get short info about all organization -->
-	<Route Method="GET" Url="/json/allCompaniesShortInfo" Call="Stc.Web.JsonUser:GetCompaniesShortInfo"/>
+	<Route Method="GET" Url="/json/company" Call="Stc.Web.JsonUser:GetCompaniesShortInfo"/>
 	
-	<!-- Get short info about all organization for training -->
-	<Route Method="GET" Url="/json/allCompaniesShortInfo/training/:id" Call="Stc.Web.JsonUser:GetCompaniesShortInfoForTraining"/>
+
+	<!-- ==================================== MAILING SUBSCRIPTION =========================================== -->
 	
-	<!-- Save organization -->
-	<Route Method="POST" Url="/json/saveCompany" Call="Stc.Web.JsonUser:SaveCompany"/>
-	
-	<!-- ==================================== PERSONS ==================================== -->
-	
-	<!-- Get students of approved application -->
-	<Route Method="POST" Url="/json/approvedOrderStudents" Call="Stc.Web.JsonUser:GetApprovedOrderStudents"/>
-	
-	<!-- Create student for application. If email exist link student with application -->
-	<Route Method="POST" Url="/json/saveOrderStudent" Call="Stc.Web.JsonUser:SaveOrderStudent"/>
-	
-	<!-- Delete student from application (and from database, if possible) -->
-	<Route Method="POST" Url="/json/deleteOrderStudent" Call="Stc.Web.JsonUser:DeleteOrderStudent"/>
-	
-	<!-- Get application by student -->
-	<Route Method="POST" Url="/json/getOrderStudent" Call="Stc.Web.JsonUser:GetOrderStudent"/>
-	
-	
-	<!-- ==================================== MAILING SUBSCRIPTION ==================================== -->
-	<!-- -->
+	<!-- Create dirty mailing item -->
 	<Route Method="POST" Url="/json/mailing/subscription" Call="Stc.Web.JsonUser:CreateMailingSubscription"/>
 	
-	<!-- -->
+	<!-- Update approved mailing item by access code-->
 	<Route Method="POST" Url="/json/mailing/subscription/:code" Call="Stc.Web.JsonUser:UpdateMailingSubscription"/>
 	
-	<!-- -->
+	<!-- Remove approved mailing item by access code (unsubscribe)-->
 	<Route Method="DELETE" Url="/json/mailing/subscription/:code" Call="Stc.Web.JsonUser:DeleteMailingSubscription"/>
 	
-	<!-- -->
+	<!-- Get approved mailing item by access code-->
 	<Route Method="GET" Url="/json/mailing/subscription/:code" Call="Stc.Web.JsonUser:GetMailingSubscription"/>
 	
-	<!-- -->
+	<!-- Activate subscription, remove dirty and create approved mailing item -->
 	<Route Method="POST" Url="/json/mailing/subscription/confirmation/:code" Call="Stc.Web.JsonUser:ConfirmMailingSubscription"/>
 	
-	<!-- ==================================== OTHER ==================================== -->
+	<!-- ==================================== OTHER ========================================================= -->
 	
-	<!-- Get training by id -->
+	<!-- Search cities -->
+	<Route Method="GET" Url="/json/city/:startsWith" Call="Stc.Web.JsonUser:GetCities"/>
+	
+	<!-- Get training by id for public-->
 	<Route Method="GET" Url="/json/training/:id" Call="Stc.Web.JsonUser:GetTraining"/>
 
-	<!-- All training students for teacher view -->
-	<Route Method="POST" Url="/json/trainingStudents" Call="Stc.Web.JsonUser:GetTrainingStudents"/>
+	<!-- All training students for teacher view by access code -->
+	<Route Method="POST" Url="/json/training/:code/student" Call="Stc.Web.JsonUser:GetTrainingStudents"/>
 
-	<!-- Save feedback -->
-	<Route Method="POST" Url="/json/saveFeedBack" Call="Stc.Web.JsonUser:SaveFeedBack"/>
-
-	<!-- Search cities -->
-	<Route Method="GET" Url="/json/citiesStartsWith/:startsWith" Call="Stc.Web.JsonUser:GetCitiesStartsWith"/>
-	
-	<!-- Report, students of training -->
-	<Route Method="GET" Url="/text/:lang/students/:trainingAccessCode" Call="Stc.Web.Report:Students"/>
+	<!-- Save feedback by access code -->
+	<Route Method="POST" Url="/json/saveFeedBack/:code" Call="Stc.Web.JsonUser:SaveFeedBack"/>
 	
 	<!-- Schedule, course and trainings -->
 	<Route Method="GET" Url="/json/schedule" Call="Stc.Web.JsonUser:GetSchedule"/>
+	
+	
+	<!-- Report, students of training -->
+	<Route Method="GET" Url="/text/:lang/students/:trainingAccessCode" Call="Stc.Web.Report:Students"/>
 	
 </Routes>
 ]]></Data>

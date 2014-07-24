@@ -57,15 +57,9 @@ Create approved application from "new"</Description>
 	
 	set dirty = ##class(Stc.Data.OrderDirty).%OpenId(dirtyId,3,.status)
 
-	//set approved.Partner = dirty.Partner
-	set approved.TrainingDate = dirty.TrainingDate
 	set approved.Course = dirty.Course
-	//set approved.City = dirty.City
 	set approved.Company = dirty.Company
-	//set approved.Latitude = dirty.Latitude
-	//set approved.Longitude = dirty.Longitude
 	set approved.CreatedTS = dirty.CreatedTS
-	
 	set approved.AccessCode = $SYSTEM.Util.CreateGUID()
 	set approved.OrderStatus = ##class(OrderStatus).CodeIdxOpen("Approved")
 	
@@ -89,13 +83,9 @@ Convert to proxyObject (for JSON)</Description>
 	set proxy.id = ..%Id()
 	set proxy.status = ..OrderStatus.ConvertToProxyObject()
 	set proxy.code = ..AccessCode
-	//set proxy.city = ..City.ConvertToProxyObject()
 	set proxy.course = ..Course.ConvertToProxyObject(1)
 	set proxy.contact = ..Company.Contact.ConvertToProxyObject()
-	//set proxy.contact.partner = ..Partner
-	set proxy.date = $ZDATE(..TrainingDate, 3)
 	set proxy.createdTS = ..CreatedTS
-	
 	set proxy.studentsNumber = ..StudentsNumber
 
 	quit proxy

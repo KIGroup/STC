@@ -213,6 +213,8 @@ filter: alpha(opacity=60);
 	cursor: pointer;
 }
 
+
+
 .cellLinkDisabled{
 	color: rgb(139, 135, 135)!important;
 	
@@ -387,5 +389,20 @@ pre.badge-inverse[href] {
     background: white;
     cursor: inherit;
     display: block;
+}
+
+
+.scheduleDetails{
+	color: inherit;
+	border-bottom: 1px dashed black;
+	border-color: inherit;
+}
+
+.scheduleDetails:hover{
+	color: inherit;
+	border-bottom: 1px dashed black;
+	border-color: inherit;
+	cursor: pointer;
+	text-decoration: none;
 }]]></CSP>
 </Export>

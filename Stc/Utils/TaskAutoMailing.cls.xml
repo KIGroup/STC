@@ -22,11 +22,15 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 </Method>
 
 <Method name="StudentsAutoMailing">
+<Description>
+Send notification to all students in the training</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	set st = $$$OK
+	
 	try{
-		set diffDays = $GET(^Settings("Stc", "StudentsAutoMailingDays"), 2)
+		set diffDays = ##class(Stc.Data.Settings).GetMailingStudentsDays()
 			
 		&sql(DECLARE TrCur CURSOR FOR 
 				SELECT ID
@@ -36,47 +40,41 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 		&sql(OPEN TrCur)
 		for  
 		{	
-			&sql(FETCH TrCur INTO :trainingId) 
+			&sql(FETCH TrCur INTO :trId) 
 			quit:(SQLCODE '= 0)
 			
-			set training = ##class(Stc.Data.Training).%OpenId(trainingId)
-			set msg =  ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudents"),
-							$ZDATE(training.DateStart, 3),
-							training.Course.Name.Value,
-							training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value,
-							training.Street.Value,
-							training.Room,
-							$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5),
-							training.Teacher.LastName.Value_" "_training.Teacher.FirstName.Value,
-							training.OtherInfo.Value)
+			set tr = ##class(Stc.Data.Training).%OpenId(trId)
+			set mail = ##class(Stc.Utils.Email).GetMailForStudents(tr)
 			
-
-			set emailList = ..GetStudentEmails(trainingId)
-			if (emailList.Count() > 0){
-				set status = ##class(Stc.Utils.Email).Send(emailList, ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudents"), msg)
-				//set ^testmail("students") = ^testmail("students")_" "_trainingId 
-				if '$$$ISERR(status){
-					set training.IsStudentsAutoMailing = 0
-					do training.%Save()
+			set emailList = ..GetStudentEmails(trId)
+			if (emailList.Count() '= 0){
+				set st = ##class(Stc.Utils.Email).Send(emailList, mail.subject, mail.message)
+				
+				if $$$ISOK(st){
+					set tr.IsStudentsAutoMailing = 0
+					do tr.%Save()
 				}
 			}						
 		}
 			
 		&sql(CLOSE TrCur)		
 	}
-	catch{}
+	catch(ex){
+		set st = ex.AsStatus()
+	}
 	
-	quit $$$OK
+	quit st
 ]]></Implementation>
 </Method>
 
 <Method name="TeacherAutoMailing">
+<Description>
+Send notification to training teacher</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	try{
-		set diffDays = $GET(^Settings("Stc", "TeacherAutoMailingDays"), 4)
-		set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp?urlData=trainingstudents-q-id-eq-%1-and-code-eq-%2"
+		set diffDays = ##class(Stc.Data.Settings).GetMailingTeacherDays()
 		
 		&sql(DECLARE Tr2Cur CURSOR FOR 
 				SELECT ID
@@ -86,55 +84,38 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 		&sql(OPEN Tr2Cur)
 		for  
 		{	
-			&sql(FETCH Tr2Cur INTO :trainingId) 
+			&sql(FETCH Tr2Cur INTO :trId) 
 			quit:(SQLCODE '= 0)
 			
-			set training = ##class(Stc.Data.Training).%OpenId(trainingId)
-			
-			set tempUrl = $replace(url, "%1", trainingId)
-			set tempUrl = $replace(tempUrl, "%2", training.AccessCode)
-			
-			set curatorData = ""
-			if (training.CuratorFullName.Value '= ""){
-				set curatorData = ##class(Stc.Utils.Msg).GetMsg("Curator")_": "_training.CuratorFullName.Value_", "_training.CuratorEmail_", "_training.CuratorPhoneSecret
-			
-				if (training.OtherInfo.Value '= ""){
-					set curatorData = "<br>"_curatorData
-				}
-			}
-			
-			set msg =  ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingTeacher"),
-							tempUrl,
-							$ZDATE(training.DateStart, 3),
-							$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5),
-							training.Course.Name.Value,
-							training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value,
-							training.Street.Value,
-							training.Room,
-							training.OtherInfo.Value,
-							curatorData)
+			set tr = ##class(Stc.Data.Training).%OpenId(trId)
 				
-			set status = ##class(Stc.Utils.Email).Send(training.Teacher.Email, ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingTeacher"), msg)
-			//set ^testmail("teacher") = ^testmail("teacher")_" "_trainingId	
-			if '$$$ISERR(status){
-				set training.IsTeacherAutoMailing = 0
-				do training.%Save()
+			set mail = ##class(Stc.Utils.Email).GetMailForTeacher(tr)
+					
+			set st = ##class(Stc.Utils.Email).Send(tr.Teacher.Email, mail.subject, mail.message)	
+			if $$$ISOK(st){
+				set tr.IsTeacherAutoMailing = 0
+				do tr.%Save()
 			}						
 		}
 			
 		&sql(CLOSE Tr2Cur)
-	}catch{}
-	quit $$$OK
+	}
+	catch(ex){
+		set st = ex.AsStatus()
+	}
+	
+	quit st
 ]]></Implementation>
 </Method>
 
 <Method name="CuratorAutoMailing">
+<Description>
+Send notification to training curator</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	try{
-		set diffDays = $GET(^Settings("Stc", "CuratorAutoMailingDays"), 4)
-		set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp?urlData=trainingstudents-q-id-eq-%1-and-code-eq-%2"
+		set diffDays = ##class(Stc.Data.Settings).GetMailingCuratorDays()
 			
 		&sql(DECLARE Tr3Cur CURSOR FOR 
 				SELECT ID
@@ -144,47 +125,40 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 		&sql(OPEN Tr3Cur)
 		for  
 		{	
-			&sql(FETCH Tr3Cur INTO :trainingId) 
+			&sql(FETCH Tr3Cur INTO :trId) 
 			quit:(SQLCODE '= 0)
 			
-			set training = ##class(Stc.Data.Training).%OpenId(trainingId)
+			set tr = ##class(Stc.Data.Training).%OpenId(trId)
 			
-			set tempUrl = $replace(url, "%1", trainingId)
-			set tempUrl = $replace(tempUrl, "%2", training.AccessCode)
-			
-			set msg =  ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingCurator"),
-							tempUrl,
-							$ZDATE(training.DateStart, 3),
-							$e(##class(%Library.Time).LogicalToDisplay(training.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(training.TimeFinish), 1, 5),
-							training.Course.Name.Value,
-							training.City.Name.Value_", "_training.City.ParentRegion.Name.Value_", "_training.City.ParentRegion.ParentRegion.Name.Value,
-							training.Street.Value,
-							training.Room,
-							training.Teacher.FullName_", "_training.Teacher.Phone_", "_training.Teacher.Email_", "_training.Teacher.Skype,
-							training.OtherInfo.Value)
-			
-			set status = ##class(Stc.Utils.Email).Send(training.CuratorEmail, ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingCurator"), msg)
-			//set ^testmail("curator") = ^testmail("curator")_" "_trainingId	
-			if '$$$ISERR(status){
-				set training.IsCuratorAutoMailing = 0
-				do training.%Save()
+			set mail = ##class(Stc.Utils.Email).GetMailForCurator(tr)
+					
+			set st = ##class(Stc.Utils.Email).Send(tr.CuratorEmail, mail.subject, mail.message)
+			if $$$ISOK(st){
+				set tr.IsCuratorAutoMailing = 0
+				do tr.%Save()
 			}						
 		}
 			
 		&sql(CLOSE Tr3Cur)
 	
-	}catch{}
-	quit $$$OK
+	}
+	catch(ex){
+		set st = ex.AsStatus()
+	}
+	
+	quit st
 ]]></Implementation>
 </Method>
 
 <Method name="FeedBackAutoMailing">
+<Description>
+Send feedback link to students in the training</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	set st = $$$OK
+	
 	try{
-		set url = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp?urlData=feedback-q-id-eq-%1-and-code-eq-%2"
-		
 		&sql(DECLARE Tr4Cur CURSOR FOR 
 				SELECT ID
 			 	FROM Stc_Data.Training
@@ -193,39 +167,37 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 		&sql(OPEN Tr4Cur)
 		for  
 		{	
-			&sql(FETCH Tr4Cur INTO :trainingId) 
+			&sql(FETCH Tr4Cur INTO :trId) 
 			quit:(SQLCODE '= 0)
 			
-			set training = ##class(Stc.Data.Training).%OpenId(trainingId)
+			set tr = ##class(Stc.Data.Training).%OpenId(trId)
 			
-			set tempUrl = $replace(url, "%1", trainingId)
-			set tempUrl = $replace(tempUrl, "%2", $p(training.AccessCode,"-",1)_"-"_$p(training.AccessCode,"-",5))
-			
-			set msg =  ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudentsFeedBack"),
-							tempUrl,
-							training.Course.Name.Value)
-				
-				
-			set emailList = ..GetStudentEmails(trainingId)
+			set mail = ##class(Stc.Utils.Email).GetMailForFeedBack(tr)
+					
+			set emailList = ..GetStudentEmails(trId)
 			if (emailList.Count() > 0){
-				set status = ##class(Stc.Utils.Email).Send(emailList, ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudentsFeedBack"), msg)
-				//set ^testmail("feedback") = ^testmail("feedback")_" "_trainingId
-				if '$$$ISERR(status){
-					set training.IsFeedBackAutoMailing = 0
-					do training.%Save()
+				set st = ##class(Stc.Utils.Email).Send(emailList, mail.subject, mail.message)
+
+				if $$$ISOK(st){
+					set tr.IsFeedBackAutoMailing = 0
+					do tr.%Save()
 				}
 			}								
 		}
 			
 		&sql(CLOSE Tr4Cur)
-	}catch{}
-	quit $$$OK
+	}
+	catch(ex){
+		set st = ex.AsStatus()
+	}
+	
+	quit st
 ]]></Implementation>
 </Method>
 
 <Method name="GetStudentEmails">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>trainingId:%String</FormalSpec>
+<FormalSpec>trId:%String</FormalSpec>
 <ReturnType>%ListOfDataTypes</ReturnType>
 <Implementation><![CDATA[
 	set emailList = ##class(%ListOfDataTypes).%New()
@@ -233,7 +205,7 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 	&sql(DECLARE StudCur CURSOR FOR 
 		 	 	SELECT Students->Email 
 		 	 	FROM Stc_Data.SubGroup_Students
-		 	 	WHERE SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training = :trainingId))	
+		 	 	WHERE SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training = :trId))	
 	&sql(OPEN StudCur)
 	for  
 	{	

@@ -883,7 +883,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
 	                    
                         $scope.mailing.status = $scope.training.data.isTeacherAutoMailing==0 ? false : true;
                         $scope.mailing.email.msg = data.msg
-                                                      .replace("%1", $location.host() + ":" + $location.port() + StcAppSetting['default'] + "/stc/index.csp?urlData=trainingstudents-q-id-eq-"+$scope.training.data.id + "-and-code-eq-"+$scope.training.data.accessCode)
+                                                      .replace("%1", $location.host() + ":" + $location.port() + StcAppSetting['defaultApp'] + "/stc/index.csp?urlData=trainingstudents-q-id-eq-"+$scope.training.data.id + "-and-code-eq-"+$scope.training.data.accessCode)
                                                       .replace("%2", $filter('convertCacheDate')($scope.training.data.dateStart, $filter('localize')('d MMMM y')))
                                                       .replace("%4", $scope.training.data.course.name)
                                                       .replace("%5", $scope.training.data.city.name + ', ' + $scope.training.data.city.parentName + ', ' + $scope.training.data.city.greatParentName)
@@ -898,7 +898,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
                     case 'curator':{
                       $scope.mailing.status = $scope.training.data.isCuratorAutoMailing==0 ? false : true;
                       $scope.mailing.email.msg = data.msg
-                                                      .replace("%1", $location.host() + ":" + $location.port() + StcAppSetting['default'] + "/stc/index.csp?urlData=trainingstudents-q-id-eq-"+$scope.training.data.id + "-and-code="+$scope.training.data.accessCode)
+                                                      .replace("%1", $location.host() + ":" + $location.port() + StcAppSetting['defaultApp'] + "/stc/index.csp?urlData=trainingstudents-q-id-eq-"+$scope.training.data.id + "-and-code="+$scope.training.data.accessCode)
                                                       .replace("%2", $filter('convertCacheDate')($scope.training.data.dateStart, $filter('localize')('d MMMM y')))
                                                       .replace("%4", $scope.training.data.course.name)
                                                       .replace("%5", $scope.training.data.city.name + ', ' + $scope.training.data.city.parentName + ', ' + $scope.training.data.city.greatParentName)
@@ -913,7 +913,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
                     case 'feedback':{
                       $scope.mailing.status = $scope.training.data.isFeedBackAutoMailing==0 ? false : true;
                       $scope.mailing.email.msg = data.msg
-                                                      .replace("%1", $location.host() + ":" + $location.port() + StcAppSetting['default'] + "/stc/index.csp?urlData=feedback-q-id-eq-"+$scope.training.data.id + "-and-code="+$scope.training.data.accessCode.split('-')[0]+'-'+$scope.training.data.accessCode.split('-')[4])
+                                                      .replace("%1", $location.host() + ":" + $location.port() + StcAppSetting['defaultApp'] + "/stc/index.csp?urlData=feedback-q-id-eq-"+$scope.training.data.id + "-and-code="+$scope.training.data.accessCode.split('-')[0]+'-'+$scope.training.data.accessCode.split('-')[4])
                                                       .replace("%2", $scope.training.data.course.name)
                                                       .replace(/<br>/g, "\n");
                   

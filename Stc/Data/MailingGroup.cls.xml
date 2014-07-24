@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.MailingGroup">
+<Description>
+Mailing group. Group has items (subscribers)</Description>
 <Super>%Persistent</Super>
 <TimeCreated>63387,80192.527554</TimeCreated>
 
@@ -65,6 +67,8 @@
 </Method>
 
 <Method name="GetAnnouncementGroup">
+<Description>
+Get special group for subscribers</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>MailingGroup</ReturnType>
 <Implementation><![CDATA[

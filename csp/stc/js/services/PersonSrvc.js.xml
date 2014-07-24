@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/PersonSrvc.js" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/js/services/PersonSrvc.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //ddв
 
@@ -84,13 +84,9 @@ servicesModule.factory('PersonSrvc', function(DALSrvc) {
             return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/getCourseTeachers/' + courseId, null);
         },
         changeCompanyContact: function(data){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/changeCompanyContact', data);
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/company/contact/change', data);
         },
-
-        getPersonOrders: function(id){
-            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/personOrders/' + id, null);
-        },
-        getPersonTrainings: function(id){
+		getPersonTrainings: function(id){
             return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/personTrainings/' + id, null);
         },
         getPersonCourses: function(id){

@@ -80,7 +80,6 @@ Convert to proxyObject (for JSON)</Description>
 	
 	set proxy.id = ..%Id()
 	set proxy.status = ..OrderStatus.ConvertToProxyObject()
-	//set proxy.city = ..City.ConvertToProxyObject()
 	set proxy.course = ..Course.ConvertToProxyObject()
 	
 	set proxy.contact = ##class(%ZEN.proxyObject).%New()
@@ -90,7 +89,7 @@ Convert to proxyObject (for JSON)</Description>
 	set proxy.contact.email = ..Email
 	set proxy.contact.phone = ..Phone
 	set proxy.contact.skype = ..Skype
-	//set proxy.contact.partner = ..Partner
+	
 	
 	set proxy.contact.company = ##class(%ZEN.proxyObject).%New()
 
@@ -103,7 +102,6 @@ Convert to proxyObject (for JSON)</Description>
 		set proxy.contact.company.site = ..CompanySite	
 	}
 	
-	//set proxy.date = $ZDATE(..TrainingDate, 3)
 	set proxy.createdTS = ..CreatedTS
 	set proxy.studentsNumber = ..StudentsNumber
 	
@@ -118,33 +116,39 @@ Create "new" application</Description>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
 <ReturnType>OrderDirty</ReturnType>
 <Implementation><![CDATA[
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Create", 
+	"CourseId="_data.course.id_
+	"; Contact="_$ZCONVERT(data.contact.lastName, "I","UTF8")_" "_$ZCONVERT(data.contact.firstName, "I","UTF8")_" "_$ZCONVERT(data.contact.middleName, "I","UTF8")_
+	"; Email="_$ZCONVERT(data.contact.email, "I","UTF8")_
+	"; Phone="_$ZCONVERT(data.contact.phone, "I","UTF8")_
+	"; Skype="_$ZCONVERT(data.contact.skype, "I","UTF8")_
+	"; Company="_$ZCONVERT(data.contact.company.notexist.name, "I", "UTF8")_
+	"; StudentsNumber="_data.studentsNumber)
+	
 	set order = ..%New()
 	
-	//set order.City = ##class(Region).%OpenId(data.city.id)
 	set order.Course = ##class(Course).%OpenId(data.course.id)
 		
 	set order.FirstName = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.contact.firstName, "I","UTF8"), "Stc.Data.Localization.Translation;PersonLTextValue")
 	set order.LastName = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.contact.lastName, "I","UTF8"), "Stc.Data.Localization.Translation;PersonLTextValue")
 	set order.MiddleName = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.contact.middleName, "I","UTF8"), "Stc.Data.Localization.Translation;PersonLTextValue")
 		
-	//set order.TrainingDate = $ZDATEH(data.date, 15)
 	set order.StudentsNumber = data.studentsNumber
 	set order.Email = $ZCONVERT(data.contact.email, "I","UTF8")
 	set order.Phone = $ZCONVERT(data.contact.phone, "I","UTF8")
 	set order.Skype = $ZCONVERT(data.contact.skype, "I","UTF8")
-	//set order.Partner = $ZCONVERT(data.contact.partner, "I","UTF8")
 		
-	//set order.Longitude = $p(data.point, " ", 1)
-	//set order.Latitude = $p(data.point, " ", 2)
-		
-	if (data.contact.company.exist) set order.Company = ##class(Company).%OpenId(data.contact.company.exist.id)
-		
+	if (data.contact.company.exist){ 
+		set order.Company = ##class(Company).%OpenId(data.contact.company.exist.id)
+	}
+	
 	if '(order.Company){
 		// If organization is not selected then search by name,
 		// if found - use it, else - new company with name
 		set compName = $ZCONVERT(data.contact.company.notexist.name, "I","UTF8")
 		set compId = ""
-		&sql(SELECT ID INTO:compId FROM Stc_Data.Company WHERE ShortName->Value  = :compName OR FullName->Value = :compName)
+		&sql(SELECT ID INTO:compId FROM Stc_Data.Company WHERE ShortName->Value  = :compName)
+		
 		if (##class(Stc.Data.Company).%ExistsId(compId) = 0) {
 			set order.CompanyString = $ZCONVERT(data.contact.company.notexist.name, "I","UTF8")
 			set order.CompanySite = $REPLACE($REPLACE($ZCONVERT(data.contact.company.notexist.site, "I","UTF8"),"http://",""), "https://","")
@@ -154,7 +158,7 @@ Create "new" application</Description>
 		}
 	} 
 
-	set order.CreatedTS = $ZDATETIME($NOW(), 3)
+	set order.CreatedTS = $ZDATETIME($ZTS, 3)
 	set order.OrderStatus = ##class(OrderStatus).CodeIdxOpen("New")
 		
 	set status = order.%Save()

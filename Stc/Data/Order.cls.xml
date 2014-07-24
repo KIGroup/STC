@@ -6,12 +6,6 @@ Application for training</Description>
 <Super>%Persistent</Super>
 <TimeCreated>63098,13893.822559</TimeCreated>
 
-<Property name="City">
-<Description>
-City of training</Description>
-<Type>Region</Type>
-</Property>
-
 <Property name="Course">
 <Description>
 Training course</Description>
@@ -23,13 +17,6 @@ Training course</Description>
 <Description>
 Organization</Description>
 <Type>Company</Type>
-</Property>
-
-<Property name="TrainingDate">
-<Description>
-Training date</Description>
-<Type>%Date</Type>
-<Parameter name="FORMAT" value="3"/>
 </Property>
 
 <Property name="CreatedTS">
@@ -44,24 +31,6 @@ Application creation timestamp</Description>
 Application status</Description>
 <Type>OrderStatus</Type>
 <Required>1</Required>
-</Property>
-
-<Property name="Latitude">
-<Description>
-Latitude</Description>
-<Type>%Float</Type>
-</Property>
-
-<Property name="Longitude">
-<Description>
-Longitutde</Description>
-<Type>%Float</Type>
-</Property>
-
-<Property name="Partner">
-<Description>
-Partner</Description>
-<Type>%String</Type>
 </Property>
 
 <Method name="Delete">

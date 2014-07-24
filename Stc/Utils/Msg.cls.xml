@@ -33,7 +33,7 @@ Write all messages into global</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	/*
+	
 	set ^CacheMsg("Stc", "ru", "Curator") = "Куратор"
 	set ^CacheMsg("Stc", "en", "Curator") = "Curator"
 	
@@ -41,22 +41,7 @@ Write all messages into global</Description>
 	set ^CacheMsg("Stc", "ru", "emailSubject") = "Заявка на обучение"
 	set ^CacheMsg("Stc", "en", "emailSubject") = "Order for training"
 	
-	// Customer email text
-	set ^CacheMsg("Stc", "ru", "msgToCompanyContact") = ""_
-	"Здравствуйте, вы оставили заявку на обучение по курсу - '%1', в городе - '%2', дата обучения - '%3'. "_
-	"<br>Вам необходимо перейти по <a href='http://%4/stc/index.csp?urlData=updateorder-q-code-eq-%5'>ссылке</a> для дальнейшего заполнения вашей заявки, проверить и заполнить реквизиты организации, добавить сотрудников для обучения.<br>"_
-	"Прямая ссылка на вашу заявку: http://%4/stc/index.csp?urlData=updateorder-q-code-eq-%5<br>"_
-	"Нажмите 'Завершить редактирование', чтобы отправить ее администратору системы для рассмотрения. Доступ к заявке будет закрыт после завершения редактирования.<br>"_
-	"------------<br>"_
-	"С уважением, Администратор 'Системы учёта курсов'"
 	
-	set ^CacheMsg("Stc", "en", "msgToCompanyContact") = ""_
-	"Hello, you left a order for a course - '%1', in city - '%2', training date - '%3'. "_
-	"<br>You need to <a href='http://%4/stc/index.csp?urlData=updateorder-q-code-eq-%5'>link</a> for further filling your order, check and fill in your company details, add employees for training.<br>"_
-	"Direct link to your order: http://%4/stc/index.csp?urlData=updateorder-q-code-eq-%5<br>"_
-	"Click 'Finish editing' to send it to your system administrator for consideration. Access to the application will be closed after completion of editing.<br>"_
-	"------------<br>"_
-	"Best regards, Administrator 'Systems of training courses'"
 	
 	//======================================================================= MAILING
 	// To Students
@@ -154,27 +139,25 @@ Write all messages into global</Description>
 	
 	
 	set ^CacheMsg("Stc", "ru", "CalendarEvent") = ""_
-	"<a href='http://%1'>Программа курса</a><br><br>"_
-	"<a href='http://%2/stc/index.csp?urlData=orderstudent-q-training-eq-%3'>Записаться на обучение</a><br><br>"_
-	"Место проведения:<br>"_
-	"%4<br><br>"_
-	"Преподаватель:<br>"_
-	"%5<br><br>"_
-	"Время проведения: %6<br>"_
-	"%7"_
-	"%8"
+		"<a href='http://%1'>Программа курса</a><br><br>"_
+		"<a href='http://%2'>Записаться на обучение</a><br><br>"_
+		"Место проведения:<br>"_
+		"%3<br><br>"_
+		"Преподаватель:<br>"_
+		"%4<br><br>"_
+		"Время проведения: %5<br>"_
+		"%6%7"
 
 	set ^CacheMsg("Stc", "en", "CalendarEvent") = ""_
-	"<a href='http://%1'>Course program</a><br><br>"_
-	"<a href='http://%2/stc/index.csp?urlData=orderstudent-q-training-eq-%3'>Register for course</a><br><br>"_
-	"Loacation:<br>"_
-	"%4<br><br>"_
-	"Teacher:<br>"_
-	"%5<br><br>"_
-	"Time: %6<br>"_
-	"%7"_
-	"%8"
-	*/
+		"<a href='http://%1'>Course program</a><br><br>"_
+		"<a href='http://%2'>Registration</a><br><br>"_
+		"Location:<br>"_
+		"%3<br><br>"_
+		"Teacher:<br>"_
+		"%4<br><br>"_
+		"Time: %5<br>"_
+		"%6%7"
+		
 	// Mailing
 	set ^CacheMsg("Stc", "ru", "subjectConfirmationSubscription") = "Активация подписки на анонсы обучающих курсов InterSystems"
 	set ^CacheMsg("Stc", "en", "subjectConfirmationSubscription") = "Activate subscription to announcements of InterSystems training courses"

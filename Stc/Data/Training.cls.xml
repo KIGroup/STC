@@ -176,6 +176,15 @@ New applications from students for this certain training</Description>
 <Relationship>1</Relationship>
 </Property>
 
+<Property name="FeedBacks">
+<Description>
+FeedBacks</Description>
+<Type>Stc.Data.FeedBack</Type>
+<Cardinality>children</Cardinality>
+<Inverse>Training</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
 <Property name="AccessCode">
 <Description>
 Access code to training for teacher</Description>
@@ -357,29 +366,6 @@ Create or save modified training</Description>
 ]]></Implementation>
 </Method>
 
-<Method name="AddSubGroupsFromOrders">
-<Description>
-Add new subgroups to trainings from applications</Description>
-<FormalSpec>orders:%ListOfObjects</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	for i=1:1:orders.Count(){
-		set order = ##class(OrderApproved).%OpenId(orders.GetAt(i))
-		set sub = ##class(SubGroup).Create(order.Company, order.Students, order.Course, .status)
-		if $$$ISERR(status) RETURN ##class(Stc.Utils.Msg).GetErrorStatus("createSubGroup" ," | "_status) 	
-			
-		do ..SubGroups.SetAt(sub, sub.%Id())
-		
-		// Close app - all students in training
-		set order.OrderStatus = ##class(OrderStatus).CodeIdxOpen("Closed")
-		set status = order.%Save()
-		if $$$ISERR(status) RETURN ##class(Stc.Utils.Msg).GetErrorStatus("saveSubGroup" ," | "_status) 	
-	}
-	
-	quit $$$OK
-]]></Implementation>
-</Method>
-
 <Method name="DeleteSubGroup">
 <Description>
 Delete subgroup from training, without deleting students</Description>
@@ -512,12 +498,92 @@ Add person to training, subgroup is detirmining automatically</Description>
 ]]></Implementation>
 </Method>
 
-<Property name="FeedBacks">
-<Type>Stc.Data.FeedBack</Type>
-<Cardinality>children</Cardinality>
-<Inverse>Training</Inverse>
-<Relationship>1</Relationship>
-</Property>
+<Method name="ConvertToProxyObjectForPublic">
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	set proxy.id = ..%Id()
+	set proxy.city = ..City.ConvertToProxyObject()
+	set proxy.course = ..Course.ConvertToProxyObject()
+	set proxy.teacher = ..Teacher.ConvertToProxyObject()
+	set proxy.teacher.phone = ""
+	set proxy.teacher.company = ""
+	
+	set proxy.dateStart = $ZDATE(..DateStart, 3)
+	set proxy.dateFinish = $ZDATE(..DateFinish, 3)
+	set proxy.isCompleted = ..IsCompleted	
+	
+	set proxy.timeStart = $e(##class(%Library.Time).LogicalToDisplay(..TimeStart), 1, 5)
+	set proxy.timeFinish = $e(##class(%Library.Time).LogicalToDisplay(..TimeFinish), 1, 5)
+	
+	set proxy.otherInfo = ..OtherInfo.Value
+	set proxy.room = ..Room
+	set proxy.address = ##class(%ZEN.proxyObject).%New()
+	set proxy.address.title = ..Street.Value
+	set proxy.address.point = ..Longitude_" "_..Latitude
+	
+	set proxy.curator = ##class(%ZEN.proxyObject).%New() 
+	set proxy.curator.fullName = ..CuratorFullName.Value
+	set proxy.curator.email = ..CuratorEmail
+	set proxy.curator.phone = ..CuratorPhone
+	
+	quit proxy
+]]></Implementation>
+</Method>
+
+<Method name="GetCalendarEventDescription">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>tr:Stc.Data.Training</FormalSpec>
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set descr = ""
+	
+	try{
+		/*
+			<a href='http://%1'>Программа курса</a><br><br>
+			<a href='http://%2'>Записаться на обучение</a><br><br>
+			Место проведения:<br>
+			%3<br><br>
+			Преподаватель:<br>
+			%4<br><br>
+			Время проведения: %5<br>
+			%6%7
+		*/
+		
+		set pattern = ##class(Stc.Utils.Msg).GetMsg("CalendarEvent")
+		set urlJoin = ##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/ordernewstudent?training="_tr.%Id() 
+		set urlCourse = tr.Course.ProgramUrl
+		set cityFullName = tr.City.Name.Value_", "_tr.City.ParentRegion.Name.Value_", "_tr.City.ParentRegion.ParentRegion.Name.Value
+		set street = tr.Street.Value
+		set room = tr.Room
+		set time = $e(##class(%Library.Time).LogicalToDisplay(tr.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(tr.TimeFinish), 1, 5)
+		set teacherData = tr.Teacher.LastName.Value_" "_tr.Teacher.FirstName.Value_", "_tr.Teacher.Email								
+		set curatorData = ""
+		
+		if (tr.CuratorFullName.Value '= ""){
+			set curatorData = "<br>"_##class(Stc.Utils.Msg).GetMsg("contactPerson")_":<br>"_tr.CuratorFullName.Value
+			
+			if (tr.CuratorPhone '= ""){
+				set curatorData = curatorData_", "_tr.CuratorPhone
+			}
+			
+			set curatorData = curatorData_"<br>"
+		}
+					
+		set otherInfoData = ""
+		if (tr.OtherInfo.Value '= ""){
+			set otherInfoData = "<br>"_tr.OtherInfo.Value
+		}
+					
+		set descr = ##class(%MessageDictionary).FormatText(pattern, urlCourse, urlJoin, cityFullName_"<br>"_street_", "_room, teacherData, time, curatorData, otherInfoData)
+	}
+	catch(ex){
+		set descr = ex.AsStatus()
+	}
+	
+	quit descr
+]]></Implementation>
+</Method>
 
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>

@@ -70,34 +70,6 @@
 	</div>
 	<div class="span10">
 		<tabset>
-			<tab heading="{{('Заявки'|localize) + ' (' + orderTable.items.length + ')'}}" active="orderTable.active" ng-hide="$parent.orderTable.items.length==0">
-				<stcgrid
-			    table-class="table table-bordered"
-			    caption=""
-			    columns="orderTable.columns"
-			    items="orderTable.items"
-			    properties="orderTable.properties"
-			    update-items=""
-
-			    page-curr="1"
-			    page-total="1"
-			    page-size="100"
-			    navigator-visible="false"
-
-			    selectable="false"
-			    selected-items="orderTable.selectedItems"
-			    multi-select-mode="false"
-
-			    action-column-visible="!menu.readOnlyMode"
-		    	action-column-icon="'icon-ellipsis-horizontal'"
-
-		    	first-row-action-icon="'icon-eye-open'"
-		    	first-row-action-title="'Открыть заявку'|localize"
-		    	first-row-action-method="orderTable.open(item)"
-		 
-				/>
-		    </tab>
-		    
 			<tab heading="{{('Обучения'|localize) + ' (' + trainingTable.items.length + ')'}}" active="trainingTable.active" ng-hide="$parent.trainingTable.items.length==0">
 				<stcgrid
 			    table-class="table table-bordered"

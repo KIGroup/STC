@@ -26,10 +26,6 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
         completeTraining: function(trainingId){
            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/completeTraining', {id: trainingId});
         },
-        /* Создать подгруппы из заявок для существующего обучения */
-        createSubGroupsForTraining: function(trainingData){
-           return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/createSubGroupsForTraining', trainingData);
-        },
         /* Получить обучение */
         getTraining: function(id){
            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/getTraining/' + id, null);

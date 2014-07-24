@@ -29,8 +29,12 @@
                         <i class="icon icon-caret-right" ng-hide="tr.detailsVisible"></i>
                         <i class="icon icon-sort-down" ng-show="tr.detailsVisible" style="position: relative; top: -3px;"></i>
                     </td>
-                    <td ng-bind="tr.city.name" style="width: 50%;"></td>
-                    <td ng-bind="tr.dates" style="text-align: center;" colspan="2"></td> 
+                    <td ng-bind="tr.city.name" style="width: 30%;"></td>
+                    <td ng-bind="tr.dates" style="text-align: center;" colspan="2"></td>
+                    <td style="width: 115px; text-align: center;">
+                    	<a ng-hide="tr.detailsVisible" href="" class="scheduleDetails" ng-bind="'Подробнее'" title="Показать дополнительную информацию"></a>
+                    	<a ng-show="tr.detailsVisible" href="" class="scheduleDetails" ng-bind="'Закрыть'"  title="Скрыть дополнительную информацию"></a>
+                	</td> 
                 </tr>
             </table>
         </div>

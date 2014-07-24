@@ -14,90 +14,76 @@ Private request processor for administrator</Description>
 <XData name="UrlMap">
 <Data><![CDATA[
 <Routes>
-	<!-- ==================================== COURSES ==================================== -->
-	
-	<!-- Get full info about all courses -->
-	<Route Method="POST" Url="/json/allCoursesFullInfo" Call="Stc.Web.JsonAdmin:GetCoursesFullInfo"/>
+	<!-- ==================================== COURSES =============================================== -->
 	
 	<!-- Save or create course -->
-	<Route Method="POST" Url="/json/saveCourse" Call="Stc.Web.JsonAdmin:SaveCourse"/>
+	<Route Method="POST" Url="/json/course" Call="Stc.Web.JsonAdmin:SaveCourse"/>
 	
 	<!-- Get course -->
-	<Route Method="GET" Url="/json/getCourse/:id" Call="Stc.Web.JsonAdmin:GetCourse"/>	
+	<Route Method="GET" Url="/json/course/:id" Call="Stc.Web.JsonAdmin:GetCourse"/>	
 	
 	<!-- Mark/unmark course as unused -->
-	<Route Method="POST" Url="/json/changeIsInUseCourse" Call="Stc.Web.JsonAdmin:ChangeIsInUseCourse"/>	
+	<Route Method="POST" Url="/json/course/:id/inverseStatus" Call="Stc.Web.JsonAdmin:ChangeCourseStatus"/>	
 	
 	
-	<!-- ==================================== APPLICATION ==================================== -->
+	<!-- ==================================== APPLICATION (Order) ==================================== -->
 
 	<!-- Get all applications (or by status) -->
-	<Route Method="POST" Url="/json/orders" Call="Stc.Web.JsonAdmin:GetOrders"/>
+	<Route Method="POST" Url="/json/order/grid" Call="Stc.Web.JsonAdmin:GetOrdersForGrid"/>
 	
 	<!-- Get all applications - from students for given training -->
-	<Route Method="POST" Url="/json/ordersNewStudent" Call="Stc.Web.JsonAdmin:GetOrdersNewStudent"/>
-	
+	<Route Method="POST" Url="/json/ordesNewStudent/grid" Call="Stc.Web.JsonAdmin:GetOrdersNewStudentForGrid"/>
 	
 	<!-- Get not approved application by id -->
-	<Route Method="GET" Url="/json/dirtyOrder/:id" Call="Stc.Web.JsonAdmin:GetDirtyOrder"/>
+	<Route Method="GET" Url="/json/orderDirty/:id" Call="Stc.Web.JsonAdmin:GetOrderDirty"/>
 	
 	<!-- Get application from student by id -->
 	<Route Method="GET" Url="/json/orderNewStudent/:id" Call="Stc.Web.JsonAdmin:GetOrderNewStudent"/>
 	
-	
 	<!-- Create approved application -->
-	<Route Method="POST" Url="/json/createApprovedOrder" Call="Stc.Web.JsonAdmin:CreateApprovedOrder"/>
-	
-	<!-- Create all students from given applications -->
-	<Route Method="GET" Url="/json/getStudentsFromOrders/:orderIdString" Call="Stc.Web.JsonAdmin:GetStudentsFromOrders"/>	
+	<Route Method="POST" Url="/json/orderApproved" Call="Stc.Web.JsonAdmin:CreateOrderApproved"/>
 	
 	<!-- Delete application by id -->
-	<Route Method="DELETE" Url="/json/deleteOrder/:id" Call="Stc.Web.JsonAdmin:DeleteOrder"/>
+	<Route Method="DELETE" Url="/json/order/:id" Call="Stc.Web.JsonAdmin:DeleteOrder"/>
 	
 	<!-- Delete application from student by id -->
-	<Route Method="DELETE" Url="/json/deleteOrderNewStudent/:id" Call="Stc.Web.JsonAdmin:DeleteOrderNewStudent"/>
-	
+	<Route Method="DELETE" Url="/json/orderNewStudent/:id" Call="Stc.Web.JsonAdmin:DeleteOrderNewStudent"/>
 	
 	<!-- Change organization in application -->
-	<Route Method="POST" Url="/json/changeOrderCompany" Call="Stc.Web.JsonAdmin:ChangeOrderCompany"/>
+	<Route Method="POST" Url="/json/order/:orderId/company/:companyId" Call="Stc.Web.JsonAdmin:ChangeOrderCompany"/>
 	
 	<!-- Change organization in application from student-->
-	<Route Method="POST" Url="/json/changeOrderNewStudentCompany" Call="Stc.Web.JsonAdmin:ChangeOrderNewStudentCompany"/>
-	
-	
-	<!-- Resend email with instructions to organization's contact person -->
-	<Route Method="POST" Url="/json/sendEmailToCompanyContactForApprovedOrder" Call="Stc.Web.JsonAdmin:SendEmailToCompanyContactForApprovedOrder"/>
-	
+	<Route Method="POST" Url="/json/orderNewStudent/:orderId/company/:companyId" Call="Stc.Web.JsonAdmin:ChangeOrderNewStudentCompany"/>
 	
 	<!-- Change order status to "close" -->
-	<Route Method="POST" Url="/json/approvedorder/:id/close" Call="Stc.Web.JsonAdmin:CloseOrder"/>
+	<Route Method="POST" Url="/json/orderApproved/:id/close" Call="Stc.Web.JsonAdmin:CloseOrderApproved"/>
+	
+	
 	
 	<!-- ==================================== ORGANIZATIONS ==================================== -->
+	
+	<!-- Save new organization data -->
+	<Route Method="POST" Url="/json/company" Call="Stc.Web.JsonAdmin:SaveCompany"/>
 	
 	<!-- Get organization by id -->
 	<Route Method="GET" Url="/json/company/:id" Call="Stc.Web.JsonAdmin:GetCompany"/>	
 	
-	<!-- Save organization from application -->
-	<Route Method="POST" Url="/json/saveCompanyFromOrder" Call="Stc.Web.JsonAdmin:SaveCompanyFromOrder"/>
-	
-	<!-- Save organization and contact person from application from student -->
-	<Route Method="POST" Url="/json/saveCompanyFromOrderNewStudent" Call="Stc.Web.JsonAdmin:SaveCompanyFromOrderNewStudent"/>
-	
-	
-	<!-- Save new organization data -->
-	<Route Method="POST" Url="/json/saveCompany" Call="Stc.Web.JsonAdmin:SaveCompany"/>
-	
-	<!-- Change contact person of organization -->
-	<Route Method="POST" Url="/json/changeCompanyContact" Call="Stc.Web.JsonAdmin:ChangeCompanyContact"/>
-	
-	<!-- Get all organizations for table, full info -->
-	<Route Method="POST" Url="/json/allCompaniesFullInfo" Call="Stc.Web.JsonAdmin:GetCompaniesFullInfo"/>
-	
 	<!-- Delete organization if it is available -->
 	<Route Method="DELETE" Url="/json/company/:id" Call="Stc.Web.JsonAdmin:DeleteCompany"/>
+	
+	<!-- Save organization from application -->
+	<Route Method="POST" Url="/json/company/order/:orderId" Call="Stc.Web.JsonAdmin:SaveCompanyFromOrder"/>
+	
+	<!-- Change contact person of organization -->
+	<Route Method="POST" Url="/json/company/contact/change" Call="Stc.Web.JsonAdmin:ChangeCompanyContact"/>
+	
+	<!-- Get all organizations for table, full info -->
+	<Route Method="POST" Url="/json/company/grid" Call="Stc.Web.JsonAdmin:GetCompaniesFullInfoFroGrid"/>
+	
 
 
 	<!-- ==================================== TRAININGS ==================================== -->
+	
 	<!-- Working with event in Google Calendar - create, update, delete -->
 	<Route Method="POST" Url="/json/trainingEvent" Call="Stc.Web.JsonAdmin:TrainingCalendarEvent"/>
 	
@@ -110,8 +96,6 @@ Private request processor for administrator</Description>
 	<!-- Complete training and create certificates for each student -->
 	<Route Method="POST" Url="/json/completeTraining" Call="Stc.Web.JsonAdmin:ChangeTrainingStatus"/>	
 	
-	<!-- Add subgroups, based on selected application to training -->
-	<Route Method="POST" Url="/json/createSubGroupsForTraining" Call="Stc.Web.JsonAdmin:CreateSubGroupsForTraining"/>	
 	
 	<!-- Get all trainings for table -->
 	<Route Method="POST" Url="/json/allTrainings" Call="Stc.Web.JsonAdmin:GetTrainings"/>	
@@ -190,9 +174,6 @@ Private request processor for administrator</Description>
 	
 	<!-- Delete person  -->
 	<Route Method="DELETE" Url="/json/deletePerson/:id" Call="Stc.Web.JsonAdmin:DeletePerson"/>
-	
-	<!-- All application with person -->
-	<Route Method="GET" Url="/json/personOrders/:id" Call="Stc.Web.JsonAdmin:GetPersonOrders"/>
 	
 	<!-- All trainings with person -->
 	<Route Method="GET" Url="/json/personTrainings/:id" Call="Stc.Web.JsonAdmin:GetPersonTrainings"/>

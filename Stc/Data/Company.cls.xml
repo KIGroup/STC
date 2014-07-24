@@ -191,8 +191,8 @@ Create or save modified organization</Description>
 	set company.CorrespondentAccount = $ZCONVERT(data.correspondentAccount, "I","UTF8")	
 	set company.KPP = $ZCONVERT(data.kpp, "I","UTF8")
 	set company.WebSite = $REPLACE($REPLACE($ZCONVERT(data.site, "I","UTF8"),"http://",""), "https://","")
-	//set company.IsUniversity = data.status
-	if (data.status=1){
+	
+	if (data.status = 1){
 		set company.Type = ##class(CompanyType).CodeIdxOpen("Univer")
 	}
 	else{

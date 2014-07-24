@@ -199,11 +199,6 @@ Checking before deletion</Description>
 			if (id = ""){
 				// Checking: if has certificates
 				&sql(SELECT ID INTO:id FROM Stc_Data.Certificate WHERE Student = :personId)	
-	
-				if (id = ""){
-					// Checking: if at least in 2 applications
-					&sql(SELECT COUNT(ID) INTO:countId FROM Stc_Data.OrderApproved_Students WHERE Students = :personId)
-				}
 			}
 		}
 	}
