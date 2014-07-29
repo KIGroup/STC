@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/directives/stctraining.js" application="/csp/feb/" default="1"><![CDATA[
+<CSP name="stc/js/directives/stctraining.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //dddddddddd
 
@@ -81,7 +81,7 @@ directivesModule.directive('stctraining', function(){
 
             // Подгрузить курсы 
             $scope.loadCourses = function(){
-                CourseTeacherSrvc.getAllCoursesShortInfo(-1).then(
+                CourseTeacherSrvc.getAll(-1).then(
                     function(data){
                         $scope.courses = data;
                     },
@@ -94,7 +94,7 @@ directivesModule.directive('stctraining', function(){
                 if (!$scope.training || !$scope.training.course || !$scope.training.course.id)
                     return;
 
-                PersonSrvc.getCourseTeachers($scope.training.course.id).then(
+                CourseTeacherSrvc.getTeachers($scope.training.course.id).then(
                     function(data){
                         $scope.teachers = data;
                         if (!$scope.editMode && data && data.length != 0)

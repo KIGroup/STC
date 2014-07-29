@@ -324,7 +324,19 @@ Create or save modified training</Description>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
 <ReturnType>Training</ReturnType>
 <Implementation><![CDATA[
-	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Save", "ID="_data.id_"; CourseID="_data.course.id_"; CityID="_data.city.id_"; TeacherID="_data.teacher.id_"; DateStart="_data.dateStart_"; Point="_data.address.point)
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Save", 
+	"ID="_data.id_
+	"; CourseID="_data.course.id_
+	"; CityID="_data.city.id_
+	"; TeacherID="_data.teacher.id_
+	"; CuratorFullName="_$ZCONVERT(data.curator.fullName, "I","UTF8")_
+	"; CuratorEmail="_data.curator.email_
+	"; CuratorPhone="_data.curator.phone_
+	"; DateStart="_data.dateStart_
+	"; DateFinish="_data.dateFinish_
+	"; Street="_$ZCONVERT(data.address.title, "I","UTF8")_
+	"; Point="_data.address.point_
+	"; OtherInfo="_$ZCONVERT(data.otherInfo, "I","UTF8"))
 	
 	if (data.id = ""){
 		set tr = ..%New()
@@ -335,8 +347,6 @@ Create or save modified training</Description>
 		set tr.Street = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.address.title, "I","UTF8"))
 		set tr.OtherInfo = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.otherInfo, "I","UTF8"))
 		set tr.AccessCode = $SYSTEM.Util.CreateGUID()
-		set status = tr.AddSubGroupsFromOrders(data.orders)
-		quit:$$$ISERR(status) tr
 	}
 	else{
 		set tr = ..%OpenId(data.id)

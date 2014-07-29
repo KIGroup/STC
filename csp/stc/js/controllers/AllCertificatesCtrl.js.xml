@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllCertificatesCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllCertificatesCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //ddd
 
@@ -18,20 +18,20 @@ controllersModule.controller('AllCertificatesCtrl', function($scope, $filter, $l
 
     $scope.cert.init = function(){
         $scope.cert.columns = [
-                          {name: 'Курс',          sqlName: 'Training->Course->Name->Value', isSorted: false, isSortable: true, isDown: true,  isSearched: true,  isSearchable: true},
-                          {name: 'Номер',         sqlName: 'Number',                        isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
-                          {name: 'Слушатель',     sqlName: 'Student->LastName->Value',      isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
-                          {name: 'Дата создания', sqlName: 'CreatedDate',                   isSorted: true,  isSortable: true, isDown: false, isSearched: false, isSearchable: false, filter: 'date'},
-                          {name: 'Статус',        sqlName: 'isPrinted',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true}];
+                          {name: 'Курс', sqlName: 'Training->Course->Name->Value', isSorted: false, isSortable: true, isDown: true,  isSearched: true, isSearchable: true},
+                          {name: 'Номер', sqlName: 'Number', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true, captionStyle: {textAlign: 'center', width: '80px'}},
+                          {name: 'Слушатель', sqlName: 'Student->LastName->Value', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Дата создания', sqlName: 'CreatedDate', isSorted: true,  isSortable: true, isDown: false, isSearched: false, isSearchable: false, filter: 'date', captionStyle: {width: '150px'}},
+                          {name: 'Статус', sqlName: 'isPrinted', isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true, captionStyle: {textAlign: 'center', width: '80px'}}];
         
         $scope.cert.properties = [{name:'training.course.name'}, 
-                                  {name:'number'},
+                                  {name:'number', cellStyle: {textAlign: 'center'}},
                                   {name:'student.fullName', 
                                   calculate: function(item){
                                                 item.student.fullName = item.student.lastName + ' ' + item.student.firstName + ' ' + item.student.middleName;
                                   }}, 
                                   {name:'date', filter: 'date', filterParam: $filter('localize')('d MMMM y')}, 
-                                  {name:'status', 
+                                  {name:'status', cellStyle: {textAlign: 'center'},
                                   getCssClass: function(item){
                                                 return 'label ' + (item.isPrinted == 0 ? 'label-important' : 'label-success');
                                               }, 
@@ -51,7 +51,7 @@ controllersModule.controller('AllCertificatesCtrl', function($scope, $filter, $l
 
     // Загрузка сертификатов
     $scope.cert.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
-        CertificateSrvc.getCertificates(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $scope.cert.status).then(
+        CertificateSrvc.getAllForGrid(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $scope.cert.status).then(
             function(data){
                 $scope.cert.pageTotal = Math.ceil(data.itemsTotal / pageSize);
                 $scope.cert.itemsTotal = data.itemsTotal;
@@ -71,7 +71,7 @@ controllersModule.controller('AllCertificatesCtrl', function($scope, $filter, $l
     $scope.cert.print = function(item){
          CertificateSrvc.print(item.number).then(
             function(data){
-                //$scope.cert.alert = UtilsSrvc.getAlert('Готово!', 'Статус сертификата изменен.', 'success', true);
+                $scope.cert.alert = UtilsSrvc.getAlert('Готово!', 'Статус сертификата изменен.', 'success', true);
                 $scope.cert.forciblyUpdate++;
             },
             function(response){
@@ -100,7 +100,7 @@ controllersModule.controller('AllCertificatesCtrl', function($scope, $filter, $l
         $scope.pageStore.certificates.status = $scope.cert.status;
     });
 
-	$scope.cert.init();
+	  $scope.cert.init();
 });
 
 ]]></CSP>

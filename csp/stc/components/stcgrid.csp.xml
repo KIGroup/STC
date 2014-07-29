@@ -7,7 +7,7 @@
     <thead>
         <tr>
             <th class="tableNumber">#</th>
-            <th ng-repeat="column in columns"  ng-click="sort(column, column.isDown)" ng-class="{selectableMode:column.isSortable}">
+            <th ng-repeat="column in columns"  ng-click="sort(column, column.isDown)" ng-class="{selectableMode:column.isSortable}" ng-style="column.captionStyle">
                 <span ng-bind="column.name|localize"></span>
                 <i class="icon-sort-down icon-large pull-right" ng-show="column.isDown && column.isSorted"  style="margin-top: -3px;"></i>
                 <i class="icon-sort-up icon-large pull-right"   ng-show="!column.isDown && column.isSorted" style="margin-top: 3px;"></i>
@@ -57,7 +57,7 @@
     <tbody ng-class="isSelectable">
         <tr ng-repeat="item in items" ng-class="getRowClass(item.rowClass)">
             <td ng-bind="$index + pageSize*(pageCurr - 1) + 1" ng-click="select(item)"></td>
-            <td ng-repeat="property in properties" ng-click="select(item)">
+            <td ng-repeat="property in properties" ng-click="select(item)" ng-style="property.cellStyle">
                 <span ng-class="property.getCssClass(item)" ng-bind="getPropertyValue(item, property)"></span>
             </td>
             <td class="atableAction" ng-show="actionColumnVisible" ng-click="actionRow(item)">

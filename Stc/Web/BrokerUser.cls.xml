@@ -14,8 +14,10 @@ Public request processor for users</Description>
 <XData name="UrlMap">
 <Data><![CDATA[
 <Routes>
-	<!-- ==================================== COURSES ======================================================== -->
-		
+	<!-- ================================================================================================================================== -->
+	<!-- COURSE                                                                                                                      COURSE -->
+	<!-- ================================================================================================================================== -->
+	
 	<!-- Get short info about all courses -->
 	<Route Method="GET"  Url="/json/course/isInUse/:isInUse" Call="Stc.Web.JsonUser:GetCoursesShortInfo"/>
 	
@@ -23,7 +25,10 @@ Public request processor for users</Description>
 	<Route Method="POST" Url="/json/course/grid" Call="Stc.Web.JsonUser:GetCoursesFullInfoForGrid"/>
 	
 	
-	<!-- ==================================== APPLICATIONS =================================================== -->
+	<!-- ================================================================================================================================== -->
+	<!-- ORDER (Application)                                                                                                          ORDER -->
+	<!-- ================================================================================================================================== -->
+
 	
 	<!-- Create application -->
 	<Route Method="POST" Url="/json/orderDirty" Call="Stc.Web.JsonUser:CreateOrderDirty"/>
@@ -32,13 +37,18 @@ Public request processor for users</Description>
 	<Route Method="POST" Url="/json/orderNewStudent" Call="Stc.Web.JsonUser:CreateOrderNewStudent"/>
 	
 	
-	<!-- ==================================== ORGANIZATIONS ================================================== -->
+	<!-- ================================================================================================================================== -->
+	<!-- ORGANIZATION                                                                                                          ORGANIZATION -->
+	<!-- ================================================================================================================================== -->
 	
 	<!-- Get short info about all organization -->
 	<Route Method="GET" Url="/json/company" Call="Stc.Web.JsonUser:GetCompaniesShortInfo"/>
 	
 
-	<!-- ==================================== MAILING SUBSCRIPTION =========================================== -->
+	<!-- ================================================================================================================================== -->
+	<!-- MAILING SUBSCRIPTION                                                                                          MAILING SUBSCRIPTION -->
+	<!-- ================================================================================================================================== -->
+	
 	
 	<!-- Create dirty mailing item -->
 	<Route Method="POST" Url="/json/mailing/subscription" Call="Stc.Web.JsonUser:CreateMailingSubscription"/>
@@ -55,7 +65,9 @@ Public request processor for users</Description>
 	<!-- Activate subscription, remove dirty and create approved mailing item -->
 	<Route Method="POST" Url="/json/mailing/subscription/confirmation/:code" Call="Stc.Web.JsonUser:ConfirmMailingSubscription"/>
 	
-	<!-- ==================================== OTHER ========================================================= -->
+	<!-- ================================================================================================================================== -->
+	<!-- OTHER                                                                                                                        OTHER -->
+	<!-- ================================================================================================================================== -->
 	
 	<!-- Search cities -->
 	<Route Method="GET" Url="/json/city/:startsWith" Call="Stc.Web.JsonUser:GetCities"/>
@@ -67,7 +79,7 @@ Public request processor for users</Description>
 	<Route Method="POST" Url="/json/training/:code/student" Call="Stc.Web.JsonUser:GetTrainingStudents"/>
 
 	<!-- Save feedback by access code -->
-	<Route Method="POST" Url="/json/saveFeedBack/:code" Call="Stc.Web.JsonUser:SaveFeedBack"/>
+	<Route Method="POST" Url="/json/training/:id/feedback/:code" Call="Stc.Web.JsonUser:SaveTrainingFeedBack"/>
 	
 	<!-- Schedule, course and trainings -->
 	<Route Method="GET" Url="/json/schedule" Call="Stc.Web.JsonUser:GetSchedule"/>

@@ -27,6 +27,18 @@ Get localized error message</Description>
 ]]></Implementation>
 </Method>
 
+<Method name="SetMsg">
+<Description>
+Set localized </Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>key,value</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	s ^CacheMsg("Stc", $$$SessionLanguage, key) = value
+	quit $$$OK
+]]></Implementation>
+</Method>
+
 <Method name="Init">
 <Description>
 Write all messages into global</Description>

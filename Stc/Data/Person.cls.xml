@@ -120,7 +120,13 @@ Create or save modified person</Description>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
 <ReturnType>Stc.Data.Person</ReturnType>
 <Implementation><![CDATA[
-	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Save", "ID="_data.id_"; LastName="_$ZCONVERT(data.lastName, "I","UTF8")_"; FirstName="_$ZCONVERT(data.firstName, "I","UTF8")_"; MiddleName="_$ZCONVERT(data.middleName, "I","UTF8")_"; Email="_data.email)
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Save", 
+	"ID="_data.id_
+	"; LastName="_$ZCONVERT(data.lastName, "I","UTF8")_
+	"; FirstName="_$ZCONVERT(data.firstName, "I","UTF8")_
+	"; MiddleName="_$ZCONVERT(data.middleName, "I","UTF8")_
+	"; Email="_data.email_
+	"; Phone="_data.phone)
 
 	if (data.id '= ""){
 		set person = ..%OpenId(data.id,3,.status)

@@ -2,7 +2,7 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/controllers/AllTrainingsCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//ddвd
+//ddвdаd
 
 /*===========================================================================================
 Все обучения
@@ -16,7 +16,7 @@ controllersModule.controller('AllTrainingsCtrl', function($scope, $filter, $loca
 
     $scope.training = {};
 	if ($scope.menu.readOnlyMode){
-		$scope.training.secondRowActionIcon = '';
+        $scope.training.secondRowActionIcon = '';
 		$scope.training.actionColumnIcon = 'icon-ellipsis-horizontal';
 	}
 	else{
@@ -28,50 +28,46 @@ controllersModule.controller('AllTrainingsCtrl', function($scope, $filter, $loca
 
     $scope.training.init = function(){
         $scope.training.columns = [
-                          {name: 'Курс',           sqlName: 'Course->Name->Value', isSorted: false,  isSortable: true,  isDown: false, isSearched: true,  isSearchable: true},
-                          {name: 'Город',          sqlName: 'City->Name->Value',   isSorted: false, isSortable: true,  isDown: true,  isSearched: false, isSearchable: true},
-                          {name: 'Дата начала',    sqlName: 'DateStart',           isSorted: true, isSortable: true,  isDown: false,  isSearched: false, isSearchable: false},
-                          {name: 'Дата окончания', sqlName: 'DateFinish',          isSorted: false, isSortable: true,  isDown: true,  isSearched: false, isSearchable: false},
-                          /*{name: 'Время',             sqlName: '',                    isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false},*/
-                          {name: 'Подгруппы',       sqlName: '',                    isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false},
-                          {name: 'Слушатели',     sqlName: '',                    isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false},
-                          {name: 'Новые заявки',   sqlName: '',                    isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false},
-                          /*{name: 'Оплачено подгрупп', sqlName: '',                    isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false},*/
-                          {name: 'Статус',            sqlName: 'IsCompleted',         isSorted: false, isSortable: true,  isDown: true,  isSearched: false, isSearchable: false}];
+                          {name: 'Курс', sqlName: 'Course->Name->Value', isSorted: false, isSortable: true, isDown: false, isSearched: true, isSearchable: true},
+                          {name: 'Город', sqlName: 'City->Name->Value', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Дата начала / окончания', sqlName: 'DateStart', isSorted: true, isSortable: true, isDown: false,  isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '200px'}},
+                          {name: 'Подгруппы', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '70px'}},
+                          {name: 'Слушатели', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '70px'}},
+                          {name: 'Отзывы', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '60px'}},
+                          {name: 'Заявки', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '60px'}},
+                          {name: 'Статус', sqlName: 'IsCompleted', isSorted: false, isSortable: true,  isDown: true,  isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '90px'}}];
                             
-        $scope.training.properties = [{name: 'course.name'}, 
+        $scope.training.properties = [{name: 'course.nameShort',
+        								calculate: function(item){
+	        								if (item.course.name.length > 60){
+	        									item.course.nameShort = item.course.name.substring(0, 60) + '...'; 
+	        								}
+	        								else{
+		        								item.course.nameShort = item.course.name;
+	        								}
+	        							}}, 
                                       {name: 'city.name'}, 
-                                      {name: 'dateStart', filter: 'date', filterParam: $filter('localize')('d MMMM y')}, 
-                                      {name: 'dateFinish', filter: 'date', filterParam: $filter('localize')('d MMMM y')}, 
-                                      /*{name: 'timeStartFinish'},*/ 
-                                       {name: 'sgroups'/*, 
-                                      getCssClass: function(item){
-                                                    return 'label ' + (item.sgroups == 0 ? 'label-important' : 'label-success');
-                                       }*/},
-                                       {name: 'students'/*, 
-                                      getCssClass: function(item){
-                                                    return 'label ' + (item.students == 0 ? 'label-important' : 'label-success');
-                                       }*/},
-                                        {name: 'newStudents', 
-                                      getCssClass: function(item){
-                                                    return 'label ' + (item.newStudents > 0 ? 'label-important' : 'label-success');
-                                       }},
-                                       /*
-                                      {name: 'isPaidProgress', 
-                                      getCssClass: function(item){
-                                                    return 'label ' + (item.isPaid == 0 ? 'label-important' : 'label-success');
-                                       }},
-                                       */
-                                      {name: 'status', 
-                                      getCssClass: function(item){
-                                                    return 'label ' + (item.isCompleted == 0 ? 'label-info' : 'label-success');
+                                      {name: 'dates', cellStyle: {textAlign: 'center'},
+                                      	calculate:function(item){
+	                                    	item.dates = UtilsSrvc.getTwoDate(item.dateStart, item.dateFinish);
+	                                    }},
+                                      {name: 'sgroups', cellStyle: {textAlign: 'center'}},
+                                      {name: 'students', cellStyle: {textAlign: 'center'}},
+                                      {name: 'feedBacks.count', cellStyle: {textAlign: 'center'}},
+                                      {name: 'newStudents', cellStyle: {textAlign: 'center'},
+                                        getCssClass: function(item){
+                                            return '' + (item.newStudents > 0 ? 'label label-important' : '');
+                                        }},
+                                      {name: 'status', cellStyle: {textAlign: 'center'},
+                                        getCssClass: function(item){
+                                            return 'label ' + (item.isCompleted == 0 ? 'label-info' : 'label-success');
                                         },
-                                      calculate: function(item){
-                                                    item.isStudentsAutoMailing = item.isStudentsAutoMailing==0 ? false : true;
-                                                    item.isTeacherAutoMailing = item.isTeacherAutoMailing==0 ? false : true;
-                                                    item.isCuratorAutoMailing = item.isCuratorAutoMailing==0 ? false : true;
-                                                    item.isFeedBackAutoMailing = item.isFeedBackAutoMailing==0 ? false : true;
-                                                    item.status = item.isCompleted == 1 ? $filter('localize')('Завершено') : $filter('localize')('Не завершено');
+                                        calculate: function(item){
+                                            item.isStudentsAutoMailing = item.isStudentsAutoMailing==0 ? false : true;
+                                            item.isTeacherAutoMailing = item.isTeacherAutoMailing==0 ? false : true;
+                                            item.isCuratorAutoMailing = item.isCuratorAutoMailing==0 ? false : true;
+                                            item.isFeedBackAutoMailing = item.isFeedBackAutoMailing==0 ? false : true;
+                                            item.status = item.isCompleted == 1 ? $filter('localize')('Завершено') : $filter('localize')('Не завершено');
                                         }}];
 
         $scope.training.status = UtilsSrvc.getPropertyValue($scope.pageStore, 'trainings.status', 'All');
@@ -82,10 +78,10 @@ controllersModule.controller('AllTrainingsCtrl', function($scope, $filter, $loca
         $scope.training.multiSelectMode = false;
         $scope.training.forciblyUpdate = 0;
     };
-
+ 
     // Загрузка
     $scope.training.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
-        TrainingSrvc.getTrainings(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $scope.training.status).then(
+        TrainingSrvc.getAllForGrid(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $scope.training.status).then(
             function(data){
                 $scope.training.pageTotal = Math.ceil(data.itemsTotal / pageSize);
                 $scope.training.itemsTotal = data.itemsTotal;
@@ -109,18 +105,18 @@ controllersModule.controller('AllTrainingsCtrl', function($scope, $filter, $loca
 
     // Открыть обучение для просмотра на другой странице
     $scope.training.open = function(item){
-        $location.path('/training').search({id: item.id});
+        $location.path('/training/' + item.id);
     };
 
     // Создать пустое обучение
     $scope.training.add = function(){
-        $location.path('/createtraining');
+        $location.path('/training');
     };
 
     // Удалить пустое обучение
     $scope.training.remove = function(item){
         function deleteTraining(){
-            TrainingSrvc.deleteTraining(item.id).then(
+            TrainingSrvc.remove(item.id).then(
                 function(data){
                     $scope.training.alert = UtilsSrvc.getAlert('Готово!', 'Обучение удалено.', 'success', true);
                     $scope.training.selectedItems = [];

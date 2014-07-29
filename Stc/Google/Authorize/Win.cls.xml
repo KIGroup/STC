@@ -14,7 +14,8 @@
 <body>>
 	s rtoken = $Get(%request.Data("refresh_token",1))
 	s atoken = $Get(%request.Data("access_token",1))
-	s ^Settings("Stc","Google", "RefreshToken") = rtoken
+	d ##class(Stc.Data.Settings).SetGoogleRefreshToken(rtoken)
+
 	w "Refresh token is """_rtoken_"""",!
 	w "<br>"
 	w "Access token is """_atoken_"""",!

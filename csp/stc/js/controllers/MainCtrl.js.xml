@@ -97,7 +97,7 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
 	            $scope.menu.admin = true;
                 $scope.menu.loginCaption = 'Выход';
                 $cookies['admin'] = 'true';
-                $location.path('/trainings');
+                //$location.path('/trainings');
             },
             function(response){
                 $scope.menu.admin = false;

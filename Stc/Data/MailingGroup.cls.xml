@@ -49,6 +49,11 @@ Mailing group. Group has items (subscribers)</Description>
 <Implementation><![CDATA[
 	#dim group As MailingGroup = ""
 	
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Save", 
+	"ID="_data.id_
+	"; Name="_$ZCONVERT(data.name, "I","UTF8")_
+	"; Descr="_$ZCONVERT(data.description, "I","UTF8"))
+	
 	if (data.id = ""){
 		set group = ..%New()
 		set group.AccessCode = $SYSTEM.Util.CreateGUID()

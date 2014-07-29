@@ -8,9 +8,9 @@ filterModule.filter('convertCacheDate', function($filter) {
         var result;
 
         try{
-	        if (isUTC){
+	        //if (isUTC){
 	        	return $filter('date')(new Date(input.replace(/-/g,"/")+' UTC'), filterParams)
-	        }
+	        //}
 	        
             var dateTime = input.split(' ');
             var date = dateTime[0].split('-');

@@ -12,26 +12,30 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
 	return {
         /* Добавить слушателя из заявки в обучение */
         addNewStudentIntoTraining: function(trainingData){
-           return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/addNewStudentIntoTraining', trainingData);
+           return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/orderNewStudent', trainingData);
         },
         /* Сохранить/ создать обучение */
-        saveTraining: function(trainingData){
-           return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/saveTraining', trainingData);
+        save: function(trainingData){
+           return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training', trainingData);
         },
         /* Удалить обучение */
-        deleteTraining: function(id){
-           return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/deleteTraining/'+id, null);
+        remove: function(id){
+           return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/training/' + id, null);
         },
         /* Завершить обучение */
-        completeTraining: function(trainingId){
-           return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/completeTraining', {id: trainingId});
+        complete: function(trainingId){
+           return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/' + trainingId + '/complete', null);
         },
         /* Получить обучение */
-        getTraining: function(id){
-           return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/getTraining/' + id, null);
+        get: function(id){
+           return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/training/' + id, null);
+        },
+        /**/
+        getSubGroupById: function(id){
+           return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/training/subgroup/' + id, null);
         },
         /* Получить обучение для пользователя*/
-        getTrainingForUser: function(id){
+        getForUser: function(id){
            return DALSrvc.getPromise('get', StcAppSetting.user + '/json/training/' + id, null);
         },
         /* Все сертификаты обучения */
@@ -45,13 +49,13 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
                        searchText: searchText,
                        trainingId: trainingId};
 
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/getCertificates', obj);
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/certificate/grid', obj);
         },
         createCertificates: function(trainingId){
-	        return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/createCertificates', {id: trainingId});
-	    },
+	        return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/' + trainingId + '/certificate', null);
+	      },
         /* Получить все обучения для таблицы */
-        getTrainings: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, status){
+        getAllForGrid: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, status){
             var first = pageSize * (pageCurr - 1) + 1;
             var obj = {sqlName: sqlName, 
                        isDown: isDown, 
@@ -61,10 +65,10 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
                        searchText: searchText,
                        status: status};
 
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/allTrainings', obj);
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/grid', obj);
         },
         /* Все подгруппы обучения для таблицы */
-        getTrainingSubGroups: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, trainingId){
+        getSubGroupsForGrid: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, trainingId){
             var first = pageSize * (pageCurr - 1) + 1;
             var obj = {sqlName: sqlName, 
                        isDown: isDown, 
@@ -74,10 +78,10 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
                        searchText: searchText,
                        trainingId: trainingId};
 
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/getTrainingSubGroups', obj);
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/subgroup/grid', obj);
         },
         /* Все слушатели обучения для таблицы */
-        getTrainingStudents: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, trainingId){
+        getStudentsForGrid: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, trainingId){
             var first = pageSize * (pageCurr - 1) + 1;
             var obj = {sqlName: sqlName, 
                        isDown: isDown, 
@@ -87,58 +91,68 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
                        searchText: searchText,
                        trainingId: trainingId};
 
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/getTrainingStudents', obj);
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/student/grid', obj);
         },
         /* Все слушатели обучения для таблицы */
-        getTrainingStudentsByAccessCode: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, code){
+        getStudentsByAccessCodeForGrid: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, code){
             var first = pageSize * (pageCurr - 1) + 1;
             var obj = {sqlName: sqlName, 
                        isDown: isDown, 
                        first: first, 
                        last: first + pageSize - 1,
                        searchSqlName: searchSqlName, 
-                       searchText: searchText,
-                       accessCode: code};
+                       searchText: searchText
+                     };
 
-            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/trainingStudents', obj);
+            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/training/' + code + '/student', obj);
+        },
+        deleteSubGroupStudent: function(sgroupId, studentId){
+            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/training/subgroup/' + sgroupId + '/student/' + studentId, null);
+        },
+        deleteStudent: function(trainingId, studentId){
+            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/training/' + trainingId + '/student/' + studentId, null);
         },
         /* Все валюты */
         getCurrencies: function(){
-            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/allCurrencies', null);
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/currency', null);
+        },
+        /* */
+        getEMail: function(trId, type){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/training/' + trId + '/mail/' + type, null);
         },
         /* Сохранить платеж */
         saveSubGroupPayment: function(payment){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/saveSubGroupPayment', payment);  
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/subgroup/payment', payment);  
+        },
+        addStudent: function(trainingId, groupId, person){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/student', {training: {id: trainingId},group: {id: groupId}, student: person});
         },
         /* Сохранить инфу о договоре */
         saveSubGroupContract: function(contract){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/saveSubGroupContract', contract);  
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/subgroup/contract', contract);  
         },
         /* Создать подгруппу и добавить ее в обучение */
-        createSubGroup: function(sgData){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/createSubGroup', sgData);  
+        createSubGroup: function(trId, sgData){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/' + trId + '/subgroup', sgData);  
         },
         /* Удалить подгруппу из обучения */
         deleteSubGroup: function(trainingId, sgroupId){
-            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/deleteSubGroup/' + trainingId + ';' + sgroupId, null);  
+            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/training/' + trainingId + '/subgroup/' +  sgroupId, null);  
         },
         doEvent: function(data){
 	        return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/trainingEvent', data);
 	      },
         getEmailContacts: function(trainingId){
-          	return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/trainingStudentsEmails/' + trainingId, null);
-        },
-        sendEmail: function(data){
-          	return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/sendEmail', data);
+          	return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/training/' + trainingId + '/student/email', null);
         },
         changeStatusAutoMailing: function(data){
-          	return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/changeTrainingStatusAutoMailing', data);
+          	return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/automailing/status', data);
         },
-        saveFeedBack: function(data){
-            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/saveFeedBack', data);
+        saveFeedBack: function(data, trId, code){
+            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/training/' + trId + '/feedback/' + code, data);
         },
         /* All training feedbacks */
-        getFeedBacks: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, trainingId){
+        getFeedBacksForGrid: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, trainingId){
             var first = pageSize * (pageCurr - 1) + 1;
             var obj = {sqlName: sqlName, 
                        isDown: isDown, 
@@ -148,14 +162,12 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
                        searchText: searchText,
                        trainingId: trainingId};
 
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/getFeedBacks', obj);
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/feedback/grid', obj);
         },
         deleteFeedBack: function(id){
-            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/deleteFeedBack/' + id, null); 
+            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/training/feedback/' + id, null); 
         },
-        getMailPattern: function(type){
-            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/mailPattern/' + type, null);
-        },
+
         getUrlForCreateGoogleCalendarEvent: function(text, dates, location, details){
 	    	return 'https://www.google.com/calendar/render?action=TEMPLATE&hl=ru' + 
                                     '&text=' + text +

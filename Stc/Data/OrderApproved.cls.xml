@@ -53,6 +53,8 @@ Create approved application from "new"</Description>
 <FormalSpec><![CDATA[dirtyId:%String,&status]]></FormalSpec>
 <ReturnType>Stc.Data.OrderApproved</ReturnType>
 <Implementation><![CDATA[
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Create", "DirtyID="_dirtyId)
+	
 	set approved = ..%New()
 	
 	set dirty = ##class(Stc.Data.OrderDirty).%OpenId(dirtyId,3,.status)
@@ -85,6 +87,7 @@ Convert to proxyObject (for JSON)</Description>
 	set proxy.code = ..AccessCode
 	set proxy.course = ..Course.ConvertToProxyObject(1)
 	set proxy.contact = ..Company.Contact.ConvertToProxyObject()
+	set proxy.contact.company = ..Company.ConvertToProxyObject()
 	set proxy.createdTS = ..CreatedTS
 	set proxy.studentsNumber = ..StudentsNumber
 

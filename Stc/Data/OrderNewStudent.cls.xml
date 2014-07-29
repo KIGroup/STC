@@ -123,6 +123,16 @@ Create application</Description>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
 <ReturnType>OrderDirty</ReturnType>
 <Implementation><![CDATA[
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Create", 
+	"; TrID="_data.trainingId_
+	"; LastName="_$ZCONVERT(data.contact.lastName, "I","UTF8")_
+	"; FirstName="_$ZCONVERT(data.contact.firstName, "I","UTF8")_
+	"; MiddleName="_$ZCONVERT(data.contact.lastName, "I","UTF8")_
+	"; Company="_$ZCONVERT(data.contact.company.notexist.name, "I","UTF8")_
+	"; Email="_data.contact.email_
+	"; Phone="_data.contact.phone_
+	"; Skype="_data.contact.skype)
+	
 	set order = ..%New()
 	
 	set order.Training = ##class(Stc.Data.Training).%OpenId(data.trainingId)
@@ -146,7 +156,7 @@ Create application</Description>
 		// if found - use it, else - new company with name
 		set compName = $ZCONVERT(data.contact.company.notexist.name, "I","UTF8")
 		set compId = ""
-		&sql(SELECT ID INTO:compId FROM Stc_Data.Company WHERE ShortName->Value  = :compName OR FullName->Value = :compName)
+		&sql(SELECT ID INTO:compId FROM Stc_Data.Company WHERE ShortName->Value  = :compName)
 		if (##class(Stc.Data.Company).%ExistsId(compId) = 0) {
 			set order.CompanyString = $ZCONVERT(data.contact.company.notexist.name, "I","UTF8")
 		}
@@ -155,11 +165,9 @@ Create application</Description>
 		}
 	} 
 
-	set order.CreatedTS = $ZDATETIME($NOW(), 3)
+	set order.CreatedTS = $ZDT($ZTS, 3)
 		
 	set status = order.%Save()
-	
-	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Create", "ID="_order.%Id()_"; LastName="_order.LastName.Value_"; FirstName="_order.FirstName.Value_"; Email="_order.Email)
 		
 	quit order
 ]]></Implementation>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/createtraining.csp" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/partials/createtraining.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid">
-	<div class="span1">
-	</div>
-	<div class="span10">
+<span ng-bind="'Создание обучения'|localize" style="font-weight: bold;"></span>
+<br>
+<br>
  		<form name="trainingForm" style="margin: 0 0 10px 0;" ng-submit="training.submit()">
 			<stctraining training="training.data" 
 							 form-name="trainingForm" 
@@ -13,9 +13,6 @@
 							 edit-mode="false"  
 							 btn-addition-visible="false"/>
 		</form>
- 	</div>
-	<div class="span1">
-	</div>
 </div>
 </br>
 <stcalert data="training.alert" span-right="1" span-middle="10" span-left="1"/>]]></CSP>

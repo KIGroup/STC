@@ -20,44 +20,40 @@ Work with Google JSON API, not GData.<br>]]></Description>
  try 
  {
   set req = ##class(%Net.HttpRequest).%New()
-  set req.SSLConfiguration=$g(^Settings("Stc","Google", "SslConfig"))
-  set req.Server="www.googleapis.com"
-  set req.Https=1
-  set req.Port=443
-  set req.ProxyHTTPS=1
-  set req.ProxyServer=$g(^Settings("Stc","Google", "ProxyServer"))
+  set req.SSLConfiguration = ##class(Stc.Data.Settings).GetGoogleSSLConfig()
+  set req.Server = "www.googleapis.com"
+  set req.Https = 1
+  set req.Port = 443
+  set req.ProxyHTTPS = 1
+  /*
+  set req.ProxyServer = $g(^Settings("Stc","Google", "ProxyServer"))
   set req.ProxyPort=$g(^Settings("Stc","Google", "ProxyPort"))
   set req.ProxyTunnel=$g(^Settings("Stc","Google", "ProxyTunnel"))
+  */
+  
   set req.Authorization="Bearer "_pToken
   set req.Timeout = timeout
   
-  //set req.ContentCharset="windows-1251"
- 
   if PObjInput'="" {
-   set req.ContentType="application/json"
+  	set req.ContentType="application/json"
    
-   set tIO = $IO
-   set tMnemSpace = ##class(%Library.Device).GetMnemonicRoutine()
-   try
-   {
+   	set tIO = $IO
+   	set tMnemSpace = ##class(%Library.Device).GetMnemonicRoutine()
+   	try{
 	  $$$TOE(sc,##class(%ZEN.Auxiliary.jsonProvider).%WriteJSONStreamFromObject(req.EntityBody, PObjInput))
 	  use tIO::("^"_tMnemSpace)
    }
-   catch ex
-   {
+   catch ex {
 	  use tIO::("^"_tMnemSpace)
 	  throw ex
    }
  
-  //  s req.WriteRawMode=1
   }
-  //set ^temp("delete") = pMethod_" | "_pUrl
+ 
   $$$TOE(sc,req.Send($zconvert(pMethod,"u"),pUrl))
-  //$$$TOE(sc,req.Send($zconvert(pMethod,"u"),pUrl,1))
-  //set ^temp("afterdelete") = "delete success"_pMethod
   
   set json=req.HttpResponse.Data.Read()
-  //set ^temp("json") = json
+ 
   $$$TOE(sc,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(json,,.PResponse))
  }
  catch ex

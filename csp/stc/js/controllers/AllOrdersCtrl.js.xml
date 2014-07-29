@@ -2,7 +2,7 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/controllers/AllOrdersCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//dddddddcdcd
+//dddddddcdd
  
 /*===========================================================================================
 Все заявки
@@ -24,37 +24,38 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
    
     $scope.order.init = function(){
         $scope.order.columns = [
-                          {name: 'Курс',          sqlName: 'Course->Name->Value',       isSorted: false, isSortable: true, isDown: true,  isSearched: true,  isSearchable: true},
-                          {name: 'Организация',   sqlName: 'Company->ShortName->Value', isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
-                          {name: 'Слушатели',     sqlName: 'StudentsNumber',     isSorted: false, isSortable: false,isDown: true,  isSearched: false, isSearchable: false},
-                          {name: 'Дата создания', sqlName: 'CreatedTS',          isSorted: true,  isSortable: true, isDown: false, isSearched: false, isSearchable: false, filter: 'date'},
-                          {name: 'Статус',        sqlName: 'OrderStatus',        isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false}];
+                          {name: 'Курс', sqlName: 'Course->Name->Value', isSorted: false, isSortable: true, isDown: true, isSearched: true,  isSearchable: true},
+                          {name: 'Организация', sqlName: 'Company->ShortName->Value', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Слушатели', sqlName: 'StudentsNumber', isSorted: false, isSortable: false,isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '60px'}},
+                          {name: 'Дата создания', sqlName: 'CreatedTS', isSorted: true, isSortable: true, isDown: false, isSearched: false, isSearchable: false, filter: 'date', captionStyle: {width: '190px'}},
+                          {name: 'Статус', sqlName: 'OrderStatus', isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '70px'}}];
         
         $scope.order.properties = [{name:'course.name'}, 
                                    {name:'contact.company.shortName'},
-                                   {name:'studentsNumberString', 
-                                   	   calculate: function(item){
+                                   {name:'studentsNumberString', cellStyle: {textAlign: 'center'}, 
+                                   	    calculate: function(item){
 	                                   	   if (item.status.code == 'Closed'){
-	                                   	    	item.studentsNumberString = '-';
+	                                   	    	item.studentsNumberString = '---';
 	                                   	   }
 	                                   	   else{
 		                                   	   item.studentsNumberString = item.studentsNumber;
 	                                   	   }
-	                                   }}, 
+	                                    }}, 
                                    {name:'createdTS', filter: 'date', filterParam: $filter('localize')('d MMMM y, HH:mm:ss')}, 
-                                   {name:'status.name', getCssClass: function(item){
-                                        var code = UtilsSrvc.getPropertyValue(item, 'status.code');
-                                        
-                                        var css = 'label';
+                                   {name:'status.name', cellStyle: {textAlign: 'center'}, 
+                                        getCssClass: function(item){
+                                            var code = UtilsSrvc.getPropertyValue(item, 'status.code');
+                                            
+                                            var css = 'label';
 
-                                        if (code == 'New')
-                                            css += ' label-important';
-                                        if (code == 'Approved')
-                                            css += ' label-info';
-                                        if (code == 'Closed')
-                                            css += ' label-inverse';
+                                            if (code == 'New')
+                                                css += ' label-important';
+                                            if (code == 'Approved')
+                                                css += ' label-info';
+                                            if (code == 'Closed')
+                                                css += ' label-inverse';
 
-                                        return css;
+                                            return css;
                                         }}];
         $scope.order.status = UtilsSrvc.getPropertyValue($scope.pageStore, 'orders.status', 'All');
         $scope.order.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'orders.grid.pageSize', 10);
@@ -69,7 +70,7 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
     // order
     // Загрузка заявок
     $scope.order.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
-        OrderSrvc.getOrders(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $scope.order.status).then(
+        OrderSrvc.getAllOrdersForGrid(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $scope.order.status).then(
             function(data){
                 $scope.order.pageTotal = Math.ceil(data.itemsTotal / pageSize);
                 $scope.order.itemsTotal = data.itemsTotal;
@@ -105,7 +106,7 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
 	// Принять заявку
     $scope.order.accept = function(){
         function acceptOrder(sendEmail){
-            OrderSrvc.createApprovedOrder($scope.order.selectedItems[0].id, sendEmail).then(
+            OrderSrvc.createOrderApproved($scope.order.selectedItems[0].id).then(
                 function(data){
                     $scope.order.selectedItems = [];
                     $scope.order.alert = UtilsSrvc.getAlert('Готово!', 'Заявка одобрена.', 'success', true);
@@ -128,22 +129,7 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
         }
     };
 
-    // order
-    // Отправить код доступа
-    $scope.order.sendEmail = function(){
-        function sendEmail(){
-            OrderSrvc.sendEmail($scope.order.selectedItems[0].code).then(
-                function(data){
-                    $scope.order.alert = UtilsSrvc.getAlert('Готово!', 'Контакту на почту был выслан код доступа к заявке.', 'success', true);
-                },
-                function(response){
-                    $scope.order.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
-                });
-        };
-
-        UtilsSrvc.openMessageBox('Отправить письмо', "Отправить контактному лицу на email код доступа к заявке, чтобы завершить заполнение?", sendEmail);    
-    };
-
+  
     // Удалить заявку
     $scope.order.deleteOrder = function(item){
         function deleteOrder(){
@@ -172,7 +158,7 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
         }
         
         function resolve(){
-            PersonSrvc.changeCompanyContact({contact: $scope.order.selectedItems[0].contact, 
+            CompanySrvc.changeContact({contact: $scope.order.selectedItems[0].contact, 
             								 companyId: $scope.order.selectedItems[0].contact.company.id, 
             								 isReplace: isReplace, 
             								 orderId: $scope.order.selectedItems[0].id}).then(
@@ -190,7 +176,7 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
 
     $scope.order.openChangeCompanyDialog = function(){
         if (!$scope.order.companies || $scope.order.companies.length==0){
-            CompanySrvc.getAllCompaniesShortInfo().then(
+            CompanySrvc.getAll().then(
                 function(data){
                     $scope.order.companies = data;
                 },
@@ -208,7 +194,7 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
          OrderSrvc.closeOrder($scope.order.selectedItems[0].id).then(
                 function(data){
                     $scope.order.alert = UtilsSrvc.getAlert('Готово!', 'Статус заявки изменен.', 'success', true);
-                    $scope.order.selectedItems = [];
+                   // $scope.order.selectedItems = [];
                     $scope.order.forciblyUpdate++;
                 },
                 function(response){

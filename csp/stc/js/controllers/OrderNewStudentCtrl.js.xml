@@ -22,20 +22,9 @@ controllersModule.controller('OrderNewStudentCtrl', function($scope, $timeout, $
         $scope.ordForm.order.trainingId = $routeParams.training;
     };
 
-    /* Подгрузить имена компаний */
-    $scope.ordForm.loadCompanies = function(){
-        CompanySrvc.getAllCompaniesShortInfoForTraining($routeParams.training).then(
-            function(data){
-                $scope.ordForm.companies = data;
-            },
-            function(response){
-                $scope.ordForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
-            }); 
-    };
-
     /* Подгрузить обучение */
     $scope.ordForm.loadTraining = function(){
-        TrainingSrvc.getTrainingForUser($scope.ordForm.order.trainingId).then(
+        TrainingSrvc.getForUser($scope.ordForm.order.trainingId).then(
             function(data){
                 $scope.ordForm.training = data;    
                 $scope.ordForm.training.dates = UtilsSrvc.getTwoDate(data.dateStart, data.dateFinish);
@@ -85,7 +74,6 @@ controllersModule.controller('OrderNewStudentCtrl', function($scope, $timeout, $
 
     $scope.ordForm.init();
     $scope.ordForm.loadTraining();
-    //$scope.ordForm.loadCompanies();
   });
 
 ]]></CSP>

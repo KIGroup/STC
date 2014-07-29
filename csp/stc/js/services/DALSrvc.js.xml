@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/DALSrvc.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/services/DALSrvc.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //dddxdddddв
 
@@ -13,42 +13,18 @@ servicesModule.factory('DALSrvc', function($resource, $q) {
 		getPromise: function(method, url, obj){
     		var resource = $resource(url);
             var deferred = $q.defer();
-
-            switch(method){
-                case 'save':
-                {
-                    resource.save(obj,
+            
+            resource[method](obj,
                         function(data){
                             deferred.resolve(data.children ? data.children : data);
                         },
                         function(response){
+	                        if (response.data == ""){
+	                        	response.data = "Error status: " + response.status + ". Method: " + response.config.method + ". Url: " + response.config.url + "."; 
+	                        }
+                            
                             deferred.reject(response);
                         });
-                    break;    
-                }
-                case 'get':
-                {
-                    resource.get(obj,
-                        function(data){
-                            deferred.resolve(data.children ? data.children : data);
-                        },
-                        function(response){
-                            deferred.reject(response);
-                        });
-                    break;    
-                }
-                case 'delete':
-                {
-                    resource.delete(obj,
-                        function(data){
-                            deferred.resolve(data.children ? data.children : data);
-                        },
-                        function(response){
-                            deferred.reject(response);
-                        });
-                    break;    
-                }      
-            }
 
             return deferred.promise;
     	}

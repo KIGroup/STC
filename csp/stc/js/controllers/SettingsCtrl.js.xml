@@ -173,7 +173,6 @@ controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsS
     $scope.page.google.load('calendar');
     $scope.page.mail.load('settings');
     $scope.page.mail.load('operators');
-    $scope.page.mail.load('order');
     $scope.page.mail.load('reminder');
     $scope.page.mail.load('registration');
     $scope.page.mail.load('feedback');

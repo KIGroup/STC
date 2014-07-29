@@ -65,6 +65,14 @@ MailingItem (subscriber)</Description>
 <Implementation><![CDATA[
 	#dim item As MailingItem = ""
 	
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Save", 
+	"ID="_data.id_
+	"; FullName="_$ZCONVERT(data.fullName, "I","UTF8")_
+	"; Email="_$ZCONVERT(data.email, "I","UTF8")_
+	"; Company="_$ZCONVERT(data.company, "I","UTF8")_
+	"; Position="_$ZCONVERT(data.position, "I","UTF8")_
+	"; MGroup="_data.group.id)
+	
 	if (data.id = ""){
 		set item = ..%New()
 		set item.AccessCode = $SYSTEM.Util.CreateGUID()

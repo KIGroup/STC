@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/FeedBackCtrl.js" application="/csp/feb/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/FeedBackCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //
 
@@ -20,7 +20,7 @@ controllersModule.controller('FeedBackCtrl', function($scope, $filter, $routePar
 
     /* Подгрузить обучение */
     $scope.page.loadTraining = function(){
-        TrainingSrvc.getTrainingForUser($routeParams.id).then(
+        TrainingSrvc.getForUser($routeParams.id).then(
             function(data){
                 $scope.page.training = data;
             },
@@ -31,8 +31,7 @@ controllersModule.controller('FeedBackCtrl', function($scope, $filter, $routePar
 
     // Save feedback
     $scope.page.submit = function(){
-        $scope.page.feedBack.access = {id: $routeParams.id, code: $routeParams.code};
-        TrainingSrvc.saveFeedBack($scope.page.feedBack).then(
+        TrainingSrvc.saveFeedBack($scope.page.feedBack, $routeParams.id, $routeParams.code).then(
             function(data){
                 $scope.page.hide = true;
                 $scope.page.alert = UtilsSrvc.getAlert('Готово!', 'Ваш отзыв принят. Спасибо!', 'success', true);

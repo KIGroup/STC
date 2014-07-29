@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/CreateTrainingCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/CreateTrainingCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //ddd
 
@@ -13,7 +13,7 @@ controllersModule.controller('CreateTrainingCtrl', function($scope, $location, U
     $scope.training = {data:{timeStart:'10:00', timeFinish: '14:00', orders: []}};
     
     $scope.training.submit = function(){
-        TrainingSrvc.saveTraining($scope.training.data).then(
+        TrainingSrvc.save($scope.training.data).then(
             function(data){
                  $location.path('/trainings');
             },

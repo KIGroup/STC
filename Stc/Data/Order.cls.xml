@@ -40,6 +40,8 @@ Delete application. Deletes all students and localization</Description>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Delete", "ID="_id)
+	
 	if (##class(OrderDirty).%ExistsId(id) = $$$OK){
 		set order = ..%OpenId(id,4)
 		

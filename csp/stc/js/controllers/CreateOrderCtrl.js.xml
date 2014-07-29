@@ -27,7 +27,7 @@ controllersModule.controller('CreateOrderCtrl', function($scope, $routeParams, $
 
     /* Подгрузить курсы */
     $scope.ordForm.loadCourses = function(){
-        CourseTeacherSrvc.getAllCoursesShortInfo(1).then(
+        CourseTeacherSrvc.getAll(1).then(
             function(data){
                 $scope.ordForm.courses = data;
                 
@@ -44,36 +44,6 @@ controllersModule.controller('CreateOrderCtrl', function($scope, $routeParams, $
                 $scope.ordForm.alert = UtilsSrvc.getAlert('Ошибка!', response.data, 'error', true);
             }); 
     };
-
-    /* Подгрузить города 
-    $scope.ordForm.loadCities = function(startsWith){
-        if(!startsWith || startsWith.length == 0)
-            $scope.ordForm.cities = [];
-        
-        if (!startsWith || startsWith.length != 2)
-            return;  
-
-        RegionSrvc.getAllCitiesStartsWith(startsWith).then(
-            function(data){
-                $scope.ordForm.cities = data;
-            },
-            function(response){
-                $scope.ordForm.alert = UtilsSrvc.getAlert('Ошибка!', response.data, 'error', true);
-            }); 
-    };
-    */
-   
-    /* Подгрузить имена компаний 
-    $scope.ordForm.loadCompanies = function(){
-        CompanySrvc.getAllCompaniesShortInfo().then(
-            function(data){
-                $scope.ordForm.companies = data;
-            },
-            function(response){
-                $scope.ordForm.alert = UtilsSrvc.getAlert('Ошибка!', response.data, 'error', true);
-            }); 
-    };
-    */
     
     /* Создать еще одну заявку */
     $scope.ordForm.again = function(){
@@ -100,9 +70,6 @@ controllersModule.controller('CreateOrderCtrl', function($scope, $routeParams, $
 	    $scope.ordForm.order.date = UtilsSrvc.getValidDate($scope.ordForm.date);
         if ($scope.ordForm.order.date == "")
         	$scope.ordForm.date = "";
-        /*
-        if (!$scope.ordForm.order.city || !$scope.ordForm.order.city.id)
-            $scope.ordForm.order.city = '';*/
     };
     
     /* Создать заявку */
@@ -121,36 +88,12 @@ controllersModule.controller('CreateOrderCtrl', function($scope, $routeParams, $
 
     /* Отправка формы */
     $scope.ordForm.submit = function(){
-        /*/ Получаем координаты из яндекса и создаем заявку
-        var searchStr = $scope.ordForm.order.city.greatParentName + ', ' + $scope.ordForm.order.city.parentName + ', ' + $scope.ordForm.order.city.name;
-        $scope.ordForm.order.point = '66.666 66.666'; // Если яндекс отвалится, то отправляем в "Салехард"
-        YandexSrvc.getResult(searchStr).then(
-            function(data){
-                var results = [];
-                for(var i=0; i < data.response.GeoObjectCollection.featureMember.length; i++){
-                    results.push(
-                        {point: UtilsSrvc.getPropertyValue(data.response.GeoObjectCollection.featureMember[i], 'GeoObject.Point.pos'),
-                         title: UtilsSrvc.getPropertyValue(data.response.GeoObjectCollection.featureMember[i], 'GeoObject.name')});
-                }
-
-                if (results.length > 0)
-                    $scope.ordForm.order.point = results[0].point;
-                
-                console.log($scope.ordForm.order.point);
-                $scope.ordForm.create();
-            },
-            function(response){
-                $scope.ordForm.create();
-            });
-        */
-
         $scope.ordForm.create();
     };
     
 
     $scope.ordForm.init();
     $scope.ordForm.loadCourses();
-    //$scope.ordForm.loadCompanies();
   });
 
 ]]></CSP>

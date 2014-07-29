@@ -19,7 +19,8 @@
     <link rel="stylesheet" type="text/css" href="css/custom.css">
   
    
-    <script language="javascript"  src="lib/jquery-1.7.2.min.js"></script>
+   <!-- <script language="javascript"  src="lib/jquery-1.7.2.min.js"></script>-->
+     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script language="javascript"  src="lib/bootstrap.min.js"></script>
      
     <script language="javascript"  src="lib/angular/angular.min.js"></script>
@@ -106,9 +107,9 @@
        	}
        	
         // Настройки приложения. Имена веб-приложений для REST, google календарь, язык
-        var StcAppSetting = {defaultApp: '#($GET(^Settings("Stc", "WebApp")))#',
-	        				           admin: '#($GET(^Settings("Stc", "WebAppAdmin")))#',
-                             user:  '#($GET(^Settings("Stc", "WebAppUser")))#',
+        var StcAppSetting = {defaultApp: '#(##class(Stc.Data.Settings).GetWebAppNamespace())#',
+	        				 admin: '#(##class(Stc.Data.Settings).GetWebAppAdmin())#',
+                             user:  '#(##class(Stc.Data.Settings).GetWebAppUser())#',
                              lang: getLang()};
 
         document.write('<script language="javascript" src="js/localization/locale_' + StcAppSetting.lang + '.js"><\/script>'); 
@@ -205,7 +206,6 @@
     <script language="javascript"  src="js/controllers/TrainingCtrl.js"></script>
     <script language="javascript"  src="js/controllers/AllTrainingsCtrl.js"></script>
     <script language="javascript"  src="js/controllers/CreateTrainingCtrl.js"></script>
-    <script language="javascript"  src="js/controllers/UpdateOrderCtrl.js"></script>
     <script language="javascript"  src="js/controllers/CreateOrderCtrl.js"></script>
     <script language="javascript"  src="js/controllers/OrderNewStudentCtrl.js"></script>
     <script language="javascript"  src="js/controllers/AllOrdersCtrl.js"></script>
@@ -213,6 +213,8 @@
 	  <script language="javascript"  src="js/controllers/CompanyCtrl.js"></script>
     <script language="javascript"  src="js/controllers/AllCertificatesCtrl.js"></script>
 	  <script language="javascript"  src="js/controllers/PersonCtrl.js"></script>
+	  <script language="javascript"  src="js/controllers/PersonTeacherCtrl.js"></script>
+	  <script language="javascript"  src="js/controllers/PersonStudentCtrl.js"></script>
 	  <script language="javascript"  src="js/controllers/AllPersonsCtrl.js"></script>
     <script language="javascript"  src="js/controllers/AllCoursesCtrl.js"></script>    
     <script language="javascript"  src="js/controllers/CourseCtrl.js"></script>
@@ -225,6 +227,7 @@
     <script language="javascript"  src="js/controllers/MailingGroupCtrl.js"></script>
     <script language="javascript"  src="js/controllers/MailingItemCtrl.js"></script>
     <script language="javascript"  src="js/controllers/MailingSubscriptionCtrl.js"></script>
+    <script language="javascript"  src="js/controllers/AllLogsCtrl.js"></script>
 
     <script language="javascript"  src="js/services/DALSrvc.js"></script>
     <script language="javascript"  src="js/services/YandexSrvc.js"></script>

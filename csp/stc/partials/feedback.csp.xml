@@ -58,13 +58,12 @@
 				</form>   			
 		    </accordion-group>
 		</accordion>
+	<br>
+	<stcalert data="page.alert"/>
 	</div >
 	<div class="span1">
 	</div >
 </div >
 
-<br>
-
-<stcalert data="page.alert" span-right="1" span-middle="10" span-left="1"/>
 ]]></CSP>
 </Export>

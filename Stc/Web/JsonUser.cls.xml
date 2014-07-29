@@ -6,15 +6,13 @@ Handling of BrokerUser</Description>
 <Super>Json</Super>
 <TimeCreated>63098,81469.21022</TimeCreated>
 
-<UDLText name="T">
-<Content><![CDATA[
-// ==================================== COURSES ===========================================
-
-]]></Content>
-</UDLText>
-
 <Method name="GetCoursesShortInfo">
 <Description>
+
+==========================================================================================================================
+COURSE                                                                                                              COURSE
+==========================================================================================================================
+
 Get short info about all courses
 Method="GET" Url="/json/course/isInUse/:isInUse"</Description>
 <ClassMethod>1</ClassMethod>
@@ -52,15 +50,13 @@ Method="POST" Url="/json/course/grid"</Description>
 ]]></Implementation>
 </Method>
 
-<UDLText name="T">
-<Content><![CDATA[
-// ==================================== APPLICATIONS (Orders) ============================= 
-
-]]></Content>
-</UDLText>
-
 <Method name="CreateOrderDirty">
 <Description>
+
+==========================================================================================================================
+ORDER                                                                                                                ORDER
+==========================================================================================================================
+
 Create application
 Method="POST" Url="/json/orderDirty"</Description>
 <ClassMethod>1</ClassMethod>
@@ -127,15 +123,13 @@ Method="POST" Url="/json/orderNewStudent"</Description>
 ]]></Implementation>
 </Method>
 
-<UDLText name="T">
-<Content><![CDATA[
-// ==================================== ORGANIZATIONS =====================================
-
-]]></Content>
-</UDLText>
-
 <Method name="GetCompaniesShortInfo">
 <Description>
+
+==========================================================================================================================
+ORGANIZATION                                                                                                  ORGANIZATION
+==========================================================================================================================
+
 Get short info about all organization
 Method="GET" Url="/json/company"</Description>
 <ClassMethod>1</ClassMethod>
@@ -144,15 +138,13 @@ Method="GET" Url="/json/company"</Description>
 ]]></Implementation>
 </Method>
 
-<UDLText name="T">
-<Content><![CDATA[
-// ==================================== MAILING SUBSCRIPTION ============================== 
-
-]]></Content>
-</UDLText>
-
 <Method name="CreateMailingSubscription">
 <Description>
+
+==========================================================================================================================
+MAILING SUBSCRIPTION                                                                                  MAILING SUBSCRIPTION
+==========================================================================================================================
+
 Create dirty mailing item
 Method="POST" Url="/json/mailing/subscription"</Description>
 <ClassMethod>1</ClassMethod>
@@ -362,15 +354,13 @@ Method="GET" Url="/json/mailing/subscription/:code"</Description>
 ]]></Implementation>
 </Method>
 
-<UDLText name="T">
-<Content><![CDATA[
-// ==================================== OTHER ============================================ 
-
-]]></Content>
-</UDLText>
-
 <Method name="GetCities">
 <Description>
+
+==========================================================================================================================
+OTHER                                                                                                                OTHER
+==========================================================================================================================
+
 Search cities
 Method="GET" Url="/json/city/:startsWith"</Description>
 <ClassMethod>1</ClassMethod>
@@ -461,12 +451,12 @@ Method="POST" Url="/json/training/:code/student"</Description>
 ]]></Implementation>
 </Method>
 
-<Method name="SaveFeedBack">
+<Method name="SaveTrainingFeedBack">
 <Description>
 Create feedBack for training
-Method="POST" Url="/json/saveFeedBack/:code"</Description>
+Method="POST" Url="/json/training/:id/feedback/:code"</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>accessCode:%String</FormalSpec>
+<FormalSpec>trId:%String,accessCode:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set status = $$$OK
@@ -476,7 +466,7 @@ Method="POST" Url="/json/saveFeedBack/:code"</Description>
 		
 		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
       	
-      	set tr = ##class(Stc.Data.Training).%OpenId(data.access.id)
+      	set tr = ##class(Stc.Data.Training).%OpenId(trId)
       	if ($P(tr.AccessCode,"-",1)_"-"_$P(tr.AccessCode,"-",5) '= accessCode){
       		$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("feedBackErrorCode"))
       	}
@@ -485,15 +475,25 @@ Method="POST" Url="/json/saveFeedBack/:code"</Description>
 	      	$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("feedBackSpam"))
       	}
       	
+      	do ##class(Stc.Utils.Log).Create("Stc.Web.JsonUser.SaveTrainingFeedBack", 
+			"Author="_$ZCONVERT(data.author, "I","UTF8")_
+			"TrainingId="_tr.%Id()_
+			"Rating="_data.rating_
+			"WhatLiked="_$ZCONVERT(data.whatLiked, "I","UTF8")_
+			"WhatImprovements="_$ZCONVERT(data.whatImprovements, "I","UTF8")_
+			"WhatHear="_$ZCONVERT(data.whatHear, "I","UTF8")_
+			"AboutTeacher="_$ZCONVERT(data.aboutTeacher, "I","UTF8"))
+	
       	set fb = ##class(Stc.Data.FeedBack).%New()
       	set fb.Author = $ZCONVERT(data.author, "I","UTF8")
-      	set fb.Training = training
+      	set fb.Training = tr
       	set fb.Rating = data.rating
       	set fb.WhatLiked = $ZCONVERT(data.whatLiked, "I","UTF8")
       	set fb.WhatImprovements = $ZCONVERT(data.whatImprovements, "I","UTF8")
       	set fb.WhatHear = $ZCONVERT(data.whatHear, "I","UTF8")
       	set fb.AboutTeacher = $ZCONVERT(data.aboutTeacher, "I","UTF8")
       	set status = fb.%Save()
+      	
       	if ($$$ISERR(status)) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("feedBackSave")) 
       	
 		TCOMMIT

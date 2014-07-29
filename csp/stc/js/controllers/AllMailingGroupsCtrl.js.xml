@@ -2,7 +2,7 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/controllers/AllMailingGroupsCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//вddddddddd
+//вdddddddddd
 
 /*===========================================================================================
 Все группы рассылки + участники 
@@ -27,11 +27,11 @@ controllersModule.controller('AllMailingGroupsCtrl', function($scope, $location,
         $scope.groupTable.columns = [
                           {name: 'Название', sqlName: 'Name', isSorted: true, isSortable: true, isDown: true, isSearched: true, isSearchable: true},
                           {name: 'Описание', sqlName: 'Description', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false},
-                          {name: 'Участники', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false}];
+                          {name: 'Участники', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '80px'}}];
         
         $scope.groupTable.properties = [{name:'name'}, 
                                         {name:'description'}, 
-                                        {name:'itemsCount'}]; 
+                                        {name:'itemsCount', cellStyle: {textAlign: 'center'}}]; 
                                                                              
         $scope.groupTable.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'mailingGroups.grid.pageSize', 10);
         $scope.groupTable.pageCurr = UtilsSrvc.getPropertyValue($scope.pageStore, 'mailingGroups.grid.pageCurr', 1);
@@ -43,7 +43,7 @@ controllersModule.controller('AllMailingGroupsCtrl', function($scope, $location,
 
     // Загрузить все группы рассылки
     $scope.groupTable.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
-        MailingSrvc.getAllGroups(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, {}).then(
+        MailingSrvc.getAllGroupsForGrid(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, {}).then(
             function(data){
                 $scope.groupTable.pageTotal = Math.ceil(data.itemsTotal / pageSize);
                 $scope.groupTable.itemsTotal = data.itemsTotal;
@@ -101,7 +101,7 @@ controllersModule.controller('AllMailingGroupsCtrl', function($scope, $location,
                           {name: 'Email', sqlName: 'Email', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: true},
                           {name: 'Организация', sqlName: 'Company', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: true},
                           {name: 'Должность', sqlName: 'Position', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false},
-                          {name: 'Послед. изменение', sqlName: 'LastUpdated', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false}];
+                          {name: 'Послед. изменение', sqlName: 'LastUpdated', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {width: '190px'}}];
         
         $scope.mitemTable.properties = [{name:'fullName'}, 
                                         {name:'email'}, 
@@ -122,7 +122,7 @@ controllersModule.controller('AllMailingGroupsCtrl', function($scope, $location,
         if ($scope.groupTable.selectedItems.length == 0)
             return;
         
-        MailingSrvc.getAllGroupItems(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, {groupId: $scope.groupTable.selectedItems[0].id}).then(
+        MailingSrvc.getAllGroupItemsForGrid(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, {groupId: $scope.groupTable.selectedItems[0].id}).then(
             function(data){
                 $scope.mitemTable.pageTotal = Math.ceil(data.itemsTotal / pageSize);
                 $scope.mitemTable.itemsTotal = data.itemsTotal;

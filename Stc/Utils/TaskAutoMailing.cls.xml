@@ -12,11 +12,22 @@ sets any property values using the stored "settings" for the task, and then
 invokes this method to execute the task.<br>
 In order to execute a real task, override this method in a subclass.]]></Description>
 <ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..Main()
+]]></Implementation>
+</Method>
+
+<Method name="Main">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	do ..StudentsAutoMailing()
+	
 	do ..TeacherAutoMailing()
+	
 	do ..CuratorAutoMailing()
+	
 	do ..FeedBackAutoMailing()
+	
 	Quit $$$OK
 ]]></Implementation>
 </Method>
@@ -43,6 +54,8 @@ Send notification to all students in the training</Description>
 			&sql(FETCH TrCur INTO :trId) 
 			quit:(SQLCODE '= 0)
 			
+			do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing StudentsAutoMailing()", "Start; TrID="_trId)
+			
 			set tr = ##class(Stc.Data.Training).%OpenId(trId)
 			set mail = ##class(Stc.Utils.Email).GetMailForStudents(tr)
 			
@@ -61,6 +74,7 @@ Send notification to all students in the training</Description>
 	}
 	catch(ex){
 		set st = ex.AsStatus()
+		do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing StudentsAutoMailing() Catch", st)
 	}
 	
 	quit st
@@ -73,6 +87,8 @@ Send notification to training teacher</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	set st = $$$OK
+	
 	try{
 		set diffDays = ##class(Stc.Data.Settings).GetMailingTeacherDays()
 		
@@ -86,6 +102,8 @@ Send notification to training teacher</Description>
 		{	
 			&sql(FETCH Tr2Cur INTO :trId) 
 			quit:(SQLCODE '= 0)
+			
+			do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing TeacherAutoMailing()", "Start; TrID="_trId)
 			
 			set tr = ##class(Stc.Data.Training).%OpenId(trId)
 				
@@ -102,6 +120,7 @@ Send notification to training teacher</Description>
 	}
 	catch(ex){
 		set st = ex.AsStatus()
+		do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing TeacherAutoMailing() Catch", st)
 	}
 	
 	quit st
@@ -114,6 +133,8 @@ Send notification to training curator</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	set st = $$$OK
+	
 	try{
 		set diffDays = ##class(Stc.Data.Settings).GetMailingCuratorDays()
 			
@@ -127,6 +148,8 @@ Send notification to training curator</Description>
 		{	
 			&sql(FETCH Tr3Cur INTO :trId) 
 			quit:(SQLCODE '= 0)
+			
+			do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing CuratorAutoMailing()", "Start; TrID="_trId)
 			
 			set tr = ##class(Stc.Data.Training).%OpenId(trId)
 			
@@ -144,6 +167,7 @@ Send notification to training curator</Description>
 	}
 	catch(ex){
 		set st = ex.AsStatus()
+		do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing CuratorAutoMailing() Catch", st)
 	}
 	
 	quit st
@@ -170,6 +194,8 @@ Send feedback link to students in the training</Description>
 			&sql(FETCH Tr4Cur INTO :trId) 
 			quit:(SQLCODE '= 0)
 			
+			do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing FeedBackAutoMailing()", "Start; TrID="_trId)
+			
 			set tr = ##class(Stc.Data.Training).%OpenId(trId)
 			
 			set mail = ##class(Stc.Utils.Email).GetMailForFeedBack(tr)
@@ -189,6 +215,7 @@ Send feedback link to students in the training</Description>
 	}
 	catch(ex){
 		set st = ex.AsStatus()
+		do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing FeedBackAutoMailing() Catch", st)
 	}
 	
 	quit st

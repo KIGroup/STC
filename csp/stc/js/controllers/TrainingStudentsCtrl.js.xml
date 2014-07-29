@@ -40,7 +40,7 @@ controllersModule.controller('TrainingStudentsCtrl', function($scope, $location,
 
     // Загрузить всех слушателей
     $scope.page.studTable.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
-        TrainingSrvc.getTrainingStudentsByAccessCode(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $routeParams.code).then(
+        TrainingSrvc.getStudentsByAccessCodeForGrid(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $routeParams.code).then(
             function(data){
                 $scope.page.studTable.pageTotal = Math.ceil(data.itemsTotal / pageSize);
                 $scope.page.studTable.itemsTotal = data.itemsTotal;
@@ -58,7 +58,7 @@ controllersModule.controller('TrainingStudentsCtrl', function($scope, $location,
 
     /* Подгрузить обучение */
     $scope.page.loadTraining = function(){
-        TrainingSrvc.getTrainingForUser($routeParams.id).then(
+        TrainingSrvc.getForUser($routeParams.id).then(
             function(data){
                 $scope.page.training = data;
             },

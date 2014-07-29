@@ -10,7 +10,7 @@
 
 servicesModule.factory('MailingSrvc', function(DALSrvc) {
 	return {
-        getAllGroups: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, other){
+        getAllGroupsForGrid: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, other){
             var first = pageSize * (pageCurr - 1) + 1;
             var obj = {sqlName: sqlName, 
                        isDown: isDown, 
@@ -20,9 +20,9 @@ servicesModule.factory('MailingSrvc', function(DALSrvc) {
                        searchText: searchText,
                        other: other};
 
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/mailing/groups', obj);
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/mailing/group/grid', obj);
         },
-        getAllGroupItems: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, other){
+        getAllGroupItemsForGrid: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, other){
             var first = pageSize * (pageCurr - 1) + 1;
             var obj = {sqlName: sqlName, 
                        isDown: isDown, 
@@ -32,7 +32,7 @@ servicesModule.factory('MailingSrvc', function(DALSrvc) {
                        searchText: searchText,
                        other: other};
 
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/mailing/group/items', obj);
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/mailing/group/item/grid', obj);
         },
         saveGroup: function(group){
             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/mailing/group', group);

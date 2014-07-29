@@ -25,9 +25,9 @@ Working with email</Description>
 	set courseName = tr.Course.Name.Value
 	set cityFullName = tr.City.Name.Value_", "_tr.City.ParentRegion.Name.Value_", "_tr.City.ParentRegion.ParentRegion.Name.Value
 	set street = tr.Street.Value
-	set room = tr.Room
+	set room = " "_tr.Room
 	set time = $e(##class(%Library.Time).LogicalToDisplay(tr.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(tr.TimeFinish), 1, 5)
-	set teacherData = tr.Teacher.LastName.Value_" "_tr.Teacher.FirstName.Value							
+	set teacherData = tr.Teacher.LastName.Value_" "_tr.Teacher.FirstName.Value_", "_tr.Teacher.Email							
 	set otherInfo = tr.OtherInfo.Value
 	
 	set mail = ##class(%ZEN.proxyObject).%New()
@@ -55,7 +55,7 @@ Working with email</Description>
 	*/
 	
 	set pattern = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingTeacher")
-	set url = ##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/trainingstudents?id="_tr.%Id()_"&code="_tr.AccessCode
+	set url = ##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_tr.%Id()_"/students/"_tr.AccessCode
 	set dateStart = $ZDATE(tr.DateStart, 3)
 	set courseName = tr.Course.Name.Value
 	set cityFullName = tr.City.Name.Value_", "_tr.City.ParentRegion.Name.Value_", "_tr.City.ParentRegion.ParentRegion.Name.Value
@@ -98,7 +98,7 @@ Working with email</Description>
 	*/
 	
 	set pattern = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingCurator")
-	set url = ##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/trainingstudents?id="_tr.%Id()_"&code="_tr.AccessCode
+	set url = ##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_tr.%Id()_"/students/"_tr.AccessCode
 	set dateStart = $ZDATE(tr.DateStart, 3)
 	set courseName = tr.Course.Name.Value
 	set cityFullName = tr.City.Name.Value_", "_tr.City.ParentRegion.Name.Value_", "_tr.City.ParentRegion.ParentRegion.Name.Value
@@ -127,14 +127,111 @@ Working with email</Description>
 	*/
 	
 	set pattern = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudentsFeedBack")
-	set url = ##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/feedback?id="_tr.%Id()_"&code="_$p(tr.AccessCode,"-",1)_"-"_$p(tr.AccessCode,"-",5)
+	set url = ##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_tr.%Id()_"/feedback/"_$p(tr.AccessCode,"-",1)_"-"_$p(tr.AccessCode,"-",5)
 	set courseName = tr.Course.Name.Value
 	
 	set mail = ##class(%ZEN.proxyObject).%New()
-	set mail.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudents")
+	set mail.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudentsFeedBack")
 	set mail.message = ##class(%MessageDictionary).FormatText(pattern, url, courseName)
 	
 	quit mail
+]]></Implementation>
+</Method>
+
+<Method name="GetMailForRegistration">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>tr:Stc.Data.Training</FormalSpec>
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	/* 
+		Здравствуйте! Ваша заявка на обучение принята.<br>
+		Дата начала обучения: %1, время: %6<br>
+		Курс: %2<br>
+		Город: %3<br>
+		Адрес: %4%5<br>
+		Преподаватель: %7<br>
+		%8
+	*/
+	
+	set pattern = ..GetEmailPattern("registration")
+	set dateStart = $ZDATE(tr.DateStart, 3)
+	set time = $e(##class(%Library.Time).LogicalToDisplay(tr.TimeStart), 1, 5)_" - "_$e(##class(%Library.Time).LogicalToDisplay(tr.TimeFinish), 1, 5)
+	set courseName = tr.Course.Name.Value
+	set cityFullName = tr.City.Name.Value_", "_tr.City.ParentRegion.Name.Value_", "_tr.City.ParentRegion.ParentRegion.Name.Value
+	set street = tr.Street.Value
+	set room = tr.Room
+	set teacherData = tr.Teacher.FullName_", "_tr.Teacher.Phone_", "_tr.Teacher.Email_", "_tr.Teacher.Skype
+	set otherInfo = tr.OtherInfo.Value	
+	
+	set mail = ##class(%ZEN.proxyObject).%New()
+	set mail.subject = pattern.subject
+	set mail.message = ##class(%MessageDictionary).FormatText(pattern.message, dateStart, courseName, cityFullName, street, room, time, teacherData, otherInfo)
+	
+	quit mail
+]]></Implementation>
+</Method>
+
+<Method name="GetEmailPattern">
+<Description>
+Get email pattern from ^CacheMsg</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>type:%String</FormalSpec>
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	
+	if (type = "students"){
+		set proxy.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudents")
+		set proxy.message = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudents")
+	}
+	elseif (type = "teacher"){
+		set proxy.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingTeacher")
+		set proxy.message = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingTeacher")
+	}
+	elseif (type = "curator"){
+		set proxy.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingCurator")
+		set proxy.message = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingCurator")
+	}
+	elseif (type = "feedback"){
+		set proxy.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToTrainingStudentsFeedBack")
+		set proxy.message = ##class(Stc.Utils.Msg).GetMsg("msgToTrainingStudentsFeedBack")
+	}
+	elseif (type = "registration"){
+		set proxy.subject = ##class(Stc.Utils.Msg).GetMsg("msgSubjectToNewTrainingStudent")
+		set proxy.message = ##class(Stc.Utils.Msg).GetMsg("msgToNewTrainingStudent")
+	}
+	
+	quit proxy
+]]></Implementation>
+</Method>
+
+<Method name="SetMailPattern">
+<Description>
+Get email pattern from ^CacheMsg</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>type:%String,subject:%String,message:%String</FormalSpec>
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	
+	if (type = "students"){
+		do ##class(Stc.Utils.Msg).SetMsg("msgSubjectToTrainingStudents", subject)
+		do ##class(Stc.Utils.Msg).SetMsg("msgToTrainingStudents", message)
+	}
+	elseif (type = "teacher"){
+		do ##class(Stc.Utils.Msg).SetMsg("msgSubjectToTrainingTeacher", subject)
+		do ##class(Stc.Utils.Msg).SetMsg("msgToTrainingTeacher", message)
+	}
+	elseif (type = "curator"){
+		do ##class(Stc.Utils.Msg).SetMsg("msgSubjectToTrainingCurator", subject)
+		do ##class(Stc.Utils.Msg).SetMsg("msgToTrainingCurator", message)
+	}
+	elseif (type = "feedback"){
+		do ##class(Stc.Utils.Msg).SetMsg("msgSubjectToTrainingStudentsFeedBack", subject)
+		do ##class(Stc.Utils.Msg).SetMsg("msgToTrainingStudentsFeedBack", message)
+	}
+	
+	quit $$$OK
 ]]></Implementation>
 </Method>
 

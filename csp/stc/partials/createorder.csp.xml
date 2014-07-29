@@ -11,10 +11,10 @@
 	</div>
 	<div class="span8">
 
-		<accordion close-others="true">
+		<accordion close-others="false">
 			<accordion-group id="gcalendar" heading="{{'Календарь ближайших курсов'|localize}}" is-open="ordForm.calendarOpen">
 		    	<iframe id="ifcalendar"
-		    		src='#($GET(^Settings("Stc", "GoogleCalendarSrc")))#'
+		    		src='#(##class(Stc.Data.Settings).GetGoogleCalendarSRC())#'
 		    		style="border: 0" 
 		    		width="100%" 
 		    		height="500px" 
@@ -58,13 +58,12 @@
 				</form>
 		    </accordion-group>
 		</accordion>
-
+		<stcalert data="ordForm.alert"/>
 	</div >
 	<div class="span2">
 	</div >
 	</div >
-	
-	<stcalert data="ordForm.alert" span-right="2" span-middle="8" span-left="2"/>
+
 	</div >
 	<div class="span2">
 	</div >

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/CourseCtrl.js" application="/csp/dorabotka/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/CourseCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //dddddfd
 
@@ -8,7 +8,7 @@
 Курс, создание и изменение
 ===========================================================================================*/
 
-controllersModule.controller('CourseCtrl', function($scope, $routeParams, $location, CourseTeacherSrvc, TrainingSrvc, UtilsSrvc){
+controllersModule.controller('CourseCtrl', function($scope, $routeParams, $window, CourseTeacherSrvc, TrainingSrvc, UtilsSrvc){
     if ($scope.menu.active) $scope.menu.active.css = "menuAfterActive";
     $scope.courseForm = {};
     
@@ -28,7 +28,7 @@ controllersModule.controller('CourseCtrl', function($scope, $routeParams, $locat
 
     // Загрузить курс
     $scope.courseForm.loadData = function(){
-        CourseTeacherSrvc.getCourse($routeParams.id).then(
+        CourseTeacherSrvc.get($routeParams.id).then(
             function(data){
                 $scope.courseForm.course = data;
             },
@@ -39,7 +39,7 @@ controllersModule.controller('CourseCtrl', function($scope, $routeParams, $locat
 
     // Сохранить / создать курс
     $scope.courseForm.submit = function(){
-        CourseTeacherSrvc.saveCourse($scope.courseForm.course).then(
+        CourseTeacherSrvc.save($scope.courseForm.course).then(
             function(data){
 	            if (!$scope.courseForm.course.id){
                 	$scope.courseForm.alert = UtilsSrvc.getAlert('Готово!', 'Курс создан.', 'success', true);
@@ -48,6 +48,8 @@ controllersModule.controller('CourseCtrl', function($scope, $routeParams, $locat
                 else{
                 	$scope.courseForm.alert = UtilsSrvc.getAlert('Готово!', 'Изменения сохранены.', 'success', true);
                 }
+                
+                $scope.cForm.$setPristine();
             },
             function(response){
                 $scope.courseForm.alert = UtilsSrvc.getAlert('Ошибка!', response.data, 'error', true);
@@ -56,7 +58,7 @@ controllersModule.controller('CourseCtrl', function($scope, $routeParams, $locat
 
     // Отмена - возврат на страницу курсов
     $scope.courseForm.cancel = function(){
-        $location.path('/courses').search({id:null});
+        $window.history.back();
     };
 
 

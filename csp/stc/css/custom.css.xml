@@ -404,5 +404,10 @@ pre.badge-inverse[href] {
 	border-color: inherit;
 	cursor: pointer;
 	text-decoration: none;
+}
+
+
+.table th, .table td {
+	padding: 4px 8px 4px 8px!important;
 }]]></CSP>
 </Export>

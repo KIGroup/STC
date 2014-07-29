@@ -61,8 +61,15 @@
 	</div >
 </div >
 
-<stcalert data="ordForm.alert" span-right="1" span-middle="10" span-left="1"/>
-
+<div class="row-fluid">
+	<div class="span1">
+	</div>
+	<div class="span10">
+		<stcalert data="ordForm.alert"/>
+	</div>
+	<div class="span1">
+	</div>
+</div>
 <br>
 ]]></CSP>
 </Export>

@@ -8,9 +8,10 @@
 Компания
 ===========================================================================================*/
 
-controllersModule.controller('CompanyCtrl', function($scope, $routeParams, $timeout, $location, OrderSrvc, CompanySrvc, UtilsSrvc){
+controllersModule.controller('CompanyCtrl', function($scope, $routeParams, $window, $route, $timeout, $location, OrderSrvc, PersonSrvc, CompanySrvc, UtilsSrvc){
     if ($scope.menu.active) $scope.menu.active.css = "menuAfterActive";
 
+	$scope.searchForm = {visible: true, persons: [], person:''};
     $scope.compForm = {form: {}, company: {}, contact: {}, visible: true};
    
     $scope.compForm.init = function(){
@@ -28,9 +29,29 @@ controllersModule.controller('CompanyCtrl', function($scope, $routeParams, $time
         }
     };
 
+    // Поиск персоны
+    $scope.searchForm.search = function(startsWith){
+        if(!startsWith || startsWith.length == 0){
+            $scope.searchForm.persons = [];
+            startsWith = '';
+        }
+        
+        if (startsWith.length != 2)
+            return;  
+        
+        PersonSrvc.getBySearchParameters(startsWith).then(
+            function(data){
+                $scope.searchForm.persons = data;
+            },
+            function(response){
+                $scope.searchForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            }); 
+    };
+    
+    
     // Загрузить новую заявку
     $scope.compForm.loadDirtyOrder = function(code){
-        OrderSrvc.getDirtyOrder(code).then(
+        OrderSrvc.getOrderDirty(code).then(
             function(data){
                 $scope.compForm.company = {contact: {}};
                 $scope.compForm.company.shortName = data.contact.company.shortName;
@@ -61,19 +82,18 @@ controllersModule.controller('CompanyCtrl', function($scope, $routeParams, $time
     $scope.compForm.save = function(){
         // Создать компанию из заявки вместе с контактом
         if ($routeParams.order){
-            CompanySrvc.saveCompanyFromOrder($scope.compForm.company, $routeParams.order).then(
+            CompanySrvc.saveFromOrder($scope.compForm.company, $routeParams.order).then(
                 function(data){
-                    $location.path('/orders');
+                    $window.history.back();
                 },
                 function(response){
                     $scope.compForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
-                    
                 });
         }
         if ($routeParams.ordernewstudent){
-            CompanySrvc.saveCompanyFromOrderNewStudent($scope.compForm.company, $routeParams.ordernewstudent).then(
+            CompanySrvc.saveFromOrderNewStudent($scope.compForm.company, $routeParams.ordernewstudent).then(
                 function(data){
-                    $location.path('/training').search({id: $scope.compForm.company.contact.training.id});
+                    $window.history.back();
                 },
                 function(response){
                     $scope.compForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
@@ -81,7 +101,7 @@ controllersModule.controller('CompanyCtrl', function($scope, $routeParams, $time
                 });
         }
         else if ($routeParams.id){
-	        CompanySrvc.saveCompany($scope.compForm.company).then(
+	        CompanySrvc.save($scope.compForm.company).then(
                 function(data){
                     $scope.compForm.alert = UtilsSrvc.getAlert('Готово!', 'Изменения сохранены.', 'success', true);
                     $scope.compForm_form.$setPristine();
@@ -95,7 +115,7 @@ controllersModule.controller('CompanyCtrl', function($scope, $routeParams, $time
     
     // Загрузить компанию
     $scope.compForm.loadCompany = function(id){
-		CompanySrvc.getCompany(id).then(
+		CompanySrvc.get(id).then(
                 function(data){
 	                data.status = data.status == 1; 
                     $scope.compForm.company = data;
@@ -108,12 +128,18 @@ controllersModule.controller('CompanyCtrl', function($scope, $routeParams, $time
 
     // Редактировать контакт - переход
     $scope.compForm.editContact = function(){
-        $location.path('/person').search({type: 'cont', id: $scope.compForm.company.contact.id});
+        $location.path('/person/' + $scope.compForm.company.contact.id);
     };
 
     // Сменить контакт - переход
     $scope.compForm.changeContact = function(){
-        $location.path('/person').search({type: 'cont', comp: $scope.compForm.company.id});
+		CompanySrvc.changeContact({contact: $scope.searchForm.person, companyId: $routeParams.id, isReplace: 1}).then(
+            function(data){
+                $route.reload();
+            },
+            function(response){
+                $scope.compForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            }); 
     };
     
     $scope.compForm.init();

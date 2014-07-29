@@ -29,14 +29,14 @@
 <stcalert data="searchForm.alert" span-right="4" span-middle="4" span-left="4"/>
 
 
-<div class="row-fluid" ng-show="personForm.visible">
+<div class="row-fluid">
 	<div class="span4">
 	
 	</div>
 	<div class="span4">
 		<accordion close-others="false">
 			<accordion-group heading="{{personForm.caption|localize}}" is-open="true">
-		    	<form class="form" style="margin: 0 0 10px 0;" ng-submit="personForm.submit()">
+		    	<form name="pform" class="form" style="margin: 0 0 10px 0;" ng-submit="personForm.submit()">
 					<stcperson 
 					  person="personForm.person" 
 				      companies="personForm.companies" 
@@ -50,10 +50,11 @@
 				</form>
 		    </accordion-group>
 		</accordion>
+		<stcalert data="personForm.alert" span-right="4" span-middle="4" span-left="4"/>
 	</div>
 	<div class="span4">
 	</div>
 </div>
-<stcalert data="personForm.alert" span-right="4" span-middle="4" span-left="4"/>
+
 ]]></CSP>
 </Export>
