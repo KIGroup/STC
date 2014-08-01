@@ -423,17 +423,25 @@ localizationModule.constant('StcDictionary', {
 	'Подписка отменена':'Unsubscribe completed',
 
 
-    'О проекте'       :'About',
-    'Руководитель'    :'Project manager',
-    'Разработчики'    :'Developers',
-    'Организация'     :'Organization',
-    'Якунин Юрий'     :'Yakunin Yuri',
-    'Подолько Илья'   :'Podolko Ilya',
-    'Речитский Андрей':'Rechitsky Andrey',
-    'Проект'          :'Project',
-    'ФГАОУ ВПО'       :'FSAEI HPE',
-    'Сибирский Федеральный Университет'               :'Siberian Federal University',
-    'Институт Космических и Информационных Технологий':'Institute of Space and Information Technologies'
+    'Дата начала / окончания' : 'Start / end date',
+	'Журнал рассылок' : 'Mailing journal',
+	'Закрыть заявку' : 'Close order',
+	'Изменить обучение' : 'Edit training',
+	'Непубличный телефон' : 'Secret phone',
+	'Получатель' : 'Recipient', 
+	'Публичный телефон' : 'Public phone',
+	'ЧЧ:MM' : 'HH:MM',
+	'Шаблон: Активация подписки' : 'Pattern: Subscription activation',
+	'Шаблон: Группа рассылки для подписчиков' : 'Pattern: ',
+	'Шаблон: Группы рассылки' : 'Pattern: Mailing groups',
+	'Шаблон: Заявки - ссылка для регистрации' : 'Pattern: Orders - link for registration',
+	'Шаблон: Куратор - доступ к списку слушателей' : 'Pattern: Curator - access to list of students',
+	'Шаблон: Одобрение заявки, отсылка письма контакту организации' : 'Pattern: Change order status to Approved',
+	'Шаблон: Преподаватель - доступ к списку слушателей' : 'Pattern: Teacher - access to list of students',
+	'Шаблон: Слушатели - доступ к анкете' : 'Pattern: Students - access to feedback',
+	'Шаблон: Слушатели - напоминание' : 'Pattern: Students - remainder',
+	'Шаблон: Слушатель - подтверждение регистрации' : 'Pattern: Student - confirmation registration'
+
   },
   getTranslate: function(word){
       

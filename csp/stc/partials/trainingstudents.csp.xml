@@ -46,13 +46,14 @@
 				<button type="button" class="btn btn-small btn-success" ng-click="page.exportToCSV()" ng-bind="'Экспорт'|localize" title="{{'Экспорт всех слушателей в файл *.csv'|localize}}"></button>   			
 		    </accordion-group>
 		</accordion>
+		
+
+		<br>
+		<stcalert data="page.alert" span-right="1" span-middle="10" span-left="1"/>
 	</div >
 	<div class="span1">
 	</div >
 </div >
 
-<br>
-
-<stcalert data="page.alert" span-right="1" span-middle="10" span-left="1"/>
 ]]></CSP>
 </Export>

@@ -254,15 +254,15 @@ Method="POST" Url="/json/orderNewStudent/grid"</Description>
 ]]></Implementation>
 </Method>
 
-<Method name="GetOrderDirty">
+<Method name="GetOrder">
 <Description>
 Get not approved application by id
-Method="GET" Url="/json/orderDirty/:id"</Description>
+Method="GET" Url="/json/order/:id"</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	do ..GetProxyObject("Stc.Data.OrderDirty", id).%ToJSON()
+	do ..GetProxyObject("Stc.Data.Order", id).%ToJSON()
 	quit $$$OK
 ]]></Implementation>
 </Method>
@@ -280,11 +280,12 @@ Method="GET" Url="/json/orderNewStudent/:id"</Description>
 ]]></Implementation>
 </Method>
 
-<Method name="CreateOrderApproved">
+<Method name="ChangeOrderStatus">
 <Description>
 Create approved application
-Method="POST" Url="/json/orderApproved"</Description>
+Method="POST" Url="/json/order/:id/status/:status"</Description>
 <ClassMethod>1</ClassMethod>
+<FormalSpec>orderId:%String,orderStatus:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set st = $$$OK
@@ -295,15 +296,17 @@ Method="POST" Url="/json/orderApproved"</Description>
 		// Check privilege for Person table
 		$$$THROWONERROR(st, ##class(Stc.Data.Person).CheckDeletePrivilege())
 		
-		$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
-
-      	set approved = ##class(Stc.Data.OrderApproved).Create(data.id, .st)
-      	if $$$ISERR(st){ 
-      		$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createApprovedOrder", "| "_st))
-      	}
-      	
-      	// delete dirty order
-      	set st = ##class(Stc.Data.Order).Delete(data.id)
+		set order = ##class(Stc.Data.Order).%OpenId(orderId)
+		if (orderStatus = "approved"){
+			set order.OrderStatus = ##class(Stc.Data.OrderStatus).CodeIdxOpen("Approved")
+			set mail = ##class(Stc.Utils.Email).GetMailForOrderApply(order)
+			do ##class(Stc.Utils.Email).Send(order.Email, mail.subject, mail.message, order.LastName_" "_order.FirstName)
+		}
+		elseif (orderStatus = "closed"){
+			set order.OrderStatus = ##class(Stc.Data.OrderStatus).CodeIdxOpen("Closed")
+		}
+		
+      	set st = order.%Save()
       	$$$THROWONERROR(st, st)
       	
       	TCOMMIT
@@ -313,6 +316,8 @@ Method="POST" Url="/json/orderApproved"</Description>
 		set st = ex.AsStatus()
 	}
 
+	do ##class(Stc.Data.Order).SynchronizeCube()
+	
 	quit st
 ]]></Implementation>
 </Method>
@@ -332,7 +337,7 @@ Method="DELETE" Url="/json/order/:id"</Description>
 		// Check privilege for Person table
 		$$$THROWONERROR(st, ##class(Stc.Data.Person).CheckDeletePrivilege())
 		
-		$$$THROWONERROR(st, ##class(Stc.Data.Order).Delete(id))
+		$$$THROWONERROR(st, ##class(Stc.Data.Order).%DeleteId(id))
 		
 		TCOMMIT
 	}
@@ -340,6 +345,8 @@ Method="DELETE" Url="/json/order/:id"</Description>
 		TROLLBACK
 		set st = ex.AsStatus()
 	}
+	
+	do ##class(Stc.Data.Order).SynchronizeCube()
 	
     quit st
 ]]></Implementation>
@@ -437,30 +444,6 @@ Method="POST" Url="/json/orderNewStudent/:orderId/company/:companyId"</Descripti
 	}
 	catch ex {
 		TROLLBACK
-		set st = ex.AsStatus()
-	}
-	
-    quit st
-]]></Implementation>
-</Method>
-
-<Method name="CloseOrderApproved">
-<Description>
-Change st approved order to "close"
-Method="POST" Url="/json/orderApproved/:id/close"</Description>
-<ClassMethod>1</ClassMethod>
-<FormalSpec>id:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set st  = $$$OK
-	
-	try{
-		set order = ##class(Stc.Data.OrderApproved).%OpenId(id)
-		set order.OrderStatus = ##class(Stc.Data.OrderStatus).CodeIdxOpen("Closed")
-		set st = order.%Save()
-		do ##class(Stc.Data.OrderApproved).SynchronizeCube()
-	}
-	catch ex {
 		set st = ex.AsStatus()
 	}
 	
@@ -580,8 +563,8 @@ Method="POST" Url="/json/company/order"</Description>
 		if $$$ISERR(st) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveCompany", " | "_st))
       	
       	// Теперь у новой заявки есть компания
-      	if (data.isOrderDirty){
-      		set order = ##class(Stc.Data.OrderDirty).%OpenId(data.orderId)
+      	if (data.isOrder){
+      		set order = ##class(Stc.Data.Order).%OpenId(data.orderId)
       	}
       	else{
 	      	set order = ##class(Stc.Data.OrderNewStudent).%OpenId(data.orderId)
@@ -638,12 +621,12 @@ Method="POST" Url="/json/company/contact/change"</Description>
 			set company.Contact = newContact
 		}
 		else{
-			set order = ##class(Stc.Data.OrderDirty).%OpenId(data.orderId,3,.st)
+			set order = ##class(Stc.Data.Order).%OpenId(data.orderId,3,.st)
 			if $$$ISERR(st) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("openOrder", "| "_st))
 			
-			do company.Contact.LastName.SetValues(order.LastName.%Id())
-			do company.Contact.FirstName.SetValues(order.FirstName.%Id())
-			do company.Contact.MiddleName.SetValues(order.MiddleName.%Id())
+			set company.Contact.LastName.Value = order.LastName
+			set company.Contact.FirstName.Value = order.FirstName
+			set company.Contact.MiddleName.Value = order.MiddleName
 			set company.Contact.Email = $ZCONVERT(order.Email, "I","UTF8")
 			set company.Contact.Phone = $ZCONVERT(order.Phone, "I","UTF8")
 			set company.Contact.Skype = $ZCONVERT(order.Skype, "I","UTF8")
@@ -800,12 +783,13 @@ Method="POST" Url="/json/training"</Description>
 		$$$THROWONERROR(st, ##class(Stc.Data.Person).CheckDeletePrivilege())
 		
 		$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
-		do ##class(Stc.Data.Training).Save(data, .st)
+		set tr = ##class(Stc.Data.Training).Save(data, .st)
 		if $$$ISERR(st) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus($CASE(data.id = "", 1:"createTraining",:"saveTraining"), " | "_st)) 
-		if (data.id=""){
+		if (data.id = ""){
 			set isNew = $$$YES
+			do ##class(Stc.Data.MailingTrainingGroup).CreateAll(tr)
 		}
-		
+
 		TCOMMIT
 	}
 	catch ex {
@@ -813,7 +797,7 @@ Method="POST" Url="/json/training"</Description>
 		set st = ex.AsStatus()
 	}
 	
-	if (isNew=1){
+	if (isNew = 1){
 		do ##class(Stc.Data.Training).BuildCubes()
 	}
 	
@@ -910,7 +894,7 @@ Method="POST" Url="/json/training/:id/complete"</Description>
 		}
 		
 		// Close orders
-		do ##class(Stc.Data.OrderApproved).CloseOrdersByTraining(training.%Id()) 
+		do ##class(Stc.Data.Order).CloseOrdersByTraining(training.%Id()) 
 		
 		set trId = training.%Id() 
 		
@@ -922,7 +906,7 @@ Method="POST" Url="/json/training/:id/complete"</Description>
 	}
 	
 	if (st = $$$OK) {
-		do ##class(Stc.Data.OrderApproved).SynchronizeCube()
+		do ##class(Stc.Data.Order).SynchronizeCube()
 		do ##class(Stc.Data.Training).UpdateFacts(trId)
 	}
 	
@@ -975,17 +959,28 @@ Method="POST" Url="/json/training/automailing/status"</Description>
 		$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
 		
 		set training = ##class(Stc.Data.Training).%OpenId(data.id)
-		if (data.type = "students"){
+		if (data.groupId = "students"){
 			set training.IsStudentsAutoMailing = data.isAutoMailing
 		}
-		elseif (data.type = "teacher"){
+		elseif (data.groupId = "teacher"){
 			set training.IsTeacherAutoMailing = data.isAutoMailing
 		}
-		elseif (data.type = "curator"){
+		elseif (data.groupId = "curator"){
 			set training.IsCuratorAutoMailing = data.isAutoMailing
 		}
-		elseif (data.type = "feedback"){
+		elseif (data.groupId = "feedback"){
 			set training.IsFeedBackAutoMailing = data.isAutoMailing
+		}
+		elseif (data.groupId = "orders"){
+			set training.IsOrdersAutoMailing = data.isAutoMailing
+		}
+		else{
+			set mgroup = ##class(Stc.Data.MailingTrainingGroup).CommonIdxOpen(training.%Id(), data.groupId,,.st)
+			if $$$ISOK(st){
+				set mgroup.IsAutoMailing = data.isAutoMailing
+				set st = mgroup.%Save()
+				if $$$ISERR(st) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveTrainingMailingGroup", " | "_st))
+			}
 		}
 		
 		set st = training.%Save()
@@ -1301,15 +1296,18 @@ Method="POST" Url="/json/training/oredeNewStudent"</Description>
 			$$$THROWONERROR(st, st)
 		}
 		
+		set orderEmail = order.Email
+		set orderFullName = order.LastName.Value_" "_order.FirstName.Value
 		set st = ##class(Stc.Data.OrderNewStudent).%DeleteId(order.%Id())
 		$$$THROWONERROR(st, st)
 		
 		set st = training.%Save()
 		$$$THROWONERROR(st, st)
 		
-		set mail = ##class(Stc.Utils.Email).GetMailForRegistration(training)
+		set mail = ##class(Stc.Utils.Email).GetMailForTrainingRegistration(training)
 		
-		set st = ##class(Stc.Utils.Email).Send(order.Email, mail.subject, mail.message)
+		set st = ##class(Stc.Utils.Email).Send(orderEmail, mail.subject, mail.message, orderFullName)
+		
 		if $$$OK '= st set st = ##class(Stc.Utils.Msg).GetErrorStatus("emailAddNewStudent", "| "_st) 
 		set trId = training.%Id()
 			
@@ -2052,9 +2050,6 @@ Method="GET" Url="/json/settings/mail/:type"</Description>
 			set proxy.data = ##class(Stc.Utils.Email).GetEmailPattern("students")
 			set proxy.data.days = ##class(Stc.Data.Settings).GetMailingStudentsDays()
 		}
-		elseif (type = "feedback"){
-			set proxy.data = ##class(Stc.Utils.Email).GetEmailPattern(type)
-		}
 		elseif (type = "teacher"){
 			set proxy.data = ##class(Stc.Utils.Email).GetEmailPattern(type)
 			set proxy.data.days = ##class(Stc.Data.Settings).GetMailingTeacherDays()			
@@ -2063,7 +2058,7 @@ Method="GET" Url="/json/settings/mail/:type"</Description>
 			set proxy.data = ##class(Stc.Utils.Email).GetEmailPattern(type)
 			set proxy.data.days = ##class(Stc.Data.Settings).GetMailingCuratorDays()
 		}
-		elseif (type = "registration"){
+		else{
 			set proxy.data = ##class(Stc.Utils.Email).GetEmailPattern(type)
 		}
 		
@@ -2125,9 +2120,10 @@ Method="POST" Url="/json/settings/mail/:type"</Description>
 			do ##class(Stc.Utils.Email).SetMailPattern(type, $ZCVT(data.subject, "I", "UTF8"), $ZCVT(data.message, "I", "UTF8"))
 			do ##class(Stc.Data.Settings).SetMailingCuratorDays(data.days)
 		}
-		elseif (type = "registration"){
+		else{
 			do ##class(Stc.Utils.Email).SetMailPattern(type, $ZCVT(data.subject, "I", "UTF8"), $ZCVT(data.message, "I", "UTF8"))	
 		}
+
 		
 		TCOMMIT	
 	}
@@ -2164,19 +2160,42 @@ Method="GET" Url="/json/settings/mail/preview/:type"</Description>
 		}
 		
 		if (type = "registration"){
-			set mail = ##class(Stc.Utils.Email).GetMailForRegistration(tr)
+			set mail = ##class(Stc.Utils.Email).GetMailForTrainingRegistration(tr)
 		}
 		elseif (type = "students") || (type = "reminder"){
-			set mail = ##class(Stc.Utils.Email).GetMailForStudents(tr)
+			set mail = ##class(Stc.Utils.Email).GetMailForTrainingStudents(tr)
 		}
 		elseif (type = "feedback"){
-			set mail = ##class(Stc.Utils.Email).GetMailForFeedBack(tr)
+			set mail = ##class(Stc.Utils.Email).GetMailForTrainingFeedBack(tr)
 		}
 		elseif (type = "curator"){
-			set mail = ##class(Stc.Utils.Email).GetMailForCurator(tr)
+			set mail = ##class(Stc.Utils.Email).GetMailForTrainingCurator(tr)
 		}
 		elseif (type = "teacher"){
-			set mail = ##class(Stc.Utils.Email).GetMailForTeacher(tr)
+			set mail = ##class(Stc.Utils.Email).GetMailForTrainingTeacher(tr)
+		}
+		elseif (type = "orders"){
+			set mail = ##class(Stc.Utils.Email).GetMailForTrainingOrders(tr)
+		}
+		elseif (type = "orderapply"){
+			&sql(SELECT TOP 1 ID INTO :lastId FROM Stc_Data.Order ORDER BY ID DESC)
+			set order = ##class(Stc.Data.Order).%OpenId(lastId,,.sc)
+			if $$$ISOK(sc){ 
+				set mail = ##class(Stc.Utils.Email).GetMailForOrderApply(tr)
+			}
+		}
+		elseif (type = "mailinggroups"){
+			set mail = ##class(Stc.Utils.Email).GetMailForMailingGroups(tr)
+		}
+		elseif (type = "mailingsubscriber"){
+			set mail = ##class(Stc.Utils.Email).GetMailForMailingSubscriber(tr)
+		}
+		elseif (type = "confirmsubscription"){
+			&sql(SELECT TOP 1 ID INTO :lastId FROM Stc_Data.MailingItemApproved ORDER BY ID DESC)
+			set mItem = ##class(Stc.Data.MailingItemApproved).%OpenId(lastId,,.sc)
+			if $$$ISOK(sc){ 
+				set mail = ##class(Stc.Utils.Email).GetMailForConfirmationSubscription(mItem)
+			}
 		}
 		
 		set proxy = ##class(%ZEN.proxyObject).%New()
@@ -2544,6 +2563,201 @@ Method="POST" Url="/json/log/grid"</Description>
 		set st = ex.AsStatus()
 	}
 
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="GetMailingJournalItemsForGrid">
+<Description>
+Get mail journal
+Method="POST" Url="/json/mail/grid"</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
+      	
+		$$$THROWONERROR(st, ..WriteJsonForGrid("SELECT ID FROM Stc_Data.MailingJournal", "Stc.Data.MailingJournal", params))
+    }
+	catch ex {
+		set st = ex.AsStatus()
+	}
+
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="GetTrainingMailingGroups">
+<Description>
+http://localhost:57772/csp/stc/admin/json/training/112/mailing/group</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>trId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{		
+		set tr = ##class(Stc.Data.Training).%OpenId(trId)
+		
+		set proxy = ##class(%ZEN.proxyObject).%New()
+		set proxy.mGroups = ##class(%ListOfObjects).%New()
+		
+		set teacherEmail = ##class(%ZEN.proxyObject).%New()
+		set teacherEmail.id = tr.%Id()_"T"
+		set teacherEmail.name = tr.Teacher.FullName
+		set teacherEmail.email = tr.Teacher.Email
+		
+		set curatorEmail = ##class(%ZEN.proxyObject).%New()
+		set curatorEmail.id = tr.%Id()_"C"
+		set curatorEmail.name = tr.CuratorFullName.Value
+		set curatorEmail.email = tr.CuratorEmail
+		
+		set studentsContacts = ##class(Stc.Data.Training).GetStudentsContacts(tr.%Id())
+		
+		
+		// Students
+		set grStudents = ##class(%ZEN.proxyObject).%New()
+		set grStudents.id = "students"
+		set grStudents.name = "Слушатели - напоминание"
+		set grStudents.mailingIsCompleted = $$$NO
+		set grStudents.isAutoMailing = tr.IsStudentsAutoMailing
+		set grStudents.mail = ##class(Stc.Utils.Email).GetMailForTrainingStudents(tr)  
+		set grStudents.contacts = studentsContacts
+		do proxy.mGroups.Insert(grStudents)
+		
+		
+		// FeedBack
+		set grFeedBack = ##class(%ZEN.proxyObject).%New()
+		set grFeedBack.id = "feedback"
+		set grFeedBack.name = "Слушатели - доступ к анкете"
+		set grFeedBack.mailingIsCompleted = $$$NO
+		set grFeedBack.isAutoMailing = tr.IsFeedBackAutoMailing
+		set grFeedBack.mail = ##class(Stc.Utils.Email).GetMailForTrainingFeedBack(tr)
+		set grFeedBack.contacts = studentsContacts
+		do proxy.mGroups.Insert(grFeedBack)
+		
+		
+		// Curator
+		set grCurator = ##class(%ZEN.proxyObject).%New()
+		set grCurator.id = "curator"
+		set grCurator.name = "Куратор - список слушателей"
+		set grCurator.mailingIsCompleted = $$$NO
+		set grCurator.isAutoMailing = tr.IsCuratorAutoMailing
+		set grCurator.mail = ##class(Stc.Utils.Email).GetMailForTrainingCurator(tr)
+		set grCurator.contacts = ##class(%ListOfObjects).%New()
+		do grCurator.contacts.Insert(curatorEmail)
+		do proxy.mGroups.Insert(grCurator)
+		
+		
+		// Teacher
+		set grTeacher = ##class(%ZEN.proxyObject).%New()
+		set grTeacher.id = "teacher"
+		set grTeacher.name = "Преподаватель - список слушателей"
+		set grTeacher.mailingIsCompleted = $$$NO
+		set grTeacher.isAutoMailing = tr.IsTeacherAutoMailing
+		set grTeacher.mail = ##class(Stc.Utils.Email).GetMailForTrainingTeacher(tr)
+		set grTeacher.contacts = ##class(%ListOfObjects).%New()
+		do grTeacher.contacts.Insert(teacherEmail)
+		do proxy.mGroups.Insert(grTeacher)
+		
+		
+		// Insert mailing group for orders
+		set grOrders = ##class(%ZEN.proxyObject).%New()
+		set grOrders.id = "orders"
+		set grOrders.name = "Заявки - ссылка на регистрацию"
+		set grOrders.mailingIsCompleted = $$$NO
+		set grOrders.isAutoMailing = tr.IsOrdersAutoMailing
+		set grOrders.mail = ##class(Stc.Utils.Email).GetMailForTrainingOrders(tr)
+		set grOrders.contacts = ##class(Stc.Data.Order).GetContactsForCourse(tr.Course.%Id())
+		do proxy.mGroups.Insert(grOrders)
+		
+		
+		// Insert real Mailing Groups
+		set MGSubscriber = ##class(Stc.Data.MailingGroup).GetAnnouncementGroup()
+		set mgt = ##class(Stc.Data.MailingTrainingGroup).Create(tr, MGSubscriber)
+		set grSubscriber = ##class(%ZEN.proxyObject).%New()
+		set grSubscriber.id = MGSubscriber.%Id()
+		set grSubscriber.isSubscribers = $$$YES
+		set grSubscriber.name = MGSubscriber.Name
+		set grSubscriber.mailingIsCompleted = mgt.MailingIsCompleted
+		set grSubscriber.isAutoMailing = mgt.IsAutoMailing
+		set grSubscriber.mail = ##class(Stc.Utils.Email).GetMailForMailingSubscriber(tr)
+		set grSubscriber.contacts = ##class(Stc.Data.MailingGroup).GetMailingItemsContacts(MGSubscriber.%Id())
+		do proxy.mGroups.Insert(grSubscriber)
+		
+		
+		set mailForGroup = ##class(Stc.Utils.Email).GetMailForMailingGroups(tr)
+		&sql(DECLARE MGCur CURSOR FOR 
+			 	 SELECT ID
+			 	 FROM Stc_Data.MailingGroup
+			 	 WHERE ID <> :grSubscriber.id)	
+			
+		&sql(OPEN MGCur)
+		for  
+		{	
+			&sql(FETCH MGCur INTO :id) 
+			quit:(SQLCODE '= 0)
+			
+			set mgroup = ##class(Stc.Data.MailingGroup).%OpenId(id)
+			set mtg = ##class(Stc.Data.MailingTrainingGroup).Create(tr, mgroup)
+			
+			set grProxy = ##class(%ZEN.proxyObject).%New()
+			set grProxy.id = mgroup.%Id()
+			set grProxy.name = mgroup.Name
+			set grProxy.isAutoMailing = mtg.IsAutoMailing
+			set grProxy.mailingIsCompleted = mtg.MailingIsCompleted 
+			set grProxy.mail = mailForGroup
+			set grProxy.contacts = ##class(Stc.Data.MailingGroup).GetMailingItemsContacts(mgroup.%Id())	
+			do proxy.mGroups.Insert(grProxy)
+		}
+		&sql(CLOSE MGCur)
+		
+		
+		do proxy.%ToJSON()
+	}
+	catch(ex){
+		set st = ex.AsStatus()
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="SendEmailFromTraining">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		set data.subject = $ZCVT(data.subject, "I", "UTF8")
+		set data.message = $ZCVT(data.message, "I", "UTF8")
+		
+		if (data.isSubscribers){
+			for i=1:1:data.contacts.Count(){
+				set mItem = ##class(Stc.Data.MailingItemApproved).GetByEmail(data.contacts.GetAt(i).email)
+				if $ISOBJECT(mItem){
+					set msg = $REPLACE(data.message, "%accessCode", $system.Encryption.Base64Encode(mItem.AccessCode))
+					do ##class(Stc.Utils.Email).Send(mItem.Email, data.subject, msg, mItem.FullName)
+				}
+				else{
+					do ##class(Stc.Utils.Email).Send(data.contacts.GetAt(i).email, data.subject, data.message)
+				}
+			}
+		}
+		else{
+			for i=1:1:data.contacts.Count(){
+				do ##class(Stc.Utils.Email).Send(data.contacts.GetAt(i).email, data.subject, data.message, $ZCVT(data.contacts.GetAt(i).name, "I", "UTF8"))
+			}
+		}
+	}
+	catch (ex){
+		set st = ex.AsStatus()
+	}
+	
 	quit st
 ]]></Implementation>
 </Method>

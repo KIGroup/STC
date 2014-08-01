@@ -50,7 +50,7 @@ Method="POST" Url="/json/course/grid"</Description>
 ]]></Implementation>
 </Method>
 
-<Method name="CreateOrderDirty">
+<Method name="CreateOrder">
 <Description>
 
 ==========================================================================================================================
@@ -58,28 +58,30 @@ ORDER                                                                           
 ==========================================================================================================================
 
 Create application
-Method="POST" Url="/json/orderDirty"</Description>
+Method="POST" Url="/json/order"</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set status = $$$OK
+	set st = $$$OK
 	
     try{
 	    TSTART
 	    
-	   	$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.order,1))
+	   	$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.order,1))
        
-       	set order = ##class(Stc.Data.OrderDirty).Create(order, .status)
-       	if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createDirtyOrder", "| "_status))
+       	do ##class(Stc.Data.Order).Create(order, .st)
+       	if $$$ISERR(st) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createDirtyOrder", "| "_st))
        	
        	TCOMMIT
    	}
    	catch ex {
 	   	TROLLBACK
-	   	set status = ex.AsStatus()
+	   	set st = ex.AsStatus()
 	}
 	
-	quit status
+	do ##class(Stc.Data.Order).SynchronizeCube()
+	
+	quit st
 ]]></Implementation>
 </Method>
 
@@ -179,12 +181,10 @@ Method="POST" Url="/json/mailing/subscription"</Description>
 		set item = ##class(Stc.Data.MailingItemDirty).Save(data, .st)
 		$$$THROWONERROR(st, st)
 		
-		set url = "http://"_$GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp#/mailing/subscription/confirmation/"_$system.Encryption.Base64Encode(item.AccessCode)
+		set mail = ##class(Stc.Utils.Email).GetMailForConfirmationSubscription(item)
 		
-		set mailSubject = ##class(Stc.Utils.Msg).GetMsg("subjectConfirmationSubscription")
-		set mailMsg = ##class(%MessageDictionary).FormatText(##class(Stc.Utils.Msg).GetMsg("msgConfirmationSubscription"), url)
+		set st = ##class(Stc.Utils.Email).Send(item.Email, mail.subject, mail.message)
 		
-		set st = ##class(Stc.Utils.Email).Send(item.Email, mailSubject, mailMsg)
 		if $$$ISERR(st){
 			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("SendSubscriptionConfirmationCodeError", "| "_st))
 		}

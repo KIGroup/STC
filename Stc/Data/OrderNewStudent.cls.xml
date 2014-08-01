@@ -121,7 +121,7 @@ Convert to proxyObject (for JSON)</Description>
 Create application</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
-<ReturnType>OrderDirty</ReturnType>
+<ReturnType>OrderNewStudent</ReturnType>
 <Implementation><![CDATA[
 	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Create", 
 	"; TrID="_data.trainingId_

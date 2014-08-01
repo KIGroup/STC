@@ -17,12 +17,16 @@ controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsS
                    mail:{
                       settings: {},
                       operators: {items:[{email:{}}]},
-                      order: {},
                       reminder: {},
                       feedback: {},
                       teacher: {},
                       curator: {},
-                      registration:{}
+                      registration: {},
+                      orders: {},
+                      orderapply: {},
+                      mailinggroup: {},
+                      mailingsubscriber:{},
+                      confirmsubscription:{}
                    }
                  };
     
@@ -169,7 +173,7 @@ controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsS
 
     
     // Load all settings
-	  $scope.page.google.load('settings');
+	$scope.page.google.load('settings');
     $scope.page.google.load('calendar');
     $scope.page.mail.load('settings');
     $scope.page.mail.load('operators');
@@ -178,6 +182,11 @@ controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsS
     $scope.page.mail.load('feedback');
     $scope.page.mail.load('teacher');
     $scope.page.mail.load('curator');
+    $scope.page.mail.load('orders');
+    $scope.page.mail.load('orderapply');
+    $scope.page.mail.load('mailinggroups');
+    $scope.page.mail.load('mailingsubscriber'); 
+    $scope.page.mail.load('confirmsubscription'); 
 });
 
 ]]></CSP>

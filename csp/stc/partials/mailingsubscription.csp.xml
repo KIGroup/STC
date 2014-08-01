@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/mailingitem.csp" application="/csp/stc/" default="1"><![CDATA[
-<div class="row-fluid">
+<CSP name="stc/partials/mailingsubscription.csp" application="/csp/stc/" default="1"><![CDATA[
+<stcalert data="mitemForm.confirmAlert"/>
+
+
+<div class="row-fluid" ng-hide="mitemForm.isConfirmation">
 	<div class="span4">
 	</div>
 	<div class="span4">
@@ -14,7 +17,7 @@
 					<div class="accordion-inner">
 						<form name="form" ng-submit="mitemForm.submit()">
 							<div class="control-group">
-						        <label class="control-label" ng-bind="('ФИО'|localize) + '*'"></label>
+						        <label class="control-label" ng-bind="('Ф.И.О.'|localize) + '*'"></label>
 						        <div class="controls">
 						            <input class="span12" type="text" ng-model="mitemForm.mitem.fullName" required></input>
 						        </div>
@@ -22,7 +25,7 @@
 							<div class="control-group">
 						        <label class="control-label">Email*</label>
 						        <div class="controls">
-						            <input class="span12" type="email" ng-model="mitemForm.mitem.email" required></input>
+						            <input class="span12" type="email" ng-model="mitemForm.mitem.email" required ng-disabled="mitemForm.mitem.id"></input>
 						        </div>
 						    </div>
 						    <div class="control-group">
@@ -38,17 +41,10 @@
 						        </div>
 						    </div>
 						    <div class="control-group">
-						    	<label class="control-label" ng-bind="('Группа'|localize) + '*'"></label>
-						        <div class="controls">
-					            	<select class="span12" ng-model="mitemForm.mitem.group.id" ng-options="gr.id as gr.name for gr in mitemForm.groups" required>
-					            		<option value=""></option>
-					            	</select>
-						        </div>
-						    </div>
-						    <div class="control-group">
 						        <div class="controls">
 						            <button type="submit" class="btn btn-primary btn-small" ng-bind="mitemForm.actionName|localize" ng-disabled="form.$pristine"></button>
-						            <button type="button" class="btn btn-small" ng-click="mitemForm.cancel()" ng-bind="'Назад'|localize"></button>
+						            <button type="button" class="btn btn-small" ng-click="mitemForm.clear()" ng-bind="'Очистить'|localize" ng-hide="mitemForm.mitem.id"></button>
+						            <button type="button" class="btn btn-small btn-danger pull-right" ng-click="mitemForm.removeSubscription()" ng-show="mitemForm.mitem.id" ng-bind="'Отменить подписку'|localize" ng-show="mitemForm.removeBtnVisible"></button>
 						        </div>
 						    </div>    		    		    
 						</form>

@@ -31,8 +31,8 @@ controllersModule.controller('AllTrainingsCtrl', function($scope, $filter, $loca
                           {name: 'Курс', sqlName: 'Course->Name->Value', isSorted: false, isSortable: true, isDown: false, isSearched: true, isSearchable: true},
                           {name: 'Город', sqlName: 'City->Name->Value', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
                           {name: 'Дата начала / окончания', sqlName: 'DateStart', isSorted: true, isSortable: true, isDown: false,  isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '200px'}},
-                          {name: 'Подгруппы', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '70px'}},
-                          {name: 'Слушатели', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '70px'}},
+                          {name: 'Подгруппы', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '85px'}},
+                          {name: 'Слушатели', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '85px'}},
                           {name: 'Отзывы', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '60px'}},
                           {name: 'Заявки', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '60px'}},
                           {name: 'Статус', sqlName: 'IsCompleted', isSorted: false, isSortable: true,  isDown: true,  isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '90px'}}];

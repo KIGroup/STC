@@ -41,7 +41,7 @@
 					<p><span ng-bind="'Адрес'|localize"></span>: <span ng-bind="ordForm.training.address.title"></span></p>
 					<p ng-hide="ordForm.training.room=='-'||ordForm.training.room==''"><span ng-bind="'Аудитория'|localize"></span>: <span ng-bind="ordForm.training.room"></span></p>
 					<p><span ng-bind="'Дата'|localize"></span>: <span ng-bind="ordForm.training.dates"></span></p>
-					<p><span ng-bind="'Время'|localize"></span>: <span ng-bind="ordForm.training.timeStartFinish"></span></p>
+					<p><span ng-bind="'Время'|localize"></span>: <span ng-bind="ordForm.training.timeStart + ' - ' + ordForm.training.timeFinish"></span></p>
 					<br>
 					<p style="margin-bottom: 0px"><span ng-bind="'Преподаватель'|localize"></span>: <span ng-bind="ordForm.training.teacher.lastName + ' ' + ordForm.training.teacher.firstName"></span></p>
 					<p><span class="unselectable" style="color: white;" ng-bind="'Преподаватель:'|localize"></span> <span ng-bind="ordForm.training.teacher.email"></span></p>

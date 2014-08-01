@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <Document name="StcDashboards-OrdersApproved.dashboard.DFI">
-<dashboard xmlns="http://www.intersystems.com/deepsee/library" name="OrdersApproved" folderName="StcDashboards" title="Заявки" description="" keywords="" owner="" shared="true" public="true" locked="false" resource="" timeCreated="2014-07-22T17:42:54.322Z" createdBy="ilson" category="" bookCover="" scheme="" worklistCount="0" snapTo="true" snapGrid="true" gridRows="10" gridCols="10" canResize="false" canModify="true" showTitleBar="true" companyName="" companyLogo="" companyStyle="">
+<dashboard xmlns="http://www.intersystems.com/deepsee/library" name="OrdersApproved" folderName="StcDashboards" title="Заявки" description="" keywords="" owner="" shared="true" public="true" locked="false" resource="" timeCreated="2014-07-22T17:42:54.322Z" createdBy="ilson" category="" bookCover="" scheme="" worklistCount="0" snapTo="true" snapGrid="true" gridRows="10" gridCols="10" canResize="false" canModify="false" showTitleBar="true" companyName="" companyLogo="" companyStyle="">
   <widget name="CourseStudentsTable" type="pivot" subtype="pivot" subtypeClass="lineChart" title="$$$Количество слушателей в заявках по курсам/Stc" dataSource="STCTables/Orders_Course_Students.pivot" dataLink="" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="0" homeColL="0" colSpanL="5" rowSpanL="5" showToolbar="true" theme="" dataColorList="">
+    <control name="" action="showListing" target="" targetProperty="Orders" location="widget" type="auto" controlClass="" label="" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
     <property name="analyzer">0</property>
   </widget>
   <widget name="CourseCountDiagram" type="pivot" subtype="pieChart" subtypeClass="pieChart" title="$$$Количество заявок по курсам/Stc" dataSource="STCTables/Orders_Course_Count.pivot" dataLink="" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="5" homeColL="5" colSpanL="5" rowSpanL="5" showToolbar="true" theme="" dataColorList="">
@@ -10,7 +11,8 @@
   </widget>
   <widget name="CourseStudentsDiagram" type="pivot" subtype="pieChart" subtypeClass="pieChart" title="$$$Количество слушателей в заявках по курсам/Stc" dataSource="" dataLink="CourseStudentsTable" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="5" homeColL="0" colSpanL="5" rowSpanL="5" showToolbar="true" theme="" dataColorList="">
   </widget>
-  <widget name="CourseCountTable" type="pivot" subtype="pivot" subtypeClass="lineChart" title="$$$Количество заявок по курсам/Stc" dataSource="" dataLink="CourseCountDiagram" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="0" homeColL="5" colSpanL="5" rowSpanL="5" showToolbar="true" theme="" dataColorList="">
+  <widget name="CourseCountTable" type="pivot" subtype="pivot" subtypeClass="lineChart" title="$$$Количество заявок по курсам/Stc" dataSource="STCTables/Orders_Course_Count.pivot" dataLink="" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="0" homeColL="5" colSpanL="5" rowSpanL="5" showToolbar="true" theme="" dataColorList="">
+    <control name="" action="showListing" target="" targetProperty="Orders" location="widget" type="auto" controlClass="" label="" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
   </widget>
 </dashboard>
 </Document></Export>

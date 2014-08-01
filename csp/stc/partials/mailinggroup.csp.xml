@@ -36,9 +36,10 @@
 				</div>
 			</div>
 		</div>
+		
+		<stcalert data="groupForm.alert"/>
 	</div>
 	<div class="span4">
 	</div>
-</div>
-<stcalert data="groupForm.alert" span-right="4" span-middle="4" span-left="4"/>]]></CSP>
+</div>]]></CSP>
 </Export>

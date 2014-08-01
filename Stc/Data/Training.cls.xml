@@ -153,6 +153,13 @@ Automailing to curator in n - days before start</Description>
 <InitialExpression>1</InitialExpression>
 </Property>
 
+<Property name="IsOrdersAutoMailing">
+<Description>
+Automailing to contacts in approved orders in the evening </Description>
+<Type>%Boolean</Type>
+<InitialExpression>1</InitialExpression>
+</Property>
+
 <Property name="OtherInfo">
 <Description>
 Other information</Description>
@@ -521,6 +528,8 @@ Add person to training, subgroup is detirmining automatically</Description>
 	
 	set proxy.dateStart = $ZDATE(..DateStart, 3)
 	set proxy.dateFinish = $ZDATE(..DateFinish, 3)
+	set proxy.dateGoogleCalendar = $REPLACE($ZD(..DateStart, 3)_"/"_$ZD(..DateFinish+1, 3), "-", "")
+	
 	set proxy.isCompleted = ..IsCompleted	
 	
 	set proxy.timeStart = $e(##class(%Library.Time).LogicalToDisplay(..TimeStart), 1, 5)
@@ -561,7 +570,7 @@ Add person to training, subgroup is detirmining automatically</Description>
 		*/
 		
 		set pattern = ##class(Stc.Utils.Msg).GetMsg("CalendarEvent")
-		set urlJoin = ##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/ordernewstudent?training="_tr.%Id() 
+		set urlJoin = ##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_tr.%Id()_"/order" 
 		set urlCourse = tr.Course.ProgramUrl
 		set cityFullName = tr.City.Name.Value_", "_tr.City.ParentRegion.Name.Value_", "_tr.City.ParentRegion.ParentRegion.Name.Value
 		set street = tr.Street.Value
@@ -592,6 +601,36 @@ Add person to training, subgroup is detirmining automatically</Description>
 	}
 	
 	quit descr
+]]></Implementation>
+</Method>
+
+<Method name="GetStudentsContacts">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>trId:%String</FormalSpec>
+<ReturnType>%ListOfObjects</ReturnType>
+<Implementation><![CDATA[
+	set contacts = ##class(%ListOfObjects).%New()
+	
+	&sql(DECLARE TrStudEmCur CURSOR FOR 
+			 	 SELECT Students As ID, Students->FullName As FullName, Students->Email 
+			 	 FROM Stc_Data.SubGroup_Students
+			 	 WHERE SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training = :trId)
+			 	 ORDER BY FullName)	
+			
+	&sql(OPEN TrStudEmCur)
+	for  
+	{	
+		&sql(FETCH TrStudEmCur INTO :id, :fullName, :email) 
+		quit:(SQLCODE '= 0)
+		set item = ##class(%ZEN.proxyObject).%New()
+		set item.id = id
+		set item.name = fullName
+		set item.email = email
+		do contacts.Insert(item)	
+	}
+	&sql(CLOSE TrStudEmCur)
+	
+	quit contacts
 ]]></Implementation>
 </Method>
 
@@ -689,6 +728,9 @@ Add person to training, subgroup is detirmining automatically</Description>
 </Value>
 <Value name="27">
 <Value>CuratorPhoneSecret</Value>
+</Value>
+<Value name="28">
+<Value>IsOrdersAutoMailing</Value>
 </Value>
 </Data>
 </Storage>

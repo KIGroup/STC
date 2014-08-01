@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.MailingTrainingGroup">
+<Super>%Persistent</Super>
+<TimeCreated>63398,3420.122456</TimeCreated>
+
+<Property name="Training">
+<Type>Training</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="MGroup">
+<Type>MailingGroup</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="IsAutoMailing">
+<Type>%Boolean</Type>
+<InitialExpression>1</InitialExpression>
+</Property>
+
+<Property name="MailingIsCompleted">
+<Type>%Boolean</Type>
+<InitialExpression>0</InitialExpression>
+</Property>
+
+<Index name="CommonIdx">
+<Properties>Training,MGroup</Properties>
+<Unique>1</Unique>
+</Index>
+
+<Method name="Create">
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[tr:Training,gr:MailingGroup,isAutoMailing:%Boolean=1,&st]]></FormalSpec>
+<ReturnType>MailingTrainingGroup</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	set obj = ""
+	
+	if (..CommonIdxExists(tr.%Id(), gr.%Id()) = $$$YES){
+		quit ..CommonIdxOpen(tr.%Id(), gr.%Id())	
+	}
+	
+	set obj = ..%New()
+	set obj.Training = tr
+	set obj.MGroup = gr
+	set obj.IsAutoMailing = isAutoMailing
+	set st = obj.%Save()
+	
+	quit obj
+]]></Implementation>
+</Method>
+
+<Method name="CreateAll">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>tr:Training,isAutoMailing:%Boolean=1</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	&sql(DECLARE MGCur CURSOR FOR
+			SELECT ID
+			FROM Stc_Data.MailingGroup)	
+		
+	&sql(OPEN MGCur)
+	for  
+	{	
+		&sql(FETCH MGCur INTO :id) 
+		quit:(SQLCODE '= 0)
+		
+		do ..Create(tr, ##class(Stc.Data.MailingGroup).%OpenId(id), isAutoMailing, .st)
+		
+		$$$THROWONERROR(st, st)	
+	}
+	
+	&sql(CLOSE MGCur)
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.MailingTrainingGroupD</DataLocation>
+<DefaultData>MailingTrainingGroupDefaultData</DefaultData>
+<IdLocation>^Stc.Data.MailingTrainingGroupD</IdLocation>
+<IndexLocation>^Stc.Data.MailingTrainingGroupI</IndexLocation>
+<StreamLocation>^Stc.Data.MailingTrainingGroupS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="MailingTrainingGroupDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Training</Value>
+</Value>
+<Value name="3">
+<Value>MGroup</Value>
+</Value>
+<Value name="4">
+<Value>IsAutoMailing</Value>
+</Value>
+<Value name="5">
+<Value>MailingIsCompleted</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

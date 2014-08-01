@@ -25,6 +25,7 @@ controllersModule.controller('ScheduleFrameCtrl', function($scope, $window, $fil
 					
 					if (data.courses[0].trainings.length != 0){
 						data.courses[0].trainings[0].detailsVisible = true;
+						data.courses[0].trainings[0].headStyle = {color : 'rgb(175, 5, 5)'}; 
 					}
 				}
 
@@ -40,32 +41,32 @@ controllersModule.controller('ScheduleFrameCtrl', function($scope, $window, $fil
 
                         training.dates = UtilsSrvc.getTwoDate(training.dateStart, training.dateFinish);
 
-                        training.address = training.street;
+                        training.address = training.address.title;
                         if (training.room != "" && training.room != "-"){
                             training.address += ', ауд. ' + training.room;
                         }
 
-                        training.curatorInfo = training.curatorFullName;
-                        if (training.curatorPhone != ""){
-                            training.curatorInfo += ', ' + training.curatorPhone;
+                        training.curatorInfo = training.curator.fullName;
+                        if (training.curator.phone != ""){
+                            training.curatorInfo += ', ' + training.curator.phone;
                         }
 
-                        if (training.curatorEmail != ""){
-                            training.curatorInfo += ', ' + training.curatorEmail;
+                        if (training.curator.email != ""){
+                            training.curatorInfo += ', ' + training.curator.email;
                         }
     
-                        training.urlJoin = 'http://' + host_appName + '/stc/index.csp#/orderstudent?training=' + training.id;
+                        training.urlJoin = 'http://' + host_appName + '/stc/index.csp#/training/' + training.id + '/order';
                         training.urlAddGoogleCalendarEvent = TrainingSrvc.getUrlForCreateGoogleCalendarEvent(
                                         course.name + '. '+ training.city.name,
                                         training.dateGoogleCalendar,
-                                        training.city.name + ', ' + training.street,
+                                        training.city.name + ', ' + training.address.title,
                                         {
 	                                        trainingId: training.id,
                                             courseProgramUrl: course.programUrl,
                                             city: training.city.name + ', ' + training.city.parentName + ', ' + training.city.greatParentName,
                                             address: training.address,
                                             time: training.timeStart + ' - ' + training.timeFinish,
-                                            teacher: training.teacherFullName + ', ' + training.teacherEmail,
+                                            teacher: training.teacher.lastName + ' ' + training.teacher.firstName +  ', ' + training.teacher.email,
                                             curator: training.curatorInfo,
                                             otherInfo: training.otherInfo   
                                         });

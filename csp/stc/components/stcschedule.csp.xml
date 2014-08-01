@@ -50,7 +50,7 @@
                 </tr>
                 <tr>
                     <td ng-bind="' '" style="width: 5%; border-top: none;"></td>
-                    <td ng-bind="'Преподаватель: ' + tr.teacherFullName + ', ' + tr.teacherEmail" style="border-top: none;"></td> 
+                    <td ng-bind="'Преподаватель: ' + tr.teacher.lastName + ' ' + tr.teacher.firstName + ', ' + tr.teacher.email" style="border-top: none;"></td> 
                 </tr>
                 <tr ng-hide="tr.curatorFullName==''">
                     <td ng-bind="' '" style="width: 5%; border-top: none;"></td>

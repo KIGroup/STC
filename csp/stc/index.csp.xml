@@ -163,6 +163,8 @@
                       		<li ng-class="{aSelected: menu.courses.css=='active'}"      ><a href="#/courses" ng-bind="menu.courses.name|localize"></a></li>
                       		<li ng-class="{aSelected: menu.mailingGroups.css=='active'}"><a href="#/mailing/groups" ng-bind="menu.mailingGroups.name|localize"></a></li>
                       		<li ng-class="{aSelected: menu.mailingSubscription.css=='active'}"><a href="#/mailing/subscription" ng-bind="menu.mailingSubscription.name|localize"></a></li>
+                      		<li ng-class="{aSelected: menu.mailingJournal.css=='active'}"><a href="#/mailing/journal" ng-bind="menu.mailingJournal.name|localize"></a></li>
+          
                       		<li ng-class="{aSelected: menu.settings.css=='active'}"     ><a href="#/settings" ng-bind="menu.settings.name|localize"></a></li>
                       	</ul>
                   </li>
@@ -228,6 +230,7 @@
     <script language="javascript"  src="js/controllers/MailingItemCtrl.js"></script>
     <script language="javascript"  src="js/controllers/MailingSubscriptionCtrl.js"></script>
     <script language="javascript"  src="js/controllers/AllLogsCtrl.js"></script>
+    <script language="javascript"  src="js/controllers/MailingJournalCtrl.js"></script>
 
     <script language="javascript"  src="js/services/DALSrvc.js"></script>
     <script language="javascript"  src="js/services/YandexSrvc.js"></script>

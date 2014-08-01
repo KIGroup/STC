@@ -42,7 +42,7 @@ controllersModule.controller('MailingSubscriptionCtrl', function($scope, $routeP
                 $scope.mitemForm.mitem = data;
             },
             function(response){
-                 $scope.mitemForm.confirmAlert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                 $scope.mitemForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
                  $scope.mitemForm.isConfirmation = true;
             }); 
     };
@@ -51,10 +51,13 @@ controllersModule.controller('MailingSubscriptionCtrl', function($scope, $routeP
     $scope.mitemForm.confirmData = function(code){
         MailingSrvc.confirmSubscription(code).then(
             function(data){
-                 $scope.mitemForm.confirmAlert = UtilsSrvc.getAlert('Готово!', 'Активация подписки завершена.', 'info', true);
+	            console.log(data);
+                $scope.mitemForm.confirmAlert = UtilsSrvc.getAlert('Готово!', 'Активация подписки завершена.', 'info', true);
             },
             function(response){
-                 $scope.mitemForm.confirmAlert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+	            console.log(response);
+                $scope.mitemForm.confirmAlert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            	console.log($scope.mitemForm.confirmAlert);
             }); 
     };
 

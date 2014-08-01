@@ -2,7 +2,7 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/controllers/TrainingCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//dddedddddddd
+//
 
 /*===========================================================================================
 Обучение
@@ -167,7 +167,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
         $scope.student.itemsTotal = 0;
         $scope.student.selectedItems = [];
         $scope.student.multiSelectMode = false; 
-
+     
 
         //============================== ВСЕ СТУДЕНТЫ ==========================================================================
         $scope.allstud.columns = [
@@ -771,63 +771,40 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
     // Automailing                                                                                                                                                       Automailing
     //==============================================================================================================================================================================
     // Load all students emails
-    $scope.mailing = {selectedType: 'students', types:[
-                                                  {id: 'students', name: $filter('localize')('Слушатели - напоминание')}, 
-                                                  {id: 'feedback', name: $filter('localize')('Слушатели - доступ к анкете')}, 
-                                                  {id: 'teacher',  name: $filter('localize')('Преподаватель - доступ к списку слушателей')},
-                                                  {id: 'curator',  name: $filter('localize')('Куратор - доступ к списку слушателей')}]};
-
-    $scope.mailing.loadEmailContacts = function(){
-        TrainingSrvc.getEmailContacts($routeParams.id).then(
-            function(data){
-                $scope.mailing.contacts = data; 
-            },
-            function(response){
-                $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
-            });
-    };
+    $scope.mailing = {};
 
     // Delete email from recipient field
     $scope.mailing.deleteEmailContact = function(contact){
-        var idx = UtilsSrvc.getIndexes($scope.mailing.contacts, 'id', contact.id);
+        var idx = UtilsSrvc.getIndexes($scope.mailing.selectedGroup.contacts, 'id', contact.id);
                 
         if (idx.length != 0)
-            $scope.mailing.contacts.splice(idx[0], 1);
+            $scope.mailing.selectedGroup.contacts.splice(idx[0], 1);
     };
 
     // Send email to training students or custom student (single email)
     $scope.mailing.sendEmail = function(isSingleEmail){
-        var emails;
+        var contacts = [];
 
         if (isSingleEmail){
-            if (!$scope.mailing.single || $scope.mailing.single == '') 
-                return;
-
-            emails = $scope.mailing.single;
+            contacts = [{name: '', email: $scope.mailing.single}];
         }
         else{
-            if ($scope.mailing.selectedType=='students' || $scope.mailing.selectedType=='feedback'){
-                emails = [];
-                for (var i=0; i < $scope.mailing.contacts.length; i++)
-                    emails.push($scope.mailing.contacts[i].email);
-
-                if (emails.length == 0){
-                    $scope.other.alert = UtilsSrvc.getAlert('Внимание!', 'Выберите получателей письма.', 'error', true);
-                    return;
-                }
-            }
-            else if ($scope.mailing.selectedType=='teacher'){
-                emails = $scope.training.data.teacher.email;
-            }
-            else if ($scope.mailing.selectedType=='curator'){
-                emails = $scope.training.data.curator.email;
-            }             
+            contacts = $scope.mailing.selectedGroup.contacts;
         }
-
-        if (!$scope.mailing.email.message || $scope.mailing.email.message == '') 
-        	return;
-		
-		UtilsSrvc.sendEmail({emails: emails, subject: $scope.mailing.email.subject, message: $scope.mailing.email.message.replace(/\n/g, "<br>")}).then(
+        
+        if (contacts.length == 0){
+            $scope.other.alert = UtilsSrvc.getAlert('Внимание!', 'Выберите получателей письма.', 'error', true);
+            return;
+        }
+        
+        var promise = TrainingSrvc.sendEmail({
+	        isSubscribers: $scope.mailing.selectedGroup.isSubscribers,
+            contacts: contacts, 
+            subject: $scope.mailing.selectedGroup.mail.subject, 
+            message: $scope.mailing.selectedGroup.mail.message.replace(/\n/g, "<br>")
+        });
+        
+		promise.then(
             function(data){
                 $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Почта отправлена', 'success', true);
             },
@@ -840,68 +817,47 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
     // Off\On Automailing for training 
     $scope.mailing.changeStatus = function(){
         //console.log('msg: mailing.changeStatus');
-        TrainingSrvc.changeStatusAutoMailing({id: $scope.training.data.id, isAutoMailing: $scope.mailing.status, type: $scope.mailing.selectedType}).then(
+      
+        TrainingSrvc.changeStatusAutoMailing({id: $scope.training.data.id, isAutoMailing: $scope.mailing.selectedGroup.isAutoMailing, groupId: $scope.mailing.selectedGroup.id}).then(
             function(data){
                 $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Изменения сохранены.', 'success', true);
-                switch($scope.mailing.selectedType){
-                    case 'students':{
-                        $scope.training.data.isStudentsAutoMailing = $scope.mailing.status; 
-                        break;
-                    }
-                    case 'teacher':{
-                        $scope.training.data.isTeacherAutoMailing = $scope.mailing.status;
-                        break;
-                    }
-                    case 'curator':{
-                        $scope.training.data.isCuratorAutoMailing = $scope.mailing.status;
-                        break;
-                    }
-                    case 'feedback':{
-                        $scope.training.data.isFeedBackAutoMailing = $scope.mailing.status;
-                        break;
-                    }
-                }  
+              
             },
             function(response){
                 $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
             });
     };
 
-    // Change mail type in combobox
-    $scope.mailing.changeType = function(){
-        TrainingSrvc.getEMail($scope.training.data.id, $scope.mailing.selectedType).then(
-            function(data){
-                 data.message = data.message.replace(/<br>/g, "\n");
-                 $scope.mailing.email = data;
-
-                  switch($scope.mailing.selectedType){
-                    case 'students':{
-                        $scope.mailing.status = $scope.training.data.isStudentsAutoMailing==0 ? false : true;
-                        break;
-                    }
-                    case 'teacher':{
-                        $scope.mailing.status = $scope.training.data.isTeacherAutoMailing==0 ? false : true;
-                        break;
-                    }
-                    case 'curator':{
-                        $scope.mailing.status = $scope.training.data.isCuratorAutoMailing==0 ? false : true;
-                        break;
-                    }
-                    case 'feedback':{
-                        $scope.mailing.status = $scope.training.data.isFeedBackAutoMailing==0 ? false : true;
-                        break;
-                    }
-                  }
-            },
-            function(response){
-                $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
-            });
-    };
 
     // Select tab "Mailing"
     $scope.mailing.selectTab = function(){
-        $scope.mailing.changeType();
-        $scope.mailing.loadEmailContacts(); 
+        TrainingSrvc.getMailingGroups($scope.training.data.id).then(
+            function(data){
+                $scope.mailing.groups = data.mGroups;
+
+                if (data.mGroups.length != 0){
+                    if ($scope.mailing.selectedGroup){
+                        var idx = UtilsSrvc.getIndexes($scope.mailing.groups, 'id', $scope.mailing.selectedGroup.id);         
+                        if (idx.length != 0){
+                            $scope.mailing.selectedGroup = data.mGroups[idx[0]];
+                        }
+                        else{
+                            $scope.mailing.selectedGroup = data.mGroups[0];  
+                        }
+                    }
+                    else{
+                        $scope.mailing.selectedGroup = data.mGroups[0];
+                    }
+                }
+
+                for (var i=0; i < $scope.mailing.groups.length; i++){
+                    $scope.mailing.groups[i].isAutoMailing = $scope.mailing.groups[i].isAutoMailing == 1;
+                    $scope.mailing.groups[i].mail.message = $scope.mailing.groups[i].mail.message.replace(/<br>/g, "\n");
+                }
+            },
+            function(response){
+                $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
     };
 
     //=============================================================================================================================================================================

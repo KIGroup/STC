@@ -31,7 +31,7 @@ Public request processor for users</Description>
 
 	
 	<!-- Create application -->
-	<Route Method="POST" Url="/json/orderDirty" Call="Stc.Web.JsonUser:CreateOrderDirty"/>
+	<Route Method="POST" Url="/json/order" Call="Stc.Web.JsonUser:CreateOrder"/>
 	
 	<!-- Create application for student -->
 	<Route Method="POST" Url="/json/orderNewStudent" Call="Stc.Web.JsonUser:CreateOrderNewStudent"/>

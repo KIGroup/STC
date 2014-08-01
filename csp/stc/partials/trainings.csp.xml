@@ -85,6 +85,7 @@
 					<p ng-hide="training.selectedItems[0].otherInfo==''"><span class="spnTitle" ng-bind="'Примечание'|localize" ></span>: <span ng-bind="training.selectedItems[0].otherInfo"></span></p>
 					<p><span class="label label-success"   ng-bind="'Событие есть в календаре'|localize" ng-hide="training.selectedItems[0].event==''"></span></p>
 					<p><span class="label label-important" ng-bind="'События нет в календаре'|localize"  ng-show="training.selectedItems[0].event==''"></span></span></p>
+					<!--
 					<div class="row-fluid">
 						<div class="span6">
 							<label class="checkbox"  style="padding-top: 5px;" >
@@ -102,7 +103,8 @@
 						    	<input type="checkbox" ng-click="training.changeStatusAutoMailing('feedback')" ng-model="training.selectedItems[0].isFeedBackAutoMailing" ng-disabled="menu.readOnlyMode">{{'Авторассылка анкеты'|localize}}
 						    </label>
 						</div>
-				    </div>		
+				    </div>
+				    -->		
 				</div>
 			</div>
 			</br>

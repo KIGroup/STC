@@ -19,25 +19,23 @@
 		<!-- ============================================ РАССЫЛКА ==================================================-->
     	<tab heading="{{'Рассылка'|localize}}" active="pageStore.training.tabMailingActive" select="mailing.selectTab()">
     		<form style="margin: 0 0 10px 0;" ng-submit="">
-			    <div ng-show="mailing.selectedType=='feedback' || mailing.selectedType=='students'" class="control-group">
+			    <div class="control-group">
 				    <label class="control-label" style="display: inline;">{{('Получатели'|localize) + '*'}}
-            			<i class="iSwitcher"ng-bind="'(обновить)'|localize" ng-click="mailing.loadEmailContacts()"></i>
+            			<i class="iSwitcher"ng-bind="'(обновить)'|localize" ng-click="mailing.selectTab()"></i>
         			</label>        
 				    <div class="controls">
-						<button class="emailContact" type="button" ng-repeat="contact in mailing.contacts" ng-bind="contact.lastName + ' &times;'" title="{{contact.email}}" ng-click="mailing.deleteEmailContact(contact)"></button>    	
+						<button class="emailContact" type="button" ng-repeat="contact in mailing.selectedGroup.contacts" ng-bind="contact.name + ' &times;'" title="{{contact.email}}" ng-click="mailing.deleteEmailContact(contact)"></button>    	
 				    </div>
 				    <br>
 			    </div>
-			    <label ng-show="mailing.selectedType=='teacher'" class="control-label" ng-bind="('Преподаватель'|localize) + ': ' + training.data.teacher.lastName + ' ' + training.data.teacher.firstName + ' ' + training.data.teacher.middleName + ', ' + training.data.teacher.email"></label>
-				<label ng-show="mailing.selectedType=='curator'" class="control-label" ng-bind="('Куратор'|localize) + ': ' + training.data.curator.fullName + ', ' + training.data.curator.email"></label>
-					
+			   	
 			    <br>
 			    <div class="row-fluid">
 				    <div class="span7">
 					    <div class="control-group">
 						    <label class="control-label" ng-bind="('Тема письма'|localize) + '*'"></label>
 						    <div class="controls">
-						    	<input class="span12" type="text" ng-model="mailing.email.subject" required>
+						    	<input class="span12" type="text" ng-model="mailing.selectedGroup.mail.subject" required>
 						    </div>
 					    </div>
 				    </div>
@@ -45,7 +43,7 @@
 					    <div class="control-group">
 						    <label class="control-label" ng-bind="('Тип'|localize) + '*'"></label>
 						    <div class="controls">
-						    	<select class="span12" ng-change="mailing.changeType()" ng-model="mailing.selectedType" ng-options="type.id as type.name for type in mailing.types" required>
+						    	<select class="span12" ng-model="mailing.selectedGroup" ng-options="group as group.name for group in mailing.groups" required>
                 				</select>
 						    </div>
 					    </div>
@@ -54,7 +52,7 @@
 			    <div class="control-group">
 				    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
 				    <div class="controls">
-				    	<textarea class="span12" rows="8" ng-model="mailing.email.message" required></textarea>
+				    	<textarea class="span12" rows="10" ng-model="mailing.selectedGroup.mail.message" required></textarea>
 				    </div>
 			    </div>
 			    <div class="row-fluid" ng-hide="menu.readOnlyMode">
@@ -67,7 +65,7 @@
 					<div class="span7">
 						<button class="btn btn-success btn-small pull-right"  type="submit" ng-click="mailing.sendEmail(false)" ng-bind="'Отправить'|localize"></button>
 						<label ng-hide="menu.readOnlyMode" class="checkbox pull-right"  style="padding-top: 3px; margin-right: 25px;">
-				    		<input type="checkbox" ng-click="mailing.changeStatus()" ng-model="mailing.status">{{('Авторассылка'|localize) }}
+				    		<input type="checkbox" ng-click="mailing.changeStatus()" ng-model="mailing.selectedGroup.isAutoMailing" ng-disabled="mailing.selectedGroup.mailingIsCompleted==1">{{('Авторассылка'|localize) }}
 				    	</label>
 					</div>
 			    </div>
@@ -238,7 +236,7 @@
 			/>
 			
 			<div ng-show="newstud.selectedItems.length!=0 && newstud.items.length!=0 && !menu.readOnlyMode">
-				<p ng-hide="newstud.selectedItems[0].company.id"><span class="label label-important" ng-bind="'Внимание!'|localize"></span>&nbsp;&nbsp;<span ng-bind="'Организация ' + newStud.selectedItems[0].company.shortName + ' слушателя ' + newStud.selectedItems[0].lastName + '1 не существует, создайте её или смените'"></span></p>
+				<p ng-hide="newstud.selectedItems[0].company.id"><span class="label label-important" ng-bind="'Внимание!'|localize"></span>&nbsp;&nbsp;<span ng-bind="'Организация слушателя не существует, создайте её или смените'"></span></p>
 				
 				<div ng-hide="newstud.conflict.id">
 					<button type="button" class="btn btn-small btn-success" ng-click="newstud.addIntoTraining('create_add')" ng-bind="'Добавить в обучение'|localize" title="{{'Слушатель будет добавлен в обучение'|localize}}" ng-disabled="!newstud.selectedItems[0].company.id"></button>
@@ -257,10 +255,45 @@
 					</p>
 					<p><span class="spnTitle" ng-bind="'Организация'"          ></span>: <span ng-bind="newstud.conflict.company.shortName"></span></p>
 					
-					<button type="button" class="btn btn-small btn-warning" ng-click="newstud.addIntoTraining('update_add')" ng-bind="'Обновить и добавить в обучение'|localize"     title="{{'Сотрудник из системы будет обновлен и добавлен в обучение'|localize}}" ng-disabled="!newstud.selectedItems[0].company.id"></button>
-					<button type="button" class="btn btn-small btn-success" ng-click="newstud.addIntoTraining('old_add')"    ng-bind="'Не обновлять и добавить в обучение'|localize" title="{{'Сотрудник из системы будет добавлен в обучение'|localize}}"></button>
-					<button type="button" class="btn btn-small btn-info"    ng-click="other.openChangeCompanyDialog()"       ng-bind="'Сменить организацию'|localize"                  title="{{'Заменить организацию в заявке на существующую'|localize}}"></button>				
-					<button type="button" class="btn btn-small btn-primary" ng-click="other.createCompany()"                 ng-bind="'Создать организацию'|localize"                   title="{{'Создать новую организацию, контактом организации станет слушатель из заявки'|localize}}" ng-hide="newstud.selectedItems[0].company.id"></button>				
+					<button ng-hide="newstud.conflict.id && newstud.selectedItems[0].lastName == newstud.conflict.lastName && newstud.selectedItems[0].firstName == newstud.conflict.firstName && newstud.selectedItems[0].middleName == newstud.conflict.middleName && newstud.selectedItems[0].email == newstud.conflict.email && newstud.selectedItems[0].phone == newstud.conflict.phone && newstud.selectedItems[0].skype == newstud.conflict.skype"
+							type="button" 
+							class="btn btn-small btn-warning" 
+							ng-click="newstud.addIntoTraining('update_add')" 
+							ng-bind="'Обновить и добавить в обучение'|localize"     
+							title="{{'Сотрудник из системы будет обновлен и добавлен в обучение'|localize}}" 
+							ng-disabled="!newstud.selectedItems[0].company.id">
+					</button>
+					
+					<button ng-hide="newstud.conflict.id && newstud.selectedItems[0].lastName == newstud.conflict.lastName && newstud.selectedItems[0].firstName == newstud.conflict.firstName && newstud.selectedItems[0].middleName == newstud.conflict.middleName && newstud.selectedItems[0].email == newstud.conflict.email && newstud.selectedItems[0].phone == newstud.conflict.phone && newstud.selectedItems[0].skype == newstud.conflict.skype"
+							type="button" 
+							class="btn btn-small btn-success" 
+							ng-click="newstud.addIntoTraining('old_add')"    
+							ng-bind="'Не обновлять и добавить в обучение'|localize" 
+							title="{{'Сотрудник из системы будет добавлен в обучение'|localize}}">
+					</button>
+					
+					<button ng-show="newstud.conflict.id && newstud.selectedItems[0].lastName == newstud.conflict.lastName && newstud.selectedItems[0].firstName == newstud.conflict.firstName && newstud.selectedItems[0].middleName == newstud.conflict.middleName && newstud.selectedItems[0].email == newstud.conflict.email && newstud.selectedItems[0].phone == newstud.conflict.phone && newstud.selectedItems[0].skype == newstud.conflict.skype"
+							type="button" 
+							class="btn btn-small btn-success" 
+							ng-click="newstud.addIntoTraining('old_add')"    
+							ng-bind="'Добавить в обучение'|localize" 
+							title="{{'Сотрудник из системы будет добавлен в обучение'|localize}}">
+					</button>
+					
+					<button type="button" 
+							class="btn btn-small btn-info"    
+							ng-click="other.openChangeCompanyDialog()"       
+							ng-bind="'Сменить организацию'|localize"                  
+							title="{{'Заменить организацию в заявке на существующую'|localize}}">
+					</button>				
+					
+					<button type="button" 
+							class="btn btn-small btn-primary" 
+							ng-click="other.createCompany()"                 
+							ng-bind="'Создать организацию'|localize"      
+							title="{{'Создать новую организацию, контактом организации станет слушатель из заявки'|localize}}" 
+							ng-hide="newstud.selectedItems[0].company.id">
+					</button>				
 				</div>
 			</div>
     	</tab>

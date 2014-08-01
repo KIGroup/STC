@@ -91,6 +91,64 @@ Get special group for subscribers</Description>
 ]]></Implementation>
 </Method>
 
+<Method name="GetMailingItemsContacts">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>grId:%String</FormalSpec>
+<ReturnType>%ListOfObjects</ReturnType>
+<Implementation><![CDATA[
+	set contacts = ##class(%ListOfObjects).%New()
+	
+	&sql(DECLARE MItemCur CURSOR FOR 
+			 	 SELECT ID, FullName, Email 
+			 	 FROM Stc_Data.MailingItemApproved
+			 	 WHERE MGroup = :grId
+			 	 ORDER BY FullName)	
+			
+	&sql(OPEN MItemCur)
+	for  
+	{	
+		&sql(FETCH MItemCur INTO :id, :fullName, :email) 
+		quit:(SQLCODE '= 0)
+		
+		set item = ##class(%ZEN.proxyObject).%New()
+		set item.id = id
+		set item.name = fullName
+		set item.email = email
+		do contacts.Insert(item)	
+	}
+	&sql(CLOSE MItemCur)
+	
+	quit contacts
+]]></Implementation>
+</Method>
+
+<Method name="GetMailingItemsEmails">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>grId:%String</FormalSpec>
+<ReturnType>%ListOfDataTypes</ReturnType>
+<Implementation><![CDATA[
+	set emails = ##class(%ListOfDataTypes).%New()
+	
+	&sql(DECLARE MItem2Cur CURSOR FOR 
+			 	 SELECT DISTINCT Email 
+			 	 FROM Stc_Data.MailingItemApproved
+			 	 WHERE MGroup = :grId
+			 	 ORDER BY FullName)	
+			
+	&sql(OPEN MItem2Cur)
+	for  
+	{	
+		&sql(FETCH MItem2Cur INTO :email) 
+		quit:(SQLCODE '= 0)
+
+		do emails.Insert(email)	
+	}
+	&sql(CLOSE MItem2Cur)
+	
+	quit emails
+]]></Implementation>
+</Method>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^Stc.Data.MailingGroupD</DataLocation>

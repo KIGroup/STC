@@ -167,15 +167,21 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
         deleteFeedBack: function(id){
             return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/training/feedback/' + id, null); 
         },
-
+        getMailingGroups: function(trId){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/training/' + trId + '/mailing/group', null);
+        },
+        sendEmail: function(data){
+	        return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/mail/send', data);
+        },
         getUrlForCreateGoogleCalendarEvent: function(text, dates, location, details){
+	    	console.log(details);
 	    	return 'https://www.google.com/calendar/render?action=TEMPLATE&hl=ru' + 
                                     '&text=' + text +
                                     '&dates=' + dates +
                                     '&location=' + location +
                                     '&details=' +  
                                                 '<a href="' + details.courseProgramUrl + '" target="_blank">Программа курса</a>%0A%0A' +
-                                                '<a href="' + 'http://' + window.location.host + StcAppSetting.defaultApp + '/stc/index.csp?urlData=orderstudent-q-training-eq-' + details.trainingId + '" target="_blank">Присоединиться</a>%0A%0A' +
+                                                '<a href="' + 'http://' + window.location.host + StcAppSetting.defaultApp + '/stc/index.csp%23/training/' + details.trainingId + '/order" target="_blank">Присоединиться</a>%0A%0A' +
                                                 'Место проведения:' + '%0A' + 
                                                 details.city + '%0A' +
                                                 details.address + '%0A%0A' +
@@ -185,7 +191,7 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
                                                 details.teacher + '%0A%0A' + 
                                                 'Контактное лицо:' + '%0A' +
                                                 details.curator +
-                                                (details.otherInfo == "" ? "" : 'Примечание: %0A' + details.otherInfo) 
+                                                (details.otherInfo == "" ? "" : '%0A%0AПримечание: %0A' + details.otherInfo) 
                                                 '&sf=true&output=xml';
 	    }
         

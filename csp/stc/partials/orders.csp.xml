@@ -47,16 +47,14 @@
 </div>	
 
 
-<div class="row-fluid" ng-hide="order.selectedItems[0].status.code!='New' || order.selectedItems.length==0 || order.items==0">
+<div class="row-fluid" ng-hide="order.selectedItems.length==0 || order.items==0">
 	 <tabset>
 		<tab heading="{{'Информация'|localize}}">
 			<div class="row-fluid">
 				<div class="span6">
-					<p><span class="spnTitle" ng-bind="'Организация'|localize"         ></span>: <span ng-bind="order.selectedItems[0].contact.company.shortName"></span>&nbsp;&nbsp;<span class="label label-important" ng-hide="order.selectedItems[0].contact.company.id" ng-bind="'Новая организация'|localize"></span></p>
+					<p><span class="spnTitle" ng-bind="'Организация'|localize"         ></span>: <span ng-bind="order.selectedItems[0].contact.company.shortName"></span>&nbsp;&nbsp;<span class="label label-important" ng-hide="order.selectedItems[0].contact.company.id" ng-bind="('Новая организация'|localize) + '!'"></span></p>
 					<p ng-hide="order.selectedItems[0].contact.company.site==''"><span class="spnTitle" ng-bind="'Веб-сайт организации'|localize"></span>: <a target="_blank" style="text-decoration: none;" ng-href="{{'http://' + order.selectedItems[0].contact.company.site}}" title="{{order.selectedItems[0].contact.company.site}}"><i ng-bind="order.selectedItems[0].contact.company.site.substring(0,25)"></i></a></p>
-					<div ng-show="order.contactType=='order' || (order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email 
-																&& order.selectedItems[0].contact.company.contact.phone==order.selectedItems[0].contact.phone 
-																&& order.selectedItems[0].contact.company.contact.skype==order.selectedItems[0].contact.skype)">
+					<div ng-show="order.contactType=='order' || (order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email && order.selectedItems[0].contact.company.contact.phone==order.selectedItems[0].contact.phone && order.selectedItems[0].contact.company.contact.skype==order.selectedItems[0].contact.skype)">
 						<p style="padding-top: 10px;"><span class="spnTitle" ng-bind="'Контакт'|localize"></span>: <span ng-bind="order.selectedItems[0].contact.lastName + ' ' + order.selectedItems[0].contact.firstName + ' ' + order.selectedItems[0].contact.middleName"></span></p>
 						<p>
 							<span><i class="icon-envelope" style="font-size: 0.9em;"></i> {{order.selectedItems[0].contact.email}}</span>
@@ -64,9 +62,7 @@
 							<span ng-hide="order.selectedItems[0].contact.skype==''" style="padding-left:12px"><i class="icon-skype"></i> {{order.selectedItems[0].contact.skype}}</span>
 						</p>
 					</div>
-					<div ng-show="order.contactType=='company' && !(order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email 
-																&& order.selectedItems[0].contact.company.contact.phone==order.selectedItems[0].contact.phone 
-																&& order.selectedItems[0].contact.company.contact.skype==order.selectedItems[0].contact.skype)">
+					<div ng-show="order.contactType=='company' && !(order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email && order.selectedItems[0].contact.company.contact.phone==order.selectedItems[0].contact.phone && order.selectedItems[0].contact.company.contact.skype==order.selectedItems[0].contact.skype)">
 						<p style="padding-top: 10px;"><span class="spnTitle" ng-bind="'Контакт'|localize"></span>: <span ng-bind="order.selectedItems[0].contact.company.contact.lastName + ' ' + order.selectedItems[0].contact.company.contact.firstName + ' ' + order.selectedItems[0].contact.company.contact.middleName"></span></p>
 						<p>
 							<span><i class="icon-envelope" style="font-size: 0.9em;"></i> {{order.selectedItems[0].contact.company.contact.email}}</span>
@@ -76,13 +72,10 @@
 					</div>
 					<div ng-show="order.selectedItems[0].contact.company.id && !(order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email 
 																			 && order.selectedItems[0].contact.company.contact.phone==order.selectedItems[0].contact.phone 
-																			 && order.selectedItems[0].contact.company.contact.skype==order.selectedItems[0].contact.skype 
-																			 && order.selectedItems[0].contact.company.contact.lastName==order.selectedItems[0].contact.lastName 
-																			 && order.selectedItems[0].contact.company.contact.firstName==order.selectedItems[0].contact.firstName 
-																			 && order.selectedItems[0].contact.company.contact.middleName==order.selectedItems[0].contact.middleName)">
+																			 && order.selectedItems[0].contact.company.contact.skype==order.selectedItems[0].contact.skype)">
 						<div ng-hide="menu.readOnlyMode" class="btn-group" ng-init="order.contactType='order'">
-					        <button type="button" class="btn btn-small btnRadio" ng-model="order.contactType" btn-radio="'order'"   ng-bind="'Контакт из заявки'|localize"></button>
-					        <button type="button" class="btn btn-small btnRadio" ng-model="order.contactType" btn-radio="'company'" ng-bind="'Контакт организации'|localize" ></button>
+					        <button type="button" class="btn btn-small btnRadio" ng-model="order.contactType" btn-radio="'order'"   ng-bind="'Контакт из заявки'|localize" style="width: 160px;"></button>
+					        <button type="button" class="btn btn-small btnRadio" ng-model="order.contactType" btn-radio="'company'" ng-bind="'Контакт организации'|localize" style="width: 160px;"></button>
 					    </div>	
 						<button class="btn btn-small" ng-click="order.changeCompanyContact(false)" title="{{'Обновить контакт'|localize}}" ng-show="order.selectedItems[0].contact.company.contact.email==order.selectedItems[0].contact.email && !menu.readOnlyMode">&nbsp;<i class="icon-refresh"></i>&nbsp;</button>
 						<button class="btn btn-small" ng-click="order.changeCompanyContact(true)"  title="{{'Заменить контакт'|localize}}" ng-show="order.selectedItems[0].contact.company.contact.email!=order.selectedItems[0].contact.email && !menu.readOnlyMode">&nbsp;<i class="icon-exchange"></i>&nbsp;</button>
@@ -92,8 +85,9 @@
 					<p><span class="spnTitle" ng-bind="'Курс'|localize"                 ></span>: <span ng-bind="order.selectedItems[0].course.name"></span></p>
 					<p><span class="spnTitle" ng-bind="'Количество слушателей'|localize"></span>: <span ng-bind="order.selectedItems[0].studentsNumber"></span></p>
 					<p><span class="spnTitle" ng-bind="'Дата создания'|localize"        ></span>: <span ng-bind="order.selectedItems[0].createdTS|convertCacheDate:('d MMMM y, HH:mm:ss'|localize)"></span></p>
-					<button ng-hide="menu.readOnlyMode" class="btn btn-success btn-small" ng-click="order.accept()" 		ng-bind="'Принять заявку'|localize"></button>
-					<button ng-hide="menu.readOnlyMode" class="btn btn-info btn-small"    ng-click="order.openChangeCompanyDialog()" ng-bind="'Сменить организацию'|localize"></button>
+					<button ng-show="order.selectedItems[0].status.code=='New' && !menu.readOnlyMode" class="btn btn-success btn-small" ng-click="order.accept()" ng-bind="'Принять заявку'|localize" style="width: 150px;"></button>
+					<button ng-show="order.selectedItems[0].status.code=='Approved' && !menu.readOnlyMode" class="btn btn-inverse btn-small" ng-click="order.close()" ng-bind="'Закрыть заявку'|localize" style="width: 150px;"></button>
+					<button ng-show="order.selectedItems[0].status.code!='Closed' && !menu.readOnlyMode" class="btn btn-info btn-small" ng-click="order.openChangeCompanyDialog()" ng-bind="'Сменить организацию'|localize"></button>
 				</div>
 			</div>
 			
@@ -102,33 +96,7 @@
 	</tabset>
 </div>
 
-<div class="row-fluid"  ng-hide="order.selectedItems[0].status.code=='New' || order.selectedItems.length==0 || order.items==0">
-	 <tabset>
-		<tab heading="{{'Информация'|localize}}"  active="training.tabInfo">
-			<div class="row-fluid">
-				<div class="span6">
-					<p><span class="spnTitle" ng-bind="'Организация'|localize"></span>: <span ng-bind="order.selectedItems[0].contact.company.shortName"></span></p>
-					<p ng-hide="order.selectedItems[0].contact.company.site==''"><span class="spnTitle" ng-bind="'Веб-сайт организации'|localize"></span>: <a target="_blank" style="text-decoration: none;" ng-href="{{'http://' + order.selectedItems[0].contact.company.site}}" title="{{order.selectedItems[0].contact.company.site}}"><i ng-bind="order.selectedItems[0].contact.company.site.substring(0,25)"></i></a></p>
-					<p style="padding-top: 10px;"><span class="spnTitle" ng-bind="'Контакт'|localize"></span>: <span ng-bind="order.selectedItems[0].contact.lastName + ' ' + order.selectedItems[0].contact.firstName + ' ' + order.selectedItems[0].contact.middleName"></span></p>
-					<p>
-						<span><i class="icon-envelope" style="font-size: 0.9em;"></i> {{order.selectedItems[0].contact.email}}</span>
-						<span ng-hide="order.selectedItems[0].contact.phone==''" style="padding-left:12px"><i class="icon-phone"></i> {{order.selectedItems[0].contact.phone}}</span>
-						<span ng-hide="order.selectedItems[0].contact.skype==''" style="padding-left:12px"><i class="icon-skype"></i> {{order.selectedItems[0].contact.skype}}</span>
-					</p>
-				</div>
-				<div class="span6">
-					<p><span class="spnTitle" ng-bind="'Курс'|localize"                 ></span>: <span ng-bind="order.selectedItems[0].course.name"></span></p>
-					<p  ng-hide="order.selectedItems[0].status.code=='Closed'"><span class="spnTitle" ng-bind="'Количество слушателей'|localize"></span>: <span ng-bind="order.selectedItems[0].studentsNumber"></span></p>
-					<p><span class="spnTitle" ng-bind="'Дата создания'|localize"        ></span>: <span ng-bind="order.selectedItems[0].createdTS|convertCacheDate:('d MMMM y, HH:mm:ss'|localize)"></span></p>
-					<button ng-show="order.selectedItems[0].status.code!='Closed' && !menu.readOnlyMode"   class="btn btn-info btn-small"    ng-click="order.openChangeCompanyDialog()" ng-bind="'Сменить организацию'|localize"></button>
-					<button ng-show="order.selectedItems[0].status.code!='Closed' && !menu.readOnlyMode"   class="btn btn-inverse btn-small"   ng-click="order.closeOrder()" ng-bind="'Закрыть заявку'|localize"></button>
-				</div>
-			</div>
-		</tab>
-	</tabset>
-</div>
-</br>
-<stcalert data="order.alert" span-right="1" span-middle="10" span-left="1"/>
+<stcalert data="order.alert"/>
 
 
 <div class="modal" id="ChangeCompanyModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="ChangeCompanyModalLabel" aria-hidden="true" ng-show="order.modalChangeCompanyVisible">

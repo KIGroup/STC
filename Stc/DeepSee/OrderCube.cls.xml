@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.DeepSee.OrderCube">
+<Description>
+</Description>
+<ProcedureBlock>1</ProcedureBlock>
+<Super>%DeepSee.CubeDefinition</Super>
+<TimeCreated>63399,80662.230296</TimeCreated>
+<DependsOn>Stc.Data.Order</DependsOn>
+
+<Parameter name="DOMAIN"/>
+
+<XData name="Cube">
+<Description>
+Cube definition from Architect.</Description>
+<XMLNamespace>http://www.intersystems.com/deepsee</XMLNamespace>
+<Data><![CDATA[
+<cube xmlns="http://www.intersystems.com/deepsee" name="OrderCube" displayName="OrderCube" disabled="false" abstract="false" sourceClass="Stc.Data.Order" countMeasureName="%COUNT" bucketSize="8" bitmapChunkInMemory="false" precompute="0">
+  <dimension name="Course" displayName="Курс" disabled="false" hasAll="false" allCaption="All Name" allDisplayName="Name" type="data" iKnowType="entity" hidden="false" showHierarchies="default">
+    <hierarchy name="Course" displayName="Курс" disabled="false">
+      <level sourceProperty="Course.Name" name="Name" displayName="Курс" disabled="false" list="false" useDisplayValue="true" useAsFilter="true">
+        <property sourceProperty="Course.Name.Value" name="Value" displayName="Курс" disabled="false" hidden="false" isName="true" isDescription="false" isReference="true" useDisplayValue="false"></property>
+      </level>
+    </hierarchy>
+  </dimension>
+  <dimension name="OrderStatus" displayName="Статус" disabled="false" hasAll="false" allCaption="All Name1" allDisplayName="Name1" type="data" iKnowType="entity" hidden="false" showHierarchies="default">
+    <hierarchy name="H1" disabled="false">
+      <level sourceProperty="OrderStatus.Name" name="OrderStatus" displayName="Статус" disabled="false" list="false" useDisplayValue="true" useAsFilter="true">
+        <property sourceProperty="OrderStatus.Name.Value" name="Value" displayName="Статус" disabled="false" hidden="false" isName="true" isDescription="false" isReference="true" useDisplayValue="false"></property>
+      </level>
+    </hierarchy>
+  </dimension>
+  <measure sourceProperty="StudentsNumber" name="StudentsNumber" displayName="Слушатели" disabled="false" aggregate="SUM" type="integer" hidden="false" searchable="false"></measure>
+  <listing name="Orders" disabled="false" listingType="table" sql="SELECT Course-&gt;Name-&gt;Value As &quot;$$$TEXT[&quot;Курс/Stc&quot;]&quot;,
+Company-&gt;ShortName-&gt;Value As &quot;$$$TEXT[&quot;Организация/Stc&quot;]&quot;,
+StudentsNumber As &quot;$$$TEXT[&quot;Слушатели/Stc&quot;]&quot;,
+CreatedTS As &quot;$$$TEXT[&quot;Дата создания/Stc&quot;]&quot;
+FROM $$$SOURCE WHERE $$$RESTRICT"></listing>
+</cube>
+]]></Data>
+</XData>
+</Class>
+</Export>

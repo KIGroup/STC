@@ -11,6 +11,19 @@ MailingItem - Approved, not spam</Description>
 <Unique>1</Unique>
 </Index>
 
+<Method name="GetByEmail">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>email:%String</FormalSpec>
+<ReturnType>MailingItemApproved</ReturnType>
+<Implementation><![CDATA[
+	set id = ""
+	
+	&sql(SELECT ID INTO :id FROM Stc_Data.MailingItemApproved WHERE Email = :email)
+	
+	quit ..%OpenId(id)
+]]></Implementation>
+</Method>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^Stc.Data.MailingItemApprovedD</DataLocation>

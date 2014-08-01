@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/directives/stcalert.js" application="/csp/concurs/" default="1"><![CDATA[
+<CSP name="stc/js/directives/stcalert.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //sddddddd
 
@@ -17,7 +17,8 @@ directivesModule.directive('stcalert', function(){
             spanLeft: '@'
         },
         controller: function($scope, $timeout){           
-           $scope.data = {visible: false};
+           if (!$scope.data)
+           		$scope.data = {visible: false};
            
            $scope.close = function(){
 	           $scope.data.visible = false;

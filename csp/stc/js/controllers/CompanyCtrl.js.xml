@@ -21,7 +21,7 @@ controllersModule.controller('CompanyCtrl', function($scope, $routeParams, $wind
         }
         else if ($routeParams.order){
             $scope.compForm.caption = "Создание организации из заявки";
-            $scope.compForm.loadDirtyOrder($routeParams.order);
+            $scope.compForm.loadOrder($routeParams.order);
         }
         else if ($routeParams.ordernewstudent){
             $scope.compForm.caption = "Создание организации из заявки от слушателя";
@@ -50,8 +50,8 @@ controllersModule.controller('CompanyCtrl', function($scope, $routeParams, $wind
     
     
     // Загрузить новую заявку
-    $scope.compForm.loadDirtyOrder = function(code){
-        OrderSrvc.getOrderDirty(code).then(
+    $scope.compForm.loadOrder = function(code){
+        OrderSrvc.getOrder(code).then(
             function(data){
                 $scope.compForm.company = {contact: {}};
                 $scope.compForm.company.shortName = data.contact.company.shortName;

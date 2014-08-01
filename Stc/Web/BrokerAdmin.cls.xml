@@ -46,14 +46,14 @@ Private request processor for administrator</Description>
 	<!-- Get all applications - from students for given training -->
 	<Route Method="POST" Url="/json/orderNewStudent/grid" Call="Stc.Web.JsonAdmin:GetOrdersNewStudentForGrid"/>
 	
-	<!-- Get not approved application by id -->
-	<Route Method="GET" Url="/json/orderDirty/:id" Call="Stc.Web.JsonAdmin:GetOrderDirty"/>
+	<!-- Get application by id -->
+	<Route Method="GET" Url="/json/order/:id" Call="Stc.Web.JsonAdmin:GetOrder"/>
 	
 	<!-- Get application from student by id -->
 	<Route Method="GET" Url="/json/orderNewStudent/:id" Call="Stc.Web.JsonAdmin:GetOrderNewStudent"/>
 	
-	<!-- Create approved application -->
-	<Route Method="POST" Url="/json/orderApproved" Call="Stc.Web.JsonAdmin:CreateOrderApproved"/>
+	<!-- Change order status -->
+	<Route Method="POST" Url="/json/order/:ordId/status/:status" Call="Stc.Web.JsonAdmin:ChangeOrderStatus"/>
 	
 	<!-- Delete application by id -->
 	<Route Method="DELETE" Url="/json/order/:id" Call="Stc.Web.JsonAdmin:DeleteOrder"/>
@@ -66,9 +66,6 @@ Private request processor for administrator</Description>
 	
 	<!-- Change organization in application from student-->
 	<Route Method="POST" Url="/json/orderNewStudent/:orderId/company/:companyId" Call="Stc.Web.JsonAdmin:ChangeOrderNewStudentCompany"/>
-	
-	<!-- Change order status to "close" -->
-	<Route Method="POST" Url="/json/orderApproved/:id/close" Call="Stc.Web.JsonAdmin:CloseOrderApproved"/>
 	
 	
 	<!-- ================================================================================================================================== -->
@@ -345,6 +342,17 @@ Private request processor for administrator</Description>
 	
 	<!-- All logs -->
 	<Route Method="POST" Url="/json/log/grid" Call="Stc.Web.JsonAdmin:GetLogsForGrid"/>
+	
+	
+	
+	
+	
+	<Route Method="GET" Url="/json/training/:id/mailing/group" Call="Stc.Web.JsonAdmin:GetTrainingMailingGroups"/>
+	
+	
+	<Route Method="POST" Url="/json/training/mail/send" Call="Stc.Web.JsonAdmin:SendEmailFromTraining"/>
+	
+	<Route Method="POST" Url="/json/mailing/journal/grid" Call="Stc.Web.JsonAdmin:GetMailingJournalItemsForGrid"/>
 	
 </Routes>
 ]]></Data>

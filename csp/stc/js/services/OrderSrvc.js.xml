@@ -12,7 +12,7 @@ servicesModule.factory('OrderSrvc', function(DALSrvc) {
 	return {
 	      /* Создание грязной заявки */
         createOrder: function(order){
-            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/orderDirty', order);
+            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/order', order);
         },
         /* Создание заявки для слушателя*/
         createOrderNewStudent: function(order){
@@ -25,10 +25,6 @@ servicesModule.factory('OrderSrvc', function(DALSrvc) {
         /* Удаление заявки от слушателя*/
         deleteOrderNewStudent: function(id){
             return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/orderNewStudent/' + id, null);
-        },
-        /* Создание чистой заявки из грязной */
-        createOrderApproved: function(orderId){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/orderApproved', {id: orderId});
         },
         /* Получить все заявки */
         getAllOrdersForGrid: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, status){
@@ -56,9 +52,9 @@ servicesModule.factory('OrderSrvc', function(DALSrvc) {
 
             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/orderNewStudent/grid', obj);
         },
-        /* Получить 1 новую заявку */
-        getOrderDirty: function(id){
-            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/orderDirty/' + id, null);
+        /* Получить 1 заявку */
+        getOrder: function(id){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/order/' + id, null);
         },
         /* Получить 1 заявку от слушателя*/
         getOrderNewStudent: function(id){
@@ -72,9 +68,9 @@ servicesModule.factory('OrderSrvc', function(DALSrvc) {
         changeOrderNewStudentCompany: function(orderId, companyId){
             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/orderNewStudent/' + orderId + '/company/' + companyId, null);
         },
-        /* Закрыть заявку */
-        closeOrder: function(id){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/orderApproved/' + id + '/close', null);
+        /* Изменить статус заявки */
+        changeOrderStatus: function(ordId, status){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/order/' + ordId + '/status/' + status, null);
         }
     }
 });

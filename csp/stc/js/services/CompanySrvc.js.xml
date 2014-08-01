@@ -34,11 +34,11 @@ servicesModule.factory('CompanySrvc', function(DALSrvc) {
         },
         /* Сохранить компанию из заявки */
         saveFromOrder: function(company, orderId){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/company/order', {company: company, orderId: orderId, isOrderDirty: true});
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/company/order', {company: company, orderId: orderId, isOrder: true});
         },
         /* Сохранить компанию из заявки от слушателя*/
         saveFromOrderNewStudent: function(company, orderId){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/company/order', {company: company, orderId: orderId, isOrderDirty: false});
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/company/order', {company: company, orderId: orderId, isOrder: false});
         },
         /* Сохранить данные компании | создать*/
         save: function(company){

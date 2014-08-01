@@ -42,14 +42,32 @@
 
 <Method name="ConvertToProxyObject">
 <ReturnType>%ZEN.proxyObject</ReturnType>
+<ImplementationWideBase64>CQBzAGUAdAAgAHAAcgBvAHgAeQAgAD0AIAAjACMAYwBsAGEAcwBzACgAJQBaAEUATgAuAHAAcgBv
+AHgAeQBPAGIAagBlAGMAdAApAC4AJQBOAGUAdwAoACkACgAJAAoACQBzAGUAdAAgAHAAcgBvAHgA
+eQAuAGwAbwBjAGEAdABpAG8AbgAgAD0AIAAuAC4ATABvAGMAYQB0AGkAbwBuAAoACQBzAGUAdAAg
+AHAAcgBvAHgAeQAuAG0AcwBnACAAPQAgACQAUgBFAFAATABBAEMARQAoACQAUgBFAFAATABBAEMA
+RQAoACQAUgBFAFAATABBAEMARQAoAC4ALgBNAHMAZwAsACAAIgAwACAAGQQBAAQABAAJBBMAGiAB
+ACIALAAgACIAIQAiACkALAAgACIAAQABAAEAAQABAAEAAQA6AAEAIgAsACAAIgAhACIAKQAsACAA
+IgAvACIALAAgACIAIQAiACkACgAJAHMAZQB0ACAAcAByAG8AeAB5AC4AYwByAGUAYQB0AGUAZABU
+AFMAIAA9ACAALgAuAEMAcgBlAGEAdABlAGQAVABTAAkACgAJAAoACQBxAHUAaQB0ACAAcAByAG8A
+eAB5AA==
+</ImplementationWideBase64></Method>
+
+<Method name="Test">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set proxy = ##class(%ZEN.proxyObject).%New()
+	set st = $$$OK
 	
-	set proxy.location = ..Location
-	set proxy.msg = ..Msg
-	set proxy.createdTS = ..CreatedTS	
+	try{
+		set a = 1/0
+	}
+	catch(ex){
+		set st = ex.AsStatus()
+	}
+	do $system.OBJ.DisplayError(st)
 	
-	quit proxy
+	quit st
 ]]></Implementation>
 </Method>
 

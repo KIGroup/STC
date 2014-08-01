@@ -39,8 +39,6 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 		set orders = ..GetNewOrders()
 		set students = ..GetNewOrderStudents()
 		
-		set domainWebApp = $GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp"
-     
 		set totalCount = orders.Count() + students.Count()
 		if (totalCount > 0){
 			set subject = subject_" Новых заявок: "_totalCount_"."
@@ -57,19 +55,24 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 					set msg = msg_i_". От организации """_companyName_""" на курс """_orders.GetAt(i).Course.Name.Value_"""<br>"
 					set ^Stc.Data.OrderNotification("orders") = $GET(^Stc.Data.OrderNotification("orders"))_","_orders.GetAt(i).%Id()
 				}
-				set msg = msg_"<a href='http://"_domainWebApp_"#/orders' target='_blank'>Перейти на страницу заявок</a><br><br>"
+				
+				set msg = msg_"<a href='http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/orders' target='_blank'>Перейти на страницу заявок</a><br><br>"
 			}
 			
 			if (students.Count() > 0){
 				set msg = msg_"Новые заявки на присоединение к курсу("_students.Count()_"):<br>"
 				for i=1:1:students.Count(){
 					set msg = msg_i_". От слушателя """_students.GetAt(i).LastName.Value_""" на курс """_students.GetAt(i).Training.Course.Name.Value_""" в городе """_students.GetAt(i).Training.City.Name.Value_""""
-					set msg = msg_". <a href='http://"_domainWebApp_"#/training?id="_students.GetAt(i).Training.%Id()_"' target='_blank'>Перейти на страницу обучения</a><br>"
+					set msg = msg_". <a href='http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_students.GetAt(i).Training.%Id()_"' target='_blank'>Перейти на страницу обучения</a><br>"
 					set ^Stc.Data.OrderNotification("students") = $GET(^Stc.Data.OrderNotification("students"))_","_students.GetAt(i).%Id()
 				}
 			} 
 			
-			set st = ##class(Stc.Web.JsonAdmin).SendEmailToOperators(subject, msg)
+			set emailList = $LISTFROMSTRING(##class(Stc.Data.Settings).GetMailingOperatorAddresses(), ",")
+			for i=1:1:$LISTLENGTH(emailList){
+				set email = $LIST(emailList, i)
+				do ##class(Stc.Utils.Email).Send(email, subject, msg, "Operator")	
+			}
 		}
 		
 		TCOMMIT
@@ -77,6 +80,7 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 	catch(ex){
 		TROLLBACK
 		set st = ex.AsStatus()
+		do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskOperatorNotification Catch", $System.Status.GetErrorText(st))
 	}
 	
 	quit st
@@ -92,7 +96,8 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 	
 	&sql(DECLARE Cur1 CURSOR FOR 
 		 	 SELECT ID
-		 	 FROM Stc_Data.OrderDirty)	
+		 	 FROM Stc_Data.Order
+		 	 WHERE OrderStatus->Code = 'New')	
 		
 	&sql(OPEN Cur1)
 	for{	
@@ -100,7 +105,7 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 		quit:(SQLCODE '= 0)
 		
 		if ($LF(haveBeenNotifiedId, id) = 0){
-			do list.Insert(##class(Stc.Data.OrderDirty).%OpenId(id))
+			do list.Insert(##class(Stc.Data.Order).%OpenId(id))
 		}		
 	}
 		
