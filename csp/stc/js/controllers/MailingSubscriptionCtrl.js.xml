@@ -42,7 +42,7 @@ controllersModule.controller('MailingSubscriptionCtrl', function($scope, $routeP
                 $scope.mitemForm.mitem = data;
             },
             function(response){
-                 $scope.mitemForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                 $scope.mitemForm.confirmAlert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
                  $scope.mitemForm.isConfirmation = true;
             }); 
     };

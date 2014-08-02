@@ -214,6 +214,13 @@ controllersModule.controller('AllOrdersCtrl', function($scope, $cookieStore, $lo
     };
 
     $scope.order.init();
+    
+    if (!$scope.menu.admin){
+	    $scope.menu.brandCaption = 'Система учёта курсов';
+    	$scope.menu.appTitle = 'Система учёта курсов';
+	    console.log('training $scope.menu.login();')
+    	$scope.menu.login(); 
+    };
   });
 
 ]]></CSP>
