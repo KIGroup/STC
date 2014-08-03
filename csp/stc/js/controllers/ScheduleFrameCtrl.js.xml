@@ -2,12 +2,12 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/controllers/ScheduleFrameCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//dd
+//d
 
 /*===========================================================================================
 ===========================================================================================*/
 
-controllersModule.controller('ScheduleFrameCtrl', function($scope, $window, $filter, CourseTeacherSrvc, TrainingSrvc, UtilsSrvc){
+controllersModule.controller('ScheduleFrameCtrl', function($scope, $window, $filter, CourseTeacherSrvc, TrainingSrvc, YandexSrvc, UtilsSrvc){
     $scope.menu.hideNavBar = true;
     $("#divContainer").css("padding", "0");
     $("body").css("padding", "0");
@@ -39,6 +39,8 @@ controllersModule.controller('ScheduleFrameCtrl', function($scope, $window, $fil
                     for (var t=0 ; t < course.trainings.length; t++){
                         var training = course.trainings[t];
 
+                        training.yandexMapUrl = YandexSrvc.getMapLink(training.address.lat, training.address.lng);
+					
                         training.dates = UtilsSrvc.getTwoDate(training.dateStart, training.dateFinish);
 
                         training.address = training.address.title;

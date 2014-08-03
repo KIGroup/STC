@@ -44,8 +44,8 @@
 	    action-column-title="'Добавить обучение'|localize"
 	    action-column-method="training.add()"
 
-	    first-row-action-icon="'icon-pencil'"
-	    first-row-action-title="'Изменить обучение'|localize"
+	    first-row-action-icon="'icon-eye-open'"
+	    first-row-action-title="'Открыть обучение'|localize"
 	    first-row-action-method="training.open(item)"
 	    
 	    second-row-action-icon="training.secondRowActionIcon"

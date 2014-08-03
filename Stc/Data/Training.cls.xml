@@ -540,6 +540,8 @@ Add person to training, subgroup is detirmining automatically</Description>
 	set proxy.address = ##class(%ZEN.proxyObject).%New()
 	set proxy.address.title = ..Street.Value
 	set proxy.address.point = ..Longitude_" "_..Latitude
+	set proxy.address.lat = ..Latitude
+	set proxy.address.lng = ..Longitude
 	
 	set proxy.curator = ##class(%ZEN.proxyObject).%New() 
 	set proxy.curator.fullName = ..CuratorFullName.Value

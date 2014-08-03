@@ -42,7 +42,11 @@
             <table class="table scheduleTable" style="margin-bottom: 15px;">
                 <tr>
                     <td ng-bind="' '" style="width: 5%; border-top-style: dashed;"></td>
-                    <td ng-bind="'Адрес: ' + tr.address" style="border-top-style: dashed;"></td> 
+                    <td style="border-top-style: dashed;">
+                    	<span ng-bind="'Адрес: ' + tr.address"></span>
+                    	&nbsp;
+                    	<a href="{{tr.yandexMapUrl}}" class="cellLink" target="_blank">Карта »</a>
+                    </td> 
                 </tr>
                 <tr>
                     <td ng-bind="' '" style="width: 5%; border-top: none;"></td>

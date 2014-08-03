@@ -45,6 +45,36 @@ controllersModule.controller('OrderNewStudentCtrl', function($scope, $timeout, $
 
                 $scope.menu.brandCaption = $filter('localize')('Форма регистрации на обучение компании InterSystems по курсу "') + data.course.name + '" ';
             	$scope.menu.appTitle = $scope.menu.brandCaption;
+            	
+            	callbackYmap = function() {
+				    var myMap = new ymaps.Map("map", {
+				            center: [data.address.lat, data.address.lng],
+				            zoom: 14,
+				            controls: ['zoomControl', 'typeSelector', 'fullscreenControl']
+				        });
+
+					var placemark = new ymaps.Placemark([data.address.lat, data.address.lng], {
+				            balloonContent: data.city.name + '. ' + data.address.title + ', '+ data.room
+				        }, {
+				            preset: 'islands#nightDotIcon',
+				            iconColor: '#0095b6'
+				        });	
+						
+				    myMap.geoObjects.add(placemark);
+	           	};
+	           	
+	           	
+            	function loadScript(url){
+				    var div = document.getElementById('divYmapScript');
+				    var script = document.createElement('script');
+				    script.type = 'text/javascript';
+				    script.src = url;
+				    
+				    // Fire the loading
+				    div.appendChild(script);
+				};
+				
+				loadScript("http://api-maps.yandex.ru/2.1/?lang=ru_RU&onload=callbackYmap");
             },
             function(response){
                 $scope.ordForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);

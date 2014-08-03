@@ -71,7 +71,7 @@ controllersModule.controller('AllTrainingsCtrl', function($scope, $filter, $loca
                                         }}];
 
         $scope.training.status = UtilsSrvc.getPropertyValue($scope.pageStore, 'trainings.status', 'All');
-        $scope.training.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'trainings.grid.pageSize', 7);;
+        $scope.training.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'trainings.grid.pageSize', 10);;
         $scope.training.pageCurr = UtilsSrvc.getPropertyValue($scope.pageStore, 'trainings.grid.pageCurr', 1);;
         $scope.training.itemsTotal = 0;
         $scope.training.selectedItems = [];

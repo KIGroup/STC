@@ -40,7 +40,7 @@
 		    selected-items="order.selectedItems"
 		    multi-select-mode="false"
 
-		    action-column-visible="order.actionColumnVisible"
+		    action-column-visible="!menu.readOnlyMode"
 		    action-column-icon="'icon-ellipsis-horizontal'"
 		    action-column-title=""
 		    action-column-method=""
