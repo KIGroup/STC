@@ -49,7 +49,7 @@ controllersModule.controller('OrderNewStudentCtrl', function($scope, $timeout, $
             	callbackYmap = function() {
 				    var myMap = new ymaps.Map("map", {
 				            center: [data.address.lat, data.address.lng],
-				            zoom: 14,
+				            zoom: 15,
 				            controls: ['zoomControl', 'typeSelector', 'fullscreenControl']
 				        });
 

@@ -17,7 +17,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="border-left: none; height: 3px; padding: 0;" colspan="5"></td>
+                <td style="border-left: none; height: 2px; padding: 0!important;" colspan="5"></td>
             </tr>
         </table>
     </div>
@@ -75,7 +75,7 @@
             </table>
         </div>    
     </div>
-    <div class="row-fluid" ng-show="course.trainings.length==0">
+    <div class="row-fluid" ng-show="false">
         <table class="table scheduleTable">
             <tr>
                 <td ng-bind="'Нет доступных тренингов'" style="font-style: italic;"></td>

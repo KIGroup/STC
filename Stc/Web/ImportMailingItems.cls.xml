@@ -18,12 +18,24 @@
 		TSTART
 		
 		set fileName = %request.MimeData("FileStream", 1).FileName
-		set stream = %request.MimeData("FileStream", 1)
+		set streamTemp = %request.MimeData("FileStream", 1)
+		set stream = ##class(%CSP.CharacterStream).%New()
+		
+		while 'streamTemp.AtEnd {
+			set line = streamTemp.ReadLine()
+			set line = $REPLACE(line, $C(13), $C(13)_$C(10))
+			do stream.Write(line)
+		}
+		
+		kill streamTemp
 		
 		set group = ##class(Stc.Data.MailingGroup).%OpenId(%request.Get("groupId")).ConvertToProxyObject()
 		
+		set count = 0
 		while 'stream.AtEnd {
 			set line = stream.ReadLine()
+			set count = count + 1
+			
 			if ($FIND(line,";") = 0) continue
 			
 			set propList = $LISTFROMSTRING(line, ";")
@@ -31,8 +43,8 @@
 			set data = ##class(%ZEN.proxyObject).%New()
 			set data.fullName = $LIST(propList,1)
 			set data.email = $LIST(propList,2)
-			set data.company = $LIST(propList,3)
-			set data.position = $LIST(propList,4)
+			set data.company = $LISTGET(propList,3)
+			set data.position = $LISTGET(propList,4)
 			set data.group = group
 			
 			do ##class(Stc.Data.MailingItemApproved).Save(data, .st)
@@ -55,15 +67,20 @@
 	}
 
 	w "Записей импортировано успешно: "_result.success
-		
+	
 	if (result.errorMessages.Count() '= 0){
 		w "<br><br>Список ошибочных записей: "
 		for i=1:1:result.errorMessages.Count(){
-			w "<br>"_i_". "_result.errorMessages.GetAt(i).line
+			w "<br>"_i_". "_$ZCVT(result.errorMessages.GetAt(i).line, "I", "UTF8")
 			w "<br>"_result.errorMessages.GetAt(i).status
 			w "<br>"
 		}
 	}
+	
+	if $$$ISERR(st){
+		w "<br>"_st
+	}
+	
 	&html<</body></html>>
 	Quit $$$OK
 ]]></Implementation>

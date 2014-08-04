@@ -20,6 +20,7 @@ MailingItem (subscriber)</Description>
 <Property name="Email">
 <Type>%String</Type>
 <Required>1</Required>
+<Parameter name="MAXLEN" value="300"/>
 </Property>
 
 <Property name="Company">
