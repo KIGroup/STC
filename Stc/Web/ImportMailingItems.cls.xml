@@ -22,8 +22,11 @@
 		set stream = ##class(%CSP.CharacterStream).%New()
 		
 		while 'streamTemp.AtEnd {
-			set line = streamTemp.ReadLine()
-			set line = $REPLACE(line, $C(13), $C(13)_$C(10))
+			set line = streamTemp.Read()
+			if ($FIND(line, $C(13)_$C(10)) = 0){
+				set line = $REPLACE(line, $C(13), $C(13)_$C(10))
+			}
+			
 			do stream.Write(line)
 		}
 		
@@ -43,8 +46,9 @@
 			set data = ##class(%ZEN.proxyObject).%New()
 			set data.fullName = $LIST(propList,1)
 			set data.email = $LIST(propList,2)
-			set data.company = $LISTGET(propList,3)
-			set data.position = $LISTGET(propList,4)
+			set data.city = $LISTGET(propList,3)
+			set data.company = $LISTGET(propList,4)
+			set data.position = $LISTGET(propList,5)
 			set data.group = group
 			
 			do ##class(Stc.Data.MailingItemApproved).Save(data, .st)

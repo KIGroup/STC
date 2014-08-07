@@ -36,7 +36,7 @@ Transform sql to json</Description>
   	set status = $$$OK
   	
    	try{
-	   	do ##class(%ZEN.Auxiliary.jsonSQLProvider).%WriteJSONFromSQL(,sql)
+	   	do ##class(%ZEN.Auxiliary.jsonSQLProvider).%WriteJSONFromSQL(,sql,,300)
 	}
 	catch ex{
 		set status = ex.AsStatus()

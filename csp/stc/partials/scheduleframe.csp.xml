@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <CSP name="stc/partials/scheduleframe.csp" application="/csp/stc/" default="1"><![CDATA[
+<!--
 <b ng-bind="'Календарь ближайших курсов'|localize" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; color: #000; margin-top: 5px;"></b>
-<div style="height: 264px; width: 578px; overflow-x: auto; border: 1px solid #dddddd; border-top: 1px solid #dddddd; margin-top: 10px;">
-    <stcschedule ng-repeat="course in page.courses" course="course" ng-style="course.style"/>
+-->
+<div style="width: 578px; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; color: #000;">
+	<p><b>Очные курсы обучения: программы курсов и ближайшие обучения.</b></p>
+	<p style="text-align: justify;">Если в ближайшее время желаемого курса нет, вы можете <a class="cellLink" href="http://classroom.intersystems.ru/csp/stc/stc/index.csp#/createorder" target="_blank">оформить заявку</a> на проведение любого курса, в том числе выездного в вашем городе. Также доступна <a class="cellLink" href="http://classroom.intersystems.ru/csp/stc/stc/index.csp#/mailing/subscription" target="_blank">подписка на анонсы</a>.</p>
+
+	<div style="height: 198px; overflow-x: auto; border: 1px solid #dddddd; border-top: 1px solid #dddddd; margin-top: 10px;">
+	    <stcschedule ng-repeat="course in page.courses" course="course" ng-style="course.style"/>
+	</div>
 </div>]]></CSP>
 </Export>

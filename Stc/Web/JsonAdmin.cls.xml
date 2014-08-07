@@ -2701,7 +2701,7 @@ http://localhost:57772/csp/stc/admin/json/training/112/mailing/group</Descriptio
 			quit:(SQLCODE '= 0)
 			
 			set mgroup = ##class(Stc.Data.MailingGroup).%OpenId(id)
-			set mtg = ##class(Stc.Data.MailingTrainingGroup).Create(tr, mgroup)
+			set mtg = ##class(Stc.Data.MailingTrainingGroup).Create(tr, mgroup, 0)
 			
 			set grProxy = ##class(%ZEN.proxyObject).%New()
 			set grProxy.id = mgroup.%Id()

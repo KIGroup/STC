@@ -229,6 +229,7 @@ Method="POST" Url="/json/mailing/subscription/confirmation/:code"</Description>
 		set approvedItem = ##class(Stc.Data.MailingItemApproved).%New()
 		set approvedItem.FullName = dirtyItem.FullName
 		set approvedItem.Email = dirtyItem.Email
+		set approvedItem.City = dirtyItem.City
 		set approvedItem.Company = dirtyItem.Company
 		set approvedItem.Position = dirtyItem.Position
 		set approvedItem.AccessCode = dirtyItem.AccessCode

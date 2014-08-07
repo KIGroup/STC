@@ -33,6 +33,11 @@ MailingItem (subscriber)</Description>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
+<Property name="City">
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="500"/>
+</Property>
+
 <Property name="LastUpdated">
 <Type>%TimeStamp</Type>
 <Required>1</Required>
@@ -52,6 +57,7 @@ MailingItem (subscriber)</Description>
 	set proxy.email = ..Email
 	set proxy.company = ..Company
 	set proxy.position = ..Position
+	set proxy.city = ..City
 	set proxy.lastUpdated = ..LastUpdated
 	set proxy.group = ..MGroup.ConvertToProxyObject()
 	
@@ -84,9 +90,13 @@ MailingItem (subscriber)</Description>
 	
 	set item.MGroup = ##class(Stc.Data.MailingGroup).%OpenId(data.group.id,,.st)
 	set item.FullName = $ZCVT(data.fullName, "I", "UTF8")
-	set item.Email = data.email
+	if ($FIND(data.email, "@") > 0){
+		set item.Email = $ZCONVERT(data.email, "I","UTF8")
+	}
+	
 	set item.Company = $ZCVT(data.company, "I", "UTF8")
 	set item.Position = $ZCVT(data.position, "I", "UTF8")
+	set item.City = $ZCVT(data.city, "I", "UTF8")
 	set item.LastUpdated = $ZDT($ZTS, 3)
 	
 	set st = item.%Save()

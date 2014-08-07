@@ -29,6 +29,12 @@
 						        </div>
 						    </div>
 						    <div class="control-group">
+						        <label class="control-label" ng-bind="('Город'|localize) + ''"></label>
+						        <div class="controls">
+						            <input class="span12" type="text" ng-model="mitemForm.mitem.city"></input>
+						        </div>
+						    </div>
+						    <div class="control-group">
 						        <label class="control-label" ng-bind="('Организация'|localize) + ''"></label>
 						        <div class="controls">
 						            <input class="span12" type="text" ng-model="mitemForm.mitem.company"></input>

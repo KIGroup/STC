@@ -120,15 +120,16 @@
 						onclick="window.document.getElementById('ifUpload').style.display = 'none';"
 						disabled="1">{{'Импортировать записи из файла'|localize}}</button>
 			
-				<span class="btn btn-default btn-file btn-primary btn-small">
-			    	{{'Обзор'|localize}} 
-			    	<input 
+				<span id="fileSpan" class="btn btn-default btn-file btn-primary btn-small">
+			    	{{('Обзор'|localize) + '*'}} 
+			    	<input
+			    		id="inputFile" 
 			    		type="file" 
 			    		accept=".csv" 
 			    		name="FileStream" 
 			    		onchange="
 			    		window.document.getElementById('ifUpload').style.display = 'none';
-			    	
+			    		
 			    		if (this.value != ''){
 			    			window.document.getElementById('fileNameReal').innerHTML = this.value.split('\\').pop(); 
 			    			window.document.getElementById('fileNameReal').style.display = 'block';
@@ -144,6 +145,9 @@
 				</span>
 				<div id="fileNameDefault" style="padding: 5px 0 0 10px;">{{'Выберите файл'|localize}}</div>
 				<div id="fileNameReal"    style="padding: 5px 0 0 10px; display: none;"></div>
+			</div>
+			<div class="row-fluid" style="font-size: 0.9em; padding-top: 5px;">
+				<i ng-bind="'* Формат файла .csv, 1 запись: ФИО;Email;Город;Организация;Должность'"></i>
 			</div>
 			
 		</form>
