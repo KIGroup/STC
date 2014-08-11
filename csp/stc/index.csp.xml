@@ -161,7 +161,7 @@
                     <a href="#/companies"><span ng-bind="(menu.other.name|localize) + ' '"></span><b class="caret"></b></a>
                      	<ul class="dropdown-menu">
                       		<li ng-class="{aSelected: menu.companies.css=='active'}"    ><a href="#/companies" ng-bind="menu.companies.name|localize"></a></li>
-                      		<li ng-class="{aSelected: menu.pesrons.css=='active'}"      ><a href="#/persons" ng-bind="menu.persons.name|localize"></a></li>
+                      		<li ng-class="{aSelected: menu.persons.css=='active'}"      ><a href="#/persons" ng-bind="menu.persons.name|localize"></a></li>
                       		<li ng-class="{aSelected: menu.certificates.css=='active'}" ><a href="#/certificates" ng-bind="menu.certificates.name|localize"></a></li>
                       		<li ng-class="{aSelected: menu.courses.css=='active'}"      ><a href="#/courses" ng-bind="menu.courses.name|localize"></a></li>
                       		<!--

@@ -419,5 +419,11 @@ pre.badge-inverse[href] {
 
 .table th, .table td {
 	padding: 4px 8px 4px 8px!important;
+}
+
+
+.navbar .nav>li>a {
+border-right: 1px solid rgb(241, 241, 241);
+border-left: 1px solid rgb(241, 241, 241);
 }]]></CSP>
 </Export>

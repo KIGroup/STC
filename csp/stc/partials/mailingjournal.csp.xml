@@ -5,7 +5,7 @@
 	<div class="span1">
 	</div>
 	<div class="span10">
-		<span ng-bind="'Журнал рассылки'|localize" style="font-weight: bold;"></span>
+		<span ng-bind="'Журнал рассылок'|localize" style="font-weight: bold;"></span>
 		&nbsp;
 		<i class="iSwitcher" ng-click="mailTable.forciblyUpdate = mailTable.forciblyUpdate + 1" ng-bind="'(обновить)'|localize"></i>
 	</div>

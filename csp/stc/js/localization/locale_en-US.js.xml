@@ -424,7 +424,7 @@ localizationModule.constant('StcDictionary', {
 
 
     'Дата начала / окончания' : 'Start / end date',
-	'Журнал рассылки' : 'Mailing journal',
+	'Журнал рассылок' : 'Mailing journal',
 	'Закрыть заявку' : 'Close order',
 	'Изменить обучение' : 'Edit training',
 	'Непубличный телефон' : 'Secret phone',
