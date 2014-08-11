@@ -183,11 +183,7 @@ Method="POST" Url="/json/mailing/subscription"</Description>
 		
 		set mail = ##class(Stc.Utils.Email).GetMailForConfirmationSubscription(item)
 		
-		set st = ##class(Stc.Utils.Email).Send(item.Email, mail.subject, mail.message)
-		
-		if $$$ISERR(st){
-			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("SendSubscriptionConfirmationCodeError", "| "_st))
-		}
+		do ##class(Stc.Data.MailingJournal).Create(item.Email, "", mail.subject, mail.message)
 		
 		TCOMMIT
 	}
@@ -195,6 +191,8 @@ Method="POST" Url="/json/mailing/subscription"</Description>
 		TROLLBACK
 		set st = ex.AsStatus()
 	}
+	
+	job ##class(Stc.Data.MailingJournal).StartSending()
 	
 	quit st
 ]]></Implementation>

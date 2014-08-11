@@ -17,6 +17,20 @@ Mailing group. Group has items (subscribers)</Description>
 <Parameter name="MAXLEN" value="5000"/>
 </Property>
 
+<Property name="MailSubject">
+<Description>
+Message pattern</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="MailMessage">
+<Description>
+Message pattern</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
 <Property name="AccessCode">
 <Type>%String</Type>
 <Required>1</Required>
@@ -35,6 +49,8 @@ Mailing group. Group has items (subscribers)</Description>
 	set proxy.code = ..AccessCode
 	set proxy.name = ..Name
 	set proxy.description = ..Description
+	set proxy.mailSubject = ..MailSubject.Value
+	set proxy.mailMessage = ..MailMessage.Value
 	
 	&sql(SELECT COUNT(ID) INTO :proxy.itemsCount FROM Stc_Data.MailingItemApproved WHERE MGroup = :proxy.id)
 	
@@ -57,9 +73,13 @@ Mailing group. Group has items (subscribers)</Description>
 	if (data.id = ""){
 		set group = ..%New()
 		set group.AccessCode = $SYSTEM.Util.CreateGUID()
+		set group.MailSubject = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.mailSubject, "I", "UTF8"))
+		set group.MailMessage = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.mailMessage, "I", "UTF8"))
 	}
 	else{
 		set group = ..%OpenId(data.id)
+		set group.MailSubject.Value = $ZCONVERT(data.mailSubject, "I", "UTF8")
+		set group.MailMessage.Value = $ZCONVERT(data.mailMessage, "I", "UTF8")
 	}
 	
 	set group.Name = $ZCVT(data.name, "I", "UTF8")
@@ -68,6 +88,30 @@ Mailing group. Group has items (subscribers)</Description>
 	set st = group.%Save()
 	
 	quit group
+]]></Implementation>
+</Method>
+
+<Method name="Delete">
+<Description>
+Delete group</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>grId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set group = ..%OpenId(grId, 4)
+
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Delete", "ID="_grId_"; Name="_group.Name)
+	
+	set st = ##class(Stc.Data.Localization.LText).Delete(group.MailSubject.%Id())
+	quit:$$$ISERR(st) st
+		
+	set st = ##class(Stc.Data.Localization.LText).Delete(group.MailMessage.%Id())
+	quit:$$$ISERR(st) st
+	
+	set st = ..%DeleteId(grId, 4)
+	quit:$$$ISERR(st) ##class(Stc.Utils.Msg).GetErrorStatus("deleteMailingGroup", " | "_st) 
+	
+	quit $$$OK
 ]]></Implementation>
 </Method>
 
@@ -85,6 +129,8 @@ Get special group for subscribers</Description>
 	set gr.Name = "Подписка на анонсы"
 	set gr.Description = "Подписка на анонсы"
 	set gr.AccessCode = "Announcement"
+	set gr.MailSubject = ##class(Stc.Data.Localization.LText).Create("")
+	set gr.MailMessage = ##class(Stc.Data.Localization.LText).Create("")
 	do gr.%Save()
 	
 	quit gr
@@ -122,30 +168,22 @@ Get special group for subscribers</Description>
 ]]></Implementation>
 </Method>
 
-<Method name="GetMailingItemsEmails">
+<Method name="GetMail">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>grId:%String</FormalSpec>
-<ReturnType>%ListOfDataTypes</ReturnType>
+<FormalSpec>grId:%String,trId:%String</FormalSpec>
+<ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
-	set emails = ##class(%ListOfDataTypes).%New()
+	set tr = ##class(Training).%OpenId(trId)
+	set group = ..%OpenId(grId)
 	
-	&sql(DECLARE MItem2Cur CURSOR FOR 
-			 	 SELECT DISTINCT Email 
-			 	 FROM Stc_Data.MailingItemApproved
-			 	 WHERE MGroup = :grId
-			 	 ORDER BY FullName)	
-			
-	&sql(OPEN MItem2Cur)
-	for  
-	{	
-		&sql(FETCH MItem2Cur INTO :email) 
-		quit:(SQLCODE '= 0)
-
-		do emails.Insert(email)	
-	}
-	&sql(CLOSE MItem2Cur)
+	set mail = ##class(%ZEN.proxyObject).%New()
+	set mail.subject = group.MailSubject.Value
+	set mail.message = ##class(Stc.Utils.Email).GetMailMessageWithTrainingData(group.MailMessage.Value, tr)
 	
-	quit emails
+	set mail.message = $REPLACE(mail.message, "%JoinUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_tr.%Id()_"/order")
+	set mail.message = $REPLACE(mail.message, "%UnsubscribeUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/mailing/subscription/%AccessCode")
+	
+	quit mail
 ]]></Implementation>
 </Method>
 
@@ -169,6 +207,18 @@ Get special group for subscribers</Description>
 </Value>
 <Value name="4">
 <Value>AccessCode</Value>
+</Value>
+<Value name="5">
+<Value>MailSubjectPattern</Value>
+</Value>
+<Value name="6">
+<Value>MailMessagePattern</Value>
+</Value>
+<Value name="7">
+<Value>MailSubject</Value>
+</Value>
+<Value name="8">
+<Value>MailMessage</Value>
 </Value>
 </Data>
 </Storage>

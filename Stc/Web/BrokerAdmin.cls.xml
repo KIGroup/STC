@@ -298,6 +298,12 @@ Private request processor for administrator</Description>
 	<!-- Get mailing group by ID -->
 	<Route Method="GET" Url="/json/mailing/group/:id" Call="Stc.Web.JsonAdmin:GetMailingGroup"/>
 	
+	<!-- Get mailing group contacts by ID -->
+	<Route Method="GET" Url="/json/mailing/group/:id/contact" Call="Stc.Web.JsonAdmin:GetMailingGroupContacts"/>
+	
+	<!-- Get mailing group mail by group ID -->
+	<Route Method="GET" Url="/json/mailing/group/:id/mail" Call="Stc.Web.JsonAdmin:GetMailingGroupMail"/>
+	
 	<!-- Delete mailing group by ID -->
 	<Route Method="DELETE" Url="/json/mailing/group/:id" Call="Stc.Web.JsonAdmin:DeleteMailingGroup"/>
 	
@@ -312,6 +318,8 @@ Private request processor for administrator</Description>
 	
 	<!-- Delete mailing item by ID -->
 	<Route Method="DELETE" Url="/json/mailing/group/item/:id" Call="Stc.Web.JsonAdmin:DeleteMailingItem"/>
+	
+	<Route Method="POST" Url="/json/mailing/mail/send" Call="Stc.Web.JsonAdmin:SendMailToMailingGroup"/>
 	
 	
 	

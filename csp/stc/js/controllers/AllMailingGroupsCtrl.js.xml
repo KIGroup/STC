@@ -172,6 +172,11 @@ controllersModule.controller('AllMailingGroupsCtrl', function($scope, $location,
     $scope.mitemTable.edit = function(item){
         $location.path('/mailing/group/' + $scope.groupTable.selectedItems[0].id + '/item/' + item.id);
     };
+    
+    // Создать письмо
+    $scope.mitemTable.createMail = function(){
+        $location.path('/mailing/group/' + $scope.groupTable.selectedItems[0].id + '/mail');
+    };
  
     // Удалить связь курса с преподавателем
     $scope.mitemTable.remove = function(item){

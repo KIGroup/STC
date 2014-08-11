@@ -52,6 +52,7 @@ mainModule.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/mailing/groups', {templateUrl: 'partials/mailinggroups.csp', controller: 'AllMailingGroupsCtrl'});
     $routeProvider.when('/mailing/group', {templateUrl: 'partials/mailinggroup.csp', controller: 'MailingGroupCtrl'});
     $routeProvider.when('/mailing/group/:id', {templateUrl: 'partials/mailinggroup.csp', controller: 'MailingGroupCtrl'});
+    $routeProvider.when('/mailing/group/:id/mail', {templateUrl: 'partials/mailinggroupmail.csp', controller: 'MailingGroupMailCtrl'});
     $routeProvider.when('/mailing/group/:gId/item', {templateUrl: 'partials/mailingitem.csp', controller: 'MailingItemCtrl'});
     $routeProvider.when('/mailing/group/:gId/item/:iId', {templateUrl: 'partials/mailingitem.csp', controller: 'MailingItemCtrl'});
     

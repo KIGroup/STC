@@ -64,24 +64,24 @@ Write all messages into global</Description>
 	set ^CacheMsg("Stc", "ru", "mail_Subject_Training-Students") = "InterSystems. Обучение"
 	set ^CacheMsg("Stc", "ru", "mail_Message_Training-Students") = ""_
 	"Здравствуйте! Напоминаем Вам о предстоящем обучении.<br>"_
-	"Дата начала обучения: %1, время: %2<br>"_
-	"Курс: %3<br>"_
-	"Город: %4<br>"_
-	"Адрес: %5<br>"_
-	"Преподаватель: %6<br>"_
-	"%7%8<br>"_
+	"Дата начала обучения: %DateStart, время: %TimeStart - %TimeEnd<br>"_
+	"Курс: %Course.Name<br>"_
+	"Город: %City.Name, %Region.Name, %Country.Name<br>"_
+	"Адрес: %Street, %Room<br>"_
+	"Преподаватель: %Teacher.FullName, %Teacher.Email <br>"_
+	"Контактное лицо: %Curator.FullName, %Curator.Email, %Curator.PhonePublic<br>"_
 	"На обучение обязательно возьмите с собой ноутбук с ОС Windows (любой) или виртуальной машиной Windows."
-	
-	set ^CacheMsg("Stc", "en", "mail_Subject_Training-Students") = "InterSystems. Обучение"
+
+	set ^CacheMsg("Stc", "en", "mail_Subject_Training-Students") = "InterSystems. Training"
 	set ^CacheMsg("Stc", "en", "mail_Message_Training-Students") = ""_
-	"Hello! Напоминаем Вам о предстоящем обучении.<br>"_
-	"Дата начала обучения: %1, время: %2<br>"_
-	"Курс: %3<br>"_
-	"Город: %4<br>"_
-	"Адрес: %5<br>"_
-	"Преподаватель: %6<br>"_
-	"%7%8<br>"_
-	"На обучение обязательно возьмите с собой ноутбук с ОС Windows (любой) или виртуальной машиной Windows."
+	"Hello! We remind you of upcoming training.<br>"_
+	"Start date: %DateStart, time: %TimeStart - %TimeEnd<br>"_
+	"Course: %Course.Name<br>"_
+	"City: %City.Name, %Region.Name, %Country.Name<br>"_
+	"Address: %Street, %Room<br>"_
+	"Teacher: %Teacher.FullName, %Teacher.Email <br>"_
+	"Curator: %Curator.FullName, %Curator.Email, %Curator.PhonePublic<br>"_
+	"Training is required to bring a laptop running Windows (any) or virtual machines Windows."
 	
 	
 	
@@ -89,172 +89,121 @@ Write all messages into global</Description>
 	set ^CacheMsg("Stc", "ru", "mail_Subject_Training-Teacher") = "InterSystems. Слушатели курса"
 	set ^CacheMsg("Stc", "ru", "mail_Message_Training-Teacher") = ""_
 	"Здравствуйте!<br>"_
-	"Перейдите по <a target='_blank' href='http://%1'>ссылке</a> для просмотра списка слушателей курса.<br>"_
-	"Дата начала обучения: %2, время: %3<br>"_
-	"Курс: %4<br>"_
-	"Город: %5<br>"_
-	"Адрес: %6<br>"_
-	"%7%8"
+	"Перейдите по <a target='_blank' href='%ListOfStudentsUrl'>ссылке</a> для просмотра списка слушателей курса.<br>"_
+	"Дата начала обучения: %DateStart, время: %TimeStart - %TimeEnd<br>"_
+	"Курс: %Course.Name<br>"_
+	"Город: %City.Name, %Region.Name, %Country.Name<br>"_
+	"Адрес: %Street, %Room<br>"_
+	"Контактное лицо: %Curator.FullName, %Curator.Email, %Curator.PhoneSecret"
 	
-	set ^CacheMsg("Stc", "en", "mail_Subject_Training-Teacher") = "InterSystems. Слушатели курса"
+	set ^CacheMsg("Stc", "en", "mail_Subject_Training-Teacher") = "InterSystems. List of students"
 	set ^CacheMsg("Stc", "en", "mail_Message_Training-Teacher") = ""_
 	"Hello!<br>"_
-	"Перейдите по <a target='_blank' href='http://%1'>ссылке</a> для просмотра списка слушателей курса.<br>"_
-	"Дата начала обучения: %2, время: %3<br>"_
-	"Курс: %4<br>"_
-	"Город: %5<br>"_
-	"Адрес: %6<br>"_
-	"%7%8"
+	"Go to <a target='_blank' href='%ListOfStudentsUrl'>link</a> view a list of students.<br>"_
+	"Start date: %DateStart, time: %TimeStart - %TimeEnd<br>"_
+	"Course: %Course.Name<br>"_
+	"City: %City.Name, %Region.Name, %Country.Name<br>"_
+	"Address: %Street, %Room<br>"_
+	"Curator: %Curator.FullName, %Curator.Email, %Curator.PhoneSecret"
+	
+	
 	
 	// Curator
 	set ^CacheMsg("Stc", "ru", "mail_Subject_Training-Curator") = "InterSystems. Слушатели курса"
 	set ^CacheMsg("Stc", "ru", "mail_Message_Training-Curator") = ""_
 	"Здравствуйте!<br>"_
-	"Перейдите по <a target='_blank' href='http://%1'>ссылке</a> для просмотра списка слушателей курса.<br>"_
-	"Дата начала обучения: %2, время: %3<br>"_
-	"Курс: %4<br>"_
-	"Город: %5<br>"_
-	"Адрес: %6<br>"_
-	"Преподаватель: %7<br>"_	
-	"%8"
+	"Перейдите по <a target='_blank' href='%ListOfStudentsUrl'>ссылке</a> для просмотра списка слушателей курса.<br>"_
+	"Дата начала обучения: %DateStart, время: %TimeStart - %TimeEnd<br>"_
+	"Курс: %Course.Name<br>"_
+	"Город: %City.Name, %Region.Name, %Country.Name<br>"_
+	"Адрес: %Street, %Room<br>"_
+	"Преподаватель: %Teacher.FullName, %Teacher.Email, %Teacher.Phone"
 	
-	set ^CacheMsg("Stc", "en", "mail_Subject_Training-Curator") = "InterSystems. Слушатели курса"
+	set ^CacheMsg("Stc", "en", "mail_Subject_Training-Curator") = "InterSystems. List of students"
 	set ^CacheMsg("Stc", "en", "mail_Message_Training-Curator") = ""_
 	"Hello!<br>"_
-	"Перейдите по <a target='_blank' href='http://%1'>ссылке</a> для просмотра списка слушателей курса.<br>"_
-	"Дата начала обучения: %2, время: %3<br>"_
-	"Курс: %4<br>"_
-	"Город: %5<br>"_
-	"Адрес: %6<br>"_
-	"Преподаватель: %7<br>"_	
-	"%8"
+	"Go to <a target='_blank' href='%ListOfStudentsUrl'>link</a> view a list of students.<br>"_
+	"Start date: %DateStart, time: %TimeStart - %TimeEnd<br>"_
+	"Course: %Course.Name<br>"_
+	"City: %City.Name, %Region.Name, %Country.Name<br>"_
+	"Address: %Street, %Room<br>"_
+	"Teacher: %Teacher.FullName, %Teacher.Email, %Teacher.Phone"
 	
-	
+
+
+
 	// FeedBack
 	set ^CacheMsg("Stc", "ru", "mail_Subject_Training-FeedBack") = "InterSystems. Анкета слушателя"
 	set ^CacheMsg("Stc", "ru", "mail_Message_Training-FeedBack") = ""_
 	"Здравствуйте!<br>"_
-	"Перейдите по <a target='_blank' href='http://%1'>ссылке</a> для заполнения анкеты, там вы можете оставить свои замечания и предложения по пройденному курсу - '%2'"
-	
-	set ^CacheMsg("Stc", "en", "mail_Subject_Training-FeedBack") = "InterSystems. Анкета слушателя"
+	"Перейдите по <a target='_blank' href='%FeedBackUrl'>ссылке</a> для заполнения анкеты, там вы можете оставить свои замечания и предложения по пройденному курсу - '%Course.Name'"
+
+	set ^CacheMsg("Stc", "en", "mail_Subject_Training-FeedBack") = "InterSystems. FeedBack"
 	set ^CacheMsg("Stc", "en", "mail_Message_Training-FeedBack") = ""_
 	"Hello!<br>"_
-	"Перейдите по <a target='_blank' href='http://%1'>ссылке</a> для заполнения анкеты, там вы можете оставить свои замечания и предложения по пройденному курсу - '%2'"
+	"Go to <a target='_blank' href='%FeedBackUrl'>link</a> to complete the questionnaire, where you can leave your comments and suggestions on the course - '%Course.Name'"
+	
+	
 	
 	
 	// Registration
 	set ^CacheMsg("Stc", "ru", "mail_Subject_Training-Registration") = "InterSystems. Регистрация на курс"
 	set ^CacheMsg("Stc", "ru", "mail_Message_Training-Registration") = ""_
 	"Здравствуйте! Ваша заявка на обучение принята.<br>"_
-	"Дата начала обучения: %1, время: %2<br>"_
-	"Курс: %3<br>"_
-	"Город: %4<br>"_
-	"Адрес: %5<br>"_
-	"Преподаватель: %6<br>"_
-	"%7%8"
+	"Дата начала обучения: %DateStart, время: %TimeStart - %TimeEnd<br>"_
+	"Курс: %Course.Name<br>"_
+	"Город: %City.Name, %Region.Name, %Country.Name<br>"_
+	"Адрес: %Street, %Room<br>"_
+	"Преподаватель: %Teacher.FullName, %Teacher.Email <br>"_
+	"Контактное лицо: %Curator.FullName, %Curator.Email, %Curator.PhonePublic"
 	
-	set ^CacheMsg("Stc", "en", "mail_Subject_Training-Registration") = "InterSystems. Регистрация на курс"
+	set ^CacheMsg("Stc", "en", "mail_Subject_Training-Registration") = "InterSystems. Register for a course"
 	set ^CacheMsg("Stc", "en", "mail_Message_Training-Registration") = ""_
-	"Hello! Ваша заявка на обучение принята.<br>"_
-	"Дата начала обучения: %1, время: %2<br>"_
-	"Курс: %3<br>"_
-	"Город: %4<br>"_
-	"Адрес: %5<br>"_
-	"Преподаватель: %6<br>"_
-	"%7%8"
+	"Hello! Your order is accepted for training.<br>"_
+	"Start date: %DateStart, time: %TimeStart - %TimeEnd<br>"_
+	"Course: %Course.Name<br>"_
+	"City: %City.Name, %Region.Name, %Country.Name<br>"_
+	"Address: %Street, %Room<br>"_
+	"Teacher: %Teacher.FullName, %Teacher.Email <br>"_
+	"Curator: %Curator.FullName, %Curator.Email, %Curator.PhonePublic"
+	
 	
 	
 	// Orders
 	set ^CacheMsg("Stc", "ru", "mail_Subject_Training-Orders") = "InterSystems. Анонс нового обучения"
 	set ^CacheMsg("Stc", "ru", "mail_Message_Training-Orders") = ""_
 	"Здравствуйте!<br>"_
-	"Дата начала обучения: %1, время: %2<br>"_
-	"Курс: %3<br>"_
-	"Город: %4<br>"_
-	"Адрес: %5<br>"_
-	"Преподаватель: %6<br>"_
-	"%7%8<br>"_
-	"Для регистрации перейдите по <a target='_blank' href='http://%9'>ссылке</a>."
-	
-	set ^CacheMsg("Stc", "en", "mail_Subject_Training-Orders") = "InterSystems. Анонс нового обучения"
+	"Дата начала обучения: %DateStart, время: %TimeStart - %TimeEnd<br>"_
+	"Курс: %Course.Name<br>"_
+	"Город: %City.Name, %Region.Name, %Country.Name<br>"_
+	"Адрес: %Street, %Room<br>"_
+	"Преподаватель: %Teacher.FullName, %Teacher.Email <br>"_
+	"Контактное лицо: %Curator.FullName, %Curator.Email, %Curator.PhonePublic<br>"_
+	"Для регистрации перейдите по <a target='_blank' href='%JoinUrl'>ссылке</a>."
+
+	set ^CacheMsg("Stc", "en", "mail_Subject_Training-Orders") = "InterSystems. New training"
 	set ^CacheMsg("Stc", "en", "mail_Message_Training-Orders") = ""_
 	"Hello!<br>"_
-	"Дата начала обучения: %1, время: %2<br>"_
-	"Курс: %3<br>"_
-	"Город: %4<br>"_
-	"Адрес: %5<br>"_
-	"Преподаватель: %6<br>"_
-	"%7%8<br>"_
-	"Для регистрации перейдите по <a target='_blank' href='http://%9'>ссылке</a>."
+	"Start date: %DateStart, time: %TimeStart - %TimeEnd<br>"_
+	"Course: %Course.Name<br>"_
+	"City: %City.Name, %Region.Name, %Country.Name<br>"_
+	"Address: %Street, %Room<br>"_
+	"Teacher: %Teacher.FullName, %Teacher.Email <br>"_
+	"Curator: %Curator.FullName, %Curator.Email, %Curator.PhonePublic<br>"_
+	"Go to <a target='_blank' href='%JoinUrl'>link</a> for registration."
+	
 	
 	
 	// Apply order
 	set ^CacheMsg("Stc", "ru", "mail_Subject_Order-Apply") = "InterSystems. Заявка на обучение"
 	set ^CacheMsg("Stc", "ru", "mail_Message_Order-Apply") = ""_
 	"Здравствуйте!<br>"_
-	"Ваша заявка на обучение по курсу '%1' принята."
+	"Ваша заявка на обучение по курсу '%Course.Name' принята."
 	
-	set ^CacheMsg("Stc", "en", "mail_Subject_Order-Apply") = "InterSystems. Заявка на обучение"
+	set ^CacheMsg("Stc", "en", "mail_Subject_Order-Apply") = "InterSystems. Order for training"
 	set ^CacheMsg("Stc", "en", "mail_Message_Order-Apply") = ""_
 	"Hello!<br>"_
-	"Ваша заявка на обучение по курсу '%1' принята."
-	
-	
-	// Mailing group
-	set ^CacheMsg("Stc", "ru", "mail_Subject_Mailing-Groups") = "InterSystems. Анонс нового обучения"
-	set ^CacheMsg("Stc", "ru", "mail_Message_Mailing-Groups") = ""_
-	"Здравствуйте!<br>"_
-	"Дата начала обучения: %1, время: %2<br>"_
-	"Курс: %3<br>"_
-	"Город: %4<br>"_
-	"Адрес: %5<br>"_
-	"Преподаватель: %6<br>"_
-	"%7%8<br>"_
-	"Для регистрации перейдите по <a target='_blank' href='http://%9'>ссылке</a>."
-
-	set ^CacheMsg("Stc", "en", "mail_Subject_Mailing-Groups") = "InterSystems. Анонс нового обучения"
-	set ^CacheMsg("Stc", "en", "mail_Message_Mailing-Groups") = ""_
-	"Здравствуйте!<br>"_
-	"Дата начала обучения: %1, время: %2<br>"_
-	"Курс: %3<br>"_
-	"Город: %4<br>"_
-	"Адрес: %5<br>"_
-	"Преподаватель: %6<br>"_
-	"%7%8<br>"_
-	"Для регистрации перейдите по <a target='_blank' href='http://%9'>ссылке</a>."
-
-	
-	
-	// Mailing subscriber 
-	set ^CacheMsg("Stc", "ru", "mail_Subject_Mailing-Subscriber") = "InterSystems. Оповещение подписчика"
-	set ^CacheMsg("Stc", "ru", "mail_Message_Mailing-Subscriber") = ""_
-	"Здравствуйте!<br>"_
-	"Дата начала обучения: %1, время: %2<br>"_
-	"Курс: %3<br>"_
-	"Город: %4<br>"_
-	"Адрес: %5<br>"_
-	"Преподаватель: %6<br>"_
-	"%7%8<br>"_
-	"Для регистрации перейдите по <a target='_blank' href='http://%9'>ссылке</a>.<br>"_
-	"---<br>"_	
-	"Для того, чтобы отписаться от почтовых уведомлений перейдите по <a target='_blank' href='http://%10%accessCode'>ссылке</a>."
-	
-	
-	set ^CacheMsg("Stc", "en", "mail_Subject_Mailing-Subscriber") = "InterSystems. Оповещение подписчика"
-	set ^CacheMsg("Stc", "en", "mail_Message_Mailing-Subscriber") = ""_
-	"Здравствуйте!<br>"_
-	"Дата начала обучения: %1, время: %2<br>"_
-	"Курс: %3<br>"_
-	"Город: %4<br>"_
-	"Адрес: %5<br>"_
-	"Преподаватель: %6<br>"_
-	"%7%8<br>"_
-	"Для регистрации перейдите по <a target='_blank' href='http://%9'>ссылке</a>.<br>"_
-	"---<br>"_	
-	"Для того, чтобы отписаться от почтовых уведомлений перейдите по <a target='_blank' href='http://%10%accessCode'>ссылке</a>."
-	
-
-	
+	"Your order for training '%Course.Name' is accepted."
 	
 	//=========================================================================================
 	
@@ -281,7 +230,7 @@ Write all messages into global</Description>
 		
 	// Mailing subscription
 	set ^CacheMsg("Stc", "ru", "mail_Subject_Confirmation-Subscription") = "InterSystems. Активация подписки на анонсы обучающих курсов"
-	set ^CacheMsg("Stc", "ru", "mail_Message_Confirmation-Subscription") = "Здравствуйте, для активации подписки перейдите по <a href='http://%1' target='_blank'>ссылке</a>."
+	set ^CacheMsg("Stc", "ru", "mail_Message_Confirmation-Subscription") = "Здравствуйте, для активации подписки перейдите по <a href='%ActivationUrl' target='_blank'>ссылке</a>."
 	
 	set ^CacheMsg("Stc", "ru", "SubscriptionAlreadyExists") = "Подписка уже оформлена"
 	

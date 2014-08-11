@@ -71,7 +71,7 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 			set emailList = $LISTFROMSTRING(##class(Stc.Data.Settings).GetMailingOperatorAddresses(), ",")
 			for i=1:1:$LISTLENGTH(emailList){
 				set email = $LIST(emailList, i)
-				do ##class(Stc.Utils.Email).Send(email, subject, msg, "Operator")	
+				do ##class(Stc.Data.MailingJournal).Create(email, "Оператор", subject, msg)
 			}
 		}
 		
@@ -82,6 +82,8 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 		set st = ex.AsStatus()
 		do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskOperatorNotification Catch", $System.Status.GetErrorText(st))
 	}
+	
+	job ##class(Stc.Data.MailingJournal).StartSending()
 	
 	quit st
 ]]></Implementation>

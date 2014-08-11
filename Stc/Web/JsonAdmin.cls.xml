@@ -300,7 +300,7 @@ Method="POST" Url="/json/order/:id/status/:status"</Description>
 		if (orderStatus = "approved"){
 			set order.OrderStatus = ##class(Stc.Data.OrderStatus).CodeIdxOpen("Approved")
 			set mail = ##class(Stc.Utils.Email).GetMailForOrderApply(order)
-			do ##class(Stc.Utils.Email).Send(order.Email, mail.subject, mail.message, order.LastName_" "_order.FirstName)
+			do ##class(Stc.Data.MailingJournal).Create(order.Email, order.LastName_" "_order.FirstName, mail.subject, mail.message)
 		}
 		elseif (orderStatus = "closed"){
 			set order.OrderStatus = ##class(Stc.Data.OrderStatus).CodeIdxOpen("Closed")
@@ -317,6 +317,8 @@ Method="POST" Url="/json/order/:id/status/:status"</Description>
 	}
 
 	do ##class(Stc.Data.Order).SynchronizeCube()
+	
+	job ##class(Stc.Data.MailingJournal).StartSending()
 	
 	quit st
 ]]></Implementation>
@@ -1306,9 +1308,8 @@ Method="POST" Url="/json/training/oredeNewStudent"</Description>
 		
 		set mail = ##class(Stc.Utils.Email).GetMailForTrainingRegistration(training)
 		
-		set st = ##class(Stc.Utils.Email).Send(orderEmail, mail.subject, mail.message, orderFullName)
+		do ##class(Stc.Data.MailingJournal).Create(orderEmail, orderFullName, mail.subject, mail.message)
 		
-		if $$$OK '= st set st = ##class(Stc.Utils.Msg).GetErrorStatus("emailAddNewStudent", "| "_st) 
 		set trId = training.%Id()
 			
 		TCOMMIT
@@ -1319,6 +1320,8 @@ Method="POST" Url="/json/training/oredeNewStudent"</Description>
 	}
 	
 	if (st = $$$OK) do ##class(Stc.Data.Training).UpdateFacts(trId)
+	
+	job ##class(Stc.Data.MailingJournal).StartSending()
 	
 	quit st
 ]]></Implementation>
@@ -2105,7 +2108,7 @@ Method="POST" Url="/json/settings/mail/:type"</Description>
 			
 			do ##class(Stc.Data.Settings).SetMailingOperatorAddresses($E(emails, 1, *-1))
 		}
-		elseif (type = "students"){
+		elseif (type = "students") || (type = "reminder"){
 			do ##class(Stc.Utils.Email).SetMailPattern(type, $ZCVT(data.subject, "I", "UTF8"), $ZCVT(data.message, "I", "UTF8"))
 			do ##class(Stc.Data.Settings).SetMailingStudentsDays(data.days)
 		}
@@ -2328,6 +2331,22 @@ Method="GET" Url="/json/mailing/group/:id"</Description>
 ]]></Implementation>
 </Method>
 
+<Method name="GetMailingGroupContacts">
+<Description>
+Get mailing group contacts by ID
+Method="GET" Url="/json/mailing/group/:id/contact"</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set contacts = ##class(Stc.Data.MailingGroup).GetMailingItemsContacts(id)
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	set proxy.children = contacts
+	do proxy.%ToJSON() 
+	quit $$$OK
+]]></Implementation>
+</Method>
+
 <Method name="DeleteMailingGroup">
 <Description>
 Delete mailing group by ID
@@ -2348,7 +2367,7 @@ Method="DELETE" Url="/json/mailing/group/:id"</Description>
 			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("DeleteMailingApprovedItemsError", " SQLCODE="_SQLCODE))
 		}
 		
-		$$$THROWONERROR(st, ##class(Stc.Data.MailingGroup).%DeleteId(id))
+		$$$THROWONERROR(st, ##class(Stc.Data.MailingGroup).Delete(id))
 		
 		TCOMMIT
 	}
@@ -2438,38 +2457,28 @@ Method="DELETE" Url="/json/mailing/group/item/:id"</Description>
 ]]></Implementation>
 </Method>
 
-<Method name="SendEmail">
+<Method name="GetMailingGroupMail">
+<Description>
+Delete mailing group by ID
+Method="GET" Url="/json/mailing/group/:id/mail"</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>grId</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set trId = ""
+	&sql(SELECT TOP 1 ID INTO :trId FROM Stc_Data.Training ORDER BY ID DESC)
+	
+	quit ##class(Stc.Data.MailingGroup).GetMail(grId , trId).%ToJSON()
+]]></Implementation>
+</Method>
+
+<Method name="GetEmailPattern">
 <Description>
 
 ==========================================================================================================================
 OTHER                                                                        										 OTHER
 ==========================================================================================================================
 
-Send email from client 
-Method="POST" Url="/json/mail/send"  </Description>
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set st  = $$$OK
-	
-	try{
-		// Check privilege for Person table
-		$$$THROWONERROR(st, ##class(Stc.Data.Person).CheckDeletePrivilege())
-		
-		$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
-				
-		$$$THROWONERROR(st, ##class(Stc.Utils.Email).Send(data.emails, $ZCONVERT(data.subject, "I", "UTF8"), $ZCONVERT(data.message, "I", "UTF8")))
-	}
-	catch ex {
-		set st = ex.AsStatus()
-	}
-	
-    quit st
-]]></Implementation>
-</Method>
-
-<Method name="GetEmailPattern">
-<Description>
 Get email pattern from ^CacheMsg
 Method="GET" Url="/json/mail/pattern/:type"</Description>
 <ClassMethod>1</ClassMethod>
@@ -2486,28 +2495,6 @@ Method="GET" Url="/json/currency"</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[    quit ..WriteJsonFromSql("SELECT ID As id, Name->Value As name FROM Stc_Data.Currency")
-]]></Implementation>
-</Method>
-
-<Method name="SendEmailToOperators">
-<ClassMethod>1</ClassMethod>
-<FormalSpec>subject:%String,msg:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set items = ##class(%ListOfDataTypes).%New()
-	
-	try{
-		set emailList = $LISTFROMSTRING($GET(^Settings("Stc","OperatorEmails")), ",")
-		set items = ##class(%ListOfDataTypes).%New()
-		for i=1:1:$LISTLENGTH(emailList){
-			do items.Insert($LIST(emailList, i))	
-		}
-	}
-	catch(ex){
-		return ex.AsStatus()
-	}
-	
-	quit ##class(Stc.Utils.Email).Send(items, subject, msg)
 ]]></Implementation>
 </Method>
 
@@ -2674,25 +2661,10 @@ http://localhost:57772/csp/stc/admin/json/training/112/mailing/group</Descriptio
 		do proxy.mGroups.Insert(grOrders)
 		
 		
-		// Insert real Mailing Groups
-		set MGSubscriber = ##class(Stc.Data.MailingGroup).GetAnnouncementGroup()
-		set mgt = ##class(Stc.Data.MailingTrainingGroup).Create(tr, MGSubscriber)
-		set grSubscriber = ##class(%ZEN.proxyObject).%New()
-		set grSubscriber.id = MGSubscriber.%Id()
-		set grSubscriber.isSubscribers = $$$YES
-		set grSubscriber.name = MGSubscriber.Name
-		set grSubscriber.mailingIsCompleted = mgt.MailingIsCompleted
-		set grSubscriber.isAutoMailing = mgt.IsAutoMailing
-		set grSubscriber.mail = ##class(Stc.Utils.Email).GetMailForMailingSubscriber(tr)
-		set grSubscriber.contacts = ##class(Stc.Data.MailingGroup).GetMailingItemsContacts(MGSubscriber.%Id())
-		do proxy.mGroups.Insert(grSubscriber)
-		
-		
-		set mailForGroup = ##class(Stc.Utils.Email).GetMailForMailingGroups(tr)
 		&sql(DECLARE MGCur CURSOR FOR 
 			 	 SELECT ID
 			 	 FROM Stc_Data.MailingGroup
-			 	 WHERE ID <> :grSubscriber.id)	
+			 	 ORDER BY Name)	
 			
 		&sql(OPEN MGCur)
 		for  
@@ -2706,9 +2678,10 @@ http://localhost:57772/csp/stc/admin/json/training/112/mailing/group</Descriptio
 			set grProxy = ##class(%ZEN.proxyObject).%New()
 			set grProxy.id = mgroup.%Id()
 			set grProxy.name = mgroup.Name
+			set grProxy.isSubscribers = $$$YES
 			set grProxy.isAutoMailing = mtg.IsAutoMailing
 			set grProxy.mailingIsCompleted = mtg.MailingIsCompleted 
-			set grProxy.mail = mailForGroup
+			set grProxy.mail = ##class(Stc.Data.MailingGroup).GetMail(mgroup.%Id(), tr.%Id())
 			set grProxy.contacts = ##class(Stc.Data.MailingGroup).GetMailingItemsContacts(mgroup.%Id())	
 			do proxy.mGroups.Insert(grProxy)
 		}
@@ -2738,24 +2711,63 @@ http://localhost:57772/csp/stc/admin/json/training/112/mailing/group</Descriptio
 		
 		if (data.isSubscribers){
 			for i=1:1:data.contacts.Count(){
-				set mItem = ##class(Stc.Data.MailingItemApproved).GetByEmail(data.contacts.GetAt(i).email)
+				set mItem = ##class(Stc.Data.MailingItemApproved).%OpenId(data.contacts.GetAt(i).id)
 				if $ISOBJECT(mItem){
-					set msg = $REPLACE(data.message, "%accessCode", $system.Encryption.Base64Encode(mItem.AccessCode))
-					do ##class(Stc.Utils.Email).Send(mItem.Email, data.subject, msg, mItem.FullName)
+					set msg = $REPLACE(data.message, "%AccessCode", $system.Encryption.Base64Encode(mItem.AccessCode))
+					do ##class(Stc.Data.MailingJournal).Create(mItem.Email,  mItem.FullName, data.subject, msg)
 				}
 				else{
-					do ##class(Stc.Utils.Email).Send(data.contacts.GetAt(i).email, data.subject, data.message)
+					do ##class(Stc.Data.MailingJournal).Create(data.contacts.GetAt(i).email,"", data.subject, data.message)
 				}
 			}
 		}
 		else{
 			for i=1:1:data.contacts.Count(){
-				do ##class(Stc.Utils.Email).Send(data.contacts.GetAt(i).email, data.subject, data.message, $ZCVT(data.contacts.GetAt(i).name, "I", "UTF8"))
+				do ##class(Stc.Data.MailingJournal).Create(data.contacts.GetAt(i).email, $ZCVT(data.contacts.GetAt(i).name, "I", "UTF8"), data.subject, data.message)
 			}
 		}
+		
+		job ##class(Stc.Data.MailingJournal).StartSending()
 	}
 	catch (ex){
 		set st = ex.AsStatus()
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="SendMailToMailingGroup">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		TSTART
+		
+		do ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1)
+		
+		set data.subject = $ZCVT(data.subject, "I", "UTF8")
+		set data.message = $ZCVT(data.message, "I", "UTF8")
+		
+		for i=1:1:data.contacts.Count(){
+			set mItem = ##class(Stc.Data.MailingItemApproved).%OpenId(data.contacts.GetAt(i).id)
+			if '$ISOBJECT(mItem) continue
+					
+			set msg = $REPLACE(data.message, "%UnsubscribeUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/mailing/subscription/"_$system.Encryption.Base64Encode(mItem.AccessCode))
+			do ##class(Stc.Data.MailingJournal).Create(data.contacts.GetAt(i).email, $ZCVT(data.contacts.GetAt(i).name, "I", "UTF8"), data.subject, msg)	
+		}
+		
+		TCOMMIT
+	}
+	catch(ex){
+		TROLLBACK
+		set st = ex.AsStatus()
+	}
+	
+	if $$$ISOK(st){
+		job ##class(Stc.Data.MailingJournal).StartSending()
 	}
 	
 	quit st

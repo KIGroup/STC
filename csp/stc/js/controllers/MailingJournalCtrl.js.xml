@@ -14,13 +14,21 @@ controllersModule.controller('MailingJournalCtrl', function($scope, $filter, Uti
 
     $scope.mailTable.init = function(){
         $scope.mailTable.columns = [
-                          {name: 'Дата создания', sqlName: 'ID', isSorted: true, isSortable: false, isDown: false, isSearched: false, isSearchable: false, captionStyle: {width: '150px'}},
+                          {name: 'Дата отправки', sqlName: 'ID', isSorted: true, isSortable: false, isDown: false, isSearched: false, isSearchable: false, captionStyle: {width: '150px'}},
                           {name: 'Получатель', sqlName: 'RecipientName', isSorted: false, isSortable: false, isDown: true, isSearched: true, isSearchable: true},
                           {name: 'Тема письма', sqlName: 'Subject', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: true},
                           {name: 'Содержание', sqlName: 'Message', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: true}];
         
         $scope.mailTable.properties = [
-                          {name: 'createdTS', filter: 'date', filterParam: $filter('localize')('d MMMM y, HH:mm:ss')},
+                          {name: 'sendedStatus',
+                          calculate: function(item){
+	                      		if (item.isSended){
+	                      			item.sendedStatus = item.sendedTS;
+	                      		}
+	                      		else{
+	                      			item.sendedStatus = $filter('localize')('В очереди');
+		                      	}
+	                      }},
                           {name: 'recipient.fullName', 
                           calculate: function(item){
                                 if (item.recipient.name != ''){

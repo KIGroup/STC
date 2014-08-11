@@ -11,6 +11,11 @@ MailingItem - Approved, not spam</Description>
 <Unique>1</Unique>
 </Index>
 
+<Index name="MGroupEmailIdx">
+<Properties>MGroup,Email</Properties>
+<Unique>1</Unique>
+</Index>
+
 <Method name="GetByEmail">
 <ClassMethod>1</ClassMethod>
 <FormalSpec>email:%String</FormalSpec>
@@ -56,6 +61,9 @@ MailingItem - Approved, not spam</Description>
 </Value>
 <Value name="8">
 <Value>MGroup</Value>
+</Value>
+<Value name="9">
+<Value>City</Value>
 </Value>
 </Data>
 </Storage>

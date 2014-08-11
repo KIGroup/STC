@@ -2,7 +2,7 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/controllers/SettingsCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//dddd
+//=
 
 /*===========================================================================================
 SettingsCtrl - all settings for google, mail
@@ -97,15 +97,24 @@ controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsS
         SettingsSrvc.getMail(type).then(
                 function(data){
                     $scope.page.mail[data.type] = data.data;
+                    if ($scope.page.mail[data.type].message){
+                    	$scope.page.mail[data.type].message = $scope.page.mail[data.type].message.replace(/<br>/g, "\n")
+                    }
                 },
                 function(response){      
                     $scope.page.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
                 });
     };
-
+    
     // Save settings for mail tab by type (reminder, feedback and etc.)
     $scope.page.mail.save = function(type, form){
-		SettingsSrvc.saveMail($scope.page.mail[type], type).then(
+        var mailData = angular.copy($scope.page.mail[type]);
+        
+        if (mailData.message){
+        	mailData.message = mailData.message.replace(/\n/g, "<br>");
+        }
+        
+        SettingsSrvc.saveMail(mailData, type).then(
                 function(data){
                     form.$setPristine(); 
                     $scope.page.mail[type].alertLabel = UtilsSrvc.getAlertLabel('Сохранение завершено', 'success');
@@ -126,37 +135,61 @@ controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsS
         form.$setDirty();
     };
     
-    // Show help dialog window
+    // Show help dialog window 
     $scope.page.mail.showHelp = function(type){
-        var msg = '';
-
+        var msg = 'В содержании письма можно использовать переменные(%Variable), которые впоследствии будут заменены на соответствующие значения. Список доступных переменных для данного шаблона:<br>';
+        var trainingVariables = 
+              '%DateStart, %DateEnd - дата начала / окончания обучения;<br>' +
+              '%TimeStart, %TimeEnd - время начала / окончание занятий;<br>' +
+              '%Course.Name - название курса;<br>' +
+              '%City.Name, %Region.Name, %Country.Name - город, регион, страна;<br>' +
+              '%Street, %Room - улица и аудитория;<br>' +
+              '%Teacher.FullName - фамилия и имя преподавателя;<br>' +
+              '%Teacher.Email, %Teacher.Phone - email, телефон<br>' +
+              '%Curator.FullName - фамилия и имя куратора;<br>' + 
+              '%Curator.Email, %Curator.PhoneSecret, %Curator.PhonePublic - email, личный|публичный телефон;<br>' +
+              '%OtherInfo - дополнительная информация об обучении;';
+        
         switch(type){
             case 'registration':{
-              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - дата начала обучения, %2 - курс, %3 - город, %4 - улица, %5 - аудитория, %6 - время, %7 - преподаватель, %8 - примечание.';
+              msg += trainingVariables;
               break;
             }
             case 'reminder':{
-              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - дата начала обучения, %2 - курс, %3 - город, %4 - улица, %5 - аудитория, %6 - время, %7 - преподаватель, %8 - примечание.';
+              msg += trainingVariables;
               break;
             }
             case 'feedback':{
-              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - url анкеты, %2 - курс.';
+              msg += '%Course.Name - курс;<br>' + 
+                    '%FeedBackUrl - ссылка на страницу для анкетирования.';
               break;
             }
             case 'teacher':{
-              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - url для доступа к списку слушателей, %2 - дата начала обучения, %3 - время, %4 - курс, %5 - город, %6 - улица, %7 - аудитория, %8 - примечание, %9 - куратор';
+              msg += trainingVariables + '<br>' +
+                    '%ListOfStudentsUrl - ссылка на страницу со списком слушателей.';
               break;
             }
             case 'curator':{
-              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - url для доступа к списку слушателей, %2 - дата начала обучения, %3 - время, %4 - курс, %5 - город, %6 - улица, %7 - аудитория, %8 - примечание.';
+              msg += trainingVariables + '<br>' +
+                    '%ListOfStudentsUrl - ссылка на страницу со списком слушателей.';
               break;
             }
-            case 'order':{
-              msg = '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - курс, %2 - домен, %3 - код доступа к заявке.';
+            case 'orders':{
+              msg += trainingVariables + '<br>' +
+                    '%JoinUrl - ссылка на страницу регистрации.';
               break;
             }
+            case 'orderapply':{
+              msg += '%Course.Name - курс.';
+              break;
+            } 
+            case 'confirmsubscription':{
+              msg += '%ActivationUrl - ссылка для активации подписки.';
+              break;
+            } 
         }
-		    UtilsSrvc.openCustomMessageBox('Справка', msg, [{result: '1', label: $filter('localize')('Закрыть'),  cssClass: 'btn-small', func: null}]);    
+        
+		UtilsSrvc.openCustomMessageBox('Справка', msg, [{result: '1', label: $filter('localize')('Закрыть'),  cssClass: 'btn-small', func: null}]);    
     };
 
     // Show preview for mail tab as html
@@ -184,8 +217,6 @@ controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsS
     $scope.page.mail.load('curator');
     $scope.page.mail.load('orders');
     $scope.page.mail.load('orderapply');
-    $scope.page.mail.load('mailinggroups');
-    $scope.page.mail.load('mailingsubscriber'); 
     $scope.page.mail.load('confirmsubscription'); 
 });
 

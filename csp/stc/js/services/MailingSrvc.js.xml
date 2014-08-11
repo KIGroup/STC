@@ -64,13 +64,21 @@ servicesModule.factory('MailingSrvc', function(DALSrvc) {
         getGroupItem: function(id){
             return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/mailing/group/item/' + id, null);
         },
+        getGroupContacts: function(id){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/mailing/group/' + id + '/contact', null);
+        },
+        getGroupMail: function(id){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/mailing/group/' + id + '/mail', null);
+        },
         removeGroup: function(id){
 	   		    return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/mailing/group/' + id, null);
-	      },
+	    },
         removeGroupItem: function(id){
             return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/mailing/group/item/' + id, null);
+        },
+        sendEMail: function(data){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/mailing/mail/send', data);
         }
-
     }
 });
   

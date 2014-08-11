@@ -32,6 +32,8 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 	
 	do ..MailingGroupsAutoMailing()
 	
+	job ##class(Stc.Data.MailingJournal).StartSending()
+	
 	Quit $$$OK
 ]]></Implementation>
 </Method>
@@ -65,9 +67,7 @@ Send notification to all students in the training</Description>
 			
 			set contacts = ##class(Stc.Data.Training).GetStudentsContacts(trId)
 			
-			for i=1:1:contacts.Count(){
-				do ##class(Stc.Utils.Email).Send(contacts.GetAt(i).email, mail.subject, mail.message, contacts.GetAt(i).name)
-			}
+			do ##class(Stc.Data.MailingJournal).CreateAll(contacts, mail.subject, mail.message)
 			
 			if (contacts.Count() > 0) {
 				set tr.IsStudentsAutoMailing = $$$NO
@@ -113,12 +113,11 @@ Send notification to training teacher</Description>
 			set tr = ##class(Stc.Data.Training).%OpenId(trId)
 				
 			set mail = ##class(Stc.Utils.Email).GetMailForTrainingTeacher(tr)
-					
-			set st = ##class(Stc.Utils.Email).Send(tr.Teacher.Email, mail.subject, mail.message, tr.Teacher.FullName)	
-			if $$$ISOK(st){
-				set tr.IsTeacherAutoMailing = 0
-				do tr.%Save()
-			}						
+				
+			do ##class(Stc.Data.MailingJournal).Create(tr.Teacher.Email, tr.Teacher.FullName, mail.subject, mail.message)
+			
+			set tr.IsTeacherAutoMailing = 0
+			do tr.%Save()						
 		}
 			
 		&sql(CLOSE Tr2Cur)
@@ -159,12 +158,11 @@ Send notification to training curator</Description>
 			set tr = ##class(Stc.Data.Training).%OpenId(trId)
 			
 			set mail = ##class(Stc.Utils.Email).GetMailForTrainingCurator(tr)
-					
-			set st = ##class(Stc.Utils.Email).Send(tr.CuratorEmail, mail.subject, mail.message, tr.CuratorFullName.Value)
-			if $$$ISOK(st){
-				set tr.IsCuratorAutoMailing = 0
-				do tr.%Save()
-			}						
+			
+			do ##class(Stc.Data.MailingJournal).Create(tr.CuratorEmail, tr.CuratorFullName.Value, mail.subject, mail.message)
+			
+			set tr.IsCuratorAutoMailing = 0
+			do tr.%Save()						
 		}
 			
 		&sql(CLOSE Tr3Cur)
@@ -207,9 +205,7 @@ Send feedback link to students in the training</Description>
 					
 			set contacts = ##class(Stc.Data.Training).GetStudentsContacts(trId)
 			
-			for i=1:1:contacts.Count(){
-				do ##class(Stc.Utils.Email).Send(contacts.GetAt(i).email, mail.subject, mail.message, contacts.GetAt(i).name)
-			}
+			do ##class(Stc.Data.MailingJournal).CreateAll(contacts, mail.subject, mail.message)
 			
 			if (contacts.Count() > 0) {
 				set tr.IsFeedBackAutoMailing = $$$NO
@@ -256,9 +252,7 @@ Send </Description>
 					
 			set contacts = ##class(Stc.Data.Order).GetContactsForCourse(tr.Course.%Id())
 			
-			for i=1:1:contacts.Count(){
-				do ##class(Stc.Utils.Email).Send(contacts.GetAt(i).email, mail.subject, mail.message, contacts.GetAt(i).name)
-			}
+			do ##class(Stc.Data.MailingJournal).CreateAll(contacts, mail.subject, mail.message)
 			
 			if (contacts.Count() > 0) {
 				set tr.IsOrdersAutoMailing = $$$NO
@@ -286,8 +280,6 @@ Send </Description>
 	set st = $$$OK
 	
 	try{
-		set subscriptionGroup = ##class(Stc.Data.MailingGroup).GetAnnouncementGroup()
-			
 		&sql(DECLARE MTGCur CURSOR FOR 
 				SELECT ID
 			 	FROM Stc_Data.MailingTrainingGroup
@@ -303,24 +295,15 @@ Send </Description>
 			
 			set mtg = ##class(Stc.Data.MailingTrainingGroup).%OpenId(mtgId)
 			
-			set mail = ##class(%ZEN.proxyObject).%New()
+			set mail = ##class(Stc.Data.MailingGroup).GetMail(mtg.MGroup.%Id(), mtg.Training.%Id())
 			set contacts = ##class(Stc.Data.MailingGroup).GetMailingItemsContacts(mtg.MGroup.%Id())
 			
-			if (mtg.MGroup.%Id() = subscriptionGroup.%Id()){
-				set mail = ##class(Stc.Utils.Email).GetMailForMailingSubscriber(mtg.Training)
-				for i=1:1:contacts.Count(){
-					set mItem = ##class(Stc.Data.MailingItemApproved).%OpenId(contacts.GetAt(i).id)
-					if '$ISOBJECT(mItem) continue
+			for i=1:1:contacts.Count(){
+				set mItem = ##class(Stc.Data.MailingItemApproved).%OpenId(contacts.GetAt(i).id)
+				if '$ISOBJECT(mItem) continue
 					
-					set msg = $REPLACE(mail.message, "%accessCode", $system.Encryption.Base64Encode(mItem.AccessCode))
-					do ##class(Stc.Utils.Email).Send(contacts.GetAt(i).email, mail.subject, msg, contacts.GetAt(i).name)	
-				}
-			}
-			else{
-				set mail = ##class(Stc.Utils.Email).GetMailForMailingGroups(mtg.Training)
-				for i=1:1:contacts.Count(){
-					do ##class(Stc.Utils.Email).Send(contacts.GetAt(i).email, mail.subject, mail.message, contacts.GetAt(i).name)	
-				}
+				set msg = $REPLACE(mail.message, "%AccessCode", $system.Encryption.Base64Encode(mItem.AccessCode))
+				do ##class(Stc.Data.MailingJournal).Create(contacts.GetAt(i).email, contacts.GetAt(i).name, mail.subject, msg)	
 			}
 					
 			if (contacts.Count() > 0) {

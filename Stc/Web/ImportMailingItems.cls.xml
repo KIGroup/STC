@@ -39,6 +39,7 @@
 			set line = stream.ReadLine()
 			set count = count + 1
 			
+			set line = $REPLACE(line, ",", ";")
 			if ($FIND(line,";") = 0) continue
 			
 			set propList = $LISTFROMSTRING(line, ";")
@@ -50,6 +51,10 @@
 			set data.company = $LISTGET(propList,4)
 			set data.position = $LISTGET(propList,5)
 			set data.group = group
+			
+			set existsApprovedId = ""
+			&sql(SELECT ID INTO :existsApprovedId FROM Stc_Data.MailingItemApproved WHERE MGroup = :group.id AND Email = :data.email)
+			set data.id = existsApprovedId
 			
 			do ##class(Stc.Data.MailingItemApproved).Save(data, .st)
 			
@@ -73,7 +78,7 @@
 	w "Записей импортировано успешно: "_result.success
 	
 	if (result.errorMessages.Count() '= 0){
-		w "<br><br>Список ошибочных записей: "
+		w "<br><br>Список ошибочных записей("_result.errorMessages.Count()_"): "
 		for i=1:1:result.errorMessages.Count(){
 			w "<br>"_i_". "_$ZCVT(result.errorMessages.GetAt(i).line, "I", "UTF8")
 			w "<br>"_result.errorMessages.GetAt(i).status

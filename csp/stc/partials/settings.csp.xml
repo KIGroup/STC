@@ -99,7 +99,7 @@
 							    <div class="control-group">
 								    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
 								    <div class="controls">
-								    	<textarea class="span12" rows="7" ng-model="page.mail.registration.message" required></textarea>
+								    	<textarea class="span12" rows="10" ng-model="page.mail.registration.message" required></textarea>
 								    </div>
 							    </div>
 						    </div>
@@ -142,7 +142,7 @@
 							    <div class="control-group">
 								    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
 								    <div class="controls">
-								    	<textarea class="span12" ng-model="page.mail.reminder.message" rows="7" required></textarea>
+								    	<textarea class="span12" ng-model="page.mail.reminder.message" rows="10" required></textarea>
 								    </div>
 							    </div>
 						    </div>
@@ -179,7 +179,7 @@
 							    <div class="control-group">
 								    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
 								    <div class="controls">
-								    	<textarea class="span12" rows="7" ng-model="page.mail.feedback.message" required></textarea>
+								    	<textarea class="span12" rows="5" ng-model="page.mail.feedback.message" required></textarea>
 								    </div>
 							    </div>
 						    </div>
@@ -216,7 +216,7 @@
 							    <div class="control-group">
 								    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
 								    <div class="controls">
-								    	<textarea class="span12" ng-model="page.mail.teacher.message" rows="7" required></textarea>
+								    	<textarea class="span12" ng-model="page.mail.teacher.message" rows="10" required></textarea>
 								    </div>
 							    </div>
 						    </div>
@@ -253,7 +253,7 @@
 							    <div class="control-group">
 								    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
 								    <div class="controls">
-								    	<textarea class="span12" ng-model="page.mail.curator.message" rows="7" required></textarea>
+								    	<textarea class="span12" ng-model="page.mail.curator.message" rows="10" required></textarea>
 								    </div>
 							    </div>
 						    </div>
@@ -290,7 +290,7 @@
 							    <div class="control-group">
 								    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
 								    <div class="controls">
-								    	<textarea class="span12" ng-model="page.mail.orders.message" rows="7" required></textarea>
+								    	<textarea class="span12" ng-model="page.mail.orders.message" rows="10" required></textarea>
 								    </div>
 							    </div>
 						    </div>
@@ -327,7 +327,7 @@
 							    <div class="control-group">
 								    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
 								    <div class="controls">
-								    	<textarea class="span12" ng-model="page.mail.orderapply.message" rows="7" required></textarea>
+								    	<textarea class="span12" ng-model="page.mail.orderapply.message" rows="5" required></textarea>
 								    </div>
 							    </div>
 						    </div>
@@ -341,81 +341,7 @@
 					    </form>
 				    </accordion-group>
 				    <br>
-				    <!--============================================= mailinggroups =================================================================================-->
-				    <accordion-group heading="{{'Шаблон: Группы рассылки'|localize}}">
-					    <form name="form_mail_mailinggroups" style="margin: 0 0 10px 0;" ng-submit="page.mail.save('mailinggroups', form_mail_mailinggroups)">
-							<div class="row-fluid" ng-show="page.mail.mailinggroups.previewIsVisible">
-								<div ng-bind-html-unsafe="page.mail.mailinggroups.preview"></div>
-								<button class="btn btn-small pull-right" ng-click="page.mail.mailinggroups.previewIsVisible=false" ng-bind="('Назад'|localize)" type="button" ></button>
-							</div>
-						    <div class="row-fluid" ng-hide="page.mail.mailinggroups.previewIsVisible">
-							    <div class="span7">
-								    <div class="control-group">
-									    <label class="control-label" ng-bind="('Тема письма'|localize) + '*'"></label>
-									    <div class="controls">
-									    	<input class="span12" ng-model="page.mail.mailinggroups.subject" type="text" required>
-									    </div>
-								    </div>
-							    </div>
-							    <div class="span5">
-							    </div>
-						    </div>
-						    <div class="row-fluid" ng-hide="page.mail.mailinggroups.previewIsVisible">
-							    <div class="control-group">
-								    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
-								    <div class="controls">
-								    	<textarea class="span12" ng-model="page.mail.mailinggroups.message" rows="7" required></textarea>
-								    </div>
-							    </div>
-						    </div>
-						    <div class="row-fluid" ng-hide="page.mail.mailinggroups.previewIsVisible">
-				    			<button class="btn btn-small btn-primary" ng-bind="('Сохранить'|localize)" type="submit"  ng-disabled="form_mail_mailinggroups.$pristine"></button>
-				    			<button class="btn btn-small" ng-click="page.mail.cancel('mailinggroups', form_mail_mailinggroups)" ng-bind="('Отмена'|localize)" type="button" ></button>
-				    			<button class="btn btn-small pull-right" style="margin-left: 5px;" type="button" title="Справка" ng-click="page.mail.showHelp('mailinggroups')">&nbsp;<i class="icon-question"></i>&nbsp;</button>
-								<button class="btn btn-small pull-right" type="button" ng-bind="('Предварительный просмотр'|localize)" ng-click="page.mail.showPreview('mailinggroups')"></button>
-								<stcalertlabel data="page.mail.mailinggroups.alertLabel"></stcalertlabel>
-							</div>
-					    </form>
-				    </accordion-group>
-				    <br>
-				    <!--============================================= mailingsubscriber =================================================================================-->
-				    <accordion-group heading="{{'Шаблон: Группа рассылки для подписчиков'|localize}}">
-					    <form name="form_mail_mailingsubscriber" style="margin: 0 0 10px 0;" ng-submit="page.mail.save('mailingsubscriber', form_mail_mailingsubscriber)">
-							<div class="row-fluid" ng-show="page.mail.mailingsubscriber.previewIsVisible">
-								<div ng-bind-html-unsafe="page.mail.mailingsubscriber.preview"></div>
-								<button class="btn btn-small pull-right" ng-click="page.mail.mailingsubscriber.previewIsVisible=false" ng-bind="('Назад'|localize)" type="button" ></button>
-							</div>
-						    <div class="row-fluid" ng-hide="page.mail.mailingsubscriber.previewIsVisible">
-							    <div class="span7">
-								    <div class="control-group">
-									    <label class="control-label" ng-bind="('Тема письма'|localize) + '*'"></label>
-									    <div class="controls">
-									    	<input class="span12" ng-model="page.mail.mailingsubscriber.subject" type="text" required>
-									    </div>
-								    </div>
-							    </div>
-							    <div class="span5">
-							    </div>
-						    </div>
-						    <div class="row-fluid" ng-hide="page.mail.mailingsubscriber.previewIsVisible">
-							    <div class="control-group">
-								    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
-								    <div class="controls">
-								    	<textarea class="span12" ng-model="page.mail.mailingsubscriber.message" rows="7" required></textarea>
-								    </div>
-							    </div>
-						    </div>
-						    <div class="row-fluid" ng-hide="page.mail.mailingsubscriber.previewIsVisible">
-				    			<button class="btn btn-small btn-primary" ng-bind="('Сохранить'|localize)" type="submit"  ng-disabled="form_mail_mailingsubscriber.$pristine"></button>
-				    			<button class="btn btn-small" ng-click="page.mail.cancel('mailingsubscriber', form_mail_mailingsubscriber)" ng-bind="('Отмена'|localize)" type="button" ></button>
-				    			<button class="btn btn-small pull-right" style="margin-left: 5px;" type="button" title="Справка" ng-click="page.mail.showHelp('mailingsubscriber')">&nbsp;<i class="icon-question"></i>&nbsp;</button>
-								<button class="btn btn-small pull-right" type="button" ng-bind="('Предварительный просмотр'|localize)" ng-click="page.mail.showPreview('mailingsubscriber')"></button>
-								<stcalertlabel data="page.mail.mailingsubscriber.alertLabel"></stcalertlabel>
-							</div>
-					    </form>
-				    </accordion-group>
-				   <br>
-				   <!--============================================= confirmsubscription =================================================================================-->
+				    <!--============================================= confirmsubscription =================================================================================-->
 				    <accordion-group heading="{{'Шаблон: Активация подписки'|localize}}">
 					    <form name="form_mail_confirmsubscription" style="margin: 0 0 10px 0;" ng-submit="page.mail.save('confirmsubscription', form_mail_confirmsubscription)">
 							<div class="row-fluid" ng-show="page.mail.confirmsubscription.previewIsVisible">
@@ -438,7 +364,7 @@
 							    <div class="control-group">
 								    <label class="control-label" ng-bind="('Содержание'|localize) + '*'"></label>
 								    <div class="controls">
-								    	<textarea class="span12" ng-model="page.mail.confirmsubscription.message" rows="7" required></textarea>
+								    	<textarea class="span12" ng-model="page.mail.confirmsubscription.message" rows="5" required></textarea>
 								    </div>
 							    </div>
 						    </div>
@@ -505,7 +431,7 @@
 							    <div class="control-group">
 								    <label class="control-label" ng-bind="('Событие'|localize) + '*'"></label>
 								    <div class="controls">
-								    	<textarea class="span12" ng-model="page.google.calendar.msg" rows="7" required></textarea>
+								    	<textarea class="span12" ng-model="page.google.calendar.msg" rows="10" required></textarea>
 								    </div>
 							    </div>
 						    </div>

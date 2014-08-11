@@ -4,8 +4,12 @@
 <Super>%Persistent</Super>
 <TimeCreated>63399,51994.978925</TimeCreated>
 
-<Property name="CreatedTS">
+<Property name="SendedTS">
 <Type>%TimeStamp</Type>
+</Property>
+
+<Property name="IsSended">
+<Type>%Boolean</Type>
 <Required>1</Required>
 </Property>
 
@@ -32,14 +36,21 @@
 <Parameter name="MAXLEN" value="9000"/>
 </Property>
 
+<Index name="IsSendedIdx">
+<Properties>IsSended</Properties>
+</Index>
+
 <Method name="Create">
 <ClassMethod>1</ClassMethod>
 <FormalSpec>email:%String,recipientName:%String,subject:%String,message:%Text</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	set st = $$$OK
+	
 	try{
 		set obj = ..%New()
-		set obj.CreatedTS = $ZDT($ZTS,3)
+		
+		set obj.IsSended = $$$NO
 		set obj.Subject = subject
 		set obj.Message = message
 		set obj.RecipientEmail = email
@@ -64,6 +75,21 @@
 		do obj.%Save()
 	}
 	catch(ex){
+		set st = ex.AsStatus()
+	}
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="CreateAll">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>contacts:%ListOfObjects,subject:%String,message:%Text</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	for i=1:1:contacts.Count(){
+		set contact = contacts.GetAt(i)
+		do ..Create(contact.email, contact.name, subject, message) 
 	}
 	
 	quit $$$OK
@@ -75,7 +101,8 @@
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()
 	
-	set proxy.createdTS = ..CreatedTS
+	set proxy.isSended = ..IsSended
+	set proxy.sendedTS = ..SendedTS
 	set proxy.subject = ..Subject
 	set proxy.message = ..Message
 	
@@ -86,5 +113,87 @@
 	quit proxy
 ]]></Implementation>
 </Method>
+
+<Method name="StartSending">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{	
+		&sql(DECLARE MailCur CURSOR FOR 
+			 	 SELECT ID 
+			 	 FROM Stc_Data.MailingJournal
+			 	 WHERE IsSended = 0
+			 	 ORDER BY ID)	
+			
+		&sql(OPEN MailCur)
+		for  
+		{	
+			&sql(FETCH MailCur INTO :id) 
+			quit:(SQLCODE '= 0)
+			
+			set mail = ..%OpenId(id, 4, .st)
+			if $$$ISOK(st) && (mail.IsSended = $$$NO){
+				set st = ##class(Stc.Utils.Email).Send(mail.RecipientEmail, mail.Subject, mail.Message)		
+				if $$$ISOK(st){
+					set mail.IsSended = $$$YES
+					set mail.SendedTS = $ZDT($ZTS, 3)
+					do mail.%Save()
+				}
+				else{
+					do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".StartSending()", "MailId="_id_"; St="_$System.Status.GetErrorText(st))
+				}
+			}
+			
+			kill mail
+		}
+			
+		&sql(CLOSE MailCur)
+	}
+	catch(ex){
+		set st = ex.AsStatus()
+		do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".StartSending() catch", $System.Status.GetErrorText(st))
+	}
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.MailingJournalD</DataLocation>
+<DefaultData>MailingJournalDefaultData</DefaultData>
+<IdLocation>^Stc.Data.MailingJournalD</IdLocation>
+<IndexLocation>^Stc.Data.MailingJournalI</IndexLocation>
+<StreamLocation>^Stc.Data.MailingJournalS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="MailingJournalDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>CreatedTS</Value>
+</Value>
+<Value name="3">
+<Value>RecipientEmail</Value>
+</Value>
+<Value name="4">
+<Value>RecipientName</Value>
+</Value>
+<Value name="5">
+<Value>Subject</Value>
+</Value>
+<Value name="6">
+<Value>Message</Value>
+</Value>
+<Value name="7">
+<Value>SendedTS</Value>
+</Value>
+<Value name="8">
+<Value>IsSended</Value>
+</Value>
+</Data>
+</Storage>
 </Class>
 </Export>

@@ -781,37 +781,37 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
             $scope.mailing.selectedGroup.contacts.splice(idx[0], 1);
     };
 
-    // Send email to training students or custom student (single email)
-    $scope.mailing.sendEmail = function(isSingleEmail){
-        var contacts = [];
+	 // Send email to training students or custom student (single email)
+	$scope.mailing.sendEmail = function(isSingleEmail){
+		var contacts = [];
 
-        if (isSingleEmail){
-            contacts = [{name: '', email: $scope.mailing.single}];
-        }
-        else{
-            contacts = $scope.mailing.selectedGroup.contacts;
-        }
-        
-        if (contacts.length == 0){
-            $scope.other.alert = UtilsSrvc.getAlert('Внимание!', 'Выберите получателей письма.', 'error', true);
-            return;
-        }
-        
-        var promise = TrainingSrvc.sendEmail({
-	        isSubscribers: $scope.mailing.selectedGroup.isSubscribers,
-            contacts: contacts, 
-            subject: $scope.mailing.selectedGroup.mail.subject, 
-            message: $scope.mailing.selectedGroup.mail.message.replace(/\n/g, "<br>")
-        });
-        
+		if (isSingleEmail){
+			contacts = [{name: '', email: $scope.mailing.single}];
+		}
+		else{
+			contacts = $scope.mailing.selectedGroup.contacts;
+		}
+
+		if (contacts.length == 0){
+			$scope.other.alert = UtilsSrvc.getAlert('Внимание!', 'Выберите получателей письма.', 'error', true);
+			return;
+		}
+
+		var promise = TrainingSrvc.sendEmail({
+			isSubscribers: $scope.mailing.selectedGroup.isSubscribers,
+			contacts: contacts,
+			subject: $scope.mailing.selectedGroup.mail.subject,
+			message: $scope.mailing.selectedGroup.mail.message.replace(/\n/g, "<br>")
+		});
+	
 		promise.then(
-            function(data){
-                $scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Почта отправлена', 'success', true);
-            },
-            function(response){
-                $scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
-            });
-    };
+			function(data){
+				$scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Почта отправлена', 'success', true);
+			},
+			function(response){
+				$scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+			});
+	};
 
  
     // Off\On Automailing for training 
@@ -853,6 +853,26 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
                 for (var i=0; i < $scope.mailing.groups.length; i++){
                     $scope.mailing.groups[i].isAutoMailing = $scope.mailing.groups[i].isAutoMailing == 1;
                     $scope.mailing.groups[i].mail.message = $scope.mailing.groups[i].mail.message.replace(/<br>/g, "\n");
+                    
+                    var contacts = $scope.mailing.groups[i].contacts;
+                  	
+                  	if (contacts.length > 30){
+		            	$scope.mailing.groups[i].contactsStyle = {
+			            	height: '130px', 
+		            		overflowX: 'auto',
+		            		border: '1px dashed rgb(158, 158, 158)',
+							padding: '4px'
+						};
+		            }
+		            
+                    for (var c=0; c < contacts.length; c++){
+	                	if (contacts[c].name.length > 20){
+	                		contacts[c].nameShort = contacts[c].name.substring(0, 17) + '...'
+	                	}
+	                	else{
+		                	contacts[c].nameShort = contacts[c].name;
+		            	}
+	            	}
                 }
             },
             function(response){
