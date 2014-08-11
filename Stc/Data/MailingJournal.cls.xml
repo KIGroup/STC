@@ -101,6 +101,7 @@
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()
 	
+	set proxy.id = ..%Id()
 	set proxy.isSended = ..IsSended
 	set proxy.sendedTS = ..SendedTS
 	set proxy.subject = ..Subject

@@ -30,7 +30,7 @@
 		    page-size="mailTable.pageSize"
 		    navigator-visible="true"
 
-		    selectable="false"
+		    selectable="true"
 		    selected-items="mailTable.selectedItems"
 		    multi-select-mode="mailTable.multiSelectMode"
 
@@ -42,6 +42,22 @@
 	</div>
 </div>
 
+<div class="row-fluid" ng-hide="mailTable.selectedItems.length==0">
+	<div class="span1">
+	</div>
+	<div class="span10" style="border: 1px solid rgb(206, 206, 206); padding: 10px; border-radius: 4px;">
+		<p><b ng-bind="('Получатель'|localize) + ':'"></b> <span ng-bind="mailTable.selectedItems[0].recipient.fullName + '; ' + mailTable.selectedItems[0].sendedStatus"></span></p>
+		<div class="row-fluid" style="margin-bottom: 10px;" ng-bind-html-unsafe="'<b>' +('Тема письма'|localize) + ': </b>' + mailTable.selectedItems[0].subject"></div>
+		<b ng-bind="('Содержание письма'|localize) + ':'"></b>
+		<div class="row-fluid" ng-bind-html-unsafe="mailTable.selectedItems[0].message"></div>
+	</div>
+	<div class="span1">
+	</div>
+</div>
+
+<div class="row-fluid" ng-show="mailTable.selectedItems.length==0" style="text-align: center;">
+	<i ng-bind="'Выберите элемент для отображения подробной информации.'|localize"></i>
+</div>	
 
 <div class="row-fluid">
 	<div class="span1">

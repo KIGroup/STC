@@ -14,7 +14,7 @@ controllersModule.controller('MailingJournalCtrl', function($scope, $filter, Uti
 
     $scope.mailTable.init = function(){
         $scope.mailTable.columns = [
-                          {name: 'Дата отправки', sqlName: 'ID', isSorted: true, isSortable: false, isDown: false, isSearched: false, isSearchable: false, captionStyle: {width: '150px'}},
+                          {name: 'Дата отправки', sqlName: 'ID', isSorted: true, isSortable: false, isDown: false, isSearched: false, isSearchable: false, captionStyle: {width: '190px'}},
                           {name: 'Получатель', sqlName: 'RecipientName', isSorted: false, isSortable: false, isDown: true, isSearched: true, isSearchable: true},
                           {name: 'Тема письма', sqlName: 'Subject', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: true},
                           {name: 'Содержание', sqlName: 'Message', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: true}];
@@ -23,7 +23,7 @@ controllersModule.controller('MailingJournalCtrl', function($scope, $filter, Uti
                           {name: 'sendedStatus',
                           calculate: function(item){
 	                      		if (item.isSended){
-	                      			item.sendedStatus = item.sendedTS;
+	                      			item.sendedStatus = $filter('convertCacheDate')(item.sendedTS, $filter('localize')('d MMMM y, HH:mm:ss'));
 	                      		}
 	                      		else{
 	                      			item.sendedStatus = $filter('localize')('В очереди');
@@ -41,15 +41,15 @@ controllersModule.controller('MailingJournalCtrl', function($scope, $filter, Uti
                           {name: 'subject'},
                           {name: 'messageShort',
                           calculate: function(item){
-                                if (item.message.length >= 50){
-                                    item.messageShort = item.message.substring(0, 50) + '...';
+                                if (item.message.length >= 30){
+                                    item.messageShort = item.message.substring(0, 30) + '...';
                                 }
                                 else{
 	                                item.messageShort = item.message;
                                 }
                           }}];
                                                                              
-        $scope.mailTable.pageSize = 30;
+        $scope.mailTable.pageSize = 5;
         $scope.mailTable.pageCurr = 1;
         $scope.mailTable.itemsTotal = 0;
         $scope.mailTable.selectedItems = [];
@@ -65,6 +65,11 @@ controllersModule.controller('MailingJournalCtrl', function($scope, $filter, Uti
                 $scope.mailTable.pageTotal = Math.ceil(data.itemsTotal / pageSize);
                 $scope.mailTable.itemsTotal = data.itemsTotal;
                 $scope.mailTable.items = data.items;
+                
+                if ($scope.mailTable.selectedItems && $scope.mailTable.items && $scope.mailTable.selectedItems.length == 0 && $scope.mailTable.items.length != 0){
+                    $scope.mailTable.selectedItems[0] = $scope.mailTable.items[0];
+                    $scope.mailTable.selectedItems[0].rowClass = 'info';
+                }
             },
             function(response){
                 $scope.mailTable.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
