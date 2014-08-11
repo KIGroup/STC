@@ -30,6 +30,7 @@ color: rgb(190, 183, 183);
 
 .iSwitcher:hover{
 color: rgb(48, 42, 94);
+cursor: pointer;
 }
 
 .pullCenter{

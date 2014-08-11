@@ -115,14 +115,14 @@
 	<div class="span10">
 		<form id="importForm" enctype="multipart/form-data" method="post" target="updateFrame" accept-charset="windows-1251" action="Stc.Web.ImportMailingItems.cls">
 			<div class="row-fluid" style="display: flex;">
-				<button type="button" class="btn btn-small" ng-click="mitemTable.createMail()" style="margin-right: 6px;" >{{'Написать письмо'|localize}}</button>
-				<button type="button" class="btn btn-small" ng-click="groupTable.refresh(); mitemTable.refresh();" style="margin-right: 6px;" >{{'Обновить таблицы'|localize}}</button>
+				<button type="button" class="btn btn-small" ng-click="mitemTable.createMail()" style="margin-right: 6px;" ><i class="icon-envelope"></i>&nbsp;&nbsp;{{'Написать письмо'|localize}}</button>
+				<button type="button" class="btn btn-small" ng-click="groupTable.refresh(); mitemTable.refresh();" style="margin-right: 6px;" ><i class="icon-refresh"></i>&nbsp;&nbsp;{{'Обновить таблицы'|localize}}</button>
 				<button id="btnSubmit"type="submit" class="btn btn-success btn-small" style="margin-right: 6px;" 
 						onclick="window.document.getElementById('ifUpload').style.display = 'none';"
-						disabled="1">{{'Импортировать записи из файла'|localize}}</button>
+						disabled="1"><i class="icon-download-alt"></i>&nbsp;&nbsp;{{'Импортировать записи из файла'|localize}}</button>
 			
 				<span id="fileSpan" class="btn btn-default btn-file btn-primary btn-small">
-			    	{{('Обзор'|localize) + '*'}} 
+			    	<i class="icon-file-text"></i>&nbsp;&nbsp;{{('Обзор'|localize) + '*'}} 
 			    	<input
 			    		id="inputFile" 
 			    		type="file" 

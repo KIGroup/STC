@@ -42,7 +42,7 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
 		$scope.menu.other = {id: 'other', name: 'Ещё'};
 		$scope.menu.mailingGroups = {id: 'mailingGroups', name: 'Группы рассылки'};
 		$scope.menu.mailingSubscription = {id: 'mailingSubscription', name: 'Оформление подписки'};
-		$scope.menu.mailingJournal = {id: 'mailingJournal', name: 'Журнал рассылок'};
+		$scope.menu.mailingJournal = {id: 'mailingJournal', name: 'Журнал рассылки'};
     };
 
     // Выбор меню - сделать активным пункт

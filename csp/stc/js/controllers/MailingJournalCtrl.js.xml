@@ -49,7 +49,7 @@ controllersModule.controller('MailingJournalCtrl', function($scope, $filter, Uti
                                 }
                           }}];
                                                                              
-        $scope.mailTable.pageSize = 5;
+        $scope.mailTable.pageSize = 10;
         $scope.mailTable.pageCurr = 1;
         $scope.mailTable.itemsTotal = 0;
         $scope.mailTable.selectedItems = [];

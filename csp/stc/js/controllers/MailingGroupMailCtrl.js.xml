@@ -23,7 +23,7 @@ controllersModule.controller('MailingGroupMailCtrl', function($scope, $filter, $
         MailingSrvc.getGroup($routeParams.id).then(
             function(data){
 	            data.mailSubject = '';
-	            data.mailMessage = "\n\n" + $filter('localize')("Для того, чтобы отписаться от почтовых уведомлений перейдите по <a target='_blank' href='%UnsubscribeUrl'>ссылке</a>.");
+	            data.mailMessage = "" + $filter('localize')("Для того, чтобы отписаться от почтовых уведомлений перейдите по <a target='_blank' href='%UnsubscribeUrl'>ссылке</a>.");
                 $scope.mailForm.group = data;
             },
             function(response){

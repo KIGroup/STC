@@ -153,18 +153,26 @@
                       <li ng-class="{aSelected: menu.analyticsOrder.css=='active'}"  ><a href="#/analytics/order"     ng-bind="menu.analyticsOrder.name|localize"></a></li>
                     </ul>
                   </li>
-                  
-                  <li ng-show="menu.admin" class="dropdown" ng-class="{'dropdown': true, 'active': (menu.companies.css=='active' || menu.persons.css=='active' || menu.certificates.css=='active' || menu.courses.css=='active' || menu.mailingGroups.css=='active' || menu.mailingSubscription.css=='active' || menu.settings.css=='active')}">
+          
+                  <li ng-show="menu.admin" ng-class="menu.mailingGroups.css"><a href="#/mailing/groups" ng-bind="menu.mailingGroups.name|localize"></a></li>
+                  <li ng-show="menu.admin" ng-class="menu.mailingJournal.css"><a href="#/mailing/journal" ng-bind="menu.mailingJournal.name|localize"></a></li>
+          
+                  <li ng-show="menu.admin" class="dropdown" ng-class="{'dropdown': true, 'active': (menu.companies.css=='active' || menu.persons.css=='active' || menu.certificates.css=='active' || menu.courses.css=='active' || menu.mailingSubscription.css=='active' || menu.settings.css=='active')}">
                     <a href="#/companies"><span ng-bind="(menu.other.name|localize) + ' '"></span><b class="caret"></b></a>
                      	<ul class="dropdown-menu">
                       		<li ng-class="{aSelected: menu.companies.css=='active'}"    ><a href="#/companies" ng-bind="menu.companies.name|localize"></a></li>
                       		<li ng-class="{aSelected: menu.pesrons.css=='active'}"      ><a href="#/persons" ng-bind="menu.persons.name|localize"></a></li>
                       		<li ng-class="{aSelected: menu.certificates.css=='active'}" ><a href="#/certificates" ng-bind="menu.certificates.name|localize"></a></li>
                       		<li ng-class="{aSelected: menu.courses.css=='active'}"      ><a href="#/courses" ng-bind="menu.courses.name|localize"></a></li>
+                      		<!--
+                      		
                       		<li ng-class="{aSelected: menu.mailingGroups.css=='active'}"><a href="#/mailing/groups" ng-bind="menu.mailingGroups.name|localize"></a></li>
+                      		-->
                       		<li ng-class="{aSelected: menu.mailingSubscription.css=='active'}"><a href="#/mailing/subscription" ng-bind="menu.mailingSubscription.name|localize"></a></li>
+                      		<!--
+                      		
                       		<li ng-class="{aSelected: menu.mailingJournal.css=='active'}"><a href="#/mailing/journal" ng-bind="menu.mailingJournal.name|localize"></a></li>
-          
+          					-->
                       		<li ng-class="{aSelected: menu.settings.css=='active'}"     ><a href="#/settings" ng-bind="menu.settings.name|localize"></a></li>
                       	</ul>
                   </li>

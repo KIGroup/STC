@@ -424,12 +424,13 @@ localizationModule.constant('StcDictionary', {
 
 
     'Дата начала / окончания' : 'Start / end date',
-	'Журнал рассылок' : 'Mailing journal',
+	'Журнал рассылки' : 'Mailing journal',
 	'Закрыть заявку' : 'Close order',
 	'Изменить обучение' : 'Edit training',
 	'Непубличный телефон' : 'Secret phone',
 	'Получатель' : 'Recipient', 
 	'Публичный телефон' : 'Public phone',
+	'Содержание письма' : 'Message',
 	'ЧЧ:MM' : 'HH:MM',
 	'Шаблон: Активация подписки' : 'Pattern: Subscription activation',
 	'Шаблон: Группа рассылки для подписчиков' : 'Pattern: ',
@@ -440,7 +441,10 @@ localizationModule.constant('StcDictionary', {
 	'Шаблон: Преподаватель - доступ к списку слушателей' : 'Pattern: Teacher - access to list of students',
 	'Шаблон: Слушатели - доступ к анкете' : 'Pattern: Students - access to feedback',
 	'Шаблон: Слушатели - напоминание' : 'Pattern: Students - remainder',
-	'Шаблон: Слушатель - подтверждение регистрации' : 'Pattern: Student - confirmation registration'
+	'Шаблон: Слушатель - подтверждение регистрации' : 'Pattern: Student - confirmation registration',
+	'Дата отправки':'',
+	'В очереди':'In the queue',
+	'Написать письмо':'Create mail'
 
   },
   getTranslate: function(word){

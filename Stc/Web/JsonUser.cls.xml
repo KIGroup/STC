@@ -268,6 +268,10 @@ Method="DELETE" Url="/json/mailing/subscription/:code"</Description>
 			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("WrongAccessCode"))
 		}
 		
+		set item = ##class(Stc.Data.MailingItemApproved).AccessCodeIdxOpen(code)
+		do ##class(Stc.Utils.Log).Create("Json.Admin.DeleteMailingSubscription()", "FullName="_item.FullName_"; Email="_item.Email)
+		kill item
+		
 		$$$THROWONERROR(st, ##class(Stc.Data.MailingItemApproved).AccessCodeIdxDelete(code))
 		
 		TCOMMIT
