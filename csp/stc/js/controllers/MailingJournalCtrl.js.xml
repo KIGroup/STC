@@ -2,13 +2,13 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/js/controllers/MailingJournalCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//jd
+//jdd
 
 /*===========================================================================================
 Журнал рассылок
 ===========================================================================================*/
 
-controllersModule.controller('MailingJournalCtrl', function($scope, $filter, UtilsSrvc){
+controllersModule.controller('MailingJournalCtrl', function($scope, MailingSrvc, $filter, UtilsSrvc){
     $scope.mailTable = {grid:{}};
     $scope.menu.selectMenu('mailingJournal');
 
@@ -58,9 +58,9 @@ controllersModule.controller('MailingJournalCtrl', function($scope, $filter, Uti
         $scope.mailTable.forciblyUpdate++;
     };
 
-    // Загрузить все курсы
+    // Загрузить элементы журнала
     $scope.mailTable.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
-        UtilsSrvc.getAllMailsForGrid(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText).then(
+        MailingSrvc.getAllJournalItemsForGrid(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText).then(
             function(data){
                 $scope.mailTable.pageTotal = Math.ceil(data.itemsTotal / pageSize);
                 $scope.mailTable.itemsTotal = data.itemsTotal;
@@ -76,7 +76,54 @@ controllersModule.controller('MailingJournalCtrl', function($scope, $filter, Uti
             });
     };
 
+    // Изменить статус рассылки
+    $scope.mailTable.changeMailingStatus = function(status){
+        MailingSrvc.changeMailingStatus(status).then(
+            function(data){
+                $scope.mailTable.mailingStatus = data.status;
+                $scope.mailTable.forciblyUpdate++;
+                
+                if (data.status == "On"){
+                	$scope.mailTable.alert = UtilsSrvc.getAlert('Готово!', 'Отправка писем возобновлена', 'success', true);
+                }
+                else{
+	                $scope.mailTable.alert = UtilsSrvc.getAlert('Готово!', 'Отправка писем прекращена', 'info', true);
+                }
+            },
+            function(response){
+                $scope.mailTable.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
+    // Загрузить статус рассылки 
+    $scope.mailTable.loadMailingStatus = function(){
+        MailingSrvc.getMailingStatus().then(
+            function(data){
+                $scope.mailTable.mailingStatus = data.status;
+            },
+            function(response){
+                $scope.mailTable.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+ 
+    // Удалить запись 
+    $scope.mailTable.remove = function(item){
+        MailingSrvc.removeJournalItem(item.id).then(
+            function(data){
+               	$scope.mailTable.alert = UtilsSrvc.getAlert('Готово!', 'Запись удалена.', 'success', true);
+            	if ($scope.mailTable.selectedItems.length !=0 && item.id == $scope.mailTable.selectedItems[0].id){
+            		$scope.mailTable.selectedItems = [];
+            	}
+            	
+            	$scope.mailTable.forciblyUpdate++;
+            },
+            function(response){
+                $scope.mailTable.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+
     $scope.mailTable.init();
+    $scope.mailTable.loadMailingStatus();
 });
 
 

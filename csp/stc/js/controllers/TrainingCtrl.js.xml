@@ -806,7 +806,7 @@ controllersModule.controller('TrainingCtrl', function($scope, $route, $location,
 	
 		promise.then(
 			function(data){
-				$scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Почта отправлена', 'success', true);
+				$scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Письма добавлены в очередь, проверьте журнал рассылок', 'success', true);
 			},
 			function(response){
 				$scope.other.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);

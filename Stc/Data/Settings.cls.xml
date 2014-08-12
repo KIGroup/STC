@@ -361,6 +361,21 @@ Mailing                                                                         
 ]]></Implementation>
 </Method>
 
+<Method name="GetMailingStatus">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetMailingData("Status", "Off")
+]]></Implementation>
+</Method>
+
+<Method name="SetMailingStatus">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..SetMailingData("Status", value)
+]]></Implementation>
+</Method>
+
 <Method name="GetMailingTeacherDays">
 <ClassMethod>1</ClassMethod>
 <ReturnType>%String</ReturnType>

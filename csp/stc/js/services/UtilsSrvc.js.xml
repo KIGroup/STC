@@ -85,17 +85,6 @@ servicesModule.factory('UtilsSrvc', function($dialog, $filter, DALSrvc) {
 
             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/log/grid', obj);
         },
-        getAllMailsForGrid: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
-            var first = pageSize * (pageCurr - 1) + 1;
-            var obj = {sqlName: sqlName, 
-                       isDown: isDown, 
-                       first: first, 
-                       last: first + pageSize - 1,
-                       searchSqlName: searchSqlName, 
-                       searchText: searchText};
-
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/mailing/journal/grid', obj);
-        },
         getPropertyValue: function (item, propertyStr, defaultValue){
             var value;
             defaultValue = defaultValue ? defaultValue : '';

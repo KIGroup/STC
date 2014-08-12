@@ -5,6 +5,7 @@
 
 localizationModule.constant('StcDictionary', {
   strings: {
+	'Письма добавлены в очередь, проверьте журнал рассылок':'Letters added to the queue, check the mailing journal',
     '(обновить)'                                               :'(refresh)',
     '(есть в списке)'                                          : '(is on the list)',
     '(нет в списке)'                                           : '(not in the list)',

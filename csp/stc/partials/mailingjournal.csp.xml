@@ -8,6 +8,8 @@
 		<span ng-bind="'Журнал рассылок'|localize" style="font-weight: bold;"></span>
 		&nbsp;
 		<i class="iSwitcher" ng-click="mailTable.forciblyUpdate = mailTable.forciblyUpdate + 1" ng-bind="'(обновить)'|localize"></i>
+		<button type="button" class="btn btn-small btn-danger pull-right" style="width: 190px;" title="{{'Прекратить рассылку писем'|localize}}" ng-click="mailTable.changeMailingStatus('Off')" ng-show="mailTable.mailingStatus=='On'"><i class="icon-ban-circle"></i>&nbsp;&nbsp;{{'Отключить рассылку'|localize}}</button>
+		<button type="button" class="btn btn-small btn-success pull-right" style="width: 190px;" title="{{'Возобновить рассылку писем'|localize}}" ng-click="mailTable.changeMailingStatus('On')" ng-show="mailTable.mailingStatus=='Off'"><i class="icon-ok"></i>&nbsp;&nbsp;{{'Включить рассылку'|localize}}</button>
 	</div>
 	<div class="span1">
 	</div>
@@ -34,9 +36,15 @@
 		    selected-items="mailTable.selectedItems"
 		    multi-select-mode="mailTable.multiSelectMode"
 
-		    action-column-visible="false"
-		    forcibly-update="mailTable.forciblyUpdate"
-		/>
+		    action-column-visible="true"
+	    	action-column-icon="'icon-ellipsis-horizontal'"
+	    	
+	    	first-row-action-icon="'icon-remove'"
+	    	first-row-action-title="'Удалить из очереди'|localize"
+	    	first-row-action-method="mailTable.remove(item)"
+
+	        forcibly-update="mailTable.forciblyUpdate"
+	    />
 	</div>
 	<div class="span1">
 	</div>
@@ -58,7 +66,7 @@
 <div class="row-fluid" ng-show="mailTable.selectedItems.length==0" style="text-align: center;">
 	<i ng-bind="'Выберите элемент для отображения подробной информации.'|localize"></i>
 </div>	
-
+<br>
 <div class="row-fluid">
 	<div class="span1">
 	</div>

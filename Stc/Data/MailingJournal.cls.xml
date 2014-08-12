@@ -134,6 +134,11 @@
 			&sql(FETCH MailCur INTO :id) 
 			quit:(SQLCODE '= 0)
 			
+			if (##class(Stc.Data.Settings).GetMailingStatus() = "Off") {
+				do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".StartSending()", "MailingStatus is Off")
+				return st
+			}
+			
 			set mail = ..%OpenId(id, 4, .st)
 			if $$$ISOK(st) && (mail.IsSended = $$$NO){
 				set st = ##class(Stc.Utils.Email).Send(mail.RecipientEmail, mail.Subject, mail.Message)		

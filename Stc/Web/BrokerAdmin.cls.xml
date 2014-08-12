@@ -36,6 +36,7 @@ Private request processor for administrator</Description>
 	<!-- Delete teacher and course link -->
 	<Route Method="DELETE" Url="/json/course/:courseId/teacher/:teacherId" Call="Stc.Web.JsonAdmin:DeleteCourseTeacher"/>
 	
+	
 	<!-- ================================================================================================================================== -->
 	<!-- APPLICATION (Order)                                                                                            APPLICATION (Order) -->
 	<!-- ================================================================================================================================== -->
@@ -120,6 +121,11 @@ Private request processor for administrator</Description>
 	<!-- Get training email -->
 	<Route Method="GET" Url="/json/training/:trainingId/mail/:type" Call="Stc.Web.JsonAdmin:GetTrainingEmail"/>
 	
+	<!-- Get mailing groups for combobox in the Mailing tab on training page -->
+	<Route Method="GET" Url="/json/training/:id/mailing/group" Call="Stc.Web.JsonAdmin:GetTrainingMailingGroups"/>
+	
+	<!-- Send email from tab 'Mailing' on the training page -->
+	<Route Method="POST" Url="/json/training/mail/send" Call="Stc.Web.JsonAdmin:SendEmailFromTraining"/>
 	
 	<!-- ================================================================================================================================== -->
 	<!-- TRAINING SUBGROUP                                                                                                TRAINING SUBGROUP  -->
@@ -319,8 +325,20 @@ Private request processor for administrator</Description>
 	<!-- Delete mailing item by ID -->
 	<Route Method="DELETE" Url="/json/mailing/group/item/:id" Call="Stc.Web.JsonAdmin:DeleteMailingItem"/>
 	
+	<!-- Send mail to Mailing group items -->
 	<Route Method="POST" Url="/json/mailing/mail/send" Call="Stc.Web.JsonAdmin:SendMailToMailingGroup"/>
 	
+	<!-- Get mailing journal -->
+	<Route Method="POST" Url="/json/mailing/journal/grid" Call="Stc.Web.JsonAdmin:GetMailingJournalItemsForGrid"/>
+	
+	<!-- Get current mailing status -->
+	<Route Method="GET" Url="/json/mailing/status" Call="Stc.Web.JsonAdmin:GetMailingStatus"/>
+	
+	<!-- Change mailing status (on|off) -->
+	<Route Method="POST" Url="/json/mailing/status/:status" Call="Stc.Web.JsonAdmin:ChangeMailingStatus"/>
+	
+	<!-- Delete mailing journal item -->
+	<Route Method="DELETE" Url="/json/mailing/journal/:id" Call="Stc.Web.JsonAdmin:DeleteMailingJournalItem"/>
 	
 	
 	<!-- ================================================================================================================================== -->
@@ -351,17 +369,7 @@ Private request processor for administrator</Description>
 	<!-- All logs -->
 	<Route Method="POST" Url="/json/log/grid" Call="Stc.Web.JsonAdmin:GetLogsForGrid"/>
 	
-	
-	
-	
-	
-	<Route Method="GET" Url="/json/training/:id/mailing/group" Call="Stc.Web.JsonAdmin:GetTrainingMailingGroups"/>
-	
-	
-	<Route Method="POST" Url="/json/training/mail/send" Call="Stc.Web.JsonAdmin:SendEmailFromTraining"/>
-	
-	<Route Method="POST" Url="/json/mailing/journal/grid" Call="Stc.Web.JsonAdmin:GetMailingJournalItemsForGrid"/>
-	
+
 </Routes>
 ]]></Data>
 </XData>

@@ -23,7 +23,7 @@ controllersModule.controller('MailingGroupMailCtrl', function($scope, $filter, $
         MailingSrvc.getGroup($routeParams.id).then(
             function(data){
 	            data.mailSubject = '';
-	            data.mailMessage = "" + $filter('localize')("Для того, чтобы отписаться от почтовых уведомлений перейдите по <a target='_blank' href='%UnsubscribeUrl'>ссылке</a>.");
+	            data.mailMessage = "" + $filter('localize')("Чтобы отписаться от почтовых уведомлений перейдите по <a target='_blank' href='%UnsubscribeUrl'>ссылке</a>.");
                 $scope.mailForm.group = data;
             },
             function(response){
@@ -95,7 +95,7 @@ controllersModule.controller('MailingGroupMailCtrl', function($scope, $filter, $
         		}).then(
             function(data){
 	            $scope.form_mail.$setPristine();
-                $scope.mailForm.alert = UtilsSrvc.getAlert('Готово!', 'Почта отправлена', 'success', true);  
+                $scope.mailForm.alert = UtilsSrvc.getAlert('Готово!', 'Письма добавлены в очередь, проверьте журнал рассылок', 'success', true);  
             },
             function(response){
                 $scope.mailForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);

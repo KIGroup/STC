@@ -345,7 +345,7 @@ Method="GET" Url="/json/mailing/subscription/:code"</Description>
 		
 		set proxy = ##class(Stc.Data.MailingItemApproved).AccessCodeIdxOpen(code).ConvertToProxyObject()
 		set proxy.accessCode = ""
-		set proxy.group = ""
+		set proxy.group = proxy.group.name
 		
 		do proxy.%ToJSON()
 	}
