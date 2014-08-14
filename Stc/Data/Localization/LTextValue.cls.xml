@@ -2,11 +2,13 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Localization.LTextValue">
 <Description>
-Значение на языке - Lang для объекта LText</Description>
+Localized string value - Lang for LText object</Description>
 <Super>%Persistent,%XML.Adaptor</Super>
 <TimeCreated>63142,65463.16029</TimeCreated>
 
 <Property name="LText">
+<Description>
+Intermediate object, get or set text for current language</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Cardinality>one</Cardinality>
 <Inverse>Values</Inverse>
@@ -17,6 +19,8 @@
 </Property>
 
 <Property name="Lang">
+<Description>
+Language</Description>
 <Type>Stc.Data.Localization.LTextLanguage</Type>
 <Cardinality>one</Cardinality>
 <Inverse>Values</Inverse>
@@ -42,12 +46,14 @@
 
 <Method name="GetValue">
 <Description>
-Получить значение на языке=lang для объекта с ИД=ltxt </Description>
+Get value for language=lang for object with id=ltxt</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>ltxt,lang</FormalSpec>
 <ReturnType>%String</ReturnType>
 <Implementation><![CDATA[
-	set value = "---"
+	// ISO 639-1
+	set lang = $e(lang,1,2)
+	set value = "! no value for [ISO 639-1] lang="_lang
 	
 	&sql(SELECT Value INTO :value 
 	     FROM Stc_Data_Localization.LTextValue 
@@ -59,8 +65,7 @@
 
 <Method name="SetValue">
 <Description>
-Установить значение для объекта с ИД=ltxt для языка=lang,
-если у обхекта LText еще нет свойства на этом языке, то создаем его</Description>
+Set value for language=lang for object with id=ltxt</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>value,ltxt,lang</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -86,7 +91,7 @@
 
 <Method name="Delete">
 <Description>
-Удалить все значения на всех языках для объекта LText</Description>
+Delete all values for all languages for object LText</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>ltxt</FormalSpec>
 <ReturnType>%Status</ReturnType>

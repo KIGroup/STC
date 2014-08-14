@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.Settings">
+<Abstract>1</Abstract>
+<TimeCreated>63392,63626.63158</TimeCreated>
+
+<Method name="Init">
+<Description>
+do ##class(Stc.Data.Settings).Init()</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	do ##class(Stc.Data.Settings).SetWebAppDomain("localhost:57772")
+	do ##class(Stc.Data.Settings).SetEmailFrom("stc_testmail@mail.ru")
+	do ##class(Stc.Data.Settings).SetEmailSMTPPassword("simplepassword")
+	do ##class(Stc.Data.Settings).SetEmailSMTPPort(25)
+	do ##class(Stc.Data.Settings).SetEmailSMTPServer("smtp.mail.ru")
+	do ##class(Stc.Data.Settings).SetEmailSMTPUser("stc_testmail@mail.ru")
+	do ##class(Stc.Data.Settings).SetGoogleCalendarID("kurapatka795@gmail.com")
+	do ##class(Stc.Data.Settings).SetGoogleRefreshToken("")
+	do ##class(Stc.Data.Settings).SetGoogleSSLConfig("sasaygoogle")
+	do ##class(Stc.Data.Settings).SetGoogleCalendarSRC("https://www.google.com/calendar/embed?showTitle=0&showNav=0&showDate=0&showPrint=0&showTabs=0&showCalendars=0&showTz=0&mode=AGENDA&height=300&wkst=1&bgcolor=%23FFFFFF&src=kurapatka795%40gmail.com&ctz=Asia/Krasnoyarsk")
+	do ##class(Stc.Data.Settings).SetMailingOperatorAddresses("ilsondll@gmail.com,ilson07@mail.ru")
+	do ##class(Stc.Data.Settings).SetMailingStudentsDays(7)
+	do ##class(Stc.Data.Settings).SetMailingTeacherDays(4)
+	do ##class(Stc.Data.Settings).SetWebAppNamespace("/csp/stc")
+	do ##class(Stc.Data.Settings).SetWebAppAdmin("/csp/stc/admin")
+	do ##class(Stc.Data.Settings).SetWebAppUser("/csp/stc/user")
+]]></Implementation>
+</Method>
+
+<Method name="WriteAllSettings">
+<Description>
+do ##class(Stc.Data.Settings).WriteAllSettings()</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	w !, "-- Settings start -------------------------------------------------------"
+	
+	w !, "1 . GetWebAppNamespace() | "_..GetWebAppNamespace()
+	w !, "2 . GetWebAppAdmin()     | "_..GetWebAppAdmin()
+	w !, "3 . GetWebAppUser()      | "_..GetWebAppUser()
+	w !, "4 . GetWebAppDomain()    | "_..GetWebAppDomain()
+	
+	w !, "5 . GetEmailSMTPServer()   | "_..GetEmailSMTPServer()
+	w !, "6 . GetEmailSMTPPort()     | "_..GetEmailSMTPPort()
+	w !, "7 . GetEmailSMTPUser()     | "_..GetEmailSMTPUser()
+	w !, "8 . GetEmailSMTPPassword() | "_..GetEmailSMTPPassword()
+	w !, "9 . GetEmailFrom()         | "_..GetEmailFrom()
+	
+	w !, "10. GetGoogleSSLConfig()    | "_..GetGoogleSSLConfig()
+	w !, "11. GetGoogleRefreshToken() | "_..GetGoogleRefreshToken()
+	w !, "12. GetGoogleCalendarID()   | "_..GetGoogleCalendarID()
+	w !, "13. GetGoogleCalendarSRC()  | "_..GetGoogleCalendarSRC()
+	
+	w !, "14. GetMailingTeacherDays()       | "_..GetMailingTeacherDays()
+	w !, "15. GetMailingCuratorDays()       | "_..GetMailingCuratorDays()
+	w !, "16. GetMailingStudentsDays()      | "_..GetMailingStudentsDays()
+	w !, "17. GetMailingOperatorAddresses() | "_..GetMailingOperatorAddresses()
+	
+	w !, "-- Settings end -------------------------------------------------------",!
+]]></Implementation>
+</Method>
+
+<Method name="GetWebAppData">
+<Description>
+
+===========================================================================================================================================
+Web                                                                                                                                     Web
+===========================================================================================================================================
+</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>key:%String,defaultValue=""</FormalSpec>
+<Private>1</Private>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit $GET(^Settings("Stc", "Web", key), defaultValue)
+]]></Implementation>
+</Method>
+
+<Method name="SetWebAppData">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>key:%String,value</FormalSpec>
+<Private>1</Private>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set ^Settings("Stc", "Web", key) = value
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetWebAppNamespace">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetWebAppData("Namespace")
+]]></Implementation>
+</Method>
+
+<Method name="SetWebAppNamespace">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..SetWebAppData("Namespace", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetWebAppAdmin">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetWebAppData("AdminREST")
+]]></Implementation>
+</Method>
+
+<Method name="SetWebAppAdmin">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..SetWebAppData("AdminREST", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetWebAppUser">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetWebAppData("UserREST")
+]]></Implementation>
+</Method>
+
+<Method name="SetWebAppUser">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..SetWebAppData("UserREST", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetWebAppDomain">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetWebAppData("Domain")_..GetWebAppData("Namespace")
+]]></Implementation>
+</Method>
+
+<Method name="SetWebAppDomain">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..SetWebAppData("Domain", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetEmailData">
+<Description>
+
+===========================================================================================================================================
+Email                                                                                                                                 Email
+===========================================================================================================================================
+</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>key:%String,defaultValue=""</FormalSpec>
+<Private>1</Private>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit $GET(^Settings("Stc", "Email", key), defaultValue)
+]]></Implementation>
+</Method>
+
+<Method name="SetEmailData">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>key:%String,value</FormalSpec>
+<Private>1</Private>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set ^Settings("Stc", "Email", key) = value
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetEmailSMTPServer">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetEmailData("SMTPServer")
+]]></Implementation>
+</Method>
+
+<Method name="SetEmailSMTPServer">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..SetEmailData("SMTPServer", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetEmailSMTPPort">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetEmailData("SMTPPort")
+]]></Implementation>
+</Method>
+
+<Method name="SetEmailSMTPPort">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..SetEmailData("SMTPPort", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetEmailSMTPUser">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetEmailData("SMTPUser")
+]]></Implementation>
+</Method>
+
+<Method name="SetEmailSMTPUser">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..SetEmailData("SMTPUser", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetEmailSMTPPassword">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetEmailData("SMTPPassword")
+]]></Implementation>
+</Method>
+
+<Method name="SetEmailSMTPPassword">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..SetEmailData("SMTPPassword", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetEmailFrom">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetEmailData("From")
+]]></Implementation>
+</Method>
+
+<Method name="SetEmailFrom">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..SetEmailData("From", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetGoogleData">
+<Description>
+
+===========================================================================================================================================
+Google                                                                                                                               Google
+===========================================================================================================================================
+</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>key:%String,defaultValue=""</FormalSpec>
+<Private>1</Private>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit $GET(^Settings("Stc", "Google", key), defaultValue)
+]]></Implementation>
+</Method>
+
+<Method name="SetGoogleData">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>key:%String,value</FormalSpec>
+<Private>1</Private>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set ^Settings("Stc", "Google", key) = value
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetGoogleRefreshToken">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetGoogleData("RefreshToken")
+]]></Implementation>
+</Method>
+
+<Method name="SetGoogleRefreshToken">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..SetGoogleData("RefreshToken", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetGoogleSSLConfig">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetGoogleData("SSLConfig")
+]]></Implementation>
+</Method>
+
+<Method name="SetGoogleSSLConfig">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..SetGoogleData("SSLConfig", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetGoogleCalendarID">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetGoogleData("CalendarID")
+]]></Implementation>
+</Method>
+
+<Method name="SetGoogleCalendarID">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..SetGoogleData("CalendarID", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetGoogleCalendarSRC">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetGoogleData("CalendarSRC")
+]]></Implementation>
+</Method>
+
+<Method name="SetGoogleCalendarSRC">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..SetGoogleData("CalendarSRC", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetMailingData">
+<Description>
+
+===========================================================================================================================================
+Mailing                                                                                                                             Mailing
+===========================================================================================================================================
+</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>key:%String,defaultValue=""</FormalSpec>
+<Private>1</Private>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit $GET(^Settings("Stc", "Mailing", key), defaultValue)
+]]></Implementation>
+</Method>
+
+<Method name="SetMailingData">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>key:%String,value</FormalSpec>
+<Private>1</Private>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set ^Settings("Stc", "Mailing", key) = value
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetMailingStatus">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetMailingData("Status", "Off")
+]]></Implementation>
+</Method>
+
+<Method name="SetMailingStatus">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..SetMailingData("Status", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetMailingTeacherDays">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetMailingData("TeacherDays", 4)
+]]></Implementation>
+</Method>
+
+<Method name="SetMailingTeacherDays">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..SetMailingData("TeacherDays", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetMailingCuratorDays">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetMailingData("CuratorDays", 4)
+]]></Implementation>
+</Method>
+
+<Method name="SetMailingCuratorDays">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..SetMailingData("CuratorDays", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetMailingStudentsDays">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetMailingData("StudentsDays", 4)
+]]></Implementation>
+</Method>
+
+<Method name="SetMailingStudentsDays">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..SetMailingData("StudentsDays", value)
+]]></Implementation>
+</Method>
+
+<Method name="GetMailingOperatorAddresses">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit ..GetMailingData("OperatorAddresses")
+]]></Implementation>
+</Method>
+
+<Method name="SetMailingOperatorAddresses">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..SetMailingData("OperatorAddresses", value)
+]]></Implementation>
+</Method>
+</Class>
+</Export>

@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/filters/cacheDate.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/filters/cacheDate.js" application="/csp/stc/" default="1"><![CDATA[
 //d
 
 filterModule.filter('convertCacheDate', function($filter) {
-    return function(input, filterParams) {
+    return function(input, filterParams, isUTC) {
         var result;
 
         try{
+	        //if (isUTC){
+	        	return $filter('date')(new Date(input.replace(/-/g,"/")+' UTC'), filterParams)
+	        //}
+	        
             var dateTime = input.split(' ');
             var date = dateTime[0].split('-');
             

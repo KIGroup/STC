@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/components/stccompany.csp" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/components/stccompany.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid">
     <div class="span6">
         <div class="control-group">
-            <label class="control-label" ng-bind="('Название компании'|localize) + '*'"></label>
+            <label class="control-label" ng-bind="('Название организации'|localize) + '*'"></label>
             <div class="controls">
                 <input class="span12" type="text" ng-model="company.shortName" required ng-disabled="disableShortName"></input>
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label"><span ng-bind="'Полное название компании'|localize"></span><span ng-show="requiredAll">*</span></label>
+            <label class="control-label"><span ng-bind="'Полное название организации'|localize"></span><span ng-show="requiredAll">*</span></label>
             <div class="controls">
                 <input class="span12" type="text" ng-model="company.fullName" ng-required="requiredAll"></input>
             </div>
@@ -28,7 +28,7 @@
             </div>
         </div> 
         <div class="control-group">
-            <label class="control-label" ng-bind="'Веб-сайт компании'|localize"></label>
+            <label class="control-label" ng-bind="'Веб-сайт организации'|localize"></label>
             <div class="controls">
                 <input class="span12" type="text" ng-model="company.site"></input>
             </div>
@@ -78,7 +78,10 @@
             <div class="controls">
                 <input class="span12" type="text" ng-model="company.bic" ng-required="requiredAll"></input>
             </div>
-        </div>     
+        </div>
+        <label class="checkbox"  style="padding-top: 5px;" >
+			<input type="checkbox" ng-model="company.status">{{'Университет'|localize}}
+		</label>      
     </div>
 </div>]]></CSP>
 </Export>

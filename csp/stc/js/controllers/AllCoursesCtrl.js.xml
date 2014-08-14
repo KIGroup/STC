@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllCoursesCtrl.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllCoursesCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//вdddddddd
+//вdddddddddsd
 
 /*===========================================================================================
 Все курсы + преподаватели курсов
@@ -19,20 +19,24 @@ controllersModule.controller('AllCoursesCtrl', function($scope, $location, $filt
 
     $scope.courseTable.init = function(){
         $scope.courseTable.columns = [
-                          {name: 'Курс',            sqlName: 'Name->Value', isSorted: true,  isSortable: true,  isDown: false, isSearched: true,  isSearchable: true},
-                          {name: 'Часы',            sqlName: '',            isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false},
-                          {name: 'Дни',             sqlName: '',            isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false},
-                          {name: 'Программа курса', sqlName: '',            isSorted: false, isSortable: false, isDown: true,  isSearched: false, isSearchable: false}];
+                          {name: 'Курс', sqlName: 'Name->Value', isSorted: true, isSortable: true, isDown: true, isSearched: true, isSearchable: true},
+                          {name: 'Часы', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '50px'}},
+                          {name: 'Дни', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '50px'}},
+                          {name: 'Программа курса', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '100px'}},
+                          {name: 'Стоимость', sqlName: 'Price', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '80px'}},
+                          {name: 'Валюта', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '80px'}}];
         
         $scope.courseTable.status = UtilsSrvc.getPropertyValue($scope.pageStore, 'courses.status', 1);
         $scope.courseTable.properties = [{name:'name'}, 
-                                         {name:'hours'}, 
-                                         {name:'days'}, 
+                                         {name:'hours', cellStyle: {textAlign: 'center'}}, 
+                                         {name:'days', cellStyle: {textAlign: 'center'}}, 
                                          {name:'programUrlShort', 
                                          calculate: function(item){
                                                         var tail = (item.programUrl && item.programUrl.length > 25) ? '...':'';
                                                         item.programUrlShort = item.programUrl.substring(0,25) + tail;
-                                                    }}];
+                                                    }},
+                                         {name:'price', cellStyle: {textAlign: 'center'}},
+                                         {name:'currency.name', cellStyle: {textAlign: 'center'}}];
                                                                              
         $scope.courseTable.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'courses.grid.pageSize', 10);
         $scope.courseTable.pageCurr = UtilsSrvc.getPropertyValue($scope.pageStore, 'courses.grid.pageCurr', 1);
@@ -44,7 +48,7 @@ controllersModule.controller('AllCoursesCtrl', function($scope, $location, $filt
 
     // Загрузить все курсы
     $scope.courseTable.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
-        CourseTeacherSrvc.getAllCoursesFullInfo(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $scope.courseTable.status).then(
+        CourseTeacherSrvc.getAllForGrid(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $scope.courseTable.status).then(
             function(data){
                 $scope.courseTable.pageTotal = Math.ceil(data.itemsTotal / pageSize);
                 $scope.courseTable.itemsTotal = data.itemsTotal;
@@ -78,7 +82,7 @@ controllersModule.controller('AllCoursesCtrl', function($scope, $location, $filt
     // Изменить статус курса
     $scope.courseTable.isInUseActionMethod = function(item){
         function changeIsInUse(){
-            CourseTeacherSrvc.changeIsInUse(item.id).then(
+            CourseTeacherSrvc.changeStatus(item.id).then(
                 function(data){
                     $scope.courseTable.alert = UtilsSrvc.getAlert('Готово!', 'Изменен статус курса.', 'success', true);
                     $scope.courseTable.forciblyUpdate++;
@@ -110,7 +114,7 @@ controllersModule.controller('AllCoursesCtrl', function($scope, $location, $filt
 
     // Удалить курс - переход на страницу
     $scope.courseTable.edit = function(item){
-        $location.path('/course').search({id: item.id});
+        $location.path('/course/' + item.id);
     };
 
     // При выборе курса - подгружать преподавателей, если надо.
@@ -129,7 +133,7 @@ controllersModule.controller('AllCoursesCtrl', function($scope, $location, $filt
                           {name: 'Фамилия'},
                           {name: 'Имя'},
                           {name: 'Отчество'},
-                          {name: 'Компания'},
+                          {name: 'Организация'},
                           {name: 'Email'},
                           {name: 'Телефон'},
                           {name: 'Skype'}];
@@ -144,7 +148,7 @@ controllersModule.controller('AllCoursesCtrl', function($scope, $location, $filt
     
     // Загрузить преподавателей курса
     $scope.teacherTable.loadItems = function(){
-        PersonSrvc.getCourseTeachers($scope.courseTable.selectedItems[0].id).then(
+        CourseTeacherSrvc.getTeachers($scope.courseTable.selectedItems[0].id).then(
             function(data){
                 $scope.teacherTable.items = data;
             },
@@ -154,9 +158,9 @@ controllersModule.controller('AllCoursesCtrl', function($scope, $location, $filt
     };
 
     // Удалить связь курса с преподавателем
-    $scope.teacherTable.delete = function(item){
+    $scope.teacherTable.remove = function(item){
         function delCourseTeacher(){
-            PersonSrvc.deleteCourseTeacher($scope.courseTable.selectedItems[0].id, item.id).then(
+            CourseTeacherSrvc.removeTeacher($scope.courseTable.selectedItems[0].id, item.id).then(
                 function(data){
                     $scope.teacherTable.alert = UtilsSrvc.getAlert('Успех!', 'Преподаватель удален.', 'success', true);
                     $scope.teacherTable.loadItems();
@@ -171,12 +175,12 @@ controllersModule.controller('AllCoursesCtrl', function($scope, $location, $filt
 
     // Добавить преподавателя в курс
     $scope.teacherTable.add = function(){
-        $location.path('/person').search({type: 'teach', course: $scope.courseTable.selectedItems[0].id});
+        $location.path('/course/' + $scope.courseTable.selectedItems[0].id + '/teacher');
     };
 
     // Редактировать преподавателя
     $scope.teacherTable.edit = function(item){
-        $location.path('/person').search({type: 'teach', id: item.id});
+        $location.path('/course/' + $scope.courseTable.selectedItems[0].id + '/teacher/' + item.id);
     };
     
     $scope.courseTable.init();

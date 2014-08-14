@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/directives/stcgrid.js" application="/csp/six/" default="1"><![CDATA[
+<CSP name="stc/js/directives/stcgrid.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //dd
 
@@ -226,6 +226,9 @@ directivesModule.directive('stcgrid', function(){
             $scope.getFilteredValue = function(value, filter, filterParam){
                 if (filter == 'date'){
                     value = $filter('convertCacheDate')(value, filterParam);
+                }
+                else if (filter == 'dateUTC'){
+                    value = $filter('convertCacheDate')(value, filterParam, true);
                 }
                 else if (filter == 'time' && value && value.length >= 5){
                     value = value.substring(0, 5);

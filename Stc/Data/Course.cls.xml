@@ -2,13 +2,13 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Course">
 <Description>
-Курс</Description>
+Course</Description>
 <Super>%Persistent,%XML.Adaptor</Super>
 <TimeCreated>63098,13286.897066</TimeCreated>
 
 <Property name="Name">
 <Description>
-Название</Description>
+Name</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 <Parameter name="XMLREFERENCE" value="ID"/>
@@ -16,43 +16,59 @@
 
 <Property name="Hours">
 <Description>
-Продолжительность в часах</Description>
+Duration (in hours)</Description>
 <Type>%Integer</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Days">
 <Description>
-Продолжительность в днях</Description>
+Duration (in days)</Description>
 <Type>%Integer</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="ProgramUrl">
 <Description>
-Ссылка на программу курса</Description>
+Link to course syllabus</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="2500"/>
 </Property>
 
 <Property name="Teachers">
 <Description>
-Преподаватели</Description>
+Teachers</Description>
 <Type>Person</Type>
 <Collection>array</Collection>
 </Property>
 
 <Property name="IsInUse">
 <Description>
-Используется = 1, 0 = нет</Description>
+Is active</Description>
 <Type>%Boolean</Type>
 <InitialExpression>1</InitialExpression>
 <Required>1</Required>
 </Property>
 
+<Property name="Price">
+<Description>
+Price of course</Description>
+<Type>%Float</Type>
+<InitialExpression>0</InitialExpression>
+<Required>1</Required>
+</Property>
+
+<Property name="Currency">
+<Description>
+Currency</Description>
+<Type>Currency</Type>
+<Required>1</Required>
+<Parameter name="XMLREFERENCE" value="ID"/>
+</Property>
+
 <Method name="ConvertToProxyObject">
 <Description>
-Конвертация в proxyObject для JSON </Description>
+Convert to proxyObject (for JSON)</Description>
 <FormalSpec>shortInfo:%Boolean=0</FormalSpec>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
@@ -67,6 +83,8 @@
 	set proxy.hours = ..Hours
 	set proxy.programUrl = ..ProgramUrl
 	set proxy.isInUse = ..IsInUse
+	set proxy.price = ..Price
+	set proxy.currency = ..Currency.ConvertToProxyObject()
 	
 	quit proxy
 ]]></Implementation>
@@ -74,11 +92,13 @@
 
 <Method name="Save">
 <Description>
-Сохранение / создание курса</Description>
+Create or save modified course</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
 <ReturnType>Course</ReturnType>
 <Implementation><![CDATA[
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Save", "ID="_data.id_"; Name="_$ZCONVERT(data.name, "I","UTF8"))
+	
 	if (data.id = ""){
 		set course = ..%New()
 		set course.Name = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.name, "I","UTF8"))
@@ -91,6 +111,8 @@
 	set course.Hours = $ZCONVERT(data.hours, "I","UTF8")
 	set course.Days = $ZCONVERT(data.days, "I","UTF8")
 	set course.ProgramUrl = $REPLACE($REPLACE($ZCONVERT(data.programUrl, "I","UTF8"),"http://",""), "https://","")
+	set course.Price = data.price
+	set course.Currency = ##class(Stc.Data.Currency).%OpenId(data.currency.id)
 	
 	set status = course.%Save()
 	
@@ -124,6 +146,12 @@
 </Value>
 <Value name="6">
 <Value>IsInUse</Value>
+</Value>
+<Value name="7">
+<Value>Price</Value>
+</Value>
+<Value name="8">
+<Value>Currency</Value>
 </Value>
 </Data>
 <Data name="Teachers">

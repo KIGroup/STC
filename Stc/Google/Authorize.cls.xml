@@ -59,28 +59,28 @@
 <Private>1</Private>
 <Implementation><![CDATA[
 	s q = ##class(%Net.HttpRequest).%New()
-	s q.SSLConfiguration=$g(^Settings("Stc","Google", "SslConfig"))
-	s q.Server="accounts.google.com"
-	s q.Https=1
-	s q.Port=443
+	s q.SSLConfiguration = ##class(Stc.Data.Settings).GetGoogleSSLConfig()
+	s q.Server = "accounts.google.com"
+	s q.Https = 1
+	s q.Port = 443
 	s q.ProxyHTTPS=1
+	/*
 	s q.ProxyServer=$g(^Settings("Stc","Google", "ProxyServer"))
 	s q.ProxyPort=$g(^Settings("Stc","Google", "ProxyPort"))
 	s q.ProxyTunnel=$g(^Settings("Stc","Google", "ProxyTunnel"))
+	*/
 	d q.InsertFormData("code", code)
 	d q.InsertFormData("client_id", ..#ClientId)
 	d q.InsertFormData("client_secret", ..#ClientSecret)
 	d q.InsertFormData("redirect_uri", ..#RedirectUri)
 	d q.InsertFormData("grant_type","authorization_code")
 	s sc = q.Post("/o/oauth2/token")
-	if ('sc)
-	{
+	if ('sc){
 		s status = $System.Status.GetErrorText(sc)
 		q
 	}
 	
-	if q.HttpResponse.StatusCode'=200
-	{
+	if q.HttpResponse.StatusCode '= 200 {
 		s status = q.HttpResponse.StatusLine
 		q
 	}
@@ -98,32 +98,33 @@
 <FormalSpec>rtoken:%String,*status:%String,*atoken:%String</FormalSpec>
 <Implementation><![CDATA[
 	s q = ##class(%Net.HttpRequest).%New()
-	s q.SSLConfiguration=$g(^Settings("Stc","Google", "SslConfig"))
-	s q.Server="accounts.google.com"
-	s q.Https=1
-	s q.Port=443
-	s q.ProxyHTTPS=1
+	s q.SSLConfiguration = ##class(Stc.Data.Settings).GetGoogleSSLConfig()
+	s q.Server = "accounts.google.com"
+	s q.Https = 1
+	s q.Port = 443
+	s q.ProxyHTTPS = 1
+	/*
 	s q.ProxyServer=$g(^Settings("Stc","Google", "ProxyServer"))
 	s q.ProxyPort=$g(^Settings("Stc","Google", "ProxyPort"))
 	s q.ProxyTunnel=$g(^Settings("Stc","Google", "ProxyTunnel"))
+	*/
 	d q.InsertFormData("refresh_token", rtoken)
 	d q.InsertFormData("client_id", ..#ClientId)
 	d q.InsertFormData("client_secret", ..#ClientSecret)
 	d q.InsertFormData("grant_type", "refresh_token")
 	s sc = q.Post("/o/oauth2/token")
-	if ('sc)
-	{
+	
+	if ('sc){
 		s status = $System.Status.GetErrorText(sc)
 		q
 	}
 	
-	i q.HttpResponse.StatusCode'=200
-	{
+	if q.HttpResponse.StatusCode '= 200 {
 		s status = q.HttpResponse.StatusLine
 		q
 	}
 	
-	s json=q.HttpResponse.Data.Read()
+	s json = q.HttpResponse.Data.Read()
 	d ##class(%ZEN.Auxiliary.jsonProvider).%ParseJSON(json,,.obj)
 	s atoken = obj."access_token"
 	s status = "success"

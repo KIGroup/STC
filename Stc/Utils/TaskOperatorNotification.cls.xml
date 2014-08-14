@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Utils.TaskOperatorNotification">
+<Super>%SYS.Task.Definition</Super>
+<TimeCreated>63390,44784.980424</TimeCreated>
+
+<Method name="OnTask">
+<Description><![CDATA[
+This method is responsible for executing the task.<br>
+At the scheduled time, the Task Manager creates an instance of this object,
+sets any property values using the stored "settings" for the task, and then
+invokes this method to execute the task.<br>
+In order to execute a real task, override this method in a subclass.]]></Description>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	Quit ..Main()
+]]></Implementation>
+</Method>
+
+<Method name="Main">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+
+	try{
+		TSTART
+		
+		set subject = "STC. Краткая сводка за последние "_(60*24/$GET(^Stc.Data.OrderNotification("maxCount"), 48))_" мин."
+		 
+		if ($GET(^Stc.Data.OrderNotification("count"), 0) >= $GET(^Stc.Data.OrderNotification("maxCount"), 48)){
+			set ^Stc.Data.OrderNotification("orders") = ""
+			set ^Stc.Data.OrderNotification("students") = ""
+			set ^Stc.Data.OrderNotification("count") = 0
+			set subject = "STC. Краткая сводка за день."
+		} 
+		
+		set ^Stc.Data.OrderNotification("count") = $GET(^Stc.Data.OrderNotification("count"), 0) + 1
+		
+		set orders = ..GetNewOrders()
+		set students = ..GetNewOrderStudents()
+		
+		set totalCount = orders.Count() + students.Count()
+		if (totalCount > 0){
+			set subject = subject_" Новых заявок: "_totalCount_"."
+			set msg = ""
+			
+			if (orders.Count() > 0){
+				set msg = "Новые заявки на обучение("_orders.Count()_"):<br>"
+				for i=1:1:orders.Count(){
+					set companyName = orders.GetAt(i).CompanyString
+					if (orders.GetAt(i).Company){
+						set companyName = orders.GetAt(i).Company.ShortName.Value
+					}
+					
+					set msg = msg_i_". От организации """_companyName_""" на курс """_orders.GetAt(i).Course.Name.Value_"""<br>"
+					set ^Stc.Data.OrderNotification("orders") = $GET(^Stc.Data.OrderNotification("orders"))_","_orders.GetAt(i).%Id()
+				}
+				
+				set msg = msg_"<a href='http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/orders' target='_blank'>Перейти на страницу заявок</a><br><br>"
+			}
+			
+			if (students.Count() > 0){
+				set msg = msg_"Новые заявки на присоединение к курсу("_students.Count()_"):<br>"
+				for i=1:1:students.Count(){
+					set msg = msg_i_". От слушателя """_students.GetAt(i).LastName.Value_""" на курс """_students.GetAt(i).Training.Course.Name.Value_""" в городе """_students.GetAt(i).Training.City.Name.Value_""""
+					set msg = msg_". <a href='http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_students.GetAt(i).Training.%Id()_"' target='_blank'>Перейти на страницу обучения</a><br>"
+					set ^Stc.Data.OrderNotification("students") = $GET(^Stc.Data.OrderNotification("students"))_","_students.GetAt(i).%Id()
+				}
+			} 
+			
+			set emailList = $LISTFROMSTRING(##class(Stc.Data.Settings).GetMailingOperatorAddresses(), ",")
+			for i=1:1:$LISTLENGTH(emailList){
+				set email = $LIST(emailList, i)
+				do ##class(Stc.Data.MailingJournal).Create(email, "Оператор", subject, msg)
+			}
+		}
+		
+		TCOMMIT
+	}
+	catch(ex){
+		TROLLBACK
+		set st = ex.AsStatus()
+		do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskOperatorNotification Catch", $System.Status.GetErrorText(st))
+	}
+	
+	job ##class(Stc.Data.MailingJournal).StartSending()
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="GetNewOrders">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%ListOfObjects</ReturnType>
+<Implementation><![CDATA[
+	set list = ##class(%ListOfObjects).%New()
+	set haveBeenNotifiedId = $LISTFROMSTRING($GET(^Stc.Data.OrderNotification("orders")), ",")
+	
+	&sql(DECLARE Cur1 CURSOR FOR 
+		 	 SELECT ID
+		 	 FROM Stc_Data.Order
+		 	 WHERE OrderStatus->Code = 'New')	
+		
+	&sql(OPEN Cur1)
+	for{	
+		&sql(FETCH Cur1 INTO :id) 
+		quit:(SQLCODE '= 0)
+		
+		if ($LF(haveBeenNotifiedId, id) = 0){
+			do list.Insert(##class(Stc.Data.Order).%OpenId(id))
+		}		
+	}
+		
+	&sql(CLOSE Cur1)
+	
+	quit list
+]]></Implementation>
+</Method>
+
+<Method name="GetNewOrderStudents">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%ListOfObjects</ReturnType>
+<Implementation><![CDATA[
+	set list = ##class(%ListOfObjects).%New()
+	set haveBeenNotifiedId = $LISTFROMSTRING($GET(^Stc.Data.OrderNotification("students")), ",")
+	
+	&sql(DECLARE Cur2 CURSOR FOR 
+		 	 SELECT ID
+		 	 FROM Stc_Data.OrderNewStudent
+		 	 WHERE Training->IsCompleted = 0)	
+		
+	&sql(OPEN Cur2)
+	for{	
+		&sql(FETCH Cur2 INTO :id) 
+		quit:(SQLCODE '= 0)
+		
+		if ($LF(haveBeenNotifiedId, id) = 0){
+			do list.Insert(##class(Stc.Data.OrderNewStudent).%OpenId(id))
+		}		
+	}
+		
+	&sql(CLOSE Cur2)
+	
+	quit list
+]]></Implementation>
+</Method>
+</Class>
+</Export>

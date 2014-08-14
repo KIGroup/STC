@@ -20,7 +20,7 @@
 	set company.LegalAddress = ##class(Stc.Data.Localization.LText).Create("Город М.")
 	set company.MailAddress = ##class(Stc.Data.Localization.LText).Create("000000 Город М.")
 	set company.OtherInfo = ##class(Stc.Data.Localization.LText).Create("---")
-	w !, $CASE($$$ISERR(company.%Save()), 1: "Ошибка! Компания не создана!",:"Компания создана")
+	w !, $CASE($$$ISERR(company.%Save()), 1: "Ошибка! Организация не создана!",:"Организация создана")
 	
 	set contact = ##class(Stc.Data.Person).%New()
 	set contact.LastName = ##class(Stc.Data.Localization.LText).Create("Петров", "Stc.Data.Localization.Translation;PersonLTextValue")
@@ -31,9 +31,74 @@
 	set contact.Company = company
 	set company.Contact = contact
 	w !, $CASE($$$ISERR(contact.%Save()) || $$$ISERR(company.%Save()), 1: "Ошибка! Контакт компании не создан!",:"Контакт компании создан")
-		
+	
 	quit $$$OK
 ]]></Implementation>
 </Method>
+
+<Method name="ImportTypesXData">
+<Description>
+do ##class(Stc.Utils.Init.Company).ImportTypesXData()</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	do ##class(Stc.Data.CompanyType).%KillExtent()
+	do ..ImportXData("Stc.Utils.Init."_..#PClassName, "Stc.Data.Localization.LText", "LTextXData")
+	do ..ImportXData("Stc.Utils.Init."_..#PClassName, "Stc.Data.Localization.LTextValue", "LTextValueXData")
+	do ..ImportXData("Stc.Utils.Init."_..#PClassName, "Stc.Data."_..#PClassName_"Type", "ClassXData")
+	
+	&sql(DECLARE StudCur CURSOR FOR 
+		 SELECT ID FROM Stc_Data.Company)	
+		
+		&sql(OPEN StudCur)
+		for  
+		{	
+			&sql(FETCH StudCur INTO :id) 
+			quit:(SQLCODE '= 0)
+			
+			set comp = ##class(Stc.Data.Company).%OpenId(id)
+			if (comp.IsUniversity = 1){
+				set comp.Type = ##class(Stc.Data.CompanyType).CodeIdxOpen("univer")
+			}
+			else{
+				set comp.Type = ##class(Stc.Data.CompanyType).CodeIdxOpen("partner")
+			}
+			
+			do comp.%Save()		
+		}
+		
+	&sql(CLOSE StudCur)
+]]></Implementation>
+</Method>
+
+<XData name="ClassXData">
+<Data><![CDATA[
+<ClassXData>
+<CompanyType><Name>CF9E764F-0F6C-4361-BC14-A695775399AB00</Name><Code>Partner</Code></CompanyType>
+<CompanyType><Name>F2596D98-0E31-4ED7-8D07-6C82E48D457699</Name><Code>Univer</Code></CompanyType>
+</ClassXData>
+]]></Data>
+</XData>
+
+<XData name="LTextXData">
+<Data><![CDATA[
+<LTextXData>
+<LText><Guid>CF9E764F-0F6C-4361-BC14-A695775399AB00</Guid></LText>
+<LText><Guid>F2596D98-0E31-4ED7-8D07-6C82E48D457699</Guid></LText>
+</LTextXData>
+]]></Data>
+</XData>
+
+<XData name="LTextValueXData">
+<Data><![CDATA[
+<LTextValueXData>
+<LTextValue><LText>CF9E764F-0F6C-4361-BC14-A695775399AB00</LText><Value>Партнер</Value><Lang>ru</Lang></LTextValue>
+<LTextValue><LText>F2596D98-0E31-4ED7-8D07-6C82E48D457699</LText><Value>Университет</Value><Lang>ru</Lang></LTextValue>
+
+<LTextValue><LText>CF9E764F-0F6C-4361-BC14-A695775399AB00</LText><Value>Partner</Value><Lang>en</Lang></LTextValue>
+<LTextValue><LText>F2596D98-0E31-4ED7-8D07-6C82E48D457699</LText><Value>University</Value><Lang>en</Lang></LTextValue>
+</LTextValueXData>
+]]></Data>
+</XData>
 </Class>
 </Export>

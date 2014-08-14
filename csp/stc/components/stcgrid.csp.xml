@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/components/stcgrid.csp" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/components/stcgrid.csp" application="/csp/stc/" default="1"><![CDATA[
  
 <table ng-class="tableClass">
     <caption class="text-left" style="padding-bottom: 10px;" ng-show="caption != ''"><b ng-bind="caption|localize"></b></caption>
     <thead>
         <tr>
             <th class="tableNumber">#</th>
-            <th ng-repeat="column in columns"  ng-click="sort(column, column.isDown)" ng-class="{selectableMode:column.isSortable}">
+            <th ng-repeat="column in columns"  ng-click="sort(column, column.isDown)" ng-class="{selectableMode:column.isSortable}" ng-style="column.captionStyle">
                 <span ng-bind="column.name|localize"></span>
                 <i class="icon-sort-down icon-large pull-right" ng-show="column.isDown && column.isSorted"  style="margin-top: -3px;"></i>
                 <i class="icon-sort-up icon-large pull-right"   ng-show="!column.isDown && column.isSorted" style="margin-top: 3px;"></i>
@@ -18,7 +18,7 @@
     </thead>
     <tfoot>
         <tr>
-            <td colspan="{{columns.length + 1}}" ng-show="actionColumnVisible">
+            <td colspan="{{columns.length + 1}}">
                 <div ng-show="navigatorVisible"><!-- Навигатор -->
                     <button class="btn btn-mini" ng-init="firstPageDisabled=true" ng-disabled="firstPageDisabled" title="{{'Первая страница'|localize}}"     ng-click="setPage(-pageCurr + 1)">&nbsp;&nbsp;&nbsp;<i class="icon-step-backward icon-large"></i>&nbsp;&nbsp;&nbsp;</button>
                     <button class="btn btn-mini" ng-init="prevPageDisabled=true"  ng-disabled="prevPageDisabled"  title="{{'Предыдущая страница'|localize}}" ng-click="setPage(-1)">&nbsp;&nbsp;&nbsp;<i class="icon-backward icon-large"></i>&nbsp;&nbsp;&nbsp;</button>&nbsp;&nbsp;
@@ -57,7 +57,7 @@
     <tbody ng-class="isSelectable">
         <tr ng-repeat="item in items" ng-class="getRowClass(item.rowClass)">
             <td ng-bind="$index + pageSize*(pageCurr - 1) + 1" ng-click="select(item)"></td>
-            <td ng-repeat="property in properties" ng-click="select(item)">
+            <td ng-repeat="property in properties" ng-click="select(item)" ng-style="property.cellStyle">
                 <span ng-class="property.getCssClass(item)" ng-bind="getPropertyValue(item, property)"></span>
             </td>
             <td class="atableAction" ng-show="actionColumnVisible" ng-click="actionRow(item)">

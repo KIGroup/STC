@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/CertificateSrvc.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/services/CertificateSrvc.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//dddddddв
+//dddddddвdd
 
 /*===========================================================================================
 Сертификаты
@@ -12,7 +12,7 @@ servicesModule.factory('CertificateSrvc', function(DALSrvc) {
 	
 	return {
 	      /* Все сертификаты */
-        getCertificates: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, isPrinted){
+        getAllForGrid: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, isPrinted){
             var first = pageSize * (pageCurr - 1) + 1;
             var obj = {sqlName: sqlName, 
                        isDown: isDown, 
@@ -22,10 +22,13 @@ servicesModule.factory('CertificateSrvc', function(DALSrvc) {
                        searchText: searchText,
                        isPrinted: isPrinted};
 
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/certificates', obj);
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/certificate/grid', obj);
+        },
+        remove: function(number){
+            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/certificate/' + number, null);
         },
         print: function(number){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/printCertificate/' + number, null);
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/certificate/' + number + '/print', null);
         }
     }
 });

@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/CreateOrderCtrl.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/CreateOrderCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//ded
+//dedd
 
 /*===========================================================================================
 Создание заявки
 ===========================================================================================*/
 
-controllersModule.controller('CreateOrderCtrl', function($scope, $cookies, YandexSrvc, OrderSrvc, CompanySrvc, RegionSrvc, CourseTeacherSrvc, UtilsSrvc){
+controllersModule.controller('CreateOrderCtrl', function($scope, $routeParams, $cookies, YandexSrvc, OrderSrvc, CompanySrvc, RegionSrvc, CourseTeacherSrvc, UtilsSrvc){
+    $scope.menu.brandCaption = 'Форма регистрации на обучение компании InterSystems';
+    $scope.menu.appTitle = 'Форма регистрации на обучение компании InterSystems';
+    		
     $scope.menu.selectMenu('createOrder');    
     $scope.ordForm = {};
 
@@ -24,37 +27,18 @@ controllersModule.controller('CreateOrderCtrl', function($scope, $cookies, Yande
 
     /* Подгрузить курсы */
     $scope.ordForm.loadCourses = function(){
-        CourseTeacherSrvc.getAllCoursesShortInfo(1).then(
+        CourseTeacherSrvc.getAll(1).then(
             function(data){
                 $scope.ordForm.courses = data;
-            },
-            function(response){
-                $scope.ordForm.alert = UtilsSrvc.getAlert('Ошибка!', response.data, 'error', true);
-            }); 
-    };
-
-    /* Подгрузить города */
-    $scope.ordForm.loadCities = function(startsWith){
-        if(!startsWith || startsWith.length == 0)
-            $scope.ordForm.cities = [];
-        
-        if (!startsWith || startsWith.length != 2)
-            return;  
-
-        RegionSrvc.getAllCitiesStartsWith(startsWith).then(
-            function(data){
-                $scope.ordForm.cities = data;
-            },
-            function(response){
-                $scope.ordForm.alert = UtilsSrvc.getAlert('Ошибка!', response.data, 'error', true);
-            }); 
-    };
-
-    /* Подгрузить имена компаний */
-    $scope.ordForm.loadCompanies = function(){
-        CompanySrvc.getAllCompaniesShortInfo().then(
-            function(data){
-                $scope.ordForm.companies = data;
+                
+                if ($routeParams.course){
+	                for (var i = 0; i < data.length; i++){
+                	 	if ($routeParams.course == data[i].id){
+                	 		$scope.ordForm.order = {course: data[i]};
+                	 		break;
+                	 	}
+	                }
+                }
             },
             function(response){
                 $scope.ordForm.alert = UtilsSrvc.getAlert('Ошибка!', response.data, 'error', true);
@@ -86,9 +70,6 @@ controllersModule.controller('CreateOrderCtrl', function($scope, $cookies, Yande
 	    $scope.ordForm.order.date = UtilsSrvc.getValidDate($scope.ordForm.date);
         if ($scope.ordForm.order.date == "")
         	$scope.ordForm.date = "";
-
-        if (!$scope.ordForm.order.city || !$scope.ordForm.order.city.id)
-            $scope.ordForm.order.city = '';
     };
     
     /* Создать заявку */
@@ -107,33 +88,12 @@ controllersModule.controller('CreateOrderCtrl', function($scope, $cookies, Yande
 
     /* Отправка формы */
     $scope.ordForm.submit = function(){
-        // Получаем координаты из яндекса и создаем заявку
-        var searchStr = $scope.ordForm.order.city.greatParentName + ', ' + $scope.ordForm.order.city.parentName + ', ' + $scope.ordForm.order.city.name;
-        $scope.ordForm.order.point = '66.666 66.666'; // Если яндекс отвалится, то отправляем в "Салехард"
-        YandexSrvc.getResult(searchStr).then(
-            function(data){
-                var results = [];
-                for(var i=0; i < data.response.GeoObjectCollection.featureMember.length; i++){
-                    results.push(
-                        {point: UtilsSrvc.getPropertyValue(data.response.GeoObjectCollection.featureMember[i], 'GeoObject.Point.pos'),
-                         title: UtilsSrvc.getPropertyValue(data.response.GeoObjectCollection.featureMember[i], 'GeoObject.name')});
-                }
-
-                if (results.length > 0)
-                    $scope.ordForm.order.point = results[0].point;
-                
-                console.log($scope.ordForm.order.point);
-                $scope.ordForm.create();
-            },
-            function(response){
-                $scope.ordForm.create();
-            });
+        $scope.ordForm.create();
     };
     
 
     $scope.ordForm.init();
     $scope.ordForm.loadCourses();
-    $scope.ordForm.loadCompanies();
   });
 
 ]]></CSP>

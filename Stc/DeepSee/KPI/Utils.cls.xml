@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.DeepSee.KPI.Utils">
+<TimeCreated>63246,3767.058813</TimeCreated>
+
+<Method name="GetStringFromXData">
+<Description>
+Извлечение SQL-запроса из блока XData с указанным именем</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>name:%String,className:%String</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	#dim sc As %Status
+	#dim result As %String = ""
+	
+	#dim xdata As %Persistent = ##class(%Dictionary.CompiledXData).%OpenId(className_ "||" _ name,, .sc)
+	if $$$ISOK(sc) && $isObject(xdata)
+	{
+		#dim node As %XML.TextReader
+		set sc = ##class(%XML.TextReader).ParseStream(xdata.Data, .node)
+		if $$$ISOK(sc)
+		{
+			do node.MoveToContent()
+			while (node.NodeType '= "chars") && (node.NodeType '= "cdata") && node.Read() {}
+			
+			if (node.NodeType = "chars") || (node.NodeType = "cdata") set result = node.Value
+		}
+	}	
+	
+	quit result
+]]></Implementation>
+</Method>
+</Class>
+</Export>

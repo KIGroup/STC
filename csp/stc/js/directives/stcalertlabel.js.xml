@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/directives/stcalertlabel.js" application="/csp/stc/" default="1"><![CDATA[
+'use strict';
+//sdddddddddd
+
+directivesModule.directive('stcalertlabel', function(){
+    return {
+        replace: true,
+        restrict: 'E',
+        templateUrl: 'components/stcalertlabel.csp',
+        
+        scope: {
+            data: '='
+        },
+        controller: function($scope, $timeout){           
+           $scope.data = {visible: false};
+           
+	       
+	       $scope.$watch('data', function(){
+                if ($scope.data && $scope.data.visible && $scope.data.cssClass == 'success'){
+                     $timeout(function(){
+                      $scope.data.visible=false;
+                    }, 1000);       
+                }  
+           });
+	   	}
+    }
+});
+]]></CSP>
+</Export>

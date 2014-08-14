@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/lib/ui-bootstrap-tpls-0.5.0.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/lib/ui-bootstrap-tpls-0.5.0.js" application="/csp/stc/" default="1"><![CDATA[
 angular.module("ui.bootstrap", ["ui.bootstrap.tpls", "ui.bootstrap.transition","ui.bootstrap.collapse","ui.bootstrap.accordion","ui.bootstrap.alert","ui.bootstrap.buttons","ui.bootstrap.carousel","ui.bootstrap.position","ui.bootstrap.datepicker","ui.bootstrap.dialog","ui.bootstrap.dropdownToggle","ui.bootstrap.modal","ui.bootstrap.pagination","ui.bootstrap.tooltip","ui.bootstrap.popover","ui.bootstrap.progressbar","ui.bootstrap.rating","ui.bootstrap.tabs","ui.bootstrap.timepicker","ui.bootstrap.typeahead"]);
 angular.module("ui.bootstrap.tpls", ["template/accordion/accordion-group.html","template/accordion/accordion.html","template/alert/alert.html","template/carousel/carousel.html","template/carousel/slide.html","template/datepicker/datepicker.html","template/datepicker/popup.html","template/dialog/message.html","template/pagination/pager.html","template/pagination/pagination.html","template/tooltip/tooltip-html-unsafe-popup.html","template/tooltip/tooltip-popup.html","template/popover/popover.html","template/progressbar/bar.html","template/progressbar/progress.html","template/rating/rating.html","template/tabs/tab.html","template/tabs/tabset-titles.html","template/tabs/tabset.html","template/timepicker/timepicker.html","template/typeahead/typeahead-match.html","template/typeahead/typeahead-popup.html"]);
 angular.module('ui.bootstrap.transition', [])
 
-/**
+/**dddd
  * $trdnsidddtion service provides a consistent interface to trigger CSS 3 transitions and to be informed when they complete.
  * @param  {DOMElement} element  The DOMElement that will be animated.
  * @param  {string|object|function} trigger  The thing that will cause the transition to start:
@@ -3308,10 +3308,9 @@ angular.module("template/datepicker/popup.html", []).run(["$templateCache", func
 angular.module("template/dialog/message.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/dialog/message.html",
     "<div class=\"modal-header\">\n" +
-    "	<h3>{{ title }}</h3>\n" +
+    "	<h4>{{ title }}</h4>\n" +
     "</div>\n" +
-    "<div class=\"modal-body\">\n" +
-    "	<p>{{ message }}</p>\n" +
+    "<div class=\"modal-body\" ng-bind-html-unsafe=\"message\" style=\"text-align: justify;\">\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +
     "	<button ng-repeat=\"btn in buttons\" ng-click=\"close(btn.result)\" class=\"btn\" ng-class=\"btn.cssClass\">{{ btn.label }}</button>\n" +
@@ -3392,7 +3391,7 @@ angular.module("template/progressbar/progress.html", []).run(["$templateCache", 
 angular.module("template/rating/rating.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/rating/rating.html",
     "<span ng-mouseleave=\"reset()\">\n" +
-    "	<i ng-repeat=\"number in range\" ng-mouseenter=\"enter(number)\" ng-click=\"rate(number)\" ng-class=\"{'icon-star': number <= val, 'icon-star-empty': number > val}\"></i>\n" +
+    "	<i ng-repeat=\"number in range\" ng-mouseenter=\"enter(number)\" ng-click=\"rate(number)\" ng-class=\"{'icon-star icon-large': number <= val, 'icon-star-empty icon-large': number > val}\" style=\"padding-right: 5px;\"></i>\n" +
     "</span>");
 }]);
 

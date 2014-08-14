@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/PersonSrvc.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/services/PersonSrvc.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//ddв
+//
 
 /*===========================================================================================
 Персоны
@@ -10,41 +10,19 @@
 
 servicesModule.factory('PersonSrvc', function(DALSrvc) {
 	return {
-        /* Удаление студента из заявки по коду доступа */
-        deleteOrderStudent: function(accessCode, studentId){
-            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/deleteOrderStudent', {order: {code: accessCode}, student: {id: studentId}});
+        save: function(person){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/person', person);
         },
-        /*  */
-        deleteSubGroupStudent: function(sgroupId, studentId){
-            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/deleteSubGroupStudent/' + sgroupId + ';' + studentId, null);
+        getById: function(id){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/person/' + id, null);
         },
-        /* Получить студента из заявки по коду доступа*/
-        getOrderStudent: function(accessCode, studentId){
-            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/getOrderStudent', {order: {code: accessCode}, student: {id: studentId}});
+        getByEmail: function(email){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/person/email/' + email, null);
         },
-        /* */
-        saveOrderStudent: function(accessCode, student){
-            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/saveOrderStudent', {order: {code: accessCode}, student: student});
+        deleteById: function(id){
+            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/person/' + id, null);
         },
-        /* */
-        saveOrderStudentAdmin: function(accessCode, student){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/saveOrderStudent', {order: {code: accessCode}, student: student});
-        },
-        /* */
-        getPersonByLastNameOrEmailStartsWith: function(word){
-            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/personByLastNameOrEmailStartsWith/' + word, null);
-        },
-                /* */
-        getFreeTeachers: function(courseword){
-            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/getFreeTeachers/' + courseword, null);
-        },
-        getFreeStudents: function(sgroupword){
-            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/getFreeStudents/' + sgroupword, null);
-        },
-        getPerson: function(id){
-            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/getPerson/' + id, null);
-        },
-        getAllPersons: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
+        getAllForGrid: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
             var first = pageSize * (pageCurr - 1) + 1;
             var obj = {sqlName: sqlName, 
                        isDown: isDown, 
@@ -53,49 +31,30 @@ servicesModule.factory('PersonSrvc', function(DALSrvc) {
                        searchSqlName: searchSqlName, 
                        searchText: searchText};
 
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/allPersons', obj);
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/person/grid', obj);
         },
-        updatePerson: function(person){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/updatePerson', person);
+        getBySearchParameters: function(word){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/person/search/' + word, null);
         },
-        createPerson: function(person){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/createPerson', person);
+        getFreeTrainingStudents: function(trainingId, word){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/person/free/training/' + trainingId + '/student/' + word, null);
         },
-        createCourseTeacher: function(courseId, person){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/createCourseTeacher',  {course: {id: courseId}, teacher: person});
+        getFreeCourseTeachers: function(courseId, word){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/person/free/course/' + courseId + '/teacher/' + word, null);
         },
-        deleteCourseTeacher: function(courseId, teacherId){
-            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/deleteCourseTeacher/' + courseId + ';' + teacherId,  null);
+        
+        getTrainings: function(id){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/person/' + id + '/training', null);
         },
-        createSubGroupStudent: function(groupId, person){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/createSubGroupStudent', {group: {id: groupId}, student: person});
+        getCourses: function(id){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/person/' + id + '/course', null);
         },
-        getCourseTeachers: function(courseId){
-            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/getCourseTeachers/' + courseId, null);
+        getCompanies: function(id){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/person/' + id + '/company', null);
         },
-        changeCompanyContact: function(data){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/changeCompanyContact', data);
-        },
-
-        getPersonOrders: function(id){
-            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/personOrders/' + id, null);
-        },
-        getPersonTrainings: function(id){
-            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/personTrainings/' + id, null);
-        },
-        getPersonCourses: function(id){
-            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/personCourses/' + id, null);
-        },
-        getPersonCompanies: function(id){
-            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/personCompanies/' + id, null);
-        },
-        getPersonCertificates: function(id){
-            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/personCertificates/' + id, null);
-        },
-        deletePerson: function(id){
-	   		return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/deletePerson/' + id, null);
-	    }
-       
+        getCertificates: function(id){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/person/' + id + '/certificate', null);
+        }
     }
 });
   

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Document name="StcDashboards-TeacherTrainings.dashboard.DFI">
+<dashboard xmlns="http://www.intersystems.com/deepsee/library" name="TeacherTrainings" folderName="StcDashboards" title="Преподаватели и обучения" description="" keywords="" owner="" shared="true" public="true" locked="false" resource="%DeepSee_PortalEdit" timeCreated="2014-02-27T15:00:22.074Z" createdBy="ilson" category="" bookCover="" scheme="" worklistCount="0" snapTo="true" snapGrid="true" gridRows="10" gridCols="10" canResize="true" canModify="true" showTitleBar="true" companyName="" companyLogo="" companyStyle="">
+  <widget name="TeacherYears" type="pivot" subtype="barChartStacked" subtypeClass="barChart" title="$$$Преподаватели и обучения/Stc" dataSource="STCTables/TeacherYears_TrainingsCount.pivot" dataLink="" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="0" homeColL="0" colSpanL="5" rowSpanL="10" showToolbar="true" theme="" dataColorList="">
+    <control name="" action="applyFilter" target="*" targetProperty="[Year].[H1].[Year]" location="widget" type="auto" controlClass="" label="$$$Год/Stc" title="" value="&amp;[NOW]" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="applyFilter" target="*" targetProperty="[Course].[H1].[CourseName]" location="widget" type="auto" controlClass="" label="$$$Курс/Stc" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="applyFilter" target="*" targetProperty="[Teacher].[H1].[TeacherFullName]" location="widget" type="auto" controlClass="" label="$$$Преподаватель/Stc" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="applyFilter" target="*" targetProperty="[SubGroupCubeRelation].[Company].[H1].[CompanyShortName]" location="widget" type="auto" controlClass="" label="$$$Организация/Stc" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="applyFilter" target="*" targetProperty="[SubGroupCubeRelation].[CompanyType].[H1].[Name]" location="widget" type="dropdown" controlClass="" label="$$$Тип организации/Stc" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="showListing" target="" targetProperty="Trainings" location="widget" type="auto" controlClass="" label="" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <property name="analyzer">0</property>
+    <property name="chartToggle">table</property>
+    <property name="excel">1</property>
+    <override name="barChart">{legendVisible:'false',xAxis:{majorGridLines:false,_type:'axis'},yAxisList:[{_type:'axis'}],chartPivot:true,chartStacked:true,_type:'barChart'}</override>
+  </widget>
+  <widget name="TrainingStudentsTotal" type="pivot" subtype="pieChart" subtypeClass="pieChart" title="$$$Количество обучений по преподавателям за все годы/Stc" dataSource="STCTables/TeacherTotal_Trainings.pivot" dataLink="" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="0" homeColL="5" colSpanL="5" rowSpanL="10" showToolbar="true" theme="" dataColorList="">
+    <control name="" action="showListing" target="" targetProperty="Trainings" location="widget" type="auto" controlClass="" label="" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="viewDashboard" target="" targetProperty="StcDashboards/TeacherStudents.dashboard" location="widget" type="auto" controlClass="" label="$$$Анализ по слушателям/Stc" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <property name="analyzer">0</property>
+    <override name="pieChart">{legendVisible:'false',xAxis:{_type:'axis'},yAxisList:[{_type:'axis'}],pieScale:1.5,showPercentage:true,showValue:true,_type:'pieChart'}</override>
+  </widget>
+</dashboard>
+</Document></Export>

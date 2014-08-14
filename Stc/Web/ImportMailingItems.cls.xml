@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Web.ImportMailingItems">
+<Super>%CSP.Page</Super>
+<TimeCreated>63389,2455.997366</TimeCreated>
+
+<Method name="OnPage">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	&html<<html><head></head><body style='font-family: Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #333; margin: 0;'>>
+	
+	set result = ##class(%ZEN.proxyObject).%New()
+	set result.success = 0
+	set result.errorMessages = ##class(%ListOfObjects).%New()
+	
+	try{
+		TSTART
+		
+		set fileName = %request.MimeData("FileStream", 1).FileName
+		set streamTemp = %request.MimeData("FileStream", 1)
+		set stream = ##class(%CSP.CharacterStream).%New()
+		
+		while 'streamTemp.AtEnd {
+			set line = streamTemp.Read()
+			if ($FIND(line, $C(13)_$C(10)) = 0){
+				set line = $REPLACE(line, $C(13), $C(13)_$C(10))
+			}
+			
+			do stream.Write(line)
+		}
+		
+		kill streamTemp
+		
+		set group = ##class(Stc.Data.MailingGroup).%OpenId(%request.Get("groupId")).ConvertToProxyObject()
+		
+		set count = 0
+		while 'stream.AtEnd {
+			set line = stream.ReadLine()
+			set count = count + 1
+			
+			set line = $REPLACE(line, ",", ";")
+			if ($FIND(line,";") = 0) continue
+			
+			set propList = $LISTFROMSTRING(line, ";")
+			
+			set data = ##class(%ZEN.proxyObject).%New()
+			set data.fullName = $LIST(propList,1)
+			set data.email = $LIST(propList,2)
+			set data.city = $LISTGET(propList,3)
+			set data.company = $LISTGET(propList,4)
+			set data.position = $LISTGET(propList,5)
+			set data.group = group
+			
+			set existsApprovedId = ""
+			&sql(SELECT ID INTO :existsApprovedId FROM Stc_Data.MailingItemApproved WHERE MGroup = :group.id AND Email = :data.email)
+			set data.id = existsApprovedId
+			
+			do ##class(Stc.Data.MailingItemApproved).Save(data, .st)
+			
+			if $$$ISOK(st){
+				set result.success = result.success + 1
+			}
+			else{
+				set error = ##class(%ZEN.proxyObject).%New()
+				set error.status = $system.Status.GetErrorText(st)
+				set error.line = line
+				do result.errorMessages.Insert(error)
+			}
+		}
+		
+		TCOMMIT
+	}catch(ex){
+		TROLLBACK
+		set st = ex.AsStatus()	
+	}
+
+	w "Записей импортировано успешно: "_result.success
+	
+	if (result.errorMessages.Count() '= 0){
+		w "<br><br>Список ошибочных записей("_result.errorMessages.Count()_"): "
+		for i=1:1:result.errorMessages.Count(){
+			w "<br>"_i_". "_$ZCVT(result.errorMessages.GetAt(i).line, "I", "UTF8")
+			w "<br>"_result.errorMessages.GetAt(i).status
+			w "<br>"
+		}
+	}
+	
+	if $$$ISERR(st){
+		w "<br>"_st
+	}
+	
+	&html<</body></html>>
+	Quit $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>

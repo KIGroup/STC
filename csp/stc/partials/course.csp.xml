@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/course.csp" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/partials/course.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span4">
 	</div>
@@ -12,25 +12,31 @@
 				</div>
 				<div class="accordion-body">
 					<div class="accordion-inner">
-						<form ng-submit="courseForm.submit()">
+						<form name="cForm" ng-submit="courseForm.submit()">
 							<div class="control-group">
 						        <label class="control-label" ng-bind="('Курс'|localize) + '*'"></label>
 						        <div class="controls">
 						            <input class="span12" type="text" ng-model="courseForm.course.name" required></input>
 						        </div>
 						    </div>
-						    <div class="control-group">
-						        <label class="control-label" ng-bind="('Часы'|localize) + '*'"></label>
-						        <div class="controls">
-						            <input class="span12" type="text" ng-model="courseForm.course.hours" pattern="[0-9]{1,3}" required></input>
-						        </div>
-						    </div>
-							<div class="control-group">
-						        <label class="control-label" ng-bind="('Дни'|localize) + '*'"></label>
-						        <div class="controls">
-						            <input class="span12" type="text" ng-model="courseForm.course.days" pattern="[0-9]{1,3}" required></input>
-						        </div>
-						    </div>
+						    <div class="row-fluid">
+						    	<div class="span6">
+								    <div class="control-group">
+								        <label class="control-label" ng-bind="('Часы'|localize) + '*'"></label>
+								        <div class="controls">
+								            <input class="span12" type="text" ng-model="courseForm.course.hours" pattern="[0-9]{1,3}" required></input>
+								        </div>
+								    </div>
+							    </div>
+							    <div class="span6">
+									<div class="control-group">
+								        <label class="control-label" ng-bind="('Дни'|localize) + '*'"></label>
+								        <div class="controls">
+								            <input class="span12" type="text" ng-model="courseForm.course.days" pattern="[0-9]{1,3}" required></input>
+								        </div>
+								    </div>
+							    </div>
+							</div>    
 							<div class="control-group">
 						        <label class="control-label" ng-bind="('Программа курса'|localize)"></label>
 						        <div class="controls">
@@ -38,9 +44,17 @@
 						        </div>
 						    </div>
 						    <div class="control-group">
+						        <label class="control-label" ng-bind="('Стоимость обучения'|localize) + '*'"></label>
 						        <div class="controls">
-						            <button type="submit" class="btn btn-primary" ng-bind="courseForm.actionName|localize"></button>
-						            <button type="submit" class="btn" ng-click="courseForm.cancel()" ng-bind="'Назад'|localize"></button>
+						            <input class="span6" type="text" ng-model="courseForm.course.price" required></input>
+						        	<select class="span6" ng-model="courseForm.course.currency.id" ng-options="curr.id as curr.name for curr in courseForm.currencies" required>
+			                		</select>
+						        </div>
+						    </div>
+						    <div class="control-group">
+						        <div class="controls">
+						            <button type="submit" class="btn btn-primary btn-small" ng-bind="courseForm.actionName|localize" ng-disabled="cForm.$pristine"></button>
+						            <button type="button" class="btn btn-small" ng-click="courseForm.cancel()" ng-bind="'Назад'|localize"></button>
 						        </div>
 						    </div>    		    		    
 						</form>
@@ -52,5 +66,14 @@
 	<div class="span4">
 	</div>
 </div>
-<stcalert data="courseForm.alert" span-right="4" span-middle="4" span-left="4"/>]]></CSP>
+
+<div class="row-fluid">
+	<div class="span4">
+	</div>
+	<div class="span4">
+		<stcalert data="courseForm.alert"/>
+	</div>
+	<div class="span4">
+	</div>
+</div>]]></CSP>
 </Export>

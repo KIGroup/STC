@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.FeedBack">
+<Super>%Persistent</Super>
+<TimeCreated>63228,84673.864246</TimeCreated>
+
+<Property name="Author">
+<Description>
+Author of feedback	</Description>
+<Type>%String</Type>
+</Property>
+
+<Property name="Rating">
+<Description>
+Training rating</Description>
+<Type>%Integer</Type>
+<Required>1</Required>
+<Parameter name="MAXVAL" value="5"/>
+<Parameter name="MINVAL" value="1"/>
+</Property>
+
+<Property name="WhatLiked">
+<Description>
+What we liked</Description>
+<Type>%Text</Type>
+<Parameter name="MAXLEN" value="3000"/>
+</Property>
+
+<Property name="WhatImprovements">
+<Description>
+What can be improved</Description>
+<Type>%Text</Type>
+<Parameter name="MAXLEN" value="3000"/>
+</Property>
+
+<Property name="WhatHear">
+<Description>
+What else would like to hear in the course</Description>
+<Type>%Text</Type>
+<Parameter name="MAXLEN" value="3000"/>
+</Property>
+
+<Property name="AboutTeacher">
+<Description>
+Comments on Speaker</Description>
+<Type>%Text</Type>
+<Parameter name="MAXLEN" value="3000"/>
+</Property>
+
+<Property name="Training">
+<Description>
+Training</Description>
+<Type>Stc.Data.Training</Type>
+<Cardinality>parent</Cardinality>
+<Inverse>FeedBacks</Inverse>
+<Relationship>1</Relationship>
+</Property>
+
+<Property name="CreatedTS">
+<Description>
+Date time feedback creation </Description>
+<Type>%TimeStamp</Type>
+<Required>1</Required>
+</Property>
+
+<Method name="ConvertToProxyObject">
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	set proxy.id = ..%Id()
+	set proxy.author = ..Author
+	set proxy.rating = ..Rating
+	set proxy.whatLiked = ..WhatLiked
+	set proxy.whatImprovements = ..WhatImprovements
+	set proxy.whatHear = ..WhatHear
+	set proxy.aboutTeacher = ..AboutTeacher
+	set proxy.createdTS = ..CreatedTS
+	quit proxy
+]]></Implementation>
+</Method>
+
+<Method name="%OnNew">
+<Private>1</Private>
+<ReturnType>%Status</ReturnType>
+<ServerOnly>1</ServerOnly>
+<Implementation><![CDATA[
+	set ..CreatedTS = $ZDATETIME($NOW(), 3)
+	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>{%%PARENT}("FeedBacks")</DataLocation>
+<DefaultData>FeedBackDefaultData</DefaultData>
+<IdLocation>^Stc.Data.TrainingC("FeedBacks")</IdLocation>
+<IndexLocation>^Stc.Data.FeedBackI</IndexLocation>
+<StreamLocation>^Stc.Data.FeedBackS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="FeedBackDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Rating</Value>
+</Value>
+<Value name="3">
+<Value>WhatLiked</Value>
+</Value>
+<Value name="4">
+<Value>WhatImprovements</Value>
+</Value>
+<Value name="5">
+<Value>WhatHear</Value>
+</Value>
+<Value name="6">
+<Value>AboutTeacher</Value>
+</Value>
+<Value name="7">
+<Value>AccessCode</Value>
+</Value>
+<Value name="8">
+<Value>CreatedTS</Value>
+</Value>
+<Value name="9">
+<Value>Author</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

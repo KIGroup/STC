@@ -2,12 +2,12 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Web.Json">
 <Description>
-Базовый класс для работы с json, общие методы</Description>
+Base class for JSON</Description>
 <TimeCreated>63099,7625.766078</TimeCreated>
 
 <Method name="GetProxyObject">
 <Description>
-Получить proxyObject объекта по ИД и классу</Description>
+Get proxyObject by id and class</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>className:%String,id:%String</FormalSpec>
 <ReturnType>%ZEN.proxyObject</ReturnType>
@@ -28,7 +28,7 @@
 
 <Method name="WriteJsonFromSql">
 <Description>
-Преобразовать запрос в json</Description>
+Transform sql to json</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>sql:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -36,7 +36,7 @@
   	set status = $$$OK
   	
    	try{
-	   	do ##class(%ZEN.Auxiliary.jsonSQLProvider).%WriteJSONFromSQL(,sql)
+	   	do ##class(%ZEN.Auxiliary.jsonSQLProvider).%WriteJSONFromSQL(,sql,,300)
 	}
 	catch ex{
 		set status = ex.AsStatus()
@@ -48,7 +48,7 @@
 
 <Method name="WriteJsonForGrid">
 <Description>
-Постраничный вывод таблицы, для любого класса с заданными параметрами: сортировка, поиск</Description>
+Paged output of table, for any class with parameters, sorting and searching</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>sql:%String,className:%String,params:%RegisteredObject,whereRequired:%String=""</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -111,7 +111,7 @@
 
 <Method name="ParseParameter">
 <Description>
-Удаление "мусора" из входных параметров</Description>
+Delete "garbage" from input parameters</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>parameter:%String</FormalSpec>
 <ReturnType>%String</ReturnType>

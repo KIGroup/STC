@@ -2,20 +2,19 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Web.JsonUser">
 <Description>
-Обработка - BrokerUser</Description>
+Handling of BrokerUser</Description>
 <Super>Json</Super>
 <TimeCreated>63098,81469.21022</TimeCreated>
 
-<UDLText name="T">
-<Content><![CDATA[
-// ==================================== КУРСЫ ==================================== 
-
-]]></Content>
-</UDLText>
-
 <Method name="GetCoursesShortInfo">
 <Description>
-Получить все курсы, коротко</Description>
+
+==========================================================================================================================
+COURSE                                                                                                              COURSE
+==========================================================================================================================
+
+Get short info about all courses
+Method="GET" Url="/json/course/isInUse/:isInUse"</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>isInUse:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -29,16 +28,67 @@
 ]]></Implementation>
 </Method>
 
-<UDLText name="T">
-<Content><![CDATA[
-// ==================================== ЗАЯВКИ ==================================== 
+<Method name="GetCoursesFullInfoForGrid">
+<Description>
+Get full info about all courses
+Method="POST" Url="/json/course/grid"</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try{
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
+      
+      	$$$THROWONERROR(status, ..WriteJsonForGrid("SELECT ID FROM Stc_Data.Course", "Stc.Data.Course", params, "IsInUse = "_..ParseParameter(params.isInUse)))
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
 
-]]></Content>
-</UDLText>
+	quit status
+]]></Implementation>
+</Method>
 
 <Method name="CreateOrder">
 <Description>
-Создать заявку</Description>
+
+==========================================================================================================================
+ORDER                                                                                                                ORDER
+==========================================================================================================================
+
+Create application
+Method="POST" Url="/json/order"</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+    try{
+	    TSTART
+	    
+	   	$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.order,1))
+       
+       	do ##class(Stc.Data.Order).Create(order, .st)
+       	if $$$ISERR(st) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createDirtyOrder", "| "_st))
+       	
+       	TCOMMIT
+   	}
+   	catch ex {
+	   	TROLLBACK
+	   	set st = ex.AsStatus()
+	}
+	
+	do ##class(Stc.Data.Order).SynchronizeCube()
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="CreateOrderNewStudent">
+<Description>
+Create application for student
+Method="POST" Url="/json/orderNewStudent"</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
@@ -49,9 +99,21 @@
 	    
 	   	$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.order,1))
        
-       	do ##class(Stc.Data.OrderDirty).Create(order, .status)
+       	set order = ##class(Stc.Data.OrderNewStudent).Create(order, .status)
        	if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createDirtyOrder", "| "_status))
-       	
+       	/*
+       	#dim order As Stc.Data.OrderNewStudent
+       	set subject = "STC. Новая заявка на присоединение к курсу от слушателя - """_order.LastName.Value_""""
+       	set msg = "Город: "_order.Training.City.Name.Value_"<br>"_
+       			  "Курс: "_order.Training.Course.Name.Value_"<br>"_
+       			  "Дата начала: "_$ZD(order.Training.DateStart, 3)_"<br><br>"_
+       			  "Слушатель: "_order.LastName.Value_" "_order.FirstName.Value_" "_order.MiddleName.Value_", "_order.Email_", "_order.Phone_"<br>"_
+       	          "Организация: """_order.CompanyString_"""<br>"_
+       	          "Заявка создана: "_order.CreatedTS_"<br>"_
+       	          "<a href='http://"_$GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp#/training?id="_order.Training.%Id()_"' target='_blank'>Страница обучения</a>"
+     
+     	do ##class(Stc.Web.JsonAdmin).SendEmailToOperators(subject, msg)
+     	*/
        	TCOMMIT
    	}
    	catch ex {
@@ -63,277 +125,247 @@
 ]]></Implementation>
 </Method>
 
-<Method name="GetApprovedOrderInfo">
-<Description>
-Получить информацию о заявке по коду доступа</Description>
-<ClassMethod>1</ClassMethod>
-<FormalSpec>code:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set status  = $$$OK
-	
-	try{
-		set order = ##class(Stc.Data.OrderApproved).AccessCodeIdxOpen(code,,.status)
-		
-		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("wrongOrderAccessCode", "| "_status))
-		
-		set proxy = order.ConvertToProxyObject()
-		set proxy.code = code
-		set proxy.contact.company = order.Company.ConvertToProxyObject()
-		do proxy.%ToJSON()
-	}
-	catch ex {
-		set status = ex.AsStatus()
-	}
-	
-   quit status
-]]></Implementation>
-</Method>
-
-<Method name="FinishEditingOrder">
-<Description>
-Завершить редактирование заявки; смена статуса заявки и кода доступа</Description>
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set status  = $$$OK
-	
-	try{
-		TSTART
-		
-		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
-	
-		set order = ##class(Stc.Data.OrderApproved).AccessCodeIdxOpen(data.code,,.status)
-		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("wrongOrderAccessCode"))
-		
-		set order.OrderStatus = ##class(Stc.Data.OrderStatus).CodeIdxOpen("Completed")
-		set order.AccessCode = $SYSTEM.Util.CreateGUID()
-		
-		set status = order.%Save()
-		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveApprovedOrder", "| "_status))
-		
-		TCOMMIT
-	}
-	catch ex {
-		TROLLBACK
-		set status = ex.AsStatus()
-	}
-	
-    quit status
-]]></Implementation>
-</Method>
-
-<UDLText name="T">
-<Content><![CDATA[
-// ==================================== КОМАПНИИ ==================================== 
-
-]]></Content>
-</UDLText>
-
 <Method name="GetCompaniesShortInfo">
 <Description>
-Получить все компании, коротко</Description>
+
+==========================================================================================================================
+ORGANIZATION                                                                                                  ORGANIZATION
+==========================================================================================================================
+
+Get short info about all organization
+Method="GET" Url="/json/company"</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[    quit ..WriteJsonFromSql("SELECT ID As id, ShortName->Value as name FROM Stc_Data.Company ORDER BY name")
 ]]></Implementation>
 </Method>
 
-<Method name="SaveCompany">
+<Method name="CreateMailingSubscription">
 <Description>
-Сохранение данных компании из заявки после проверки кода доступа к заявке</Description>
+
+==========================================================================================================================
+MAILING SUBSCRIPTION                                                                                  MAILING SUBSCRIPTION
+==========================================================================================================================
+
+Create dirty mailing item
+Method="POST" Url="/json/mailing/subscription"</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set status  = $$$OK
+	set st = $$$OK
 	
 	try{
 		TSTART
 		
-		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
-	
-		if (##class(Stc.Data.OrderApproved).AccessCodeIdxExists(data.order.code) = 0){
-			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("wrongOrderAccessCode"))
+		$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		
+		// Check email for exists subscription in the announcement group
+		set group = ##class(Stc.Data.MailingGroup).GetAnnouncementGroup()
+		set groupId = group.%Id()
+		set existsApprovedId = ""
+		&sql(SELECT ID INTO :existsApprovedId FROM Stc_Data.MailingItemApproved WHERE Email = :data.email AND MGroup = :groupId)
+		
+		if (existsApprovedId '= ""){
+			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("SubscriptionAlreadyExists"))
 		}
-		
-		do ##class(Stc.Data.Company).Save(data.company, .status)
-		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveCompany"))
-		
-		TCOMMIT
-	}
-	catch ex {
-		TROLLBACK
-		set status = ex.AsStatus()
-	}
-	
-    quit status
-]]></Implementation>
-</Method>
-
-<UDLText name="T">
-<Content><![CDATA[
-// ==================================== ПЕРСОНЫ ==================================== 
-
-]]></Content>
-</UDLText>
-
-<Method name="GetApprovedOrderStudents">
-<Description>
-Получить студентов заявки по коду доступа</Description>
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set status  = $$$OK
-	
-	try{
-		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
-		
-		set order = ##class(Stc.Data.OrderApproved).AccessCodeIdxOpen(params.code,,.status)
-		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("wrongOrderAccessCode"))
-		
-		$$$THROWONERROR(status, ..WriteJsonForGrid("SELECT Students FROM Stc_Data.OrderApproved_Students", "Stc.Data.Person", params, "OrderApproved = "_order.%Id()))
-	}
-	catch ex {
-		set status = ex.AsStatus()
-	}
-	
-    quit status
-]]></Implementation>
-</Method>
-
-<Method name="GetOrderStudent">
-<Description>
-Получить слушателя из заявки по коду доступа</Description>
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set status  = $$$OK
-	
-	try{
-		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
-		
-		set order = ##class(Stc.Data.OrderApproved).AccessCodeIdxOpen(data.order.code,,.status)
-		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("wrongOrderAccessCode"))
-		
-		set student = order.Students.GetAt(data.student.id)
-		set proxy = student.ConvertToProxyObject()
-		do proxy.%ToJSON()
- 	}
-	catch ex {
-		set status = ex.AsStatus()
-	}
-	
-    quit status
-]]></Implementation>
-</Method>
-
-<Method name="SaveOrderStudent">
-<Description>
-Создать слушателя для заявки. При совпадении email связать слушателя и заявку</Description>
-<ClassMethod>1</ClassMethod>
-<ReturnType>%Status</ReturnType>
-<Implementation><![CDATA[
-	set status  = $$$OK
-	set result = ##class(%ZEN.proxyObject).%New()
-	try{
-		TSTART
-		
-		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
-		
-		set order = ##class(Stc.Data.OrderApproved).AccessCodeIdxOpen(data.order.code,,.status)
-		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("wrongOrderAccessCode"))
-		
-		set student = order.Students.GetAt(data.student.id)
-		
-		if (student){
-			// Редактирование
-			if (##class(Stc.Data.Person).IsEditable(data.student.id)){
-				do ##class(Stc.Data.Person).Save(data.student, .status)
-				if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveOrderStudent", " | "_status))
-				
-				set result.result = 1
-			}
-			else{
-				$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("doNotHaveAccessToEditOrderStudent"))	
-			}
-		}
-		elseif (##class(Stc.Data.Person).EmailIdxExists(data.student.email) = 0){
-			// Создание
-			set student = ##class(Stc.Data.Person).Save(data.student, .status)
-			if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createOrderStudent", " | "_status))
 			
-			do order.Students.SetAt(student, student.%Id())
-			set result.result = 2
-		}
-		else{
-			// Добавление уже существующего
-			set student = ##class(Stc.Data.Person).EmailIdxOpen(data.student.email)
-			do order.Students.SetAt(student, student.%Id())
-			set result.result = 3
-		}
+		// Check email for exists order for subscription
+		set existsDirtyId = ""
+		&sql(SELECT ID INTO :existsDirtyId FROM Stc_Data.MailingItemDirty WHERE Email = :data.email)
 		
+		// Id for update data
+		set data.id = existsDirtyId
+		set data.group = ##class(%ZEN.proxyObject).%New()
+		set data.group.id = group.%Id()
 		
-		set status = order.%Save()
-		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveApprovedOrder", " | "_status))
+		set item = ##class(Stc.Data.MailingItemDirty).Save(data, .st)
+		$$$THROWONERROR(st, st)
 		
-		do result.%ToJSON()	
+		set mail = ##class(Stc.Utils.Email).GetMailForConfirmationSubscription(item)
+		
+		do ##class(Stc.Data.MailingJournal).Create(item.Email, "", mail.subject, mail.message)
 		
 		TCOMMIT
 	}
-	catch ex {
+	catch(ex){
 		TROLLBACK
-		set status = ex.AsStatus()
+		set st = ex.AsStatus()
 	}
 	
-    quit status
+	job ##class(Stc.Data.MailingJournal).StartSending()
+	
+	quit st
 ]]></Implementation>
 </Method>
 
-<Method name="DeleteOrderStudent">
+<Method name="ConfirmMailingSubscription">
 <Description>
-Удалить слушателя из заявки и из базы(если удаление возможно)</Description>
+Activate subscription, remove dirty and create approved mailing item
+Method="POST" Url="/json/mailing/subscription/confirmation/:code"</Description>
 <ClassMethod>1</ClassMethod>
+<FormalSpec>code:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set status  = $$$OK
+	set st = $$$OK
 	
 	try{
 		TSTART
 		
-		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		set code = $system.Encryption.Base64Decode(code)
 		
-		set order = ##class(Stc.Data.OrderApproved).AccessCodeIdxOpen(data.order.code, , .status)
-		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("openOrder"))
+		if (##class(Stc.Data.MailingItemDirty).AccessCodeIdxExists(code) = $$$NO){
+			if (##class(Stc.Data.MailingItemApproved).AccessCodeIdxExists(code) = $$$YES){
+				$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("SubscriptionAlreadyExists"))
+			}
+			else{ 
+				$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("WrongConfirmationCode"))
+			}
+		}
 		
-		do order.Students.RemoveAt(data.student.id)
+		set dirtyItem = ##class(Stc.Data.MailingItemDirty).AccessCodeIdxOpen(code)
 		
-		if (##class(Stc.Data.Person).IsEditable(data.student.id)) set status = ##class(Stc.Data.Person).Delete(data.student.id)
+		set approvedItem = ##class(Stc.Data.MailingItemApproved).%New()
+		set approvedItem.FullName = dirtyItem.FullName
+		set approvedItem.Email = dirtyItem.Email
+		set approvedItem.City = dirtyItem.City
+		set approvedItem.Company = dirtyItem.Company
+		set approvedItem.Position = dirtyItem.Position
+		set approvedItem.AccessCode = dirtyItem.AccessCode
+		set approvedItem.MGroup = dirtyItem.MGroup
+		set approvedItem.LastUpdated = $ZDT($ZTS, 3)
 		
-		if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("deletePerson"))
+		$$$THROWONERROR(st, approvedItem.%Save())
 		
-		$$$THROWONERROR(status, order.%Save())
-	
+		$$$THROWONERROR(st, ##class(Stc.Data.MailingItemDirty).AccessCodeIdxDelete(code))
+		
 		TCOMMIT
- 	}
-	catch ex {
+	}
+	catch(ex){
 		TROLLBACK
-		set status = ex.AsStatus()
+		set st = ex.AsStatus()
 	}
 	
-    quit status
+	quit st
 ]]></Implementation>
 </Method>
 
-<UDLText name="T">
-<Content><![CDATA[
-// ==================================== ДРУГОЕ ==================================== 
-
-]]></Content>
-</UDLText>
-
-<Method name="GetCitiesStartsWith">
+<Method name="DeleteMailingSubscription">
 <Description>
-Получить все города, поиск совпадения</Description>
+Remove approved mailing item by access code (unsubscribe)
+Method="DELETE" Url="/json/mailing/subscription/:code"</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>code:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		TSTART
+		
+		set code = $system.Encryption.Base64Decode(code)
+		
+		if (##class(Stc.Data.MailingItemApproved).AccessCodeIdxExists(code) = $$$NO){
+			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("WrongAccessCode"))
+		}
+		
+		set item = ##class(Stc.Data.MailingItemApproved).AccessCodeIdxOpen(code)
+		do ##class(Stc.Utils.Log).Create("Json.Admin.DeleteMailingSubscription()", "FullName="_item.FullName_"; Email="_item.Email)
+		kill item
+		
+		$$$THROWONERROR(st, ##class(Stc.Data.MailingItemApproved).AccessCodeIdxDelete(code))
+		
+		TCOMMIT
+	}
+	catch(ex){
+		TROLLBACK
+		set st = ex.AsStatus()
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="UpdateMailingSubscription">
+<Description>
+Update approved mailing item by access code
+Method="POST" Url="/json/mailing/subscription/:code"</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>code:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		TSTART
+		
+		set code = $system.Encryption.Base64Decode(code)
+		
+		if (##class(Stc.Data.MailingItemApproved).AccessCodeIdxExists(code) = $$$NO){
+			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("WrongAccessCode"))
+		}
+		
+		$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+		
+		set oldObj = ##class(Stc.Data.MailingItemApproved).AccessCodeIdxOpen(code)
+		set data.id = oldObj.%Id()
+		set data.email = oldObj.Email
+		set data.group = ##class(Stc.Data.MailingGroup).GetAnnouncementGroup().ConvertToProxyObject()
+		kill oldObj
+		
+		do ##class(Stc.Data.MailingItemApproved).Save(data, .st)
+		$$$THROWONERROR(st, st)
+		
+		TCOMMIT
+	}
+	catch(ex){
+		TROLLBACK
+		set st = ex.AsStatus()
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="GetMailingSubscription">
+<Description>
+Get approved mailing item by access code
+Method="GET" Url="/json/mailing/subscription/:code"</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>code:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		set code = $system.Encryption.Base64Decode(code)
+		
+		if (##class(Stc.Data.MailingItemApproved).AccessCodeIdxExists(code) = $$$NO){
+			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("WrongAccessCode"))
+		}
+		
+		set proxy = ##class(Stc.Data.MailingItemApproved).AccessCodeIdxOpen(code).ConvertToProxyObject()
+		set proxy.accessCode = ""
+		set proxy.group = proxy.group.name
+		
+		do proxy.%ToJSON()
+	}
+	catch(ex){
+		set st = ex.AsStatus()
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="GetCities">
+<Description>
+
+==========================================================================================================================
+OTHER                                                                                                                OTHER
+==========================================================================================================================
+
+Search cities
+Method="GET" Url="/json/city/:startsWith"</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>word:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -372,6 +404,166 @@
 	do proxyResult.%ToJSON()
 	    
 	q $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetTraining">
+<Description>
+Get training by id
+Method="GET" Url="/json/training/:id"</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		set proxy = ##class(Stc.Data.Training).%OpenId(id).ConvertToProxyObjectForPublic()
+		do proxy.%ToJSON()
+	}
+	catch ex {
+		set st = ex.AsStatus()
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="GetTrainingStudents">
+<Description>
+All training students for teacher view by access code
+Method="POST" Url="/json/training/:code/student"</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>accessCode:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try{
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
+      	
+      	set whereRequired = "SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training->AccessCode = '"_..ParseParameter(accessCode)_"')"
+      	
+      	$$$THROWONERROR(status, ..WriteJsonForGrid("SELECT Students FROM Stc_Data.SubGroup_Students", "Stc.Data.Person", params, whereRequired))
+	}
+	catch ex {
+		set status = ex.AsStatus()
+	}
+	
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="SaveTrainingFeedBack">
+<Description>
+Create feedBack for training
+Method="POST" Url="/json/training/:id/feedback/:code"</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>trId:%String,accessCode:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set status = $$$OK
+	
+	try{
+		TSTART
+		
+		$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+      	
+      	set tr = ##class(Stc.Data.Training).%OpenId(trId)
+      	if ($P(tr.AccessCode,"-",1)_"-"_$P(tr.AccessCode,"-",5) '= accessCode){
+      		$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("feedBackErrorCode"))
+      	}
+      	
+      	if (tr.FeedBacks.Count() > 50){
+	      	$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("feedBackSpam"))
+      	}
+      	
+      	do ##class(Stc.Utils.Log).Create("Stc.Web.JsonUser.SaveTrainingFeedBack", 
+			"Author="_$ZCONVERT(data.author, "I","UTF8")_
+			"TrainingId="_tr.%Id()_
+			"Rating="_data.rating_
+			"WhatLiked="_$ZCONVERT(data.whatLiked, "I","UTF8")_
+			"WhatImprovements="_$ZCONVERT(data.whatImprovements, "I","UTF8")_
+			"WhatHear="_$ZCONVERT(data.whatHear, "I","UTF8")_
+			"AboutTeacher="_$ZCONVERT(data.aboutTeacher, "I","UTF8"))
+	
+      	set fb = ##class(Stc.Data.FeedBack).%New()
+      	set fb.Author = $ZCONVERT(data.author, "I","UTF8")
+      	set fb.Training = tr
+      	set fb.Rating = data.rating
+      	set fb.WhatLiked = $ZCONVERT(data.whatLiked, "I","UTF8")
+      	set fb.WhatImprovements = $ZCONVERT(data.whatImprovements, "I","UTF8")
+      	set fb.WhatHear = $ZCONVERT(data.whatHear, "I","UTF8")
+      	set fb.AboutTeacher = $ZCONVERT(data.aboutTeacher, "I","UTF8")
+      	set status = fb.%Save()
+      	
+      	if ($$$ISERR(status)) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("feedBackSave")) 
+      	
+		TCOMMIT
+	}
+	catch ex {
+		TROLLBACK
+		
+		set status = ex.AsStatus()
+	}
+	
+	quit status
+]]></Implementation>
+</Method>
+
+<Method name="GetSchedule">
+<Description>
+Get schedule for IS site
+Method="GET" Url="/json/schedule"</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	set proxy.courses = ##class(%ListOfObjects).%New()
+	
+	&sql(DECLARE ScheduleCourseCur CURSOR FOR 
+		 	 SELECT ID, 
+		 	 ISNULL((SELECT MIN(DateStart)FROM Stc_Data.Training WHERE Course = course.ID AND IsCompleted = 0),'11/11/2099') As MinTrainingDate,
+		 	 (SELECT COUNT(ID)FROM Stc_Data.Training WHERE Course = course.ID) As TotalCount
+		 	 FROM Stc_Data.Course as course
+			 WHERE IsInUse = 1
+			 ORDER BY MinTrainingDate, TotalCount DESC)	
+		
+	&sql(OPEN ScheduleCourseCur)
+	for  
+	{	
+		&sql(FETCH ScheduleCourseCur INTO :courseId, :minTrainingDate, :totalCount) 
+		quit:(SQLCODE '= 0)
+		
+		set course = ##class(Stc.Data.Course).%OpenId(courseId).ConvertToProxyObject()
+		set course.trainings = ##class(%ListOfObjects).%New()
+		
+		// Course trainings	
+		&sql(DECLARE ScheduleTrainingCur CURSOR FOR 
+		 	 SELECT ID
+		 	 FROM Stc_Data.Training 
+		 	 WHERE Course = :courseId AND IsCompleted = 0
+		 	 ORDER BY DateStart)
+		
+		&sql(OPEN ScheduleTrainingCur)
+		for  
+		{	
+			&sql(FETCH ScheduleTrainingCur INTO :trId) 
+			quit:(SQLCODE '= 0)
+			
+			set trObj = ##class(Stc.Data.Training).%OpenId(trId)
+			set trProxy = trObj.ConvertToProxyObjectForPublic()
+			set trProxy.dateGoogleCalendar = $REPLACE($ZD(trObj.DateStart, 3)_"/"_$ZD(trObj.DateFinish+1, 3), "-", "")
+		
+			do course.trainings.Insert(trProxy)	
+		}
+		&sql(CLOSE ScheduleTrainingCur)
+		
+		do proxy.courses.Insert(course)		
+	}
+	&sql(CLOSE ScheduleCourseCur)
+	
+	quit proxy.%ToJSON()
 ]]></Implementation>
 </Method>
 </Class>

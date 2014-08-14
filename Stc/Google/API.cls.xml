@@ -2,60 +2,58 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Google.API">
 <Description>
-Общий класс для доступа к API Google'а.</Description>
+Base class for Google API access</Description>
 <Abstract>1</Abstract>
 <IncludeCode>%callout,%occStatus,%occOptions</IncludeCode>
 <TimeCreated>63145,69487.892963</TimeCreated>
 
 <Method name="Call">
 <Description><![CDATA[
-Метод, осуществляющий обращение к заданному API Google'а. 
-Вызывает API по адресу pUrl (без имени сервера www.googleapis.com), с типом запроса pType, 
-токеном pToken и телом запроса - JSON'ом, сформированным из PObjInput.<br>
-Работает с API, ориентированными на JSON, не на GData.<br>]]></Description>
+Calls API at pUrl (without www.googleapis.com), with method pType, 
+auth token pToken and request body - JSON of PObjInput.<br>
+Work with Google JSON API, not GData.<br>]]></Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>pUrl:%String,pMethod:%String,pToken:%String,pSslConfig:%String,PObjInput:%ZEN.proxyObject="",*PResponse:%ZEN.proxyObject</FormalSpec>
+<FormalSpec>pUrl:%String,pMethod:%String,pToken:%String,pSslConfig:%String,PObjInput:%ZEN.proxyObject="",*PResponse:%ZEN.proxyObject,timeout:%Integer=30</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
  set sc = $$$OK
  try 
  {
   set req = ##class(%Net.HttpRequest).%New()
-  set req.SSLConfiguration=$g(^Settings("Stc","Google", "SslConfig"))
-  set req.Server="www.googleapis.com"
-  set req.Https=1
-  set req.Port=443
-  set req.ProxyHTTPS=1
-  set req.ProxyServer=$g(^Settings("Stc","Google", "ProxyServer"))
+  set req.SSLConfiguration = ##class(Stc.Data.Settings).GetGoogleSSLConfig()
+  set req.Server = "www.googleapis.com"
+  set req.Https = 1
+  set req.Port = 443
+  set req.ProxyHTTPS = 1
+  /*
+  set req.ProxyServer = $g(^Settings("Stc","Google", "ProxyServer"))
   set req.ProxyPort=$g(^Settings("Stc","Google", "ProxyPort"))
   set req.ProxyTunnel=$g(^Settings("Stc","Google", "ProxyTunnel"))
-  set req.Authorization="Bearer "_pToken
+  */
   
-  //set req.ContentCharset="windows-1251"
- 
+  set req.Authorization="Bearer "_pToken
+  set req.Timeout = timeout
+  
   if PObjInput'="" {
-   set req.ContentType="application/json"
+  	set req.ContentType="application/json"
    
-   set tIO = $IO
-   set tMnemSpace = ##class(%Library.Device).GetMnemonicRoutine()
-   try
-   {
+   	set tIO = $IO
+   	set tMnemSpace = ##class(%Library.Device).GetMnemonicRoutine()
+   	try{
 	  $$$TOE(sc,##class(%ZEN.Auxiliary.jsonProvider).%WriteJSONStreamFromObject(req.EntityBody, PObjInput))
 	  use tIO::("^"_tMnemSpace)
    }
-   catch ex
-   {
+   catch ex {
 	  use tIO::("^"_tMnemSpace)
 	  throw ex
    }
  
-  //  s req.WriteRawMode=1
   }
  
   $$$TOE(sc,req.Send($zconvert(pMethod,"u"),pUrl))
   
   set json=req.HttpResponse.Data.Read()
-  set ^temp("json") = json
+ 
   $$$TOE(sc,##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(json,,.PResponse))
  }
  catch ex

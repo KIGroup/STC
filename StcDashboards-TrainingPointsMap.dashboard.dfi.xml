@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Document name="StcDashboards-TrainingPointsMap.dashboard.DFI">
+<dashboard xmlns="http://www.intersystems.com/deepsee/library" name="TrainingPointsMap" folderName="StcDashboards" title="Карта точек обучения" description="" keywords="" owner="" shared="true" public="true" locked="false" resource="%DeepSee_PortalEdit" timeCreated="2014-02-27T16:26:37.932Z" createdBy="ilson" category="" bookCover="" scheme="" worklistCount="0" snapTo="true" snapGrid="true" gridRows="10" gridCols="10" canResize="true" canModify="true" showTitleBar="true" companyName="" companyLogo="" companyStyle="">
+  <widget name="MapW" type="portlet" subtype="Stc.DeepSee.TrainingPointsMapPortlet" subtypeClass="" title="$$$Карта точек обучения/Stc" dataSource="TrainingPointsKPI.kpi" dataLink="" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="0" homeColL="0" colSpanL="6" rowSpanL="10" showToolbar="true" theme="" dataColorList="">
+    <control name="" action="applyFilter" target="" targetProperty="Year" location="widget" type="auto" controlClass="" label="$$$Год/Stc" title="" value="2014" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="applyFilter" target="" targetProperty="Status" location="widget" type="dropdown" controlClass="" label="$$$Статус/Stc" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="applyFilter" target="" targetProperty="Course" location="widget" type="auto" controlClass="" label="$$$Курс/Stc" title="" value="" text="" size="30" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="applyFilter" target="" targetProperty="Teacher" location="widget" type="auto" controlClass="" label="$$$Преподаватель/Stc" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="applyFilter" target="" targetProperty="Company" location="widget" type="auto" controlClass="" label="$$$Организация/Stc" title="" value="" text="" size="15" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <control name="" action="applyFilter" target="" targetProperty="CompanyType" location="widget" type="dropdown" controlClass="" label="$$$Тип организации/Stc" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <property name="latitude">50.74</property>
+    <property name="latitudeProperty">Latitude</property>
+    <property name="longitude">90.6</property>
+    <property name="longitudeProperty">Longitude</property>
+    <property name="markerDataProperties">ID,Course,City,Street,Room,DateStart,DateFinish,Teacher,StudentsCount,SubGroupsCount,Latitude,Longitude,IsCompleted</property>
+    <property name="markerIcon">http://i.imgur.com/pBB7MYT.png</property>
+    <property name="markerSpecialIcon">http://i.imgur.com/bFJRQfv.png</property>
+    <property name="markerSpecialProperty">IsCompleted</property>
+    <property name="markerTitleProperty">Course</property>
+    <property name="onclickmarker">
+     var filtersValues = zenThis.getAllFiltersValues();
+     var content = zenThis.FindTrainingNeighbors(filtersValues, zenThis.index, marker.data.ID, marker.data.Latitude, marker.data.Longitude);	
+  
+     if (content == ""){
+     	zenThis.openInfoWindowForSingleTraining(marker, false);
+     }
+     else{
+	    zenThis.openInfoWindowForManyTrainings(marker, content);
+	 }
+      </property>
+    <property name="zoom">3</property>
+  </widget>
+  <widget name="TrainingStudents" type="scoreCardWidget" subtype="regular" subtypeClass="" title="$$$Слушатели выбранного обучения/Stc" dataSource="TrainingStudentsKPI.kpi" dataLink="" drillDownDataSource="" width="200" height="200" sidebarContent="" showSidebar="false" sidebarWidth="" maximized="false" homeRowL="0" homeColL="6" colSpanL="4" rowSpanL="10" showToolbar="true" theme="" dataColorList="">
+    <control name="" action="applyFilter" target="" targetProperty="Training" location="widget" type="hidden" controlClass="" label="Training" title="" value="" text="" readOnly="false" valueList="" displayList="" activeWhen=""></control>
+    <override name="scoreCard">{width:386,selectedSeries:-1,columns:[{align:'left',display:'itemNo',headerAlign:'left',label:'№',_type:'scoreCardColumn'},{align:'left',dataValue:'FullName',headerAlign:'left',label:'ФИО',_type:'scoreCardColumn'},{align:'left',dataValue:'Company',headerAlign:'left',label:'Организация',width:'112.5',_type:'scoreCardColumn'},{align:'left',dataValue:'Email',headerAlign:'left',label:'Email',_type:'scoreCardColumn'},{align:'left',dataValue:'Phone',headerAlign:'left',label:'Телефон',_type:'scoreCardColumn'}],_type:'scoreCard'}</override>
+  </widget>
+</dashboard>
+</Document></Export>

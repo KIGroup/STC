@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/CourseTeacherSrvc.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/services/CourseTeacherSrvc.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//dddв
+//ddd
 
 /*===========================================================================================
 Курсы и преподватели
@@ -11,11 +11,11 @@
 servicesModule.factory('CourseTeacherSrvc', function(DALSrvc) {
 	return {
 		/* Получить все курсы, коротко */
-		getAllCoursesShortInfo: function(isInUse){
-			return DALSrvc.getPromise('get', StcAppSetting.user + '/json/allCoursesShortInfo/' + isInUse, null);
+		getAll: function(isInUse){
+			return DALSrvc.getPromise('get', StcAppSetting.user + '/json/course/isInUse/' + isInUse, null);
 		},
 		/* Получить все курсы, полная инфа, для таблицы */
-		getAllCoursesFullInfo: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, isInUse){
+		getAllForGrid: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, isInUse){
 			var first = pageSize * (pageCurr - 1) + 1;
             var obj = {sqlName: sqlName, 
                        isDown: isDown, 
@@ -25,20 +25,33 @@ servicesModule.factory('CourseTeacherSrvc', function(DALSrvc) {
                        searchText: searchText,
                        isInUse: isInUse};
 
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/allCoursesFullInfo', obj);
+            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/course/grid', obj);
 		},
 		/* Изменить статус курса */
-		changeIsInUse: function(courseId){
-			return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/changeIsInUseCourse', {id: courseId});
+		changeStatus: function(courseId){
+			return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/course/' + courseId + '/inverseStatus', null);
 		},
 		/* Обновить или создать курс */
-		saveCourse: function(course){
-			return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/saveCourse', course);
+		save: function(course){
+			return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/course', course);
 		},
 		/*  */
-		getCourse: function(id){
-			return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/getCourse/' + id, null);
-		}
+		get: function(id){
+			return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/course/' + id, null);
+		},
+		getTeachers: function(id){
+			return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/course/' + id + '/teacher', null);
+		},
+		/* Schedule */
+		getSchedule: function(){
+			return DALSrvc.getPromise('get', StcAppSetting.user + '/json/schedule', null);
+		},
+		addTeacher: function(courseId, person){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/course/' + courseId + '/teacher',  {teacher: person});
+        },
+        removeTeacher: function(courseId, teacherId){
+            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/course/' + courseId + '/teacher/' + teacherId,  null);
+        }
 	}
 });
 ]]></CSP>

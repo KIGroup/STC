@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.MailingItemDirty">
+<Description>
+MailingItem. Dirty, for spam</Description>
+<Super>%Persistent,MailingItem</Super>
+<TimeCreated>63388,39362.069005</TimeCreated>
+
+<Index name="AccessCodeIdx">
+<Properties>AccessCode</Properties>
+<Unique>1</Unique>
+</Index>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.MailingItemDirtyD</DataLocation>
+<DefaultData>MailingItemDirtyDefaultData</DefaultData>
+<IdLocation>^Stc.Data.MailingItemDirtyD</IdLocation>
+<IndexLocation>^Stc.Data.MailingItemDirtyI</IndexLocation>
+<StreamLocation>^Stc.Data.MailingItemDirtyS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="MailingItemDirtyDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>AccessCode</Value>
+</Value>
+<Value name="3">
+<Value>FullName</Value>
+</Value>
+<Value name="4">
+<Value>Email</Value>
+</Value>
+<Value name="5">
+<Value>Company</Value>
+</Value>
+<Value name="6">
+<Value>Position</Value>
+</Value>
+<Value name="7">
+<Value>LastUpdated</Value>
+</Value>
+<Value name="8">
+<Value>MGroup</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

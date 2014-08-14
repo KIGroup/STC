@@ -2,103 +2,116 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Company">
 <Description>
-Компания - заказчик</Description>
+Customer organization</Description>
 <Super>%Persistent</Super>
 <TimeCreated>63098,13287.262923</TimeCreated>
 
 <Property name="FullName">
 <Description>
-Полное название компании</Description>
+Full name of organization</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="ShortName">
 <Description>
-Короткая форма названия</Description>
+Short name of organization</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="SettlementAccount">
 <Description>
-Расчётный счёт</Description>
+Settlement account of organizaton</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="1000"/>
 </Property>
 
 <Property name="CorrespondentAccount">
 <Description>
-Корреспондентский счёт</Description>
+Correspondent account of organization</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="1000"/>
 </Property>
 
 <Property name="BIC">
 <Description>
-Банковский идентификационный код</Description>
+Bank Identification Code</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="KPP">
 <Description>
-Код причины постановки на учёт</Description>
+Code reason for registration</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="INN">
 <Description>
-Идентификационный номер налогоплательщика</Description>
+Taxpayer identification number</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="OGRN">
 <Description>
-Основной государственный регистрационный номер</Description>
+Main state registration number</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
 <Property name="LegalAddress">
 <Description>
-Юридический адрес</Description>
+Legal address</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="MailAddress">
 <Description>
-Почтовый адрес</Description>
+Mail address</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Contact">
 <Description>
-Контактное лицо</Description>
+Contact person</Description>
 <Type>Person</Type>
 </Property>
 
 <Property name="WebSite">
 <Description>
-Веб сайт</Description>
+Web-site</Description>
 <Type>%String</Type>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
+<Property name="IsUniversity">
+<Description>
+Organization is university</Description>
+<Type>%Boolean</Type>
+<InitialExpression>0</InitialExpression>
+</Property>
+
 <Property name="OtherInfo">
 <Description>
-Другая информация</Description>
+Other information</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 </Property>
 
+<Property name="Type">
+<Description>
+Type of company - univer, partner etc.</Description>
+<Type>Stc.Data.CompanyType</Type>
+</Property>
+
 <Property name="Employees">
 <Description>
-Все сотрудники</Description>
+All employees</Description>
 <Type>Stc.Data.Person</Type>
 <Cardinality>many</Cardinality>
 <Inverse>Company</Inverse>
@@ -107,7 +120,7 @@
 
 <Method name="ConvertToProxyObject">
 <Description>
-Конвертация в proxyObject для JSON </Description>
+Convert to proxyObject (for JSON)</Description>
 <FormalSpec>shortInfo:%Boolean=0</FormalSpec>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
@@ -134,17 +147,26 @@
 	
 	set proxy.employeesNumber = ..Employees.Count()
 	
+	if (..Type.Code = "Univer"){
+		set proxy.status = 1
+	}
+	else{
+		set proxy.status = 0
+	}
+	
 	quit proxy
 ]]></Implementation>
 </Method>
 
 <Method name="Save">
 <Description>
-Сохранить или создать компанию</Description>
+Create or save modified organization</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
 <ReturnType>Company</ReturnType>
 <Implementation><![CDATA[
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Save", "ID="_data.id_"; ShortName="_$ZCONVERT(data.shortName, "I","UTF8"))
+	
 	if (data.id '= ""){
 		set company = ..%OpenId(data.id,3,.status)
 		set company.FullName.Value = $ZCONVERT(data.fullName, "I","UTF8")
@@ -170,39 +192,54 @@
 	set company.KPP = $ZCONVERT(data.kpp, "I","UTF8")
 	set company.WebSite = $REPLACE($REPLACE($ZCONVERT(data.site, "I","UTF8"),"http://",""), "https://","")
 	
+	if (data.status = 1){
+		set company.Type = ##class(CompanyType).CodeIdxOpen("Univer")
+	}
+	else{
+		set company.Type = ##class(CompanyType).CodeIdxOpen("Partner")
+	}
+	
 	set status = company.%Save()
+	
 	quit company
 ]]></Implementation>
 </Method>
 
 <Method name="Delete">
 <Description>
-Удаление компании, если это возможно</Description>
+Delete organization, if it is available</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>id</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Delete", "ID="_id)
+	
 	set company = ..%OpenId(id,4,.status)
 	quit:$$$ISERR(status) ##class(Stc.Utils.Msg).GetErrorStatus("openCompany", "| "_status)
 	
 	set findId = ""
 	
-	// Проверка: есть ли в заявках	
+	// Checking: if in applications
 	&sql(SELECT ID INTO:findId FROM Stc_Data.Order WHERE Company = :id)
 	if (findId = ""){
-		// Проверка: есть ли сотрудники
+		// Checking: if has employees
 		&sql(SELECT ID INTO:findId FROM Stc_Data.Person WHERE Company = :id)
 		
 		if (findId = ""){
-			// Проверка: плательщик подгруппы
-			&sql(SELECT ID INTO:findId FROM Stc_Data.SubGroup WHERE Payer = :id)	
+			// Checking: if is payer for subgroup
+			&sql(SELECT ID INTO:findId FROM Stc_Data.SubGroup WHERE Payer = :id)
+			
+			if (findId = ""){
+				// Checking: in application from student
+				&sql(SELECT ID INTO:findId FROM Stc_Data.OrderNewStudent WHERE Company = :id)	
+			}	
 		}
 	}
 	
-	// Выход, если есть связи
+	// Quit, if has links
 	quit:findId'="" ##class(Stc.Utils.Msg).GetErrorStatus("deleteCompanyImpossible")
 	
-	// Удаление локализации
+	// Delete localization
 	set status = ##class(Stc.Data.Localization.LText).Delete(company.FullName.%Id())
 	quit:$$$ISERR(status) status
 		
@@ -218,7 +255,7 @@
 	set status = ##class(Stc.Data.Localization.LText).Delete(company.OtherInfo.%Id())
 	quit:$$$ISERR(status) status
 	
-	// Удаление компании
+	// Delete organization
 	set status = ..%DeleteId(id, 4)
 	quit:$$$ISERR(status) ##class(Stc.Utils.Msg).GetErrorStatus("deleteCompany", "| "_status)
 	
@@ -276,6 +313,12 @@
 </Value>
 <Value name="14">
 <Value>OtherInfo</Value>
+</Value>
+<Value name="15">
+<Value>IsUniversity</Value>
+</Value>
+<Value name="16">
+<Value>Type</Value>
 </Value>
 </Data>
 </Storage>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/MainCtrl.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/MainCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//dddddddd
+//ddddddddвdd
 
 /*===========================================================================================
 Главный контроллер, работа с языком и меню
@@ -11,9 +11,10 @@
 controllersModule.controller('MainCtrl', function($scope, $window, $location, $cookies, DALSrvc, $filter, UtilsSrvc){
 
     $scope.menu = {admin: ($cookies.admin === 'true'),
+    			   readOnlyMode: ($cookies.readOnlyMode === 'true'),
     			   loginCaption: ($cookies.admin === 'true' ? 'Выход' : 'Вход'),
-    			   languages: [{id: 'ru-RU', name: 'Русский'}, 
-                               {id: 'en-US', name: 'English'}]};
+    			   languages: [{id: 'ru-RU', name: 'Русский', flag: 'img/flags/ru.png'}, 
+                               {id: 'en-US', name: 'English', flag: 'img/flags/en.png'}]};
 
     var idx = UtilsSrvc.getIndexes($scope.menu.languages, 'id', StcAppSetting.lang ? StcAppSetting.lang : 'ru-RU');
     if (idx.length != 0) 
@@ -25,14 +26,40 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
         $scope.menu.createOrder  = {id: 'createOrder',  name: 'Создать заявку'};
         $scope.menu.orders       = {id: 'orders',       name: 'Заявки'};
         $scope.menu.trainings    = {id: 'trainings',    name: 'Обучения'};
-        $scope.menu.companies    = {id: 'companies',    name: 'Компании'};
+        $scope.menu.companies    = {id: 'companies',    name: 'Организации'};
         $scope.menu.courses      = {id: 'courses',      name: 'Курсы'};
+        $scope.menu.settings      = {id: 'settings',    name: 'Параметры системы'};
         $scope.menu.persons      = {id: 'persons',      name: 'Сотрудники'};
         $scope.menu.certificates = {id: 'certificates', name: 'Сертификаты'};
+
+        $scope.menu.analytics    = {id: 'analytics',    name: 'Аналитика'};
+        $scope.menu.analyticsMap = {id: 'analyticsMap', name: 'Карта точек обучения'};
+        $scope.menu.analyticsCourse  = {id: 'analyticsCourse' , name: 'Курсы'};
+        $scope.menu.analyticsTeacher = {id: 'analyticsTeacher', name: 'Преподаватели'};
+        $scope.menu.analyticsCompany = {id: 'analyticsCompany', name: 'Организации'};
+        $scope.menu.analyticsOrder = {id: 'analyticsOrder', name: 'Заявки'};
+
+		$scope.menu.other = {id: 'other', name: 'Ещё'};
+		$scope.menu.mailingGroups = {id: 'mailingGroups', name: 'Группы рассылки'};
+		$scope.menu.mailingSubscription = {id: 'mailingSubscription', name: 'Оформление подписки'};
+		$scope.menu.mailingJournal = {id: 'mailingJournal', name: 'Журнал рассылок'};
     };
 
     // Выбор меню - сделать активным пункт
     $scope.menu.selectMenu = function(menuId){
+	    $scope.menu.hide = false;
+    	
+    	if ($scope.menu.timeOutIntervalId){
+    		$window.clearTimeout($scope.menu.timeOutIntervalId);
+    	}
+    	
+        $scope.menu.analytics.css = '';
+
+    	if ($scope.menu.admin){
+    		$scope.menu.brandCaption = 'Система учёта курсов';
+    		$scope.menu.appTitle = 'Система учёта курсов';
+    	}
+    	
         if (!$scope.menu.active || $scope.menu.active.id == menuId){
             $scope.menu.active = $scope.menu[menuId];
             $scope.menu.active.css = 'active';
@@ -57,22 +84,49 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
     $scope.menu.login = function(){
         $scope.menu.admin = ($cookies.admin === 'true');
         
-        DALSrvc.getPromise('get', '/stcapp/admin/json/checkAdmin/' + ($scope.menu.admin === true ? 0: 1), null).then(
+        DALSrvc.getPromise('get', StcAppSetting.admin + '/json/checkAdmin/' + ($scope.menu.admin === true ? 0: 1), null).then(
             function(data){
-                $scope.menu.admin = true;
+	            if (data.privileges=='read'){
+	            	$cookies['readOnlyMode'] = 'true';
+	            	$scope.menu.readOnlyMode = true;
+	            }
+	            else{
+	            	$cookies['readOnlyMode'] = 'false';
+	            	$scope.menu.readOnlyMode = false;
+	            }
+	            
+	            $scope.menu.admin = true;
                 $scope.menu.loginCaption = 'Выход';
                 $cookies['admin'] = 'true';
-                $location.path('/orders');
+                
+                if ($location.path() == '/createorder'){
+                	$location.path('/orders');
+                }
             },
             function(response){
                 $scope.menu.admin = false;
                 $cookies['admin'] = 'false';
+	            $cookies['readOnlyMode'] = 'false';
+	            $scope.menu.readOnlyMode = false;
                 $scope.menu.loginCaption = 'Вход';
                 $location.path('/createorder');
+                $scope.menu.brandCaption = 'Форма регистрации на обучение компании InterSystems';
+   				$scope.menu.appTitle = 'Форма регистрации на обучение компании InterSystems';
             });
     }
     
+    $scope.goTo = function(url){
+		 alert('DDDD');
+		 $location.path(url);
+	};
+    
     $scope.menu.init();
+    
+    if (urlData != ""){
+	    var newUrl = urlData.replace(/-q-/g, "?").replace(/-and-/g, "&").replace(/-eq-/g, "=");
+	    console.log(newUrl);
+	    $window.location = StcAppSetting.defaultApp + '/stc/index.csp#/' + newUrl;
+    }
 });
 
 ]]></CSP>

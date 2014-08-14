@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/companies.csp" application="/csp/six/" default="1"><![CDATA[
-<div class="row-fluid">
+<CSP name="stc/partials/companies.csp" application="/csp/stc/" default="1"><![CDATA[
+<div class="row-fluid" style="padding-bottom: 5px;">
 	<div class="span1">
+	</div>
+	<div class="span10">
+		<span ng-bind="'Организации'|localize" style="font-weight: bold;"></span>
+		<div class="btn-group pull-right">
+			<button type="button" class="btn btn-mini btnRadio" ng-model="company.status" btn-radio="'All'" ng-bind="'Все'|localize"></button>
+			<button type="button" class="btn btn-mini btnRadio" ng-model="company.status" btn-radio="1"     ng-bind="'Университеты'|localize"></button>
+		</div>
+	</div>
+	<div class="span1">
+	</div>
+</div>
+<div class="row-fluid">
+    <div class="span1">
 	</div>
 	<div class="span10">
 	    <stcgrid
 	    	grid="pageStore.companies.grid"
 		    table-class="table table-bordered table-hover"
-		    caption="Компании"
+		    caption=""
 		    columns="company.columns"
 		    items="company.items"
 		    properties="company.properties"
@@ -23,18 +36,18 @@
 		    selected-items="company.selectedItems"
 		    multi-select-mode="company.multiSelectMode"
 
-		    action-column-visible="true"
+		    action-column-visible="!menu.readOnlyMode"
 		    action-column-icon="'icon-ellipsis-horizontal'"
 		    action-column-title=""
 		    action-column-method=""
 
 		    first-row-action-icon="'icon-pencil'"
-		    first-row-action-title="'Редактировать компанию'|localize"
+		    first-row-action-title="'Редактировать организацию'|localize"
 		    first-row-action-method="company.edit(item)"
 		    
 		    second-row-action-icon="'icon-remove'"
-		    second-row-action-title="'Удалить компанию'|localize"
-		    second-row-action-method="company.delete(item)"
+		    second-row-action-title="'Удалить организацию'|localize"
+		    second-row-action-method="company.remove(item)"
 		    
 		    forcibly-update="company.forciblyUpdate"
 		/>
@@ -43,33 +56,29 @@
 	</div>
 </div>
 
-<div class="row-fluid" ng-show="company.items.length==0 || company.selectedItems.length==0">
-	<div class="span1">
-	</div>
-	<div class="span10" style="text-align: center;">
-		<i ng-bind="'Выберите компанию для отображения подробной информации.'|localize"></i>
-	</div>
-	<div class="span1">
-	</div>
+<div class="row-fluid" ng-show="company.items.length==0 || company.selectedItems.length==0" style="text-align: center;">
+	<i ng-bind="'Выберите организацию для отображения подробной информации.'|localize"></i>
 </div>	
 
 <div class="row-fluid" ng-hide="company.items.length==0 || company.selectedItems.length==0">
-	<div class="span1">
+	 <div class="span1">
 	</div>
 	<div class="span10">
 		 <tabset>
 			<tab heading="{{'Информация'|localize}}">
 				<div class="row-fluid">
 					<div class="span6">
-						<p><span class="spnTitle" ng-bind="'Полное название компании'|localize"></span>: <span ng-bind="company.selectedItems[0].fullName"></span></p>
+						<p><span class="spnTitle" ng-bind="'Полное название организации'|localize"></span>: <span ng-bind="company.selectedItems[0].fullName"></span></p>
 						<p><span class="spnTitle" ng-bind="'Юридический адрес'|localize"       ></span>: <span ng-bind="company.selectedItems[0].legalAddress"></span></p>
 						<p><span class="spnTitle" ng-bind="'Почтовый адрес'|localize"          ></span>: <span ng-bind="company.selectedItems[0].mailAddress"></span></p>
-						<p><span class="spnTitle" ng-bind="'Веб-сайт компании'|localize"       ></span>: <a target="_blank" style="text-decoration: none;" ng-href="{{'http://' + company.selectedItems[0].site}}" title="{{company.selectedItems[0].site}}"><i ng-bind="company.selectedItems[0].site.substring(0,25)"></i></a></p>
+						<p><span class="spnTitle" ng-bind="'Веб-сайт организации'|localize"       ></span>: <a target="_blank" style="text-decoration: none;" ng-href="{{'http://' + company.selectedItems[0].site}}" title="{{company.selectedItems[0].site}}"><i ng-bind="company.selectedItems[0].site.substring(0,25)"></i></a></p>
 						</br>
 						<p><span class="spnTitle" ng-bind="'Контакт'|localize"></span>: <span ng-bind="company.selectedItems[0].contact.lastName + ' ' + company.selectedItems[0].contact.firstName + ' ' + company.selectedItems[0].contact.middleName"></span></p>
-						<p><span class="spnTitle" ng-bind="'Email'"           ></span>: <span ng-bind="company.selectedItems[0].contact.email"></span></p>
-						<p><span class="spnTitle" ng-bind="'Телефон'|localize"></span>: <span ng-bind="company.selectedItems[0].contact.phone"></span></p>
-						<p><span class="spnTitle" ng-bind="'Skype'"           ></span>: <span ng-bind="company.selectedItems[0].contact.skype"></span></p>
+						<p>
+							<span><i class="icon-envelope" style="font-size: 0.9em;"></i> {{company.selectedItems[0].contact.email}}</span>
+							<span ng-hide="company.selectedItems[0].contact.phone==''" style="padding-left:12px"><i class="icon-phone"></i> {{company.selectedItems[0].contact.phone}}</span>
+							<span ng-hide="company.selectedItems[0].contact.skype==''" style="padding-left:12px"><i class="icon-skype"></i> {{company.selectedItems[0].contact.skype}}</span>
+						</p>
 					</div>
 					<div class="span6">
 						<p><span class="spnTitle" ng-bind="'КПП'|localize"  title="{{'Код причины постановки на учёт'|localize}}"                ></span>: <span ng-bind="company.selectedItems[0].kpp"></span></p>
@@ -88,6 +97,13 @@
 	</div>
 </div>
 </br>
-<stcalert data="company.alert" span-right="1" span-middle="10" span-left="1"/>
-]]></CSP>
+<div class="row-fluid">
+	<div class="span1">
+	</div>
+	<div class="span10">
+		<stcalert data="company.alert"/>
+	</div>
+	<div class="span1">
+	</div>
+</div>]]></CSP>
 </Export>

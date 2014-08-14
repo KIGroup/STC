@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/CompanySrvc.js" application="/csp/six/" default="1"><![CDATA[
+<CSP name="stc/js/services/CompanySrvc.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //dddв
 
@@ -12,40 +12,44 @@ servicesModule.factory('CompanySrvc', function(DALSrvc) {
 	
 	return {
 	    /* Получить короткую информацию о компаниях */
-        getAllCompaniesShortInfo: function(){
-            return DALSrvc.getPromise('get', StcAppSetting.user + '/json/allCompaniesShortInfo', null);
+        getAll: function(){
+            return DALSrvc.getPromise('get', StcAppSetting.user + '/json/company', null);
         },
-                /* Получить короткую информацию о компаниях */
-        getAllCompaniesFullInfo: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
+        /* Получить короткую информацию о компаниях */
+        getAllForGrid: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, status){
             var first = pageSize * (pageCurr - 1) + 1;
             var obj = {sqlName: sqlName, 
                        isDown: isDown, 
                        first: first, 
                        last: first + pageSize - 1,
                        searchSqlName: searchSqlName, 
-                       searchText: searchText};
+                       searchText: searchText,
+                       status: status};
 
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/allCompaniesFullInfo', obj);
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/company/grid', obj);
         },
         /* Получить короткую информацию о компаниях */
-        getCompany: function(id){
+        get: function(id){
             return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/company/' + id, null);
         },
-        /* Сохранить данные компании по коду доступа к заявке */
-        saveCompanyByCode: function(company, accessCode){
-            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/saveCompany', {company: company, order: {code: accessCode}});
-        },
         /* Сохранить компанию из заявки */
-        saveCompanyFromOrder: function(company, orderId){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/saveCompanyFromOrder', {company: company, orderId: orderId});
+        saveFromOrder: function(company, orderId){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/company/order', {company: company, orderId: orderId, isOrder: true});
+        },
+        /* Сохранить компанию из заявки от слушателя*/
+        saveFromOrderNewStudent: function(company, orderId){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/company/order', {company: company, orderId: orderId, isOrder: false});
         },
         /* Сохранить данные компании | создать*/
-        saveCompany: function(company){
-            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/saveCompany', company);
+        save: function(company){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/company', company);
         },
         /* Удалить компанию*/
-        deleteCompany: function(id){
-            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/company/'+id, null);
+        remove: function(id){
+            return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/company/' + id, null);
+        },
+        changeContact: function(data){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/company/contact/change', data);
         }
 
     }

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.DeepSee.KPI.TrainingPoints">
+<Description>
+Stc.DeepSee.KPI.TrainingPoints</Description>
+<Super>%DeepSee.KPI</Super>
+<TimeCreated>63246,4017.552393</TimeCreated>
+
+<Parameter name="DOMAIN">
+</Parameter>
+
+<Parameter name="RESOURCE">
+</Parameter>
+
+<XData name="KPI">
+<Description>
+Этот блок XData содержит определение KPI</Description>
+<XMLNamespace>http://www.intersystems.com/deepsee/kpi</XMLNamespace>
+<Data><![CDATA[
+<kpi xmlns="http://www.intersystems.com/deepsee/kpi"
+ name="TrainingPointsKPI" sourceType="sql"
+ caption="TrainingPointsKPI"
+ sql=""
+>
+<property name="ID"         columnNo="1"/>
+<property name="Course"     columnNo="2"/>
+<property name="City"       columnNo="3"/>
+<property name="Street"     columnNo="4"/>
+<property name="Room"       columnNo="5"/>
+<property name="DateStart"  columnNo="6"/>
+<property name="DateFinish" columnNo="7"/>
+<property name="Teacher"    columnNo="8"/>
+<property name="StudentsCount"   columnNo="9"/>
+<property name="SubGroupsCount"  columnNo="10"/>
+<property name="Latitude"    columnNo="11"/>
+<property name="Longitude"   columnNo="12"/>
+<property name="IsCompleted" columnNo="13"/>
+
+<filter name="Course" sql="SELECT Name->Value As Name FROM Stc_Data.Course ORDER BY Name"/>
+<filter name="CompanyType" sql="SELECT Name->Value As Name FROM Stc_Data.CompanyType"/>
+<filter name="Status"/>
+<filter name="Year" sql="SELECT DISTINCT DATEPART('YEAR',DateStart) as Name FROM Stc_Data.Training ORDER BY Name"/>
+<filter name="Teacher" sql="SELECT DISTINCT %EXACT(Teacher->FullName) as FullName FROM Stc_Data.Training ORDER BY FullName"/>
+<filter name="Company" sql="SELECT DISTINCT %EXACT(SubGroups->Payer->ShortName->Value) as ShortName FROM Stc_Data.Training_SubGroups ORDER BY ShortName"/>
+</kpi>
+]]></Data>
+</XData>
+
+<Method name="%OnGetSQL">
+<Description>
+Return an SQL statement to execute.</Description>
+<FormalSpec><![CDATA[&pSQL:%String]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set pSQL = ..GetSql(..%filterValues.Year, ..%filterValues.Status, ..%filterValues.Course, ..%filterValues.Teacher, ..%filterValues.Company, ..%filterValues.CompanyType)
+	set ^temp("kpisql") = pSQL
+	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetSql">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>year,status,course,teacher,company,companyType</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set whereCondition = ""
+	
+	// ГОД
+	if (year '= "")	set whereCondition = ..GetSqlConditionForFilter(whereCondition, "DATEPART('YEAR', tr.DateStart) "_..GetMultiValueFromFilter(year))
+	
+	// СТАТУС
+	if (status '= "") set whereCondition = ..GetSqlConditionForFilter(whereCondition, "tr.IsCompleted = "_status)
+	
+	// КУРС
+	if (course '= "") set whereCondition = ..GetSqlConditionForFilter(whereCondition, "tr.Course->Name->Value "_..GetMultiValueFromFilter(course))
+		
+	// ПРЕПОДАВАТЕЛЬ
+	if (teacher '= "") set whereCondition = ..GetSqlConditionForFilter(whereCondition, "tr.Teacher->FullName "_..GetMultiValueFromFilter(teacher))
+	
+	// ОРГАНИЗАЦИЯ
+	if (company '= "") set whereCondition = ..GetSqlConditionForFilter(whereCondition, "0 < (SELECT COUNT(SubGroups) FROM Stc_Data.Training_SubGroups WHERE Training = tr.ID AND SubGroups->Payer->ShortName->Value "_..GetMultiValueFromFilter(company))
+	
+	// ТИП ОРГАНИЗАЦИИ
+	if (companyType '= "") set whereCondition = ..GetSqlConditionForFilter(whereCondition, "0 < (SELECT COUNT(SubGroups) FROM Stc_Data.Training_SubGroups WHERE Training = tr.ID AND SubGroups->Payer->Type->Name->Value='"_companyType_"')")
+	
+	
+	quit $replace(##class(Stc.DeepSee.KPI.Utils).GetStringFromXData("sql", ..%ClassName(1)), ":WHERECondition", whereCondition)
+]]></Implementation>
+</Method>
+
+<Method name="GetSqlConditionForFilter">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>whereCondition,customCondition</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	if (whereCondition = ""){
+		quit "WHERE "_customCondition
+	}
+	
+	quit whereCondition_" AND "_customCondition
+]]></Implementation>
+</Method>
+
+<Method name="GetMultiValueFromFilter">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>value</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set not = ""
+	if ($FIND(value, "%NOT") '= 0){
+			set not = "NOT"
+			set value = $REPLACE(value, "%NOT ", "")
+	}
+	
+	quit not_" IN ('"_$REPLACE($REPLACE($REPLACE(value,"{",""),"}",""), ",", "','")_"')"
+]]></Implementation>
+</Method>
+
+<Method name="%OnGetFilterMembers">
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[pFilter:%String,*pMembers:%List,pSearchKey:%String="",pDataSourceName:%String="",&pFilterValues:%String]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    Set status = $$$OK
+
+    Try {
+        If (pFilter = "Status") {
+            Set pMembers($I(pMembers)) = $LB(##class(Stc.Utils.Msg).GetMsg("completed"),1)
+            Set pMembers($I(pMembers)) = $LB(##class(Stc.Utils.Msg).GetMsg("uncompleted"),0)
+        }
+    }
+    Catch(ex) {
+        Set status = ex.AsStatus()
+    }
+
+    Quit status
+]]></Implementation>
+</Method>
+
+<XData name="sql">
+<Data><![CDATA[
+<xml><![CDATA[
+SELECT
+tr.ID, 
+tr.Course->Name->Value As Course,
+tr.City->Name->Value As City,
+tr.Street->Value As Street,
+tr.Room As Room,
+TO_CHAR(tr.DateStart,'DD-MM-YYYY'),
+TO_CHAR(tr.DateFinish,'DD-MM-YYYY'),
+tr.Teacher->FullName ||', '|| tr.Teacher->Email As Teacher,
+(SELECT COUNT(Students) FROM Stc_Data.SubGroup_Students WHERE SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training = tr.ID)) As StudentsCount,
+(SELECT COUNT(SubGroups) FROM Stc_Data.Training_SubGroups WHERE Training = tr.ID) As SubGroupsCount,
+tr.Latitude,
+tr.Longitude,
+tr.IsCompleted
+FROM Stc_Data.Training as tr :WHERECondition
+]]]]><![CDATA[></xml>
+]]></Data>
+</XData>
+</Class>
+</Export>

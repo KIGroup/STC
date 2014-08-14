@@ -23,10 +23,10 @@
 <XData name="ClassXData">
 <Data><![CDATA[
 <ClassXData>
-<Course><Name>8DB0DA1D-CEA2-4AF1-A76D-4D43B3E85D8C</Name><Hours>2</Hours><Days>2</Days><IsInUse>1</IsInUse><ProgramUrl>www.google.com</ProgramUrl></Course>
-<Course><Name>8755EEEA-7CD3-4A38-AFB5-4C2B3BACB5A2</Name><Hours>3</Hours><Days>3</Days><IsInUse>1</IsInUse><ProgramUrl>www.ya.ru</ProgramUrl></Course>
-<Course><Name>DA1F3202-AF35-48C2-9607-3037ACCE95FE</Name><Hours>4</Hours><Days>4</Days><IsInUse>1</IsInUse><ProgramUrl>www.mail.ru</ProgramUrl></Course>
-<Course><Name>C8557895-60FE-4DF8-9121-30ED714E88FE</Name><Hours>5</Hours><Days>3</Days><IsInUse>0</IsInUse><ProgramUrl>www.sql.ru</ProgramUrl></Course>
+<Course><Name>8DB0DA1D-CEA2-4AF1-A76D-4D43B3E85D8C</Name><Hours>2</Hours><Days>2</Days><IsInUse>1</IsInUse><ProgramUrl>www.google.com</ProgramUrl><Currency>1</Currency><Price>4000</Price></Course>
+<Course><Name>8755EEEA-7CD3-4A38-AFB5-4C2B3BACB5A2</Name><Hours>3</Hours><Days>3</Days><IsInUse>1</IsInUse><ProgramUrl>www.ya.ru</ProgramUrl><Currency>1</Currency><Price>300</Price></Course>
+<Course><Name>DA1F3202-AF35-48C2-9607-3037ACCE95FE</Name><Hours>4</Hours><Days>4</Days><IsInUse>1</IsInUse><ProgramUrl>www.mail.ru</ProgramUrl><Currency>1</Currency><Price>200</Price></Course>
+<Course><Name>C8557895-60FE-4DF8-9121-30ED714E88FE</Name><Hours>5</Hours><Days>3</Days><IsInUse>0</IsInUse><ProgramUrl>www.sql.ru</ProgramUrl><Currency>1</Currency><Price>100</Price></Course>
 </ClassXData>
 ]]></Data>
 </XData>

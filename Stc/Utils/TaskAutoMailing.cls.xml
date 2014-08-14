@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Utils.TaskAutoMailing">
+<Super>%SYS.Task.Definition</Super>
+<TimeCreated>63231,11522.229906</TimeCreated>
+
+<Method name="OnTask">
+<Description><![CDATA[
+This method is responsible for executing the task.<br>
+At the scheduled time, the Task Manager creates an instance of this object,
+sets any property values using the stored "settings" for the task, and then
+invokes this method to execute the task.<br>
+In order to execute a real task, override this method in a subclass.]]></Description>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	quit ..Main()
+]]></Implementation>
+</Method>
+
+<Method name="Main">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	do ..StudentsAutoMailing()
+	
+	do ..TeacherAutoMailing()
+	
+	do ..CuratorAutoMailing()
+	
+	do ..FeedBackAutoMailing()
+	
+	do ..OrdersAutoMailing()
+	
+	do ..MailingGroupsAutoMailing()
+	
+	job ##class(Stc.Data.MailingJournal).StartSending()
+	
+	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="StudentsAutoMailing">
+<Description>
+Send notification to all students in the training</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		set diffDays = ##class(Stc.Data.Settings).GetMailingStudentsDays()
+			
+		&sql(DECLARE TrCur CURSOR FOR 
+				SELECT ID
+			 	FROM Stc_Data.Training
+			 	WHERE IsCompleted = 0 AND IsStudentsAutoMailing = 1 AND DATEDIFF(D,{fn NOW()}, DateStart) = :diffDays)	
+			
+		&sql(OPEN TrCur)
+		for  
+		{	
+			&sql(FETCH TrCur INTO :trId) 
+			quit:(SQLCODE '= 0)
+			
+			do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing StudentsAutoMailing()", "Start; TrID="_trId)
+			
+			set tr = ##class(Stc.Data.Training).%OpenId(trId)
+			set mail = ##class(Stc.Utils.Email).GetMailForTrainingStudents(tr)
+			
+			set contacts = ##class(Stc.Data.Training).GetStudentsContacts(trId)
+			
+			do ##class(Stc.Data.MailingJournal).CreateAll(contacts, mail.subject, mail.message)
+			
+			if (contacts.Count() > 0) {
+				set tr.IsStudentsAutoMailing = $$$NO
+				do tr.%Save()
+			}						
+		}
+			
+		&sql(CLOSE TrCur)		
+	}
+	catch(ex){
+		set st = ex.AsStatus()
+		do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing StudentsAutoMailing() Catch", $System.Status.GetErrorText(st))
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="TeacherAutoMailing">
+<Description>
+Send notification to training teacher</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		set diffDays = ##class(Stc.Data.Settings).GetMailingTeacherDays()
+		
+		&sql(DECLARE Tr2Cur CURSOR FOR 
+				SELECT ID
+			 	FROM Stc_Data.Training
+			 	WHERE IsCompleted = 0 AND IsTeacherAutoMailing = 1 AND DATEDIFF(D,{fn NOW()}, DateStart) = :diffDays)	
+			
+		&sql(OPEN Tr2Cur)
+		for  
+		{	
+			&sql(FETCH Tr2Cur INTO :trId) 
+			quit:(SQLCODE '= 0)
+			
+			do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing TeacherAutoMailing()", "Start; TrID="_trId)
+			
+			set tr = ##class(Stc.Data.Training).%OpenId(trId)
+				
+			set mail = ##class(Stc.Utils.Email).GetMailForTrainingTeacher(tr)
+				
+			do ##class(Stc.Data.MailingJournal).Create(tr.Teacher.Email, tr.Teacher.FullName, mail.subject, mail.message)
+			
+			set tr.IsTeacherAutoMailing = 0
+			do tr.%Save()						
+		}
+			
+		&sql(CLOSE Tr2Cur)
+	}
+	catch(ex){
+		set st = ex.AsStatus()
+		do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing TeacherAutoMailing() Catch", $System.Status.GetErrorText(st))
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="CuratorAutoMailing">
+<Description>
+Send notification to training curator</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		set diffDays = ##class(Stc.Data.Settings).GetMailingCuratorDays()
+			
+		&sql(DECLARE Tr3Cur CURSOR FOR 
+				SELECT ID
+			 	FROM Stc_Data.Training
+			 	WHERE IsCompleted = 0 AND IsCuratorAutoMailing = 1 AND DATEDIFF(D,{fn NOW()}, DateStart) = :diffDays)	
+			
+		&sql(OPEN Tr3Cur)
+		for  
+		{	
+			&sql(FETCH Tr3Cur INTO :trId) 
+			quit:(SQLCODE '= 0)
+			
+			do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing CuratorAutoMailing()", "Start; TrID="_trId)
+			
+			set tr = ##class(Stc.Data.Training).%OpenId(trId)
+			
+			set mail = ##class(Stc.Utils.Email).GetMailForTrainingCurator(tr)
+			
+			do ##class(Stc.Data.MailingJournal).Create(tr.CuratorEmail, tr.CuratorFullName.Value, mail.subject, mail.message)
+			
+			set tr.IsCuratorAutoMailing = 0
+			do tr.%Save()						
+		}
+			
+		&sql(CLOSE Tr3Cur)
+	
+	}
+	catch(ex){
+		set st = ex.AsStatus()
+		do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing CuratorAutoMailing() Catch", $System.Status.GetErrorText(st))
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="FeedBackAutoMailing">
+<Description>
+Send feedback link to students in the training</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		&sql(DECLARE Tr4Cur CURSOR FOR 
+				SELECT ID
+			 	FROM Stc_Data.Training
+			 	WHERE IsFeedBackAutoMailing = 1 AND DATEDIFF(D,{fn NOW()}, DateFinish) = 0)	
+			
+		&sql(OPEN Tr4Cur)
+		for  
+		{	
+			&sql(FETCH Tr4Cur INTO :trId) 
+			quit:(SQLCODE '= 0)
+			
+			do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing FeedBackAutoMailing()", "Start; TrID="_trId)
+			
+			set tr = ##class(Stc.Data.Training).%OpenId(trId)
+			
+			set mail = ##class(Stc.Utils.Email).GetMailForTrainingFeedBack(tr)
+					
+			set contacts = ##class(Stc.Data.Training).GetStudentsContacts(trId)
+			
+			do ##class(Stc.Data.MailingJournal).CreateAll(contacts, mail.subject, mail.message)
+			
+			if (contacts.Count() > 0) {
+				set tr.IsFeedBackAutoMailing = $$$NO
+				do tr.%Save()
+			}								
+		}
+			
+		&sql(CLOSE Tr4Cur)
+	}
+	catch(ex){
+		set st = ex.AsStatus()
+		do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing FeedBackAutoMailing() Catch", $System.Status.GetErrorText(st))
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="OrdersAutoMailing">
+<Description>
+Send </Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		&sql(DECLARE Tr5Cur CURSOR FOR 
+				SELECT ID
+			 	FROM Stc_Data.Training
+			 	WHERE IsCompleted = 0 AND IsOrdersAutoMailing = 1)	
+			
+		&sql(OPEN Tr5Cur)
+		for  
+		{	
+			&sql(FETCH Tr5Cur INTO :trId) 
+			quit:(SQLCODE '= 0)
+			
+			do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing OrdersAutoMailing()", "Start; TrID="_trId)
+			
+			set tr = ##class(Stc.Data.Training).%OpenId(trId)
+			
+			set mail = ##class(Stc.Utils.Email).GetMailForTrainingOrders(tr)
+					
+			set contacts = ##class(Stc.Data.Order).GetContactsForCourse(tr.Course.%Id())
+			
+			do ##class(Stc.Data.MailingJournal).CreateAll(contacts, mail.subject, mail.message)
+			
+			if (contacts.Count() > 0) {
+				set tr.IsOrdersAutoMailing = $$$NO
+				do tr.%Save()
+			}								
+		}
+			
+		&sql(CLOSE Tr5Cur)
+	}
+	catch(ex){
+		set st = ex.AsStatus()
+		do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing OrdersAutoMailing() Catch", $System.Status.GetErrorText(st))
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+
+<Method name="MailingGroupsAutoMailing">
+<Description>
+Send </Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		&sql(DECLARE MTGCur CURSOR FOR 
+				SELECT ID
+			 	FROM Stc_Data.MailingTrainingGroup
+			 	WHERE IsAutoMailing = 1 AND Training->IsCompleted = 0)	
+			
+		&sql(OPEN MTGCur)
+		for  
+		{	
+			&sql(FETCH MTGCur INTO :mtgId) 
+			quit:(SQLCODE '= 0)
+			
+			do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing MailingGroupsAutoMailing()", "Start; mtgID="_mtgId)
+			
+			set mtg = ##class(Stc.Data.MailingTrainingGroup).%OpenId(mtgId)
+			
+			set mail = ##class(Stc.Data.MailingGroup).GetMail(mtg.MGroup.%Id(), mtg.Training.%Id())
+			set contacts = ##class(Stc.Data.MailingGroup).GetMailingItemsContacts(mtg.MGroup.%Id())
+			
+			for i=1:1:contacts.Count(){
+				set mItem = ##class(Stc.Data.MailingItemApproved).%OpenId(contacts.GetAt(i).id)
+				if '$ISOBJECT(mItem) continue
+					
+				set msg = $REPLACE(mail.message, "%AccessCode", $system.Encryption.Base64Encode(mItem.AccessCode))
+				do ##class(Stc.Data.MailingJournal).Create(contacts.GetAt(i).email, contacts.GetAt(i).name, mail.subject, msg)	
+			}
+					
+			if (contacts.Count() > 0) {
+				set mtg.IsAutoMailing = $$$NO
+				set mtg.MailingIsCompleted = $$$YES
+				do mtg.%Save()
+			}							
+		}
+		&sql(CLOSE MTGCur)
+	}
+	catch(ex){
+		set st = ex.AsStatus()
+		do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing MailingGroupsAutoMailing() Catch", $System.Status.GetErrorText(st))
+	}
+	
+	quit st
+]]></Implementation>
+</Method>
+</Class>
+</Export>

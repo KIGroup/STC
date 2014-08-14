@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.MailingGroup">
+<Description>
+Mailing group. Group has items (subscribers)</Description>
+<Super>%Persistent</Super>
+<TimeCreated>63387,80192.527554</TimeCreated>
+
+<Property name="Name">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Description">
+<Type>%Text</Type>
+<Required>1</Required>
+<Parameter name="MAXLEN" value="5000"/>
+</Property>
+
+<Property name="MailSubject">
+<Description>
+Message pattern</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="MailMessage">
+<Description>
+Message pattern</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="AccessCode">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Index name="AccessCodeIdx">
+<Properties>AccessCode</Properties>
+<Unique>1</Unique>
+</Index>
+
+<Method name="ConvertToProxyObject">
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	set proxy.id = ..%Id()
+	set proxy.code = ..AccessCode
+	set proxy.name = ..Name
+	set proxy.description = ..Description
+	set proxy.mailSubject = ..MailSubject.Value
+	set proxy.mailMessage = ..MailMessage.Value
+	
+	&sql(SELECT COUNT(ID) INTO :proxy.itemsCount FROM Stc_Data.MailingItemApproved WHERE MGroup = :proxy.id)
+	
+	quit proxy
+]]></Implementation>
+</Method>
+
+<Method name="Save">
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[data:%RegisteredObject,&st=$$$OK]]></FormalSpec>
+<ReturnType>MailingGroup</ReturnType>
+<Implementation><![CDATA[
+	#dim group As MailingGroup = ""
+	
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Save", 
+	"ID="_data.id_
+	"; Name="_$ZCONVERT(data.name, "I","UTF8")_
+	"; Descr="_$ZCONVERT(data.description, "I","UTF8"))
+	
+	if (data.id = ""){
+		set group = ..%New()
+		set group.AccessCode = $SYSTEM.Util.CreateGUID()
+		set group.MailSubject = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.mailSubject, "I", "UTF8"))
+		set group.MailMessage = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.mailMessage, "I", "UTF8"))
+	}
+	else{
+		set group = ..%OpenId(data.id)
+		set group.MailSubject.Value = $ZCONVERT(data.mailSubject, "I", "UTF8")
+		set group.MailMessage.Value = $ZCONVERT(data.mailMessage, "I", "UTF8")
+	}
+	
+	set group.Name = $ZCVT(data.name, "I", "UTF8")
+	set group.Description = $ZCVT(data.description, "I", "UTF8")
+	
+	set st = group.%Save()
+	
+	quit group
+]]></Implementation>
+</Method>
+
+<Method name="Delete">
+<Description>
+Delete group</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>grId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set group = ..%OpenId(grId, 4)
+
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Delete", "ID="_grId_"; Name="_group.Name)
+	
+	set st = ##class(Stc.Data.Localization.LText).Delete(group.MailSubject.%Id())
+	quit:$$$ISERR(st) st
+		
+	set st = ##class(Stc.Data.Localization.LText).Delete(group.MailMessage.%Id())
+	quit:$$$ISERR(st) st
+	
+	set st = ..%DeleteId(grId, 4)
+	quit:$$$ISERR(st) ##class(Stc.Utils.Msg).GetErrorStatus("deleteMailingGroup", " | "_st) 
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="GetAnnouncementGroup">
+<Description>
+Get special group for subscribers</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>MailingGroup</ReturnType>
+<Implementation><![CDATA[
+	if (..AccessCodeIdxExists("Announcement")){
+		quit ..AccessCodeIdxOpen("Announcement")
+	}
+	
+	set gr = ..%New()
+	set gr.Name = "Подписка на анонсы"
+	set gr.Description = "Подписка на анонсы"
+	set gr.AccessCode = "Announcement"
+	set gr.MailSubject = ##class(Stc.Data.Localization.LText).Create("")
+	set gr.MailMessage = ##class(Stc.Data.Localization.LText).Create("")
+	do gr.%Save()
+	
+	quit gr
+]]></Implementation>
+</Method>
+
+<Method name="GetMailingItemsContacts">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>grId:%String</FormalSpec>
+<ReturnType>%ListOfObjects</ReturnType>
+<Implementation><![CDATA[
+	set contacts = ##class(%ListOfObjects).%New()
+	
+	&sql(DECLARE MItemCur CURSOR FOR 
+			 	 SELECT ID, FullName, Email 
+			 	 FROM Stc_Data.MailingItemApproved
+			 	 WHERE MGroup = :grId
+			 	 ORDER BY FullName)	
+			
+	&sql(OPEN MItemCur)
+	for  
+	{	
+		&sql(FETCH MItemCur INTO :id, :fullName, :email) 
+		quit:(SQLCODE '= 0)
+		
+		set item = ##class(%ZEN.proxyObject).%New()
+		set item.id = id
+		set item.name = fullName
+		set item.email = email
+		do contacts.Insert(item)	
+	}
+	&sql(CLOSE MItemCur)
+	
+	quit contacts
+]]></Implementation>
+</Method>
+
+<Method name="GetMail">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>grId:%String,trId:%String</FormalSpec>
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set tr = ##class(Training).%OpenId(trId)
+	set group = ..%OpenId(grId)
+	
+	set mail = ##class(%ZEN.proxyObject).%New()
+	set mail.subject = group.MailSubject.Value
+	set mail.message = ##class(Stc.Utils.Email).GetMailMessageWithTrainingData(group.MailMessage.Value, tr)
+	
+	set mail.message = $REPLACE(mail.message, "%JoinUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_tr.%Id()_"/order")
+	set mail.message = $REPLACE(mail.message, "%UnsubscribeUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/mailing/subscription/%AccessCode")
+	
+	quit mail
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.MailingGroupD</DataLocation>
+<DefaultData>MailingGroupDefaultData</DefaultData>
+<IdLocation>^Stc.Data.MailingGroupD</IdLocation>
+<IndexLocation>^Stc.Data.MailingGroupI</IndexLocation>
+<StreamLocation>^Stc.Data.MailingGroupS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="MailingGroupDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Name</Value>
+</Value>
+<Value name="3">
+<Value>Description</Value>
+</Value>
+<Value name="4">
+<Value>AccessCode</Value>
+</Value>
+<Value name="5">
+<Value>MailSubjectPattern</Value>
+</Value>
+<Value name="6">
+<Value>MailMessagePattern</Value>
+</Value>
+<Value name="7">
+<Value>MailSubject</Value>
+</Value>
+<Value name="8">
+<Value>MailMessage</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllPersonsCtrl.js" application="/csp/six/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllPersonsCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //dd
 
 /*===========================================================================================
 Все сотрудники
 ===========================================================================================*/
-
 controllersModule.controller('AllPersonsCtrl', function($scope, $location, $routeParams, $filter, OrderSrvc, PersonSrvc, CertificateSrvc, UtilsSrvc){
     $scope.menu.selectMenu('persons');
     
@@ -15,7 +14,6 @@ controllersModule.controller('AllPersonsCtrl', function($scope, $location, $rout
         $scope.pageStore.persons = {grid:{}};
 
     $scope.personTable = {items:[]};
-    $scope.orderTable = {items:[], active: true};
     $scope.trainingTable = {items:[]};
     $scope.certificateTable = {items:[]};
     $scope.courseTable = {items:[]};
@@ -24,33 +22,18 @@ controllersModule.controller('AllPersonsCtrl', function($scope, $location, $rout
 
     // Инициализация всех таблиц
     $scope.personTable.init = function(){
-        // ORDER --------------------------
-        $scope.orderTable.columns = [
-                          {name: 'Курс'}, 
-                          {name: 'Город'}, 
-                          {name: 'Дата обучения'}, 
-                          {name: 'Компания'}, 
-                          {name: 'Дата создания'}];
-       
-        $scope.orderTable.properties = [
-                          {name:'course'}, 
-                          {name:'city'}, 
-                          {name:'trainingDate', filter: 'date', filterParam: $filter('localize')('d MMMM y', $scope.menu.lang)}, 
-                          {name:'company'}, 
-                          {name:'createdTS', filter: 'date', filterParam: $filter('localize')('d MMMM y, HH:mm:ss', $scope.menu.lang)}];
-        
         // CERTIFICATES --------------------------
         $scope.certificateTable.columns = [
                           {name: 'Курс'}, 
-                          {name: 'Номер'}, 
-                          {name: 'Дата создания'}, 
-                          {name: 'Статус'}];
+                          {name: 'Номер', captionStyle: {textAlign: 'center', width: '80px'}}, 
+                          {name: 'Дата создания', captionStyle: {width: '150px'}}, 
+                          {name: 'Статус', captionStyle: {textAlign: 'center', width: '80px'}}];
         
         $scope.certificateTable.properties = [
                           {name:'course'}, 
-                          {name:'number'}, 
+                          {name:'number', cellStyle: {textAlign: 'center'}}, 
                           {name:'createdDate', filter: 'date', filterParam: $filter('localize')('d MMMM y', $scope.menu.lang)}, 
-                          {name:'status', 
+                          {name:'status', cellStyle: {textAlign: 'center'}, 
                           getCssClass: function(item){
                                           return 'label ' + (item.isPrinted == 0 ? 'label-important' : 'label-success');             
                                         }, 
@@ -62,20 +45,17 @@ controllersModule.controller('AllPersonsCtrl', function($scope, $location, $rout
         $scope.trainingTable.columns = [
                           {name: 'Курс'}, 
                           {name: 'Город'}, 
-                          {name: 'Дата начала'}, 
-                          {name: 'Дата окончания'}, 
-                          {name: 'Время начала'}, 
-                          {name: 'Время окончания'}, 
-                          {name: 'Статус'}];
+                          {name: 'Дата начала / окончания', captionStyle: {textAlign: 'center', width: '200px'}}, 
+                          {name: 'Статус', captionStyle: {textAlign: 'center', width: '90px'}}];
         
         $scope.trainingTable.properties = [
                           {name: 'course'}, 
                           {name: 'city'}, 
-                          {name: 'dateStart', filter: 'date', filterParam: $filter('localize')('d MMMM y', $scope.menu.lang)}, 
-                          {name: 'dateFinish', filter: 'date', filterParam: $filter('localize')('d MMMM y', $scope.menu.lang)}, 
-                          {name: 'timeStart', filter: 'time'},
-                          {name: 'timeFinish', filter: 'time'}, 
-                          {name: 'status', 
+                          {name: 'dates', cellStyle: {textAlign: 'center'},
+                          calculate: function(item){
+                                        item.dates = UtilsSrvc.getTwoDate(item.dateStart, item.dateFinish);
+                                      }}, 
+                          {name: 'status', cellStyle: {textAlign: 'center'},
                           getCssClass: function(item){
                                             return 'label ' + (item.isCompleted == 0 ? 'label-info' : 'label-success');
                           },
@@ -86,13 +66,13 @@ controllersModule.controller('AllPersonsCtrl', function($scope, $location, $rout
         // COURSES --------------------------
         $scope.courseTable.columns = [
                           {name: 'Название'}, 
-                          {name: 'Часы'}, 
-                          {name: 'Дни'}];
+                          {name: 'Часы', captionStyle: {textAlign: 'center', width: '50px'}}, 
+                          {name: 'Дни', captionStyle: {textAlign: 'center', width: '50px'}}];
         
         $scope.courseTable.properties = [
                           {name:'name'}, 
-                          {name:'hours'},
-                          {name:'days'}];
+                          {name:'hours', cellStyle: {textAlign: 'center'}},
+                          {name:'days', cellStyle: {textAlign: 'center'}}];
         
         // COMPANIES --------------------------
         $scope.companyTable.columns = [
@@ -102,34 +82,34 @@ controllersModule.controller('AllPersonsCtrl', function($scope, $location, $rout
         $scope.companyTable.properties = [
                           {name:'shortName'}, 
                           {name:'legalAddress'}];
+        
         // PERSONS --------------------------
         $scope.personTable.columns = [
-                          {name: 'Фамилия',  sqlName: 'LastName->Value',           isSorted: true,  isSortable: true, isDown: true, isSearched: true,  isSearchable: true},
-                          {name: 'Имя',      sqlName: 'FirstName->Value',          isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
-                          {name: 'Отчество', sqlName: 'MiddleName->Value',         isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
-                          {name: 'Компания', sqlName: 'Company->ShortName->Value', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
-                          {name: 'Email',    sqlName: 'Email',              isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
-                          {name: 'Телефон',  sqlName: 'Phone',              isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
-                          {name: 'Skype',    sqlName: 'Skype',              isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true}];
+                          {name: 'Фамилия', sqlName: 'LastName->Value', isSorted: true,  isSortable: true, isDown: true, isSearched: true,  isSearchable: true},
+                          {name: 'Имя', sqlName: 'FirstName->Value', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Отчество', sqlName: 'MiddleName->Value', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Организация', sqlName: 'Company->ShortName->Value', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Email', sqlName: 'Email', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Телефон', sqlName: 'Phone', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Skype', sqlName: 'Skype', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true}];
         $scope.personTable.properties = [{name:'lastName'}, {name:'firstName'}, {name:'middleName'}, {name:'company.shortName'}, {name:'email'}, {name:'phone'}, {name:'skype'}];
         $scope.personTable.pageSize = parseInt(UtilsSrvc.getPropertyValue($scope.pageStore, 'persons.grid.pageSize', 10));
         $scope.personTable.pageCurr = parseInt(UtilsSrvc.getPropertyValue($scope.pageStore, 'persons.grid.pageCurr', 1));
         $scope.personTable.itemsTotal = 0;
         $scope.personTable.selectedItems = [];
         $scope.personTable.multiSelectMode = false;
-		    $scope.personTable.forciblyUpdate = 0;
+		$scope.personTable.forciblyUpdate = 0;
 		
         $scope.personTable.loadItems($scope.personTable.pageCurr, $scope.personTable.pageSize, "LastName->Value", true, "", ""); 
     };
 
     // Загрузить сотрудников
     $scope.personTable.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
-        PersonSrvc.getAllPersons(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText).then(
+        PersonSrvc.getAllForGrid(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText).then(
             function(data){
                 $scope.personTable.pageTotal = Math.ceil(data.itemsTotal / pageSize);
                 $scope.personTable.itemsTotal = data.itemsTotal;
                 $scope.personTable.items = data.items;
-
                                 
                 if ($scope.personTable.selectedItems && $scope.personTable.items && $scope.personTable.selectedItems.length == 0 && $scope.personTable.items.length != 0){
                     $scope.personTable.selectedItems[0] = $scope.personTable.items[0];
@@ -147,30 +127,19 @@ controllersModule.controller('AllPersonsCtrl', function($scope, $location, $rout
           return;
         
         $scope.other.loads = 0; 
-        $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'companyTable', 'getPersonCompanies');
-        $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'courseTable', 'getPersonCourses');
-        $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'certificateTable', 'getPersonCertificates');
-        $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'trainingTable', 'getPersonTrainings');
-        $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'orderTable', 'getPersonOrders');
+        $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'companyTable', 'getCompanies');
+        $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'courseTable', 'getCourses');
+        $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'certificateTable', 'getCertificates');
+        $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'trainingTable', 'getTrainings');
     });
 
     // Загрузка связи сотрудника
     $scope.other.loadItems = function(id, tableName, funcName){
-        /*
-        if ($scope.personTable.selectedItems[0][tableName]){
-            $scope[tableName].items = $scope.personTable.selectedItems[0][tableName];
-
-            $scope.other.loads++;
-            return;          
-        }
-        */
         $scope[tableName].items = [];
         PersonSrvc[funcName](id).then(
             function(data){
                 $scope[tableName].items = data;
-                //$scope.personTable.selectedItems[0][tableName] = data;
-
-                $scope.other.loads++;
+                $scope.other.loads++; 
             },
             function(response){
                 $scope.personTable.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
@@ -180,17 +149,13 @@ controllersModule.controller('AllPersonsCtrl', function($scope, $location, $rout
 
     // Определить какая связь есть, ту  вкладку и сделать активной
     $scope.$watch('other.loads', function(){
-        if ($scope.other.loads != 5){
+        if ($scope.other.loads != 4){
             return;
         }
         
         var flag = false;
 
-        if ($scope.orderTable.items.length > 0){
-            $scope.orderTable.active = true;
-            flag = true;
-        }
-        else if ($scope.trainingTable.items.length > 0){
+        if ($scope.trainingTable.items.length > 0){
             $scope.trainingTable.active = true;
             flag = true;
         }
@@ -214,18 +179,18 @@ controllersModule.controller('AllPersonsCtrl', function($scope, $location, $rout
 
     // Добавить сотрудника
     $scope.personTable.add = function(){
-        $location.path('/person').search({type:'empl'});
+        $location.path('/person');
     };
 
     // Ред. сотрудника
     $scope.personTable.edit = function(item){
-        $location.path('/person').search({type:'empl', id: item.id});
+        $location.path('/person/' + item.id);
     };
 
     // Удалить сотрудника
-    $scope.personTable.delete = function(item){
+    $scope.personTable.remove = function(item){
         function del(){
-            PersonSrvc.deletePerson($scope.personTable.selectedItems[0].id).then(
+            PersonSrvc.deleteById($scope.personTable.selectedItems[0].id).then(
                 function(data){
                     $scope.personTable.alert = UtilsSrvc.getAlert('Готово!', 'Сотрудник удален.', 'success', true);
                     $scope.personTable.forciblyUpdate++;
@@ -236,36 +201,29 @@ controllersModule.controller('AllPersonsCtrl', function($scope, $location, $rout
         }
 
         UtilsSrvc.openMessageBox($filter('localize')('Удалить сотрудника') + " '" + item.lastName + "'", "Удалить сотрудника из базы данных?", del);
-
     };
 
-    // Открыть заявку, в которой есть сотрудник
-    $scope.orderTable.open = function(item){
-        $location.path('/updateorder').search({code:item.code});
-    };
 
     // Открыть обучение, в котором есть сотрудник
     $scope.trainingTable.open = function(item){
-        $location.path('/training').search({id:item.id});
+        $location.path('/training/' + item.id);
     };
     
     // Открыть компанию, контактом которой является сотрудник
     $scope.companyTable.edit = function(item){
-        $location.path('/company').search({id:item.id});
+        $location.path('/company/' + item.id);
     };
     
     // Открыть курс, который преподает
     $scope.courseTable.edit = function(item){
-        $location.path('/course').search({id:item.id});
+        $location.path('/course/' + item.id);
     };
 
     // Изменить статус сертификата сотрудника
     $scope.certificateTable.print = function(item){
         CertificateSrvc.print(item.number).then(
             function(data){
-                //$scope.other.alert = UtilsSrvc.getAlert('Готово!', 'Статус сертификата изменен.', 'success', true);
-                //item.certificateTable = null;
-                $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'certificateTable', 'getPersonCertificates');
+                $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'certificateTable', 'getCertificates');
                 $scope.other.loads--;
             },
             function(response){

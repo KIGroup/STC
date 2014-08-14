@@ -2,13 +2,13 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Person">
 <Description>
-Сотрудник компании, преподаватель, слушатель</Description>
+Organization's employee, teacher or student</Description>
 <Super>%Persistent,%XML.Adaptor</Super>
 <TimeCreated>63098,13287.442379</TimeCreated>
 
 <Property name="Company">
 <Description>
-Сотрудник компании</Description>
+Organization</Description>
 <Type>Stc.Data.Company</Type>
 <Cardinality>one</Cardinality>
 <Inverse>Employees</Inverse>
@@ -20,7 +20,7 @@
 
 <Property name="FirstName">
 <Description>
-Имя</Description>
+First name</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 <Parameter name="XMLREFERENCE" value="ID"/>
@@ -28,7 +28,7 @@
 
 <Property name="LastName">
 <Description>
-Фамилия</Description>
+Last name</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 <Parameter name="XMLREFERENCE" value="ID"/>
@@ -36,29 +36,37 @@
 
 <Property name="MiddleName">
 <Description>
-Отчество</Description>
+Middle name</Description>
 <Type>Stc.Data.Localization.LText</Type>
 <Required>1</Required>
 <Parameter name="XMLREFERENCE" value="ID"/>
 </Property>
 
+<Property name="FullName">
+<Description>
+Calculated property, returns string - full name - need for deepsee</Description>
+<Type>%String</Type>
+<Calculated>1</Calculated>
+<SqlComputeCode>set {FullName} = ##class({%%CLASSNAME}).GetFullName({%%ID})</SqlComputeCode>
+<SqlComputed>1</SqlComputed>
+</Property>
+
 <Property name="Email">
 <Description>
-Почта</Description>
+Email</Description>
 <Type>%String</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Phone">
 <Description>
-Телефон</Description>
+Phone</Description>
 <Type>%String</Type>
-<Required>1</Required>
 </Property>
 
 <Property name="Skype">
 <Description>
-Скайп</Description>
+Skype</Description>
 <Type>%String</Type>
 </Property>
 
@@ -71,9 +79,23 @@
 <Unique>1</Unique>
 </Index>
 
+<Method name="CheckDeletePrivilege">
+<Description>
+Check delete privilege</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	SET SQLCODE=""
+	&sql(%CHECKPRIV DELETE ON Stc_Data.Person)
+	if (SQLCODE = 100) quit ##class(Stc.Utils.Msg).GetErrorStatus("NoPrivilege", " USERNAME="_$USERNAME)
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+
 <Method name="ConvertToProxyObject">
 <Description>
-Конвертация в proxyObject для JSON </Description>
+Convert to proxyObject (for JSON)</Description>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()
@@ -93,11 +115,19 @@
 
 <Method name="Save">
 <Description>
-Сохранение / создание сотрудника</Description>
+Create or save modified person</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
 <ReturnType>Stc.Data.Person</ReturnType>
 <Implementation><![CDATA[
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Save", 
+	"ID="_data.id_
+	"; LastName="_$ZCONVERT(data.lastName, "I","UTF8")_
+	"; FirstName="_$ZCONVERT(data.firstName, "I","UTF8")_
+	"; MiddleName="_$ZCONVERT(data.middleName, "I","UTF8")_
+	"; Email="_data.email_
+	"; Phone="_data.phone)
+
 	if (data.id '= ""){
 		set person = ..%OpenId(data.id,3,.status)
 		set person.LastName.Value = $ZCONVERT(data.lastName, "I","UTF8")
@@ -127,12 +157,14 @@
 
 <Method name="Delete">
 <Description>
-Удаление сотрудника, если это возможно</Description>
+Delete person if it is available</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>personId:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set person = ..%OpenId(personId, 4)
+
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Delete", "ID="_personId_"; LastName="_person.LastName.Value_"; FirstName="_person.FirstName.Value_"; Email="_person.Email)
 	
 	set st = ##class(Stc.Data.Localization.LText).Delete(person.LastName.%Id())
 	quit:$$$ISERR(st) st
@@ -152,7 +184,7 @@
 
 <Method name="IsEditable">
 <Description>
-Проверка перед удалением, если есть ссылки на сотрудника, то не удаляем.</Description>
+Checking before deletion</Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>personId:%String,checkForDelete:%Boolean=0</FormalSpec>
 <ReturnType>%Boolean</ReturnType>
@@ -160,39 +192,49 @@
 	set id = ""
 	set countId = ""
 	
-	// Проверка: является ли контактом какой-либо компании	
+	// Checking: if is contact person of organization	
 	&sql(SELECT ID INTO:id FROM Stc_Data.Company WHERE Contact = :personId)
 	if (id = ""){
-		// Проверка: входит ли в подгруппу в обучении
+		// Checking: if in subgroup of training
 		&sql(SELECT ID INTO:id FROM Stc_Data.SubGroup_Students WHERE Students = :personId)
 		
 		if (id = ""){
-			// Проверка: является ли преподавателем
+			// Checking: if is teacher
 			&sql(SELECT ID INTO:id FROM Stc_Data.Course_Teachers WHERE Teachers = :personId)	
 
 			if (id = ""){
-				// Проверка: есть ли у него сертификаты
+				// Checking: if has certificates
 				&sql(SELECT ID INTO:id FROM Stc_Data.Certificate WHERE Student = :personId)	
-	
-				if (id = ""){
-					// Проверка: встречается ли больше 2 раз в списке слушателей в заявке
-					&sql(SELECT COUNT(ID) INTO:countId FROM Stc_Data.OrderApproved_Students WHERE Students = :personId)
-				}
 			}
 		}
 	}
 	
- 	// Проверка на доступ к изменению (checkForDelete=0):
- 	// Не встречается в др. таблицах и в заявках не более 1 раза => можно изменить
+ 	// Check for modification access (checkForDelete=0):
+ 	// Not used in other tables and in one app only => can modify
  	
- 	// Проверка на доступ к удалению (checkForDelete=1):
- 	// Не встречается во всех таблицах => можно удалить
+ 	// Check for deleting access (checkForDelete=1):
+ 	// Not used in other tables => can delete
  	
  	set maxOrderCount = 2
  	if (checkForDelete = 1) set maxOrderCount = 1
 	if (id = "") && (countId < maxOrderCount) quit 1
 	
 	quit 0
+]]></Implementation>
+</Method>
+
+<Method name="GetFullName">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>id</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set fullName = "-"
+	
+	&sql(SELECT LastName->Value || ' ' || FirstName->Value INTO :fullName
+	     FROM Stc_Data.Person
+	     WHERE ID = :id)
+	
+	quit fullName
 ]]></Implementation>
 </Method>
 

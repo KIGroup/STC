@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.DeepSee.KPI.TrainingStudents">
+<Description>
+Stc.DeepSee.KPI.TrainingStudents</Description>
+<Super>%DeepSee.KPI</Super>
+<TimeCreated>63246,4363.099841</TimeCreated>
+
+<Parameter name="DOMAIN">
+</Parameter>
+
+<Parameter name="RESOURCE">
+</Parameter>
+
+<XData name="KPI">
+<Description>
+Этот блок XData содержит определение KPI</Description>
+<XMLNamespace>http://www.intersystems.com/deepsee/kpi</XMLNamespace>
+<Data><![CDATA[
+<kpi xmlns="http://www.intersystems.com/deepsee/kpi"
+ name="TrainingStudentsKPI" sourceType="sql"
+ caption="TrainingStudentsKPI"
+ sql=""
+>
+<property name="FullName" displayName="FullName" columnNo="1"/>
+<property name="Company" displayName="Company" columnNo="2"/>
+<property name="Email" displayName="Email" columnNo="3"/>
+<property name="Phone" displayName="Phone" columnNo="4"/>
+
+<filter name="Training" displayName="Training" filterProperty=""/>
+</kpi>
+]]></Data>
+</XData>
+
+<Method name="%OnGetSQL">
+<Description>
+Return an SQL statement to execute.</Description>
+<FormalSpec><![CDATA[&pSQL:%String]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	if (..%filterValues.Training = "") {
+		set pSQL = "SELECT NULL WHERE 1>2"
+		quit $$$OK
+	}
+	elseif (..%filterValues.Training = "0"){
+		set pSQL = "SELECT NULL"
+		quit $$$OK
+	}
+	
+	//=============== Костыль =======================
+	/*
+	Назначение и причина:
+	Если таблица scorecard пустая и мы нажали на обучение, у которого нет студентов, то всё ок.
+	Если мы нажали на обучение со студентами - таблица заполнилась -> OK.
+	Потом мы нажали на обучение без студентов, то тут начинается зависание виджета, т.е. заполненную таблицу scorecard не получается обновить - обнулить, т.к. студентов нет.
+	
+	Поэтому приходится проверять - если подгрупп нет, то выводить 1 запись-пустую. Но может зависнуть, если подгруппа есть, а в ней студентов нет, но это возникает крайне редко, а запрос усложнять не стоит. 
+	*/
+	set trainingId = ..%filterValues.Training
+	set sgroupsCount = 0
+	&sql(SELECT COUNT(SubGroups) INTO :sgroupsCount FROM Stc_Data.Training_SubGroups WHERE Training = :trainingId)
+	if (sgroupsCount = 0){
+		set pSQL = "SELECT NULL"
+		quit $$$OK
+	}
+	//===============================================	
+	
+	set pSQL = $replace(##class(Stc.DeepSee.KPI.Utils).GetStringFromXData("sql", ..%ClassName(1)), ":trainingId", ..%filterValues.Training)
+	
+	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<XData name="sql">
+<Data><![CDATA[
+<xml><![CDATA[
+SELECT 
+Students->LastName->Value || ' ' || SUBSTRING(Students->FirstName->Value,1,1) || '. ' || SUBSTRING(ISNULL(Students->MiddleName->Value,''),1,1) || '. ' As FullName,
+Students->Company->ShortName->Value As Company,
+Students->Email,
+Students->Phone
+FROM Stc_Data.SubGroup_Students
+WHERE SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training = :trainingId)
+ORDER BY Company, FullName
+]]]]><![CDATA[></xml>
+]]></Data>
+</XData>
+</Class>
+</Export>

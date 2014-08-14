@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.CompanyType">
+<Super>%Persistent,%XML.Adaptor</Super>
+<TimeCreated>63267,64468.392265</TimeCreated>
+
+<Property name="Name">
+<Description>
+Type name</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+<Parameter name="XMLREFERENCE" value="ID"/>
+</Property>
+
+<Property name="Code">
+<Description>
+Type code</Description>
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Index name="CodeIdx">
+<Properties>Code</Properties>
+<Unique>1</Unique>
+</Index>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.CompanyTypeD</DataLocation>
+<DefaultData>CompanyTypeDefaultData</DefaultData>
+<IdLocation>^Stc.Data.CompanyTypeD</IdLocation>
+<IndexLocation>^Stc.Data.CompanyTypeI</IndexLocation>
+<StreamLocation>^Stc.Data.CompanyTypeS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="CompanyTypeDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Name</Value>
+</Value>
+<Value name="3">
+<Value>Code</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

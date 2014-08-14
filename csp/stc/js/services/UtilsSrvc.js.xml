@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/services/UtilsSrvc.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/services/UtilsSrvc.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
 //ddвddddв
 
@@ -8,7 +8,7 @@
 Utils
 ===========================================================================================*/
 
-servicesModule.factory('UtilsSrvc', function($dialog, $filter) {
+servicesModule.factory('UtilsSrvc', function($dialog, $filter, DALSrvc) {
 	
 	return {
 		openMessageBox: function(title, msg, func){
@@ -34,6 +34,11 @@ servicesModule.factory('UtilsSrvc', function($dialog, $filter) {
                     cssClass: 'alert alert-' + eventType,
                     visible: visible};
     	},
+    	getAlertLabel: function(msg, eventType){
+        	return {msg: $filter('localize')(msg),
+                    cssClass: eventType,
+                    visible: true};
+    	},
         getIndexes: function(array, objField, valueField){
             var indexes = [];
             
@@ -52,6 +57,34 @@ servicesModule.factory('UtilsSrvc', function($dialog, $filter) {
 	        	
 	        return $filter('date')(date, 'dd-MM-y');
 	    },
+	    getTwoDate: function(start, finish){
+	    	var startText = $filter('convertCacheDate')(start, $filter('localize')('d MMMM y'));
+            var finishText = $filter('convertCacheDate')(finish, $filter('localize')('d MMMM y'));
+				
+			var startYearBorder = startText.indexOf(" ", 3);
+			if (startYearBorder > 0){
+				startText = startText.substring(0, startYearBorder); 	
+			}
+				
+            return startText + ' - ' +  finishText;
+	    },
+        getMailPattern: function(type){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/mail/pattern/' + type, null);
+        },
+        sendEmail: function(data){
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/mail/send', data);
+        },
+        getAllLogsForGrid: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
+            var first = pageSize * (pageCurr - 1) + 1;
+            var obj = {sqlName: sqlName, 
+                       isDown: isDown, 
+                       first: first, 
+                       last: first + pageSize - 1,
+                       searchSqlName: searchSqlName, 
+                       searchText: searchText};
+
+            return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/log/grid', obj);
+        },
         getPropertyValue: function (item, propertyStr, defaultValue){
             var value;
             defaultValue = defaultValue ? defaultValue : '';

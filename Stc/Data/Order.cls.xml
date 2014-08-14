@@ -2,103 +2,272 @@
 <Export generator="Cache" version="25">
 <Class name="Stc.Data.Order">
 <Description>
-Заявка на обучение</Description>
+Application for training</Description>
 <Super>%Persistent</Super>
 <TimeCreated>63098,13893.822559</TimeCreated>
 
-<Property name="City">
+<Parameter name="DSTIME">
 <Description>
-Город обучения</Description>
-<Type>Region</Type>
+Cube update parameter</Description>
+<Default>auto</Default>
+</Parameter>
+
+<Property name="LastName">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="FirstName">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="MiddleName">
+<Type>%String</Type>
+</Property>
+
+<Property name="Email">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Phone">
+<Type>%String</Type>
+</Property>
+
+<Property name="Skype">
+<Type>%String</Type>
+</Property>
+
+<Property name="Company">
+<Description>
+Organization</Description>
+<Type>Company</Type>
+</Property>
+
+<Property name="CompanyString">
+<Description>
+Short name of new organization</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="500"/>
+</Property>
+
+<Property name="CompanySite">
+<Description>
+Website of new organization</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="500"/>
+</Property>
+
+<Property name="StudentsNumber">
+<Description>
+Students count</Description>
+<Type>%Integer</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="Course">
 <Description>
-Курс обучения</Description>
+Training course</Description>
 <Type>Course</Type>
 <Required>1</Required>
 </Property>
 
-<Property name="Company">
-<Description>
-Компания</Description>
-<Type>Company</Type>
-</Property>
-
-<Property name="TrainingDate">
-<Description>
-Дата обучения</Description>
-<Type>%Date</Type>
-<Parameter name="FORMAT" value="3"/>
-</Property>
-
 <Property name="CreatedTS">
 <Description>
-Дата и время создания заявки</Description>
+Application creation timestamp</Description>
 <Type>%TimeStamp</Type>
 <Required>1</Required>
 </Property>
 
 <Property name="OrderStatus">
 <Description>
-Статус заявки</Description>
+Application status</Description>
 <Type>OrderStatus</Type>
 <Required>1</Required>
 </Property>
 
-<Property name="Latitude">
+<Method name="SynchronizeCube">
 <Description>
-Широта</Description>
-<Type>%Float</Type>
-<Required>1</Required>
-</Property>
-
-<Property name="Longitude">
-<Description>
-Долгота</Description>
-<Type>%Float</Type>
-<Required>1</Required>
-</Property>
-
-<Property name="Partner">
-<Description>
-Партнер</Description>
-<Type>%String</Type>
-</Property>
-
-<Method name="Delete">
-<Description>
-Удаление любой заявки. Удалются все студенты из заявки и локализация для заявки</Description>
+Synchronization cube</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>id:%String</FormalSpec>
-<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	do ##class(%DeepSee.Utils).%SynchronizeCube("OrderCube",0)
+]]></Implementation>
+</Method>
+
+<Method name="ConvertToProxyObject">
+<Description>
+Convert to proxyObject (for JSON)</Description>
+<ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
-	if (##class(OrderApproved).%ExistsId(id) = $$$OK){
-		set order = ..%OpenId(id,4)
-		set key = ""
-		for i=1:1:order.Students.Count(){
-			set key = order.Students.Next(key)
-			do order.Students.RemoveAt(key)
-			
-			set st = ##class(Person).Delete(key)
-			if $$$ISERR(st) RETURN st
-		}
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	
+	set proxy.id = ..%Id()
+	set proxy.status = ..OrderStatus.ConvertToProxyObject()
+	set proxy.course = ..Course.ConvertToProxyObject()
+	
+	set proxy.contact = ##class(%ZEN.proxyObject).%New()
+	set proxy.contact.lastName = ..LastName
+	set proxy.contact.firstName = ..FirstName
+	set proxy.contact.middleName = ..MiddleName
+	set proxy.contact.email = ..Email
+	set proxy.contact.phone = ..Phone
+	set proxy.contact.skype = ..Skype
+	
+	
+	set proxy.contact.company = ##class(%ZEN.proxyObject).%New()
+
+	if (..Company) {
+		set proxy.contact.company = ..Company.ConvertToProxyObject(1)
+		set proxy.contact.company.contact = ..Company.Contact.ConvertToProxyObject()
 	}
-	elseif (##class(OrderDirty).%ExistsId(id) = $$$OK){
-		set order = ..%OpenId(id,4)
-		
-		set st = ##class(Stc.Data.Localization.LText).Delete(order.LastName.%Id())
-		quit:$$$ISERR(st) st
-		
-		set st = ##class(Stc.Data.Localization.LText).Delete(order.FirstName.%Id())
-		quit:$$$ISERR(st) st
-		
-		set st = ##class(Stc.Data.Localization.LText).Delete(order.MiddleName.%Id())
-		quit:$$$ISERR(st) st
+	else{
+		set proxy.contact.company.shortName = ..CompanyString
+		set proxy.contact.company.site = ..CompanySite	
 	}
 	
-	quit ..%DeleteId(id,4)
+	set proxy.createdTS = ..CreatedTS
+	set proxy.studentsNumber = ..StudentsNumber
+	
+	quit proxy
+]]></Implementation>
+</Method>
+
+<Method name="Create">
+<Description>
+Create "new" application</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[data:%RegisteredObject,&st]]></FormalSpec>
+<ReturnType>Order</ReturnType>
+<Implementation><![CDATA[
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Create", 
+	"CourseId="_data.course.id_
+	"; Contact="_$ZCONVERT(data.contact.lastName, "I","UTF8")_" "_$ZCONVERT(data.contact.firstName, "I","UTF8")_" "_$ZCONVERT(data.contact.middleName, "I","UTF8")_
+	"; Email="_$ZCONVERT(data.contact.email, "I","UTF8")_
+	"; Phone="_$ZCONVERT(data.contact.phone, "I","UTF8")_
+	"; Skype="_$ZCONVERT(data.contact.skype, "I","UTF8")_
+	"; Company="_$ZCONVERT(data.contact.company.notexist.name, "I", "UTF8")_
+	"; StudentsNumber="_data.studentsNumber)
+	
+	set order = ..%New()
+	
+	set order.Course = ##class(Course).%OpenId(data.course.id)
+		
+	set order.FirstName = $ZCONVERT(data.contact.firstName, "I","UTF8")
+	set order.LastName = $ZCONVERT(data.contact.lastName, "I","UTF8")
+	set order.MiddleName = $ZCONVERT(data.contact.middleName, "I","UTF8")
+		
+	set order.Email = $ZCONVERT(data.contact.email, "I","UTF8")
+	set order.Phone = $ZCONVERT(data.contact.phone, "I","UTF8")
+	set order.Skype = $ZCONVERT(data.contact.skype, "I","UTF8")
+	set order.StudentsNumber = data.studentsNumber
+		
+	if (data.contact.company.exist){ 
+		set order.Company = ##class(Company).%OpenId(data.contact.company.exist.id)
+	}
+	
+	if '(order.Company){
+		// If organization is not selected then search by name,
+		// if found - use it, else - new company with name
+		set compName = $ZCONVERT(data.contact.company.notexist.name, "I","UTF8")
+		set compId = ""
+		&sql(SELECT ID INTO:compId FROM Stc_Data.Company WHERE ShortName->Value  = :compName)
+		
+		if (##class(Stc.Data.Company).%ExistsId(compId) = 0) {
+			set order.CompanyString = $ZCONVERT(data.contact.company.notexist.name, "I","UTF8")
+			set order.CompanySite = $REPLACE($REPLACE($ZCONVERT(data.contact.company.notexist.site, "I","UTF8"),"http://",""), "https://","")
+		}
+		else{
+			set order.Company = ##class(Stc.Data.Company).%OpenId(compId,3,.st)
+		}
+	} 
+
+	set order.CreatedTS = $ZDATETIME($ZTS, 3)
+	set order.OrderStatus = ##class(OrderStatus).CodeIdxOpen("New")
+		
+	set st = order.%Save()
+		
+	quit order
+]]></Implementation>
+</Method>
+
+<Method name="GetContactsForCourse">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>crId:%String</FormalSpec>
+<ReturnType>%ListOfObjects</ReturnType>
+<Implementation><![CDATA[
+	set contacts = ##class(%ListOfObjects).%New()
+	
+	&sql(DECLARE OrdContactCur CURSOR FOR 
+			 	 SELECT ID, LastName || ' ' || FirstName, Email 
+			 	 FROM Stc_Data.Order
+			 	 WHERE Course = :crId AND OrderStatus->Code = 'Approved'
+			 	 ORDER BY LastName)	
+			
+	&sql(OPEN OrdContactCur)
+	for  
+	{	
+		&sql(FETCH OrdContactCur INTO :id, :fullName, :email) 
+		quit:(SQLCODE '= 0)
+		
+		set item = ##class(%ZEN.proxyObject).%New()
+		set item.id = id
+		set item.name = fullName
+		set item.email = email
+		do contacts.Insert(item)	
+	}
+	&sql(CLOSE OrdContactCur)
+	
+	quit contacts
+]]></Implementation>
+</Method>
+
+<Method name="CloseOrdersByTraining">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>trId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	&sql(DECLARE GrCur CURSOR FOR
+			SELECT trSg.Training->Course, trSg.SubGroups, trSg.SubGroups->Payer, (SELECT COUNT(sgSt.Students) FROM Stc_Data.SubGroup_Students as sgSt WHERE sgSt.SubGroup = trSg.SubGroups)
+			FROM Stc_Data.Training_SubGroups as trSg
+			WHERE trSg.Training = :trId)
+	&sql(OPEN GrCur)
+	for
+	{
+		&sql(FETCH GrCur INTO :courseId, :sgId, :payerId, :stCount)
+		quit:(SQLCODE '= 0)
+		
+		&sql(DECLARE OrdCur CURSOR FOR
+				SELECT ID
+				FROM Stc_Data.Order
+				WHERE OrderStatus->Code = 'Approved' AND Company = :payerId AND Course = :courseId)
+		&sql(OPEN OrdCur)
+		for
+		{
+			&sql(FETCH OrdCur INTO :ordId)
+			quit:(SQLCODE '= 0)
+					
+			set order = ..%OpenId(ordId)
+					
+			if (order.StudentsNumber <= stCount){
+				set stCount = stCount - order.StudentsNumber
+				set order.StudentsNumber = 0
+				set order.OrderStatus = ##class(Stc.Data.OrderStatus).CodeIdxOpen("Closed")
+			}
+			else{
+				set order.StudentsNumber = order.StudentsNumber - stCount
+				set stCount = 0
+			}
+					
+			$$$THROWONERROR(st, order.%Save())
+		}
+		&sql(CLOSE OrdCur)
+	}
+	&sql(CLOSE GrCur)
+	
+	quit st
 ]]></Implementation>
 </Method>
 
@@ -115,31 +284,43 @@
 <Value>%%CLASSNAME</Value>
 </Value>
 <Value name="2">
-<Value>City</Value>
+<Value>LastName</Value>
 </Value>
 <Value name="3">
-<Value>Course</Value>
+<Value>FirstName</Value>
 </Value>
 <Value name="4">
-<Value>TrainingDate</Value>
+<Value>MiddleName</Value>
 </Value>
 <Value name="5">
-<Value>CreatedTS</Value>
+<Value>Email</Value>
 </Value>
 <Value name="6">
-<Value>Company</Value>
+<Value>Phone</Value>
 </Value>
 <Value name="7">
-<Value>OrderStatus</Value>
+<Value>Skype</Value>
 </Value>
 <Value name="8">
-<Value>Partner</Value>
+<Value>Company</Value>
 </Value>
 <Value name="9">
-<Value>Latitude</Value>
+<Value>CompanyString</Value>
 </Value>
 <Value name="10">
-<Value>Longitude</Value>
+<Value>CompanySite</Value>
+</Value>
+<Value name="11">
+<Value>StudentsNumber</Value>
+</Value>
+<Value name="12">
+<Value>Course</Value>
+</Value>
+<Value name="13">
+<Value>CreatedTS</Value>
+</Value>
+<Value name="14">
+<Value>OrderStatus</Value>
 </Value>
 </Data>
 </Storage>

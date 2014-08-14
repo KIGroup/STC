@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/Stc_DeepSee_3.css" application="/csp/stc/" default="1"><![CDATA[
+/* @class="Stc.DeepSee.TrainingPointsMapPortlet"d */
+
+.portletDiv {
+	padding: 5px;
+	font-size: 25px;
+}
+
+.gm-style-iw{
+	max-height:200px!important;
+
+    overflow-y:auto;
+}
+
+.trainingTable{
+	width: 400px;
+	border-color: #dddddd;
+	
+}
+
+.trainingTable tr td, .trainingTable tr th{
+	padding: 0 4px 0 4px;
+}
+
+.trainingTable tr th{
+	text-align: left;
+}
+
+.trainingTable tr:hover{
+	background-color: #c4e3f3;
+	cursor: pointer;
+}
+
+#trTableTrHeader:hover{
+	background-color: white;
+	cursor: default;
+}
+
+.infoWindowContent{
+	font-size:12px; 
+	font-family:arial;
+}
+
+.trTableSingle_Btn{
+	background-color: white;
+	cursor: pointer;
+	border: none;
+	font-style: italic;
+	color: blue;
+	padding: 2px;
+	margin-top: 7px;
+}
+
+.trTableSingle_Btn:hover{
+	color: darkblue;
+}
+/* EOF */]]></CSP>
+</Export>

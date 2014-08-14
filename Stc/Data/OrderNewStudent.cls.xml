@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="Stc.Data.OrderNewStudent">
+<Description>
+Application from student for given training</Description>
+<Super>%Persistent</Super>
+<TimeCreated>63175,13882.849108</TimeCreated>
+
+<Property name="FirstName">
+<Description>
+First name</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="LastName">
+<Description>
+Last name</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="MiddleName">
+<Description>
+Middle name</Description>
+<Type>Stc.Data.Localization.LText</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Email">
+<Description>
+Email</Description>
+<Type>%String</Type>
+<Required>1</Required>
+<Parameter name="MAXLEN" value="500"/>
+</Property>
+
+<Property name="Phone">
+<Description>
+Phone</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="500"/>
+</Property>
+
+<Property name="Skype">
+<Description>
+Skype</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="500"/>
+</Property>
+
+<Property name="Company">
+<Description>
+Organization</Description>
+<Type>Company</Type>
+</Property>
+
+<Property name="CompanyString">
+<Description>
+Organization short name</Description>
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="500"/>
+</Property>
+
+<Property name="CreatedTS">
+<Description>
+Timastamp of application creation</Description>
+<Type>%TimeStamp</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="Training">
+<Description>
+Training</Description>
+<Type>Stc.Data.Training</Type>
+<Cardinality>one</Cardinality>
+<Inverse>NewStudents</Inverse>
+<Relationship>1</Relationship>
+<Required>1</Required>
+</Property>
+
+<Index name="TrainingIdx">
+<Properties>Training</Properties>
+</Index>
+
+<Method name="ConvertToProxyObject">
+<Description>
+Convert to proxyObject (for JSON)</Description>
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set proxy = ##class(%ZEN.proxyObject).%New()
+	set proxy.id = ..%Id()
+	set proxy.lastName = ..LastName.Value
+	set proxy.firstName = ..FirstName.Value
+	set proxy.middleName = ..MiddleName.Value
+	set proxy.email = ..Email
+	set proxy.phone = ..Phone
+	set proxy.skype = ..Skype
+	
+	set proxy.training = ##class(%ZEN.proxyObject).%New()
+	set proxy.training.id = ..Training.%Id()
+	
+	set proxy.company = ##class(%ZEN.proxyObject).%New()
+	
+	if (..Company) {
+		set proxy.company = ..Company.ConvertToProxyObject(1)
+		set proxy.company.contact = ..Company.Contact.ConvertToProxyObject()
+	}
+	else{
+		set proxy.company.shortName = ..CompanyString	
+	}
+	
+	set proxy.createdTS = ..CreatedTS
+	
+	quit proxy
+]]></Implementation>
+</Method>
+
+<Method name="Create">
+<Description>
+Create application</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
+<ReturnType>OrderNewStudent</ReturnType>
+<Implementation><![CDATA[
+	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Create", 
+	"; TrID="_data.trainingId_
+	"; LastName="_$ZCONVERT(data.contact.lastName, "I","UTF8")_
+	"; FirstName="_$ZCONVERT(data.contact.firstName, "I","UTF8")_
+	"; MiddleName="_$ZCONVERT(data.contact.lastName, "I","UTF8")_
+	"; Company="_$ZCONVERT(data.contact.company.notexist.name, "I","UTF8")_
+	"; Email="_data.contact.email_
+	"; Phone="_data.contact.phone_
+	"; Skype="_data.contact.skype)
+	
+	set order = ..%New()
+	
+	set order.Training = ##class(Stc.Data.Training).%OpenId(data.trainingId)
+	
+	if (order.Training.NewStudents.Count() > 30){
+		set status = ##class(Stc.Utils.Msg).GetErrorStatus("tooMuchOrderNewStudent") 
+		quit order
+	} 
+		
+	set order.FirstName = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.contact.firstName, "I","UTF8"), "Stc.Data.Localization.Translation;PersonLTextValue")
+	set order.LastName = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.contact.lastName, "I","UTF8"), "Stc.Data.Localization.Translation;PersonLTextValue")
+	set order.MiddleName = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.contact.middleName, "I","UTF8"), "Stc.Data.Localization.Translation;PersonLTextValue")
+	set order.Email = $ZCONVERT(data.contact.email, "I","UTF8")
+	set order.Phone = $ZCONVERT(data.contact.phone, "I","UTF8")
+	set order.Skype = $ZCONVERT(data.contact.skype, "I","UTF8")
+		
+	if (data.contact.company.exist) set order.Company = ##class(Company).%OpenId(data.contact.company.exist.id)
+		
+	if '(order.Company){
+		// If organization is not selected then search by name,
+		// if found - use it, else - new company with name
+		set compName = $ZCONVERT(data.contact.company.notexist.name, "I","UTF8")
+		set compId = ""
+		&sql(SELECT ID INTO:compId FROM Stc_Data.Company WHERE ShortName->Value  = :compName)
+		if (##class(Stc.Data.Company).%ExistsId(compId) = 0) {
+			set order.CompanyString = $ZCONVERT(data.contact.company.notexist.name, "I","UTF8")
+		}
+		else{
+			set order.Company = ##class(Stc.Data.Company).%OpenId(compId,3,.status)
+		}
+	} 
+
+	set order.CreatedTS = $ZDT($ZTS, 3)
+		
+	set status = order.%Save()
+		
+	quit order
+]]></Implementation>
+</Method>
+
+<Method name="Delete">
+<Description>
+Delete application with localization</Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>orderId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set order = ..%OpenId(orderId, 4, .sc)
+	
+	set st = ##class(Stc.Data.Localization.LText).Delete(order.LastName.%Id())
+	quit:$$$ISERR(st) st
+		
+	set st = ##class(Stc.Data.Localization.LText).Delete(order.FirstName.%Id())
+	quit:$$$ISERR(st) st
+		
+	set st = ##class(Stc.Data.Localization.LText).Delete(order.MiddleName.%Id())
+	quit:$$$ISERR(st) st
+	
+	set st = ..%DeleteId(orderId,4)
+	quit:$$$ISERR(st) ##class(Stc.Utils.Msg).GetErrorStatus("deleteOrderNewStudent", " | "_st) 
+	
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Stc.Data.OrderNewStudentD</DataLocation>
+<DefaultData>OrderNewStudentDefaultData</DefaultData>
+<IdLocation>^Stc.Data.OrderNewStudentD</IdLocation>
+<IndexLocation>^Stc.Data.OrderNewStudentI</IndexLocation>
+<StreamLocation>^Stc.Data.OrderNewStudentS</StreamLocation>
+<ExtentSize>100000</ExtentSize>
+<Data name="OrderNewStudentDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>FirstName</Value>
+</Value>
+<Value name="3">
+<Value>LastName</Value>
+</Value>
+<Value name="4">
+<Value>MiddleName</Value>
+</Value>
+<Value name="5">
+<Value>Email</Value>
+</Value>
+<Value name="6">
+<Value>Phone</Value>
+</Value>
+<Value name="7">
+<Value>Skype</Value>
+</Value>
+<Value name="8">
+<Value>Company</Value>
+</Value>
+<Value name="9">
+<Value>CompanyString</Value>
+</Value>
+<Value name="10">
+<Value>CreatedTS</Value>
+</Value>
+<Value name="11">
+<Value>Training</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>

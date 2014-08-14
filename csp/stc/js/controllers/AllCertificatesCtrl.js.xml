@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllCertificatesCtrl.js" application="/csp/four/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllCertificatesCtrl.js" application="/csp/stc/" default="1"><![CDATA[
 'use strict';
-//dd
+//ddd
 
 /*===========================================================================================
 Все сертификаты
@@ -18,20 +18,20 @@ controllersModule.controller('AllCertificatesCtrl', function($scope, $filter, $l
 
     $scope.cert.init = function(){
         $scope.cert.columns = [
-                          {name: 'Курс',          sqlName: 'Training->Course->Name->Value', isSorted: false, isSortable: true, isDown: true,  isSearched: true,  isSearchable: true},
-                          {name: 'Номер',         sqlName: 'Number',                        isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
-                          {name: 'Слушатель',     sqlName: 'Student->LastName->Value',      isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true},
-                          {name: 'Дата создания', sqlName: 'CreatedDate',                   isSorted: true,  isSortable: true, isDown: false, isSearched: false, isSearchable: false, filter: 'date'},
-                          {name: 'Статус',        sqlName: 'isPrinted',                     isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true}];
+                          {name: 'Курс', sqlName: 'Training->Course->Name->Value', isSorted: false, isSortable: true, isDown: true,  isSearched: true, isSearchable: true},
+                          {name: 'Номер', sqlName: 'Number', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true, captionStyle: {textAlign: 'center', width: '80px'}},
+                          {name: 'Слушатель', sqlName: 'Student->LastName->Value', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
+                          {name: 'Дата создания', sqlName: 'CreatedDate', isSorted: true,  isSortable: true, isDown: false, isSearched: false, isSearchable: false, filter: 'date', captionStyle: {width: '150px'}},
+                          {name: 'Статус', sqlName: 'isPrinted', isSorted: false, isSortable: true, isDown: true,  isSearched: false, isSearchable: true, captionStyle: {textAlign: 'center', width: '80px'}}];
         
         $scope.cert.properties = [{name:'training.course.name'}, 
-                                  {name:'number'},
+                                  {name:'number', cellStyle: {textAlign: 'center'}},
                                   {name:'student.fullName', 
                                   calculate: function(item){
                                                 item.student.fullName = item.student.lastName + ' ' + item.student.firstName + ' ' + item.student.middleName;
                                   }}, 
                                   {name:'date', filter: 'date', filterParam: $filter('localize')('d MMMM y')}, 
-                                  {name:'status', 
+                                  {name:'status', cellStyle: {textAlign: 'center'},
                                   getCssClass: function(item){
                                                 return 'label ' + (item.isPrinted == 0 ? 'label-important' : 'label-success');
                                               }, 
@@ -40,7 +40,7 @@ controllersModule.controller('AllCertificatesCtrl', function($scope, $filter, $l
                                   }}];
 
         $scope.cert.status = UtilsSrvc.getPropertyValue($scope.pageStore, 'certificates.status', 'All');
-        $scope.cert.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'certificates.grid.pageSize', 5);
+        $scope.cert.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'certificates.grid.pageSize', 10);
         $scope.cert.pageCurr = UtilsSrvc.getPropertyValue($scope.pageStore, 'certificates.grid.pageCurr', 1);
         $scope.cert.itemsTotal = 0;
         $scope.cert.selectedItems = [];
@@ -51,7 +51,7 @@ controllersModule.controller('AllCertificatesCtrl', function($scope, $filter, $l
 
     // Загрузка сертификатов
     $scope.cert.loadItems = function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText){
-        CertificateSrvc.getCertificates(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $scope.cert.status).then(
+        CertificateSrvc.getAllForGrid(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, $scope.cert.status).then(
             function(data){
                 $scope.cert.pageTotal = Math.ceil(data.itemsTotal / pageSize);
                 $scope.cert.itemsTotal = data.itemsTotal;
@@ -67,10 +67,11 @@ controllersModule.controller('AllCertificatesCtrl', function($scope, $filter, $l
             });
     };
 
+    // Сменить статус печати
     $scope.cert.print = function(item){
          CertificateSrvc.print(item.number).then(
             function(data){
-                //$scope.cert.alert = UtilsSrvc.getAlert('Готово!', 'Статус сертификата изменен.', 'success', true);
+                $scope.cert.alert = UtilsSrvc.getAlert('Готово!', 'Статус сертификата изменен.', 'success', true);
                 $scope.cert.forciblyUpdate++;
             },
             function(response){
@@ -78,12 +79,28 @@ controllersModule.controller('AllCertificatesCtrl', function($scope, $filter, $l
             });
     };
 
+    // Удалить сертификат
+    $scope.cert.remove = function(item){
+        function removeCert(){
+           CertificateSrvc.remove(item.number).then(
+              function(data){
+                  $scope.cert.forciblyUpdate++;
+                  $scope.cert.alert = UtilsSrvc.getAlert('Готово!', 'Сертификат удалён.', 'success', true);
+              },
+              function(response){
+                  $scope.cert.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+              });
+        };
+
+        UtilsSrvc.openMessageBox('Удалить сертификат', $filter('localize')("Удалить сертификат слушателя") + " '" + item.student.lastName + "'?", removeCert); 
+    };
+
     $scope.$watch('cert.status', function(){
         $scope.cert.forciblyUpdate++;
         $scope.pageStore.certificates.status = $scope.cert.status;
     });
 
-	$scope.cert.init();
+	  $scope.cert.init();
 });
 
 ]]></CSP>

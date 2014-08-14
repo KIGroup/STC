@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/js/controllers/OrderNewStudentCtrl.js" application="/csp/stc/" default="1"><![CDATA[
+'use strict';
+//dedddd
+
+/*===========================================================================================
+Создание заявки для одного слушателя
+===========================================================================================*/
+
+controllersModule.controller('OrderNewStudentCtrl', function($scope, $timeout, $filter, $routeParams, OrderSrvc, TrainingSrvc, CompanySrvc, UtilsSrvc){
+    $scope.menu.hide = true;
+    $scope.ordForm = {order:{}};
+
+    /* Инициализация */
+    $scope.ordForm.init = function(){
+        $scope.ordForm.btnDisabled = false;
+        $scope.ordForm.companies = [];
+        $scope.ordForm.orderCaption = $filter('localize')("Форма регистрации слушателя");
+        $scope.ordForm.trainingCaption = $filter('localize')("Подробнее о курсе");;
+        $scope.ordForm.btnClearShow = true;
+        $scope.ordForm.order.trainingId = $routeParams.training;
+    };
+
+    /* Подгрузить обучение */
+    $scope.ordForm.loadTraining = function(){
+        TrainingSrvc.getForUser($scope.ordForm.order.trainingId).then(
+            function(data){
+                $scope.ordForm.training = data;    
+                $scope.ordForm.training.dates = UtilsSrvc.getTwoDate(data.dateStart, data.dateFinish);
+                $scope.ordForm.training.urlAddGoogleCalendarEvent = TrainingSrvc.getUrlForCreateGoogleCalendarEvent(
+                                        data.course.name + '. '+ data.city.name,
+                                        data.dateGoogleCalendar,
+                                        data.city.name + ', ' + data.address.title,
+                                        {
+	                                        trainingId: data.id,
+                                            courseProgramUrl: 'http://' + data.course.programUrl,
+                                            city: data.city.name + ', ' + data.city.parentName + ', ' + data.city.greatParentName,
+                                            address: data.address.title + ', '+ data.room,
+                                            time: data.timeStart + ' - ' + data.timeFinish,
+                                            teacher: data.teacher.lastName + ' ' + data.teacher.firstName + ', ' + data.teacher.email,
+                                            curator: data.curator.fullName + ', ' + data.curator.phone + ', ' + data.curator.email,
+                                            otherInfo: data.otherInfo   
+                                        });
+
+                $scope.menu.brandCaption = $filter('localize')('Форма регистрации на обучение компании InterSystems по курсу "') + data.course.name + '" ';
+            	$scope.menu.appTitle = $scope.menu.brandCaption;
+            	
+            	callbackYmap = function() {
+				    var myMap = new ymaps.Map("map", {
+				            center: [data.address.lat, data.address.lng],
+				            zoom: 15,
+				            controls: ['zoomControl', 'typeSelector', 'fullscreenControl']
+				        });
+
+					var placemark = new ymaps.Placemark([data.address.lat, data.address.lng], {
+				            balloonContent: data.city.name + '. ' + data.address.title + ', '+ data.room
+				        }, {
+				            preset: 'islands#nightDotIcon',
+				            iconColor: '#0095b6'
+				        });	
+						
+				    myMap.geoObjects.add(placemark);
+	           	};
+	           	
+	           	
+            	function loadScript(url){
+				    var div = document.getElementById('divYmapScript');
+				    var script = document.createElement('script');
+				    script.type = 'text/javascript';
+				    script.src = url;
+				    
+				    // Fire the loading
+				    div.appendChild(script);
+				};
+				
+				loadScript("http://api-maps.yandex.ru/2.1/?lang=ru_RU&onload=callbackYmap");
+            },
+            function(response){
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            }); 
+    };
+
+    
+    /* Стереть все */
+    $scope.ordForm.clear = function(){
+        $scope.ordForm.order = {trainingId: $scope.ordForm.order.trainingId};
+        $scope.ordForm.btnDisabled = false;
+    };
+
+    /* Создать заявку */
+    $scope.ordForm.submit = function(){
+        OrderSrvc.createOrderNewStudent($scope.ordForm.order).then(
+            function(data){
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Готово!', 'Регистрация прошла успешно.', 'success', true);
+                $scope.ordForm.btnDisabled = true;
+                $scope.ordForm.btnClearShow = true;
+            },
+            function(response){
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+    
+
+    $scope.ordForm.init();
+    $scope.ordForm.loadTraining();
+  });
+
+]]></CSP>
+</Export>

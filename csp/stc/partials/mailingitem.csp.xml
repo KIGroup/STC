@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="stc/partials/mailingitem.csp" application="/csp/stc/" default="1"><![CDATA[
+<div class="row-fluid">
+	<div class="span4">
+	</div>
+	<div class="span4">
+		<div class="accordion">
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" ng-bind="mitemForm.caption|localize"></a>
+				</div>
+				<div class="accordion-body">
+					<div class="accordion-inner">
+						<form name="form" ng-submit="mitemForm.submit()">
+							<div class="control-group">
+						        <label class="control-label" ng-bind="('ФИО'|localize) + '*'"></label>
+						        <div class="controls">
+						            <input class="span12" type="text" ng-model="mitemForm.mitem.fullName" required></input>
+						        </div>
+						    </div>
+							<div class="control-group">
+						        <label class="control-label">Email*</label>
+						        <div class="controls">
+						            <input class="span12" type="email" ng-model="mitemForm.mitem.email" required></input>
+						        </div>
+						    </div>						    
+						    <div class="control-group">
+						        <label class="control-label" ng-bind="('Город'|localize) + ''"></label>
+						        <div class="controls">
+						            <input class="span12" type="text" ng-model="mitemForm.mitem.city"></input>
+						        </div>
+						    </div>
+						    <div class="control-group">
+						        <label class="control-label" ng-bind="('Организация'|localize) + ''"></label>
+						        <div class="controls">
+						            <input class="span12" type="text" ng-model="mitemForm.mitem.company"></input>
+						        </div>
+						    </div>
+							<div class="control-group">
+						        <label class="control-label" ng-bind="('Должность'|localize) + ''"></label>
+						        <div class="controls">
+						            <input class="span12" type="text" ng-model="mitemForm.mitem.position"></input>
+						        </div>
+						    </div>
+						    <div class="control-group">
+						    	<label class="control-label" ng-bind="('Группа'|localize) + '*'"></label>
+						        <div class="controls">
+					            	<select class="span12" ng-model="mitemForm.mitem.group.id" ng-options="gr.id as gr.name for gr in mitemForm.groups" required>
+					            		<option value=""></option>
+					            	</select>
+						        </div>
+						    </div>
+						    <div class="control-group">
+						        <div class="controls">
+						            <button type="submit" class="btn btn-primary btn-small" ng-bind="mitemForm.actionName|localize" ng-disabled="form.$pristine"></button>
+						            <button type="button" class="btn btn-small" ng-click="mitemForm.cancel()" ng-bind="'Назад'|localize"></button>
+						        </div>
+						    </div>    		    		    
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<stcalert data="mitemForm.alert"/>
+	</div>
+	<div class="span4">
+	</div>
+</div>]]></CSP>
+</Export>
