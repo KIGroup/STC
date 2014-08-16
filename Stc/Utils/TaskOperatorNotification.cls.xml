@@ -28,8 +28,8 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 		set subject = "STC. Краткая сводка за последние "_(60*24/$GET(^Stc.Data.OrderNotification("maxCount"), 48))_" мин."
 		 
 		if ($GET(^Stc.Data.OrderNotification("count"), 0) >= $GET(^Stc.Data.OrderNotification("maxCount"), 48)){
-			set ^Stc.Data.OrderNotification("orders") = ""
-			set ^Stc.Data.OrderNotification("students") = ""
+			set ^Stc.Data.OrderNotification("orders") = $GET(^Stc.Data.OrderNotification("ignoredorders"), "")
+			set ^Stc.Data.OrderNotification("students") = $GET(^Stc.Data.OrderNotification("ignoredstudents"), "")
 			set ^Stc.Data.OrderNotification("count") = 0
 			set subject = "STC. Краткая сводка за день."
 		} 
