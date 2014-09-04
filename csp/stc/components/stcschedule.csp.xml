@@ -8,12 +8,9 @@
                 <td colspan="5" ng-style="course.style"><b ng-bind="course.name"></b></td>
             </tr>
             <tr>
-                <td ng-bind="'Продолжительность' + ': ' + course.days + ' д. (' + course.hours + ' ч.)'" colspan="3"></td>
+                <td ng-bind="'Продолжительность' + ': ' + course.days + ' д. (' + course.hours + ' ч.)'" colspan="4"></td>
                 <td class="cellLink" style="width: 115px; text-align: center;" title="Открыть программу курса">
                     <a ng-href="{{course.programUrl}}" class="cellLink" target="_blank" ng-bind="'Программа'"></a>
-                </td>
-                <td style="width: 125px; text-align: center;" title="Оформить заявку на новое обучение">
-                    <a ng-href="{{course.urlCreateOrder}}" class="cellLink" target="_blank"  ng-bind="'Оформить заявку'"></a>
                 </td>
             </tr>
             <tr>
@@ -53,7 +50,7 @@
                 </tr>
                 <tr>
                     <td ng-bind="' '" style="width: 5%; border-top: none;"></td>
-                    <td ng-bind="'Преподаватель: ' + tr.teacher.lastName + ' ' + tr.teacher.firstName + ', ' + tr.teacher.email" style="border-top: none;"></td> 
+                    <td ng-bind="'Преподаватель: ' + tr.teacher.lastName + ' ' + tr.teacher.firstName +  ' ' + tr.teacher.middleName" style="border-top: none;"></td> 
                 </tr>
                 <tr ng-hide="tr.curatorFullName==''">
                     <td ng-bind="' '" style="width: 5%; border-top: none;"></td>
@@ -66,9 +63,9 @@
                 <tr>
                     <td ng-bind="' '" class="cellLink" style="width: 5%; border-top: none;"></td>
                     <td style="border-top: none;">
-                        <a ng-href="{{tr.urlJoin}}" class="cellLink" target="_blank" ng-bind="'Присоединиться'"></a>
+                        <a ng-href="{{tr.urlJoin}}" class="cellLink" target="_blank" ng-bind="'Записаться на курс'"></a>
                         &nbsp;&nbsp;&nbsp;
-                        <a ng-href="{{tr.urlAddGoogleCalendarEvent}}" class="cellLink" target="_blank" ng-bind="'Копировать мой календарь'"></a>
+                        <a ng-href="{{tr.urlAddGoogleCalendarEvent}}" class="cellLink" target="_blank" ng-bind="'Копировать в мой календарь'"></a>
                     </td> 
                 </tr>
             </table>

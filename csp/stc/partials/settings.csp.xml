@@ -2,9 +2,7 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/partials/settings.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid">
-	<div class="span1">
-	</div>
-	<div class="span10">
+	<div class="span10 offset1">
 		<tabset>
 	 		<!-- ============================================ MAIL ==================================================-->
 	    	<tab heading="{{'Почта'|localize}}" >
@@ -448,19 +446,13 @@
 			</tab>
 		</tabset>
 	</div>
-	<div class="span1">
-	</div>
 </div >
 
 <br>
 
 <div class="row-fluid">
-	<div class="span1">
-	</div>
-	<div class="span10">
+	<div class="span10 offset1">
 		<stcalert data="page.alert"/>
-	</div>
-	<div class="span1">
 	</div>
 </div>]]></CSP>
 </Export>

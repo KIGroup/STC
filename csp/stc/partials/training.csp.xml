@@ -2,9 +2,7 @@
 <Export generator="Cache" version="25">
 <CSP name="stc/partials/training.csp" application="/csp/stc/" default="1"><![CDATA[
 <div class="row-fluid">
-	<div class="span1">
-	</div>
-	<div class="span10">
+	<div class="span10 offset1">
 	 	<tabset>
 	 		<!-- ============================================ ОБУЧЕНИЕ ==================================================-->
 	    	<tab heading="{{'Обучение'|localize}}" select="pageStore.training.tabSgActive=false">
@@ -357,17 +355,13 @@
 	    	</tab>
 	    </tabset>
 	</div>
-	<div class="span1">
-	</div>
 </div>
 
 
 
 
 <div class="row-fluid" ng-show="pageStore.training.tabSgActive && sgroup.selectedItems.length!=0">
-	<div class="span1">
-	</div>
-	<div class="span10">
+	<div class="span10 offset1">
 			 <tabset>
 			 	<!-- ============================================ ИНФОРМАЦИЯ ==================================================-->
 				<tab heading="{{'Информация'|localize}}">
@@ -504,16 +498,12 @@
 				</tab>
 			</tabset>
 	</div>
-	<div class="span1">
-	</div>
 </div>
 </br>
 
 
 <div class="row-fluid" ng-show="pageStore.training.tabFeedBacksActive && feedBack.items.length!=0 && feedBack.selectedItems.length!=0">
-	<div class="span1">
-	</div>
-	<div class="span10">
+	<div class="span10 offset1">
 		 <tabset>
 		 	<!-- ============================================ ПОДРОБНОСТИ ОТЗЫВА ==================================================-->
 			<tab heading="{{'Информация'|localize}}">
@@ -526,18 +516,12 @@
 			</tab>
 		</tabset>
 	</div>
-	<div class="span1">
-	</div>
 </div>
 
 
 <div class="row-fluid">
-	<div class="span1">
-	</div>
-	<div class="span10">
+	<div class="span10 offset1">
 		<stcalert data="other.alert"/>
-	</div>
-	<div class="span1">
 	</div>
 </div>
 

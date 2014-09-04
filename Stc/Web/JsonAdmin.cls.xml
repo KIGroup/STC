@@ -831,8 +831,17 @@ Method="DELETE" Url="/json/training/:id"</Description>
 			&sql(SELECT COUNT(ID) INTO :certs FROM Stc_Data.Certificate WHERE Training = :id)
 		}
 		
-		if (sgroups > 0) || (certs > 0) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("deleteTrainingImpossible"))
-	
+		if (sgroups > 0) || (certs > 0) {
+			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("deleteTrainingImpossible"))
+		}
+		
+		set SQLCODE = ""
+		&sql(DELETE FROM Stc_Data.MailingTrainingGroup WHERE Training = :id)
+		
+		if (SQLCODE '= 0) && (SQLCODE '= 100){
+			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("DeleteMailingTrainingGroupError", " SQLCODE="_SQLCODE))
+		}	
+		
 		set st = ##class(Stc.Data.Training).Delete(id)
 		
 		if $$$ISERR(st) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("deleteTraining", "| "_st))
@@ -2530,6 +2539,13 @@ Method="DELETE" Url="/json/mailing/group/:id"</Description>
 		
 		if (SQLCODE '= 0) && (SQLCODE '= 100){
 			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("DeleteMailingApprovedItemsError", " SQLCODE="_SQLCODE))
+		}
+		
+		set SQLCODE = ""
+		&sql(DELETE FROM Stc_Data.MailingTrainingGroup WHERE MGroup = :id)
+		
+		if (SQLCODE '= 0) && (SQLCODE '= 100){
+			$$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("DeleteMailingTrainingGroupError", " SQLCODE="_SQLCODE))
 		}
 		
 		$$$THROWONERROR(st, ##class(Stc.Data.MailingGroup).Delete(id))

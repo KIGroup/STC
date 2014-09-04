@@ -182,6 +182,7 @@ Get special group for subscribers</Description>
 	
 	set mail.message = $REPLACE(mail.message, "%JoinUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_tr.%Id()_"/order")
 	set mail.message = $REPLACE(mail.message, "%UnsubscribeUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/mailing/subscription/%AccessCode")
+	set mail.message = $REPLACE(mail.message, "%ListOfStudentsUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_tr.%Id()_"/students/"_tr.AccessCode)
 	
 	quit mail
 ]]></Implementation>

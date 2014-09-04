@@ -425,5 +425,10 @@ pre.badge-inverse[href] {
 .navbar .nav>li>a {
 border-right: 1px solid rgb(241, 241, 241);
 border-left: 1px solid rgb(241, 241, 241);
+}
+
+
+body{
+	min-width: 900px;
 }]]></CSP>
 </Export>
