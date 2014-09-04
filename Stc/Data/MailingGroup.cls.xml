@@ -177,7 +177,7 @@ Get special group for subscribers</Description>
 	set group = ..%OpenId(grId)
 	
 	set mail = ##class(%ZEN.proxyObject).%New()
-	set mail.subject = group.MailSubject.Value
+	set mail.subject = ##class(Stc.Utils.Email).GetMailMessageWithTrainingData(group.MailSubject.Value, tr)
 	set mail.message = ##class(Stc.Utils.Email).GetMailMessageWithTrainingData(group.MailMessage.Value, tr)
 	
 	set mail.message = $REPLACE(mail.message, "%JoinUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_tr.%Id()_"/order")
