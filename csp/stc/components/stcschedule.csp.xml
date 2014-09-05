@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
 <CSP name="stc/components/stcschedule.csp" application="/csp/stc/" default="1"><![CDATA[
-<div class="row-fluid" style="margin: 0 0 13px 0; border-bottom: 1px solid #dddddd; border-radius: 0px; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; color: #000;">
+<div class="row-fluid" style="margin: 0 0 30px 0; border-bottom: 1px solid #dddddd; border-radius: 0px; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; color: #000;">
     <div class="row-fluid">
         <table class="table scheduleTable">
             <tr>
-                <td colspan="5" ng-style="course.style"><b ng-bind="course.name"></b></td>
+                <td colspan="5" class="scheduleCourseName" ng-style="course.style"><b ng-bind="course.name"></b></td>
             </tr>
             <tr>
                 <td ng-bind="'Продолжительность' + ': ' + course.days + ' д. (' + course.hours + ' ч.)'" colspan="4"></td>
@@ -14,7 +14,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="border-left: none; height: 2px; padding: 0!important;" colspan="5"></td>
+                <td class="scheduleCourseName" style="border-left: none; height: 2px; padding: 0!important;" colspan="5"></td>
             </tr>
         </table>
     </div>

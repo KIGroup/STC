@@ -32,7 +32,7 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 	
 	do ..MailingGroupsAutoMailing()
 	
-	job ##class(Stc.Data.MailingJournal).StartSending()
+	//job ##class(Stc.Data.MailingJournal).StartSending()
 	
 	Quit $$$OK
 ]]></Implementation>
