@@ -71,7 +71,7 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 			set emailList = $LISTFROMSTRING(##class(Stc.Data.Settings).GetMailingOperatorAddresses(), ",")
 			for i=1:1:$LISTLENGTH(emailList){
 				set email = $LIST(emailList, i)
-				do ##class(Stc.Data.MailingJournal).Create(email, "Оператор", subject, msg)
+				do ##class(Stc.Data.MailingJournal).Create(email, "Оператор", subject, msg, "Оповещение")
 			}
 		}
 		

@@ -92,12 +92,12 @@ controllersModule.controller('OrderNewStudentCtrl', function($scope, $timeout, $
     $scope.ordForm.submit = function(){
         OrderSrvc.createOrderNewStudent($scope.ordForm.order).then(
             function(data){
-                $scope.ordForm.alert = UtilsSrvc.getAlert('Готово!', 'Регистрация прошла успешно.', 'success', true);
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Готово!', 'Ваша заявка принята к рассмотрению. На указанный Вами адрес электронной почты придет письмо-подтверждение.', 'info', true);
                 $scope.ordForm.btnDisabled = true;
                 $scope.ordForm.btnClearShow = true;
             },
             function(response){
-                $scope.ordForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+                $scope.ordForm.alert = UtilsSrvc.getAlert('Внимание!', response.data.replace(/ОШИБКА #5001: /g, "").replace(/Error #5001: /g, ""), 'error', true);
             });
     };
     

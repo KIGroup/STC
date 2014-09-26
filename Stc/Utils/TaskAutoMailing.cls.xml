@@ -67,7 +67,7 @@ Send notification to all students in the training</Description>
 			
 			set contacts = ##class(Stc.Data.Training).GetStudentsContacts(trId)
 			
-			do ##class(Stc.Data.MailingJournal).CreateAll(contacts, mail.subject, mail.message)
+			do ##class(Stc.Data.MailingJournal).CreateAll(contacts, mail.subject, mail.message, "Слушатель, напоминание")
 			
 			if (contacts.Count() > 0) {
 				set tr.IsStudentsAutoMailing = $$$NO
@@ -114,7 +114,7 @@ Send notification to training teacher</Description>
 				
 			set mail = ##class(Stc.Utils.Email).GetMailForTrainingTeacher(tr)
 				
-			do ##class(Stc.Data.MailingJournal).Create(tr.Teacher.Email, tr.Teacher.FullName, mail.subject, mail.message)
+			do ##class(Stc.Data.MailingJournal).Create(tr.Teacher.Email, tr.Teacher.FullName, mail.subject, mail.message, "Преподаватель, доступ к анкете")
 			
 			set tr.IsTeacherAutoMailing = 0
 			do tr.%Save()						
@@ -159,7 +159,7 @@ Send notification to training curator</Description>
 			
 			set mail = ##class(Stc.Utils.Email).GetMailForTrainingCurator(tr)
 			
-			do ##class(Stc.Data.MailingJournal).Create(tr.CuratorEmail, tr.CuratorFullName.Value, mail.subject, mail.message)
+			do ##class(Stc.Data.MailingJournal).Create(tr.CuratorEmail, tr.CuratorFullName.Value, mail.subject, mail.message, "Куратор, список слушателей")
 			
 			set tr.IsCuratorAutoMailing = 0
 			do tr.%Save()						
@@ -205,7 +205,7 @@ Send feedback link to students in the training</Description>
 					
 			set contacts = ##class(Stc.Data.Training).GetStudentsContacts(trId)
 			
-			do ##class(Stc.Data.MailingJournal).CreateAll(contacts, mail.subject, mail.message)
+			do ##class(Stc.Data.MailingJournal).CreateAll(contacts, mail.subject, mail.message, "Слушатель, доступ к анкете")
 			
 			if (contacts.Count() > 0) {
 				set tr.IsFeedBackAutoMailing = $$$NO
@@ -252,7 +252,7 @@ Send </Description>
 					
 			set contacts = ##class(Stc.Data.Order).GetContactsForCourse(tr.Course.%Id())
 			
-			do ##class(Stc.Data.MailingJournal).CreateAll(contacts, mail.subject, mail.message)
+			do ##class(Stc.Data.MailingJournal).CreateAll(contacts, mail.subject, mail.message, "Контакт из заявки")
 			
 			if (contacts.Count() > 0) {
 				set tr.IsOrdersAutoMailing = $$$NO
@@ -303,7 +303,7 @@ Send </Description>
 				if '$ISOBJECT(mItem) continue
 					
 				set msg = $REPLACE(mail.message, "%AccessCode", $system.Encryption.Base64Encode(mItem.AccessCode))
-				do ##class(Stc.Data.MailingJournal).Create(contacts.GetAt(i).email, contacts.GetAt(i).name, mail.subject, msg)	
+				do ##class(Stc.Data.MailingJournal).Create(contacts.GetAt(i).email, contacts.GetAt(i).name, mail.subject, msg, "ГР: "_mItem.MGroup.Name)	
 			}
 					
 			if (contacts.Count() > 0) {

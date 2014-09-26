@@ -36,13 +36,19 @@
 <Parameter name="MAXLEN" value="9000"/>
 </Property>
 
+<Property name="Type">
+<Type>%String</Type>
+<Required>1</Required>
+<Parameter name="MAXLEN" value="500"/>
+</Property>
+
 <Index name="IsSendedIdx">
 <Properties>IsSended</Properties>
 </Index>
 
 <Method name="Create">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>email:%String,recipientName:%String,subject:%String,message:%Text</FormalSpec>
+<FormalSpec>email:%String,recipientName:%String,subject:%String,message:%Text,type:%String=""</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set st = $$$OK
@@ -50,6 +56,7 @@
 	try{
 		set obj = ..%New()
 		
+		set obj.Type = type		
 		set obj.IsSended = $$$NO
 		set obj.Subject = subject
 		set obj.Message = message
@@ -84,12 +91,12 @@
 
 <Method name="CreateAll">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>contacts:%ListOfObjects,subject:%String,message:%Text</FormalSpec>
+<FormalSpec>contacts:%ListOfObjects,subject:%String,message:%Text,type:%String=""</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	for i=1:1:contacts.Count(){
 		set contact = contacts.GetAt(i)
-		do ..Create(contact.email, contact.name, subject, message) 
+		do ..Create(contact.email, contact.name, subject, message, type) 
 	}
 	
 	quit $$$OK
@@ -106,6 +113,7 @@
 	set proxy.sendedTS = ..SendedTS
 	set proxy.subject = ..Subject
 	set proxy.message = ..Message
+	set proxy.type = ..Type
 	
 	set proxy.recipient = ##class(%ZEN.proxyObject).%New()
 	set proxy.recipient.name = ..RecipientName
@@ -198,6 +206,9 @@
 </Value>
 <Value name="8">
 <Value>IsSended</Value>
+</Value>
+<Value name="9">
+<Value>Type</Value>
 </Value>
 </Data>
 </Storage>

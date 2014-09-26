@@ -92,36 +92,24 @@ Method="POST" Url="/json/orderNewStudent"</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set status = $$$OK
+	set st = $$$OK
 	
     try{
 	    TSTART
 	    
-	   	$$$THROWONERROR(status, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.order,1))
-       
-       	set order = ##class(Stc.Data.OrderNewStudent).Create(order, .status)
-       	if $$$ISERR(status) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createDirtyOrder", "| "_status))
-       	/*
-       	#dim order As Stc.Data.OrderNewStudent
-       	set subject = "STC. Новая заявка на присоединение к курсу от слушателя - """_order.LastName.Value_""""
-       	set msg = "Город: "_order.Training.City.Name.Value_"<br>"_
-       			  "Курс: "_order.Training.Course.Name.Value_"<br>"_
-       			  "Дата начала: "_$ZD(order.Training.DateStart, 3)_"<br><br>"_
-       			  "Слушатель: "_order.LastName.Value_" "_order.FirstName.Value_" "_order.MiddleName.Value_", "_order.Email_", "_order.Phone_"<br>"_
-       	          "Организация: """_order.CompanyString_"""<br>"_
-       	          "Заявка создана: "_order.CreatedTS_"<br>"_
-       	          "<a href='http://"_$GET(^Settings("Stc", "DomainName"), "-")_$GET(^Settings("Stc", "WebApp"), "-")_"/stc/index.csp#/training?id="_order.Training.%Id()_"' target='_blank'>Страница обучения</a>"
-     
-     	do ##class(Stc.Web.JsonAdmin).SendEmailToOperators(subject, msg)
-     	*/
+	   	$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data,1))
+       	
+       	set order = ##class(Stc.Data.OrderNewStudent).Create(data, .st)
+       	$$$THROWONERROR(st, st)
+       	
        	TCOMMIT
    	}
    	catch ex {
 	   	TROLLBACK
-	   	set status = ex.AsStatus()
+	   	set st = ex.AsStatus()
 	}
 	
-	quit status
+	quit st
 ]]></Implementation>
 </Method>
 
@@ -183,7 +171,7 @@ Method="POST" Url="/json/mailing/subscription"</Description>
 		
 		set mail = ##class(Stc.Utils.Email).GetMailForConfirmationSubscription(item)
 		
-		do ##class(Stc.Data.MailingJournal).Create(item.Email, "", mail.subject, mail.message)
+		do ##class(Stc.Data.MailingJournal).Create(item.Email, "", mail.subject, mail.message, "Оформление подписки")
 		
 		TCOMMIT
 	}

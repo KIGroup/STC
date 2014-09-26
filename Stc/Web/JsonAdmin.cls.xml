@@ -300,7 +300,7 @@ Method="POST" Url="/json/order/:id/status/:status"</Description>
 		if (orderStatus = "approved"){
 			set order.OrderStatus = ##class(Stc.Data.OrderStatus).CodeIdxOpen("Approved")
 			set mail = ##class(Stc.Utils.Email).GetMailForOrderApply(order)
-			do ##class(Stc.Data.MailingJournal).Create(order.Email, order.LastName_" "_order.FirstName, mail.subject, mail.message)
+			do ##class(Stc.Data.MailingJournal).Create(order.Email, order.LastName_" "_order.FirstName, mail.subject, mail.message, "Одобрение заявки")
 		}
 		elseif (orderStatus = "closed"){
 			set order.OrderStatus = ##class(Stc.Data.OrderStatus).CodeIdxOpen("Closed")
@@ -1027,16 +1027,16 @@ Method="POST" Url="/json/training/mail/send"</Description>
 				set mItem = ##class(Stc.Data.MailingItemApproved).%OpenId(data.contacts.GetAt(i).id)
 				if $ISOBJECT(mItem){
 					set msg = $REPLACE(data.message, "%AccessCode", $system.Encryption.Base64Encode(mItem.AccessCode))
-					do ##class(Stc.Data.MailingJournal).Create(mItem.Email,  mItem.FullName, data.subject, msg)
+					do ##class(Stc.Data.MailingJournal).Create(mItem.Email,  mItem.FullName, data.subject, msg, "ГР: "_mItem.MGroup.Name)
 				}
 				else{
-					do ##class(Stc.Data.MailingJournal).Create(data.contacts.GetAt(i).email,"", data.subject, data.message)
+					do ##class(Stc.Data.MailingJournal).Create(data.contacts.GetAt(i).email,"", data.subject, data.message, "Рассылка из обучения")
 				}
 			}
 		}
 		else{
 			for i=1:1:data.contacts.Count(){
-				do ##class(Stc.Data.MailingJournal).Create(data.contacts.GetAt(i).email, $ZCVT(data.contacts.GetAt(i).name, "I", "UTF8"), data.subject, data.message)
+				do ##class(Stc.Data.MailingJournal).Create(data.contacts.GetAt(i).email, $ZCVT(data.contacts.GetAt(i).name, "I", "UTF8"), data.subject, data.message, "Рассылка из обучения")
 			}
 		}
 		
@@ -1482,7 +1482,7 @@ Method="POST" Url="/json/training/oredeNewStudent"</Description>
 		
 		set mail = ##class(Stc.Utils.Email).GetMailForTrainingRegistration(training)
 		
-		do ##class(Stc.Data.MailingJournal).Create(orderEmail, orderFullName, mail.subject, mail.message)
+		do ##class(Stc.Data.MailingJournal).Create(orderEmail, orderFullName, mail.subject, mail.message, "Добавление слушателя")
 		
 		set trId = training.%Id()
 			
@@ -2675,7 +2675,7 @@ Method="POST" Url="/json/mailing/mail/send"</Description>
 			if '$ISOBJECT(mItem) continue
 					
 			set msg = $REPLACE(data.message, "%UnsubscribeUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/mailing/subscription/"_$system.Encryption.Base64Encode(mItem.AccessCode))
-			do ##class(Stc.Data.MailingJournal).Create(data.contacts.GetAt(i).email, $ZCVT(data.contacts.GetAt(i).name, "I", "UTF8"), data.subject, msg)	
+			do ##class(Stc.Data.MailingJournal).Create(data.contacts.GetAt(i).email, $ZCVT(data.contacts.GetAt(i).name, "I", "UTF8"), data.subject, msg, "ГР: "_mItem.MGroup.Name)	
 		}
 		
 		TCOMMIT

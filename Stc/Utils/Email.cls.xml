@@ -264,13 +264,14 @@ Get email pattern from ^CacheMsg</Description>
 	    do mail.To.Insert(email)
 	    
     	set auth=##class(%Net.Authenticator).%New()
-   		set auth.MechanismList = "LOGIN"
+   		//set auth.MechanismList = "LOGIN"
   		set auth.UserName = ##class(Stc.Data.Settings).GetEmailSMTPUser()
   		set auth.Password = ##class(Stc.Data.Settings).GetEmailSMTPPassword()
-  	
+  		
   		set smtp = ##class(%Net.SMTP).%New()
     	set smtp.smtpserver = ##class(Stc.Data.Settings).GetEmailSMTPServer()
-    	set smtp.port = ##class(Stc.Data.Settings).GetEmailSMTPPort()
+    	set smtp.port = 465
+  		set smtp.SSLConfiguration = "MAILRU"
   		set smtp.authenticator = auth
   	
     	$$$THROWONERROR(st, smtp.Send(mail))

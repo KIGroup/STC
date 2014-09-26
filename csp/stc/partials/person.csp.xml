@@ -26,7 +26,7 @@
 
 
 <div class="row-fluid">
-	<div class="span4 offset1">
+	<div class="span4 offset4">
 		<accordion close-others="false">
 			<accordion-group heading="{{personForm.caption|localize}}" is-open="true">
 		    	<form name="pform" class="form" style="margin: 0 0 10px 0;" ng-submit="personForm.submit()">

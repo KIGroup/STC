@@ -16,6 +16,7 @@ controllersModule.controller('MailingJournalCtrl', function($scope, MailingSrvc,
         $scope.mailTable.columns = [
                           {name: 'Дата отправки', sqlName: 'ID', isSorted: true, isSortable: false, isDown: false, isSearched: false, isSearchable: false, captionStyle: {width: '190px'}},
                           {name: 'Получатель', sqlName: 'RecipientName', isSorted: false, isSortable: false, isDown: true, isSearched: true, isSearchable: true},
+                          {name: 'Тип рассылки', sqlName: 'Type', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: true},
                           {name: 'Тема письма', sqlName: 'Subject', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: true},
                           {name: 'Содержание', sqlName: 'Message', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: true}];
         
@@ -38,6 +39,7 @@ controllersModule.controller('MailingJournalCtrl', function($scope, MailingSrvc,
 	                                item.recipient.fullName = item.recipient.email;
                                 }
                           }},
+                          {name: 'type'},
                           {name: 'subject'},
                           {name: 'messageShort',
                           calculate: function(item){
