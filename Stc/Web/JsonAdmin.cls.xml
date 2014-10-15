@@ -2374,6 +2374,9 @@ Method="GET" Url="/json/settings/mail/preview/:type"</Description>
 				set mail = ##class(Stc.Utils.Email).GetMailForConfirmationSubscription(mItem)
 			}
 		}
+		elseif (type = "listOfFeedbacks"){
+			set mail = ##class(Stc.Utils.Email).GetMailForListOfTrainingFeedBacks(tr)
+		}
 		
 		set proxy = ##class(%ZEN.proxyObject).%New()
 		set proxy.preview = mail.subject_"<br><br>"_mail.message

@@ -34,6 +34,8 @@ In order to execute a real task, override this method in a subclass.]]></Descrip
 	
 	//job ##class(Stc.Data.MailingJournal).StartSending()
 	
+	do ..TeacherAccessToListOfFeedbacks()
+	
 	Quit $$$OK
 ]]></Implementation>
 </Method>
@@ -320,6 +322,43 @@ Send </Description>
 	}
 	
 	quit st
+]]></Implementation>
+</Method>
+
+<Method name="TeacherAccessToListOfFeedbacks">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		set nowTime = $ZDT($ZTS, 3)
+		set timeOut = ##class(Stc.Data.Settings).GetMailingHoursTimeoutListOfFeedbacks()
+		
+		&sql(DECLARE TrFbCur CURSOR FOR 
+				SELECT DISTINCT Training
+			 	FROM Stc_Data.FeedBack
+			 	WHERE {fn TIMESTAMPDIFF(SQL_TSI_HOUR, CreatedTS, :nowTime)} <= :timeOut)	
+			
+		&sql(OPEN TrFbCur)
+		for  
+		{	
+			&sql(FETCH TrFbCur INTO :trId) 
+			quit:(SQLCODE '= 0)
+			
+			do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing TeacherAccessToListOfFeedbacks()", "Start; trID="_trId)
+							
+			set tr = ##class(Stc.Data.Training).%OpenId(trId)
+			set mail = ##class(Stc.Utils.Email).GetMailForListOfTrainingFeedBacks(tr)
+			//tr.Teacher.Email
+			do ##class(Stc.Data.MailingJournal).Create("ilsondll@gmail.com", tr.Teacher.FullName_"(Тест)", mail.subject, mail.message, "Преподаватель, доступ к новым отзывам")							
+		}
+		&sql(CLOSE TrFbCur)
+	}
+	catch(ex){
+		set st = ex.AsStatus()
+		do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing TeacherAccessToListOfFeedbacks() Catch", $System.Status.GetErrorText(st))
+	}
 ]]></Implementation>
 </Method>
 </Class>

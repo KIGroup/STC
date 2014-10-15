@@ -467,13 +467,13 @@ Method="POST" Url="/json/training/:id/feedback/:code"</Description>
       	}
       	
       	do ##class(Stc.Utils.Log).Create("Stc.Web.JsonUser.SaveTrainingFeedBack", 
-			"Author="_$ZCONVERT(data.author, "I","UTF8")_
+			"Author="_data.author_
 			"TrainingId="_tr.%Id()_
 			"Rating="_data.rating_
-			"WhatLiked="_$ZCONVERT(data.whatLiked, "I","UTF8")_
-			"WhatImprovements="_$ZCONVERT(data.whatImprovements, "I","UTF8")_
-			"WhatHear="_$ZCONVERT(data.whatHear, "I","UTF8")_
-			"AboutTeacher="_$ZCONVERT(data.aboutTeacher, "I","UTF8"))
+			"WhatLiked="_data.whatLiked_
+			"WhatImprovements="_data.whatImprovements_
+			"WhatHear="_data.whatHear_
+			"AboutTeacher="_data.aboutTeacher)
 	
       	set fb = ##class(Stc.Data.FeedBack).%New()
       	set fb.Author = $ZCONVERT(data.author, "I","UTF8")
@@ -496,6 +496,35 @@ Method="POST" Url="/json/training/:id/feedback/:code"</Description>
 	}
 	
 	quit status
+]]></Implementation>
+</Method>
+
+<Method name="GetTrainingFeedBacksForGridByAccessCode">
+<Description>
+Get training feedbacks. grid. BY AccessCode
+Method="POST" Url="/json/training/feedback/grid" </Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set st = $$$OK
+	
+	try{
+		$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.params, 1))
+      	
+      	set tr = ##class(Stc.Data.Training).%OpenId(params.trainingId)
+      	if (tr.GetAccessCodeForFeedbackList() '= params.accessCode){
+      		$$$THROWONERROR(st, ##class(Stc.Utils.Msg).GetErrorStatus("error_FeedBack_WrongAccessCode"))
+      	}
+      	
+      	set whereRequired = "Training = '"_..ParseParameter(params.trainingId)_"'"
+      	
+      	$$$THROWONERROR(st, ..WriteJsonForGrid("SELECT ID FROM Stc_Data.FeedBack", "Stc.Data.FeedBack", params, whereRequired))
+	}
+	catch ex {
+		set st = ex.AsStatus()
+	}
+
+	quit st
 ]]></Implementation>
 </Method>
 

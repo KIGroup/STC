@@ -164,6 +164,20 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc) {
 
             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/training/feedback/grid', obj);
         },
+        /* All training feedbacks by Access Code */
+        getFeedBacksForGridByAccessCode: function(pageCurr, pageSize, sqlName, isDown, searchSqlName, searchText, trainingId, accessCode){
+            var first = pageSize * (pageCurr - 1) + 1;
+            var obj = {sqlName: sqlName, 
+                       isDown: isDown, 
+                       first: first, 
+                       last: first + pageSize - 1,
+                       searchSqlName: searchSqlName, 
+                       searchText: searchText,
+                       trainingId: trainingId,
+                       accessCode: accessCode};
+
+            return DALSrvc.getPromise('save', StcAppSetting.user + '/json/training/feedback/grid', obj);
+        },
         deleteFeedBack: function(id){
             return DALSrvc.getPromise('delete', StcAppSetting.admin + '/json/training/feedback/' + id, null); 
         },

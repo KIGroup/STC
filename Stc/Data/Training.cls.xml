@@ -636,6 +636,12 @@ Add person to training, subgroup is detirmining automatically</Description>
 ]]></Implementation>
 </Method>
 
+<Method name="GetAccessCodeForFeedbackList">
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[	quit $REPLACE($SYSTEM.Encryption.Base64Encode($SYSTEM.Encryption.MD5Hash(..AccessCode_..Teacher.Email)), "/", "")
+]]></Implementation>
+</Method>
+
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
 <DataLocation>^Stc.Data.TrainingD</DataLocation>

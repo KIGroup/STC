@@ -96,6 +96,32 @@ Working with email</Description>
 ]]></Implementation>
 </Method>
 
+<Method name="GetMailForListOfTrainingFeedBacks">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>tr:Stc.Data.Training</FormalSpec>
+<ReturnType>%ZEN.proxyObject</ReturnType>
+<Implementation><![CDATA[
+	set mail = ..GetEmailPattern("listOfFeedbacks")
+	set mail.subject = ..GetMailMessageWithTrainingData(mail.subject, tr)
+	set mail.message = ..GetMailMessageWithTrainingData(mail.message, tr)
+	set mail.message = $REPLACE(mail.message, "%ListOfFeedbacksUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_tr.%Id()_"/feedbacks/"_tr.GetAccessCodeForFeedbackList())	
+	
+	set nowTime = $ZDT($ZTS, 3)
+	set trId = tr.%Id()
+	
+	set timeOut = ##class(Stc.Data.Settings).GetMailingHoursTimeoutListOfFeedbacks()
+	
+	&sql(SELECT COUNT(ID) INTO :numberOfNewestFeedBacks
+		 FROM Stc_Data.Feedback 
+		 WHERE Training = :trId AND {fn TIMESTAMPDIFF(SQL_TSI_HOUR, CreatedTS, :nowTime)} <= :timeOut)
+
+	set mail.subject = $REPLACE(mail.subject, "%NumberOfNewestFeedbacks", numberOfNewestFeedBacks)
+	set mail.message = $REPLACE(mail.message, "%NumberOfNewestFeedbacks", numberOfNewestFeedBacks)	
+	
+	quit mail
+]]></Implementation>
+</Method>
+
 <Method name="GetMailForTrainingRegistration">
 <ClassMethod>1</ClassMethod>
 <FormalSpec>tr:Stc.Data.Training</FormalSpec>
@@ -181,6 +207,10 @@ Get email pattern from ^CacheMsg</Description>
 		set proxy.subject = ##class(Stc.Utils.Msg).GetMsg("mail_Subject_Confirmation-Subscription")
 		set proxy.message = ##class(Stc.Utils.Msg).GetMsg("mail_Message_Confirmation-Subscription")
 	}
+	elseif (type = "listOfFeedbacks"){
+		set proxy.subject = ##class(Stc.Utils.Msg).GetMsg("mail_Subject_Training-ListOfFeedBacks")
+		set proxy.message = ##class(Stc.Utils.Msg).GetMsg("mail_Message_Training-ListOfFeedBacks")
+	}
 	
 	quit proxy
 ]]></Implementation>
@@ -234,6 +264,10 @@ Get email pattern from ^CacheMsg</Description>
 	elseif (type = "confirmsubscription"){
 		do ##class(Stc.Utils.Msg).SetMsg("mail_Subject_Confirmation-Subscription", subject)
 		do ##class(Stc.Utils.Msg).SetMsg("mail_Message_Confirmation-Subscription", message)
+	}
+	elseif (type = "listOfFeedbacks"){
+		do ##class(Stc.Utils.Msg).SetMsg("mail_Subject_Training-ListOfFeedBacks", subject)
+		do ##class(Stc.Utils.Msg).SetMsg("mail_Message_Training-ListOfFeedBacks", message)
 	}
 	
 	quit $$$OK

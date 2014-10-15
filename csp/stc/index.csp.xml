@@ -130,6 +130,7 @@
     if (window.location.href.indexOf('/scheduleframe') == -1){
 	    document.write('<script language="javascript"  src="js/controllers/TrainingCtrl.js"><\/script>');
 	    document.write('<script language="javascript"  src="js/controllers/AllTrainingsCtrl.js"><\/script>');
+	    document.write('<script language="javascript"  src="js/controllers/AllTrainingFeedBacksCtrl.js"><\/script>');
 	    document.write('<script language="javascript"  src="js/controllers/CreateTrainingCtrl.js"><\/script>');
 	    document.write('<script language="javascript"  src="js/controllers/CreateOrderCtrl.js"><\/script>');
 	    document.write('<script language="javascript"  src="js/controllers/OrderNewStudentCtrl.js"><\/script>');
