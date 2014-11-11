@@ -70,7 +70,7 @@
 				&sql(SELECT LastName || ' ' || FirstName INTO :obj.RecipientName FROM Stc_Data.Order WHERE Email = :email)	
 				
 				if (obj.RecipientName = ""){
-					&sql(SELECT FullName INTO :obj.RecipientName FROM Stc_Data.MailingItemApproved WHERE Email = :email)	
+					&sql(SELECT FullName INTO :obj.RecipientName FROM Stc_Data.MailingItemApprovedSubscriber WHERE Email = :email)	
 			
 					if (obj.RecipientName = ""){
 						&sql(SELECT FullName INTO :obj.RecipientName FROM Stc_Data.MailingItemDirty WHERE Email = :email)	

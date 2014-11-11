@@ -8,7 +8,7 @@
 All feedbacks of training
 ===========================================================================================*/
 
-controllersModule.controller('AllTrainingFeedBacksCtrl', function($scope, $route, $location, $filter, $routeParams, UtilsSrvc, OrderSrvc, ReportSrvc, TrainingSrvc, CompanySrvc, PersonSrvc, CertificateSrvc){    
+controllersModule.controller('AllTrainingFeedBacksCtrl', function($scope, $filter, $routeParams, UtilsSrvc, TrainingSrvc){    
     $scope.menu.hide=true;
     $scope.menu.brandCaption = $filter('localize')('Система учёта курсов');
     $scope.menu.appTitle = $scope.menu.brandCaption;
@@ -26,7 +26,7 @@ controllersModule.controller('AllTrainingFeedBacksCtrl', function($scope, $route
                           {name: 'Улучшения', sqlName: 'WhatImprovements', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: false},
                           {name: 'Дополнение', sqlName: 'WhatHear', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: false},
                           {name: 'О докладчике', sqlName: 'AboutTeacher', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: true},
-                          {name: 'Дата создания', sqlName: 'CreatedTS', isSorted: true, isSortable: true, isDown: false, isSearched: false, isSearchable: false, filter: 'date', captionStyle: {width: '180px'}}];
+                          {name: 'Дата создания', sqlName: 'CreatedTS', isSorted: true, isSortable: true, isDown: false, isSearched: false, isSearchable: false, filter: 'date', captionStyle: {width: '220px'}}];
  
         $scope.fbTable.properties = [{name:'rating', cellStyle: {textAlign: 'center'}}, 
                                      {name:'author'},

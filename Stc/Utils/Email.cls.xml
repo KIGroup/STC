@@ -152,7 +152,6 @@ Working with email</Description>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set mail = ..GetEmailPattern("confirmsubscription")
-	set mail.subject = ..GetMailMessageWithTrainingData(mail.subject, tr)
 	set mail.message = $REPLACE(mail.message, "%ActivationUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/mailing/subscription/confirmation/"_$system.Encryption.Base64Encode(mItem.AccessCode))
 	quit mail
 ]]></Implementation>

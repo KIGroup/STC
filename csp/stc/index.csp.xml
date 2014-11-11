@@ -11,32 +11,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	
 	<script language="javascript"  src="js/common.js"></script>  
-	<script language="javascript">
-	var urlDataCookie = StcAppSetting.getCookie('urlDataCookie');
-    if (urlDataCookie){
-	    StcAppSetting.setCookie('urlDataCookie', '', {expires: 1});
-	    if (urlDataCookie.indexOf('urlData=scheduleframe') > 0){
-	    	window.location = 'index.csp#/scheduleframe';
-	    }
-	    else{
-	    	window.location = urlDataCookie;
-	    }
-    }
-    else{
-	    if (window.location.href.indexOf('urlData=scheduleframe') > 0){
-	    	window.location = 'index.csp#/scheduleframe';
-	    }
-    }
-  </script>
-	
 	
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/custom.css">
   
    
-   <script language="javascript"  src="lib/jquery-1.7.2.min.js"></script>
-    <!--  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+   	<script language="javascript"  src="lib/jquery-1.7.2.min.js"></script>
     <script language="javascript"  src="lib/bootstrap.min.js"></script>
      
     <script language="javascript"  src="lib/angular/angular.min.js"></script>
@@ -117,10 +98,10 @@
           </div>
         </div>
        
-      
-       </div>
       <div ng-view>
       </div>
+      
+       </div>
 
     </div>
 
@@ -188,7 +169,7 @@
     <script language="javascript"  src="lib/bootstrap-modal.js"></script>
     
      <script language="javascript">
-        console.log(window.location.href);
+        
         $('ul.nav li.dropdown').hover(function() {
 	          $(this).find('.dropdown-menu').stop(true, true).delay(250).show(200);
             }, function() {
@@ -201,7 +182,8 @@
     		   	$('#divLoader').hide();
     		    $(this).css('display','block'); 
    			    next(); 
-  		  });    
+  		  });  
+  		  
    </script>
   </body>
 </html>

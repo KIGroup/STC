@@ -557,6 +557,7 @@ Method="POST" Url="/json/company/order"</Description>
       	// Создание контакта компании
       	set data.company.contact.company = ##class(%ZEN.proxyObject).%New()
       	set data.company.contact.company.id = company.%Id()
+      	set data.company.contact.id = $$$NULLOREF
       	  	
 		set company.Contact = ##class(Stc.Data.Person).Save(data.company.contact, .st)
 		if $$$ISERR(st) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createCompanyContact", " | "_st))
@@ -1166,6 +1167,7 @@ Method="GET" Url="/json/training/:id/mailing/group"</Description>
 		&sql(DECLARE MGCur CURSOR FOR 
 			 	 SELECT ID
 			 	 FROM Stc_Data.MailingGroup
+			 	 WHERE AccessCode <> 'Students'
 			 	 ORDER BY Name)	
 			
 		&sql(OPEN MGCur)
@@ -1479,6 +1481,14 @@ Method="POST" Url="/json/training/oredeNewStudent"</Description>
 		
 		set st = training.%Save()
 		$$$THROWONERROR(st, st)
+		
+		
+		if $ISOBJECT(order.CityForMailing){
+			set proxy = ##class(%ZEN.proxyObject).%New()
+			set proxy.studentId = person.%Id()
+			set proxy.cityId = order.CityForMailing.%Id()
+			do ##class(Stc.Data.MailingItemApprovedStudent).Save(proxy, .stMI)
+		}
 		
 		set mail = ##class(Stc.Utils.Email).GetMailForTrainingRegistration(training)
 		
@@ -2603,7 +2613,7 @@ Method="POST" Url="/json/mailing/group/item"</Description>
 		
 		$$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
       	
-      	do ##class(Stc.Data.MailingItemApproved).Save(data, .st)
+      	do ##class(Stc.Data.MailingItemApprovedSubscriber).Save(data, .st)
       	if $$$ISERR(st) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus($CASE(data.id = "", 1:"createMailingItem",:"saveMailingItem"), "| "_st)) 
 		
 		TCOMMIT

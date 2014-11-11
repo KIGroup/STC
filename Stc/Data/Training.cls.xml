@@ -198,6 +198,11 @@ Access code to training for teacher</Description>
 <Type>%String</Type>
 </Property>
 
+<Property name="CreatedTS">
+<Type>%TimeStamp</Type>
+<Required>1</Required>
+</Property>
+
 <Index name="AccessCodeIdx">
 <Properties>AccessCode</Properties>
 <Unique>1</Unique>
@@ -347,6 +352,7 @@ Create or save modified training</Description>
 	
 	if (data.id = ""){
 		set tr = ..%New()
+		set tr.CreatedTS = $ZDT($ZTS, 3)
 		set tr.CuratorFullName = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.curator.fullName, "I","UTF8"),"Stc.Data.Localization.Translation;PersonLTextValue")
 		set tr.CuratorEmail = data.curator.email
 		set tr.CuratorPhone = data.curator.phone
@@ -739,6 +745,9 @@ Add person to training, subgroup is detirmining automatically</Description>
 </Value>
 <Value name="28">
 <Value>IsOrdersAutoMailing</Value>
+</Value>
+<Value name="29">
+<Value>CreatedTS</Value>
 </Value>
 </Data>
 </Storage>

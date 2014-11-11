@@ -74,6 +74,10 @@ Timastamp of application creation</Description>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
+<Property name="CityForMailing">
+<Type>Region</Type>
+</Property>
+
 <Property name="Training">
 <Description>
 Training</Description>
@@ -182,7 +186,11 @@ Create application</Description>
 		}
 	} 
 
-	set order.CreatedTS = $ZDT($ZTS, 3)
+	if (data.mailingOn){
+		set order.CityForMailing = ##class(Stc.Data.Region).%OpenId(data.city.id)
+	}
+
+	set order.CreatedTS = $ZDT($ZTS, 3)	
 		
 	set status = order.%Save()
 	if $$$ISERR(status) {
@@ -263,6 +271,9 @@ Delete application with localization</Description>
 </Value>
 <Value name="12">
 <Value>Hash</Value>
+</Value>
+<Value name="13">
+<Value>CityForMailing</Value>
 </Value>
 </Data>
 </Storage>

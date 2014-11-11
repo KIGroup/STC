@@ -13,11 +13,11 @@
 						<form name="form_mail"ng-submit="mailForm.sendMail()" style="margin: 0;">
 							<div class="row-fluid">
 								<div class="control-group">
-								    <label class="control-label">{{('Получатели'|localize) + ' (' + mailForm.contacts.length + ')' + '*'}}
+								    <label class="control-label">{{('Получатели'|localize) + ' (' + ((mailForm.contacts|filter: {city: mailForm.cityFilter}).length) + ')' + '*'}}
 										<i class="iSwitcher"ng-bind="'(обновить)'|localize" ng-click="mailForm.loadItems()"></i>
 									</label>        
 								    <div class="controls" ng-style="mailForm.contactsStyle">
-										<label class="emailContact" ng-repeat="contact in mailForm.contacts" title="{{contact.email}}" ng-click="mailForm.deleteEmailContact(contact)">{{contact.nameShort + ' '}}<i class="emailContactRemove">&times;</i></label>    	
+										<label class="emailContact" ng-repeat="contact in mailForm.contacts|filter: {city: mailForm.cityFilter}" title="{{contact.email + ', ' + contact.city}}" ng-click="mailForm.deleteEmailContact(contact)">{{contact.nameShort + ' '}}<i class="emailContactRemove">&times;</i></label>    	
 								    </div>
 							    </div>
 							</div>
@@ -27,12 +27,24 @@
 								<button class="btn btn-small pull-right" ng-click="mailForm.previewVisible = false;" ng-bind="('Назад'|localize)" type="button"></button>
 							</div>
 						   	<div class="row-fluid" ng-hide="mailForm.previewVisible">
-							    <div class="control-group">
-								    <label class="control-label">{{('Тема письма'|localize) + '*'}}</label>        
-								    <div class="controls">
-										<input class="span12" type="text" ng-model="mailForm.group.mailSubject" required></input>    	
-								    </div>
-							    </div>
+							    <div class="row-fluid">
+								    <div class="span8">
+									    <div class="control-group">
+										    <label class="control-label">{{('Тема письма'|localize) + '*'}}</label>        
+										    <div class="controls">
+												<input class="span12" type="text" ng-model="mailForm.group.mailSubject" required></input>    	
+										    </div>
+									    </div>
+									</div>
+									<div class="span4">
+									    <div class="control-group">
+										    <label class="control-label">{{('Фильтр получателей по городу'|localize)}}</label>        
+										    <div class="controls">
+												<input class="span12" type="text" ng-init="mailForm.cityFilter=''" ng-model="mailForm.cityFilter"></input>
+										    </div>
+									    </div>
+									</div>
+							    </div>	
 							    <div class="control-group">
 								    <label class="control-label">{{('Содержание'|localize) + '*'}}</label>        
 								    <div class="controls">

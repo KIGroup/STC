@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<Class name="Stc.Data.MailingItemDirty">
-<Description>
-MailingItem. Dirty, for spam</Description>
-<Super>%Persistent,MailingItem</Super>
-<TimeCreated>63388,39362.069005</TimeCreated>
+<Class name="Stc.Data.MailingItemApprovedSubscriber">
+<Super>MailingItemApproved</Super>
+<TimeCreated>63492,82696.872876</TimeCreated>
 
 <Property name="FullName">
 <Type>%String</Type>
@@ -33,25 +31,42 @@ MailingItem. Dirty, for spam</Description>
 <Parameter name="MAXLEN" value="500"/>
 </Property>
 
-<Index name="AccessCodeIdx">
-<Properties>AccessCode</Properties>
+<Index name="MGroupEmailIdx">
+<Properties>MGroup,Email</Properties>
 <Unique>1</Unique>
 </Index>
 
 <Method name="ConvertToProxyObject">
+<FormalSpec>fullInfo:%Boolean=1</FormalSpec>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
 	set proxy = ##class(%ZEN.proxyObject).%New()
 	set proxy.id = ..%Id()
+	set proxy.type = "subscriber"
 	set proxy.fullName = ..FullName
 	set proxy.email = ..Email
 	set proxy.company = ..Company
 	set proxy.position = ..Position
 	set proxy.city = ..City
 	set proxy.lastUpdated = ..LastUpdated
-	set proxy.group = ..MGroup.ConvertToProxyObject()
+	if (fullInfo){
+		set proxy.group = ..MGroup.ConvertToProxyObject()
+	}
 	
 	quit proxy
+]]></Implementation>
+</Method>
+
+<Method name="GetByEmail">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>email:%String</FormalSpec>
+<ReturnType>MailingItemApproved</ReturnType>
+<Implementation><![CDATA[
+	set id = ""
+	
+	&sql(SELECT ID INTO :id FROM Stc_Data.MailingItemApprovedSubscriber WHERE Email = :email)
+	
+	quit ..%OpenId(id)
 ]]></Implementation>
 </Method>
 
@@ -97,38 +112,22 @@ MailingItem. Dirty, for spam</Description>
 
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
-<DataLocation>^Stc.Data.MailingItemDirtyD</DataLocation>
-<DefaultData>MailingItemDirtyDefaultData</DefaultData>
-<IdLocation>^Stc.Data.MailingItemDirtyD</IdLocation>
-<IndexLocation>^Stc.Data.MailingItemDirtyI</IndexLocation>
-<StreamLocation>^Stc.Data.MailingItemDirtyS</StreamLocation>
-<ExtentSize>100000</ExtentSize>
-<Data name="MailingItemDirtyDefaultData">
+<DefaultData>MailingItemApprovedSubscriberDefaultData</DefaultData>
+<Data name="MailingItemApprovedSubscriberDefaultData">
+<Subscript>"MailingItemApprovedSubscriber"</Subscript>
 <Value name="1">
-<Value>%%CLASSNAME</Value>
-</Value>
-<Value name="2">
-<Value>AccessCode</Value>
-</Value>
-<Value name="3">
 <Value>FullName</Value>
 </Value>
-<Value name="4">
+<Value name="2">
 <Value>Email</Value>
 </Value>
-<Value name="5">
+<Value name="3">
 <Value>Company</Value>
 </Value>
-<Value name="6">
+<Value name="4">
 <Value>Position</Value>
 </Value>
-<Value name="7">
-<Value>LastUpdated</Value>
-</Value>
-<Value name="8">
-<Value>MGroup</Value>
-</Value>
-<Value name="9">
+<Value name="5">
 <Value>City</Value>
 </Value>
 </Data>
