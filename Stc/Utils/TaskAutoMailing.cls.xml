@@ -99,6 +99,7 @@ Send notification to training teacher</Description>
 	set st = $$$OK
 	
 	try{
+		set grNumber = ##class(Stc.Data.MailingJournal).GetValidGroupNumber()
 		set diffDays = ##class(Stc.Data.Settings).GetMailingTeacherDays()
 		
 		&sql(DECLARE Tr2Cur CURSOR FOR 
@@ -118,7 +119,7 @@ Send notification to training teacher</Description>
 				
 			set mail = ##class(Stc.Utils.Email).GetMailForTrainingTeacher(tr)
 				
-			do ##class(Stc.Data.MailingJournal).Create(tr.Teacher.Email, tr.Teacher.FullName, mail.subject, mail.message, "Преподаватель, доступ к анкете")
+			do ##class(Stc.Data.MailingJournal).Create(tr.Teacher.Email, tr.Teacher.FullName, mail.subject, mail.message, "Преподаватель, доступ к анкете", grNumber)
 			
 			set tr.IsTeacherAutoMailing = 0
 			do tr.%Save()						
@@ -144,6 +145,7 @@ Send notification to training curator</Description>
 	set st = $$$OK
 	
 	try{
+		set grNumber = ##class(Stc.Data.MailingJournal).GetValidGroupNumber()
 		set diffDays = ##class(Stc.Data.Settings).GetMailingCuratorDays()
 			
 		&sql(DECLARE Tr3Cur CURSOR FOR 
@@ -163,7 +165,7 @@ Send notification to training curator</Description>
 			
 			set mail = ##class(Stc.Utils.Email).GetMailForTrainingCurator(tr)
 			
-			do ##class(Stc.Data.MailingJournal).Create(tr.CuratorEmail, tr.CuratorFullName.Value, mail.subject, mail.message, "Куратор, список слушателей")
+			do ##class(Stc.Data.MailingJournal).Create(tr.CuratorEmail, tr.CuratorFullName.Value, mail.subject, mail.message, "Куратор, список слушателей", grNumber)
 			
 			set tr.IsCuratorAutoMailing = 0
 			do tr.%Save()						
@@ -301,13 +303,14 @@ Send </Description>
 			
 			set mail = ##class(Stc.Data.MailingGroup).GetMail(mtg.MGroup.%Id(), mtg.Training.%Id())
 			set contacts = ##class(Stc.Data.MailingGroup).GetMailingItemsContacts(mtg.MGroup.%Id())
-			
+			set grNumber = ##class(Stc.Data.MailingJournal).GetValidGroupNumber()
+	
 			for i=1:1:contacts.Count(){
 				set mItem = ##class(Stc.Data.MailingItemApproved).%OpenId(contacts.GetAt(i).id)
 				if '$ISOBJECT(mItem) continue
 					
 				set msg = $REPLACE(mail.message, "%AccessCode", $system.Encryption.Base64Encode(mItem.AccessCode))
-				do ##class(Stc.Data.MailingJournal).Create(contacts.GetAt(i).email, contacts.GetAt(i).name, mail.subject, msg, "ГР: "_mItem.MGroup.Name)	
+				do ##class(Stc.Data.MailingJournal).Create(contacts.GetAt(i).email, contacts.GetAt(i).name, mail.subject, msg, "ГР: "_mItem.MGroup.Name, grNumber)	
 			}
 					
 			if (contacts.Count() > 0) {
@@ -334,6 +337,7 @@ Send </Description>
 	set st = $$$OK
 	
 	try{
+		set grNumber = ##class(Stc.Data.MailingJournal).GetValidGroupNumber()
 		set nowTime = $ZDT($ZTS, 3)
 		set timeOut = ##class(Stc.Data.Settings).GetMailingHoursTimeoutListOfFeedbacks()
 		
@@ -353,7 +357,7 @@ Send </Description>
 			set tr = ##class(Stc.Data.Training).%OpenId(trId)
 			set mail = ##class(Stc.Utils.Email).GetMailForListOfTrainingFeedBacks(tr)
 			
-			do ##class(Stc.Data.MailingJournal).Create(tr.Teacher.Email, tr.Teacher.FullName_"(Тест)", mail.subject, mail.message, "Преподаватель, доступ к новым отзывам")							
+			do ##class(Stc.Data.MailingJournal).Create(tr.Teacher.Email, tr.Teacher.FullName_"(Тест)", mail.subject, mail.message, "Преподаватель, доступ к новым отзывам", grNumber)							
 		}
 		&sql(CLOSE TrFbCur)
 	}
@@ -374,7 +378,6 @@ Send new training registration link to students by training city</Description>
 	
 	try{
 		set nowTime = $ZDT($ZTS, 3)
-		
 		&sql(DECLARE TrCSCur CURSOR FOR 
 				SELECT ID, City
 			 	FROM Stc_Data.Training
@@ -387,7 +390,8 @@ Send new training registration link to students by training city</Description>
 			quit:(SQLCODE '= 0)
 			
 			do ##class(Stc.Utils.Log).Create("Stc.Utils.TaskAutoMailing CityStudentMailing()", "Start; TrID="_trId)
-			
+			set grNumber = ##class(Stc.Data.MailingJournal).GetValidGroupNumber()
+		
 			set city = ##class(Stc.Data.Region).%OpenId(cityId)
 			#dim studentMGroup As Stc.Data.MailingGroup = ##class(Stc.Data.MailingGroup).GetStudentsGroup()
 			set mail = ##class(Stc.Data.MailingGroup).GetMail(studentMGroup.%Id(), trId)	
@@ -409,7 +413,7 @@ Send new training registration link to students by training city</Description>
 				
 				set student = ##class(Stc.Data.Person).%OpenId(studentId)
 				set msg = $REPLACE(mail.message, "%AccessCode", $system.Encryption.Base64Encode(accessCode))
-				do ##class(Stc.Data.MailingJournal).Create(student.Email, student.FullName, mail.subject, msg, "Оповещение слушателей города - "_city.Name.Value)						
+				do ##class(Stc.Data.MailingJournal).Create(student.Email, student.FullName, mail.subject, msg, "Оповещение слушателей города - "_city.Name.Value, grNumber)						
 			}
 			&sql(CLOSE MIASCur)						
 		}

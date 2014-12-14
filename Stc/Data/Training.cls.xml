@@ -377,6 +377,8 @@ Create or save modified training</Description>
 	set tr.CuratorEmail = data.curator.email
 	set tr.CuratorPhone = data.curator.phone
 	set tr.CuratorPhoneSecret = data.curator.phoneSecret
+	set tr.IsCertificatesDone = data.isCertificatesDone = $$$YES
+		
 		
 	set tr.DateFinish = $ZDATEH(data.dateFinish, 15)
 	set tr.DateStart = $ZDATEH(data.dateStart, 15)

@@ -171,7 +171,7 @@ Method="POST" Url="/json/mailing/subscription"</Description>
 		
 		set mail = ##class(Stc.Utils.Email).GetMailForConfirmationSubscription(item)
 		
-		do ##class(Stc.Data.MailingJournal).Create(item.Email, "", mail.subject, mail.message, "Оформление подписки")
+		do ##class(Stc.Data.MailingJournal).Create(item.Email, "", mail.subject, mail.message, "Оформление подписки", ##class(Stc.Data.MailingJournal).GetValidGroupNumber())
 		
 		TCOMMIT
 	}

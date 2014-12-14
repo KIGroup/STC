@@ -104,7 +104,10 @@
        </div>
 
     </div>
-
+    <!--
+	<script language="javascript"  src="js/combine.js"></script>
+    -->
+<!-- -->
     <script language="javascript"  src="js/controllers/MainCtrl.js"></script>
     <script language="javascript"  src="js/controllers/ScheduleFrameCtrl.js"></script>
     <script language="javascript">
@@ -164,7 +167,7 @@
     <script language="javascript"  src="js/localization/filter.js"></script>
 
     <script language="javascript"  src="js/filters/cacheDate.js"></script>
-
+<!---->
     <script language="javascript"  src="lib/ui-bootstrap-tpls-0.5.0.js"></script>
     <script language="javascript"  src="lib/bootstrap-modal.js"></script>
     
