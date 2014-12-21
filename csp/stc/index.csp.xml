@@ -104,10 +104,10 @@
        </div>
 
     </div>
-    <!--
+    
 	<script language="javascript"  src="js/combine.js"></script>
-    -->
-<!-- -->
+    
+<!--
     <script language="javascript"  src="js/controllers/MainCtrl.js"></script>
     <script language="javascript"  src="js/controllers/ScheduleFrameCtrl.js"></script>
     <script language="javascript">
@@ -162,12 +162,13 @@
     <script language="javascript"  src="js/directives/stcgrid.js"></script> 
     <script language="javascript"  src="js/directives/stcperson.js"></script> 
     <script language="javascript"  src="js/directives/stcschedule.js"></script> 
-    <script language="javascript"  src="js/directives/stccompany.js"></script> 
+    <script language="javascript"  src="js/directives/stccompany.js"></script>
+    <script language="javascript"  src="js/directives/linkbuilder.js"></script> 
     
     <script language="javascript"  src="js/localization/filter.js"></script>
 
     <script language="javascript"  src="js/filters/cacheDate.js"></script>
-<!---->
+-->
     <script language="javascript"  src="lib/ui-bootstrap-tpls-0.5.0.js"></script>
     <script language="javascript"  src="lib/bootstrap-modal.js"></script>
     

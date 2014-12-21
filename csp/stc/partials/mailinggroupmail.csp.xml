@@ -54,6 +54,7 @@
 							    <button class="btn btn-small btn-success" type="submit" ng-bind="('Отправить'|localize)" ng-disabled="mailForm.contacts.length==0 || form_mail.$pristine"></button>
 							    <button class="btn btn-small" type="button" ng-bind="('Назад'|localize)" ng-click="mailForm.back()"></button>
 							    <button class="btn btn-small pull-right" type="button" ng-bind="('Предварительный просмотр'|localize)" ng-click="mailForm.loadPreview()"></button>
+							    <button class="btn btn-small pull-right" type="button" title="{{('Сформировать ссылку'|localize)}}" ng-click="mailForm.linkBuilderIsVisible = true;" style="margin-right: 6px;"><i class="icon-link"></i></button>
 							</div>
 						</form>
 					</div>
@@ -62,5 +63,18 @@
 		</div>
 		<stcalert data="mailForm.alert"/>	
 	</div>
-</div>]]></CSP>
+</div>
+
+
+<linkbuilder is-visible="mailForm.linkBuilderIsVisible"/>
+
+
+
+
+
+
+
+
+
+]]></CSP>
 </Export>

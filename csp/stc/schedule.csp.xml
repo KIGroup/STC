@@ -7,20 +7,20 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	
+    
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/custom.css">
      
     <script language="javascript" src="lib/angular/angular.min.js"></script>
     
-    <script language="javascript">       	
-       	// Настройки приложения. Имена веб-приложений для REST, google календарь, язык
+    <script language="javascript">          
+        // Настройки приложения. Имена веб-приложений для REST, google календарь, язык
         var StcAppSetting = {};
         StcAppSetting.defaultApp = '#(##class(Stc.Data.Settings).GetWebAppNamespace())#';
         StcAppSetting.admin = '#(##class(Stc.Data.Settings).GetWebAppAdmin())#';
         StcAppSetting.user = '#(##class(Stc.Data.Settings).GetWebAppUser())#';
-        StcAppSetting.lang = 'ru-Ru';
+        StcAppSetting.lang = 'ru-RU';
     
         var servicesModule     = angular.module('servicesModule', []);
         var controllersModule  = angular.module('controllersModule', ['servicesModule']);
@@ -81,21 +81,34 @@
             }
         });
 
+		filterModule.filter('convertCacheDate', function($filter) {
+		    return function(input, filterParams, isUTC) {
+		        var result;
 
-        filterModule.filter('convertCacheDate', function($filter) {
-            return function(input, filterParams, isUTC) {
-                var result;
+		        try{
+			        //if (isUTC){
+			        	
+			        //}
+			        
+		            var dateTime = input.split(' ');
+		            var date = dateTime[0].split('-');
+		            
+		            if (dateTime.length == 1){
+		            	result = $filter('date')(new Date(date[0], date[1]-1, date[2]), filterParams);
+		            }
+		            else{
+		                //var time = dateTime[1].split(':');
+		                //result = $filter('date')(new Date(date[0], date[1]-1, date[2], time[0], time[1], time[2]), filterParams);
+		            	return $filter('date')(new Date(input.replace(/-/g,"/")+' UTC'), filterParams)
+		            }
+		        }
+		        catch (ex){
+		            result = input;
+		        }
 
-                try{
-                    result = $filter('date')(new Date(input.replace(/-/g,"/")+' UTC'), filterParams);
-                }
-                catch (ex){
-                    result = input;
-                }
-
-                return result;
-            }
-        });
+		        return result;
+		    }
+		});
 
 
         controllersModule.controller('ScheduleFrameCtrl', function($scope, $window, CommonSrvc){
@@ -127,14 +140,14 @@
                 CommonSrvc.getSchedule().then(
                     function(data){
                         $scope.courses = data.courses; 
-                        if (data.courses.length != 0){
+                        /*if (data.courses.length != 0){
                             data.courses[0].style = {borderTop: 'none'};
                   
                             if (data.courses[0].trainings.length != 0){
                                 data.courses[0].trainings[0].detailsVisible = true;
                                 data.courses[0].trainings[0].headStyle = {color : 'rgb(175, 5, 5)'}; 
                             }
-                        }
+                        }*/
 
                         var host_appName = window.location.host + StcAppSetting.defaultApp;
 
@@ -201,7 +214,7 @@
        
     </script>
   </head>
-  <body ng-app="mainModule">
+  <body ng-app="mainModule" style="padding: 0;">
     <div ng-controller="ScheduleFrameCtrl" style="width: 578px; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; color: #000;">
         <p><b>Очные курсы обучения: программы курсов и ближайшие обучения.</b></p>
         <p style="text-align: justify;">Очный курс может быть проведен как в офисе InterSystems, так и на вашем предприятии при регистрации слушателей от 3 человек. По результатам обучения слушателям выдается международный сертификат InterSystems.</p>
