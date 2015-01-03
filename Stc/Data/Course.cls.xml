@@ -66,6 +66,65 @@ Currency</Description>
 <Parameter name="XMLREFERENCE" value="ID"/>
 </Property>
 
+<Property name="YandexPlacemarkPreset">
+<Type>%String</Type>
+<InitialExpression>"islands#blackIcon"</InitialExpression>
+</Property>
+
+<Method name="RecalcYandexPresets">
+<Description>
+do ##class(Stc.Data.Course).RecalcYandexPresets()</Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set presets = $LB("islands#redIcon",
+			     "islands#greenIcon",
+				 "islands#blueIcon", 
+			     "islands#orangeIcon", 
+			     "islands#yellowIcon",
+				 "islands#brownIcon",
+				 "islands#oliveIcon",
+				 "islands#violetIcon",
+				 "islands#pinkIcon",
+				 "islands#grayIcon",		
+				 "islands#lightBlueIcon",
+				 "islands#blackIcon")
+		
+	set presetsCount = $LL(presets)
+				 
+	&sql(DECLARE CourseCur CURSOR FOR 
+	 	 SELECT Course, Count(Course) As CourseCount
+		 FROM Stc_Data.Training
+		 GROUP BY Course
+		 ORDER BY CourseCount DESC)	
+	
+	&sql(OPEN CourseCur)
+	for  
+	{	
+		&sql(FETCH CourseCur INTO :courseId, :count) 
+		quit:(SQLCODE '= 0)
+		
+		if (%ROWCOUNT > presetsCount)
+		{
+			set newPreset = $LIST(presets, presetsCount)
+		}
+		else
+		{
+			set newPreset = $LIST(presets, %ROWCOUNT) 
+		}
+		
+		//w !, ":newPreset="_newPreset
+		&sql(UPDATE Stc_Data.Course 
+			 SET YandexPlacemarkPreset = :newPreset 
+			 WHERE ID = :courseId AND (YandexPlacemarkPreset IS NULL OR YandexPlacemarkPreset <> :newPreset))
+	}
+	
+	&sql(CLOSE CourseCur)
+		
+	quit $$$OK
+]]></Implementation>
+</Method>
+
 <Method name="ConvertToProxyObject">
 <Description>
 Convert to proxyObject (for JSON)</Description>
@@ -152,6 +211,9 @@ Create or save modified course</Description>
 </Value>
 <Value name="8">
 <Value>Currency</Value>
+</Value>
+<Value name="9">
+<Value>YandexPlacemarkPreset</Value>
 </Value>
 </Data>
 <Data name="Teachers">

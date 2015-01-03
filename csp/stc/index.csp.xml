@@ -57,7 +57,7 @@
                   <li ng-show="menu.admin" class="dropdown" ng-class="'dropdown ' + menu.analytics.css">
                     <a href="#/analytics/pointsmap"><span ng-bind="(menu.analytics.name|localize) + ' '"></span><b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                      <li ng-class="{aSelected: menu.analyticsMap.css=='active'}"    ><a href="#/analytics/pointsmap" ng-bind="menu.analyticsMap.name|localize"></a></li>
+                      <li ng-class="{aSelected: menu.analyticsMap.css=='active'}"    ><a href="#/analytics/pointsmapyandex" ng-bind="menu.analyticsMap.name|localize"></a></li>
                       <li ng-class="{aSelected: menu.analyticsCourse.css=='active'}" ><a href="#/analytics/course"    ng-bind="menu.analyticsCourse.name|localize"></a></li>
                       <li ng-class="{aSelected: menu.analyticsTeacher.css=='active'}"><a href="#/analytics/teacher"   ng-bind="menu.analyticsTeacher.name|localize"></a></li>
                       <li ng-class="{aSelected: menu.analyticsCompany.css=='active'}"><a href="#/analytics/company"   ng-bind="menu.analyticsCompany.name|localize"></a></li>
@@ -106,8 +106,8 @@
     </div>
     
 	<script language="javascript"  src="js/combine.js"></script>
-    
-<!--
+<!--    
+
     <script language="javascript"  src="js/controllers/MainCtrl.js"></script>
     <script language="javascript"  src="js/controllers/ScheduleFrameCtrl.js"></script>
     <script language="javascript">
@@ -168,7 +168,9 @@
     <script language="javascript"  src="js/localization/filter.js"></script>
 
     <script language="javascript"  src="js/filters/cacheDate.js"></script>
--->
+
+
+ -->
     <script language="javascript"  src="lib/ui-bootstrap-tpls-0.5.0.js"></script>
     <script language="javascript"  src="lib/bootstrap-modal.js"></script>
     

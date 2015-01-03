@@ -22,3 +22,4 @@ StcDashboards-OrdersApproved.dashboard.DFI
 StcDashboards-TeacherStudents.dashboard.DFI
 StcDashboards-TeacherTrainings.dashboard.DFI
 StcDashboards-TrainingPointsMap.dashboard.DFI
+StcDashboards-TrainingPointsMapYandex.dashboard.DFI
