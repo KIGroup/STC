@@ -100,7 +100,7 @@
 		}
 	}
     ]]></property>
-    <property name="placemarkDataProperties">ID,Course,PlacemarkPreset,City,Street,Room,DateStart,DateFinish,Teacher,StudentsCount,SubGroupsCount,Latitude,Longitude,IsCompleted</property>
+    <property name="placemarkDataProperties">ID,Course,CourseDescription,PlacemarkPreset,City,Street,Room,DateStart,DateFinish,Teacher,StudentsCount,SubGroupsCount,Latitude,Longitude,IsCompleted</property>
     <property name="placemarkIcon">http://i.imgur.com/pBB7MYT.png</property>
     <property name="placemarkIconSize"></property>
     <property name="placemarkLatitudeProperty">Latitude</property>

@@ -35,6 +35,7 @@ Stc.DeepSee.KPI.TrainingPoints</Description>
 <property name="SubGroupsCount"  columnNo="11"/>
 <property name="Latitude"    columnNo="12"/>
 <property name="Longitude"   columnNo="13"/>
+<property name="CourseDescription" columnNo="14"/>
 
 <filter name="Course" sql="SELECT Name->Value As Name FROM Stc_Data.Course ORDER BY Name"/>
 <filter name="CompanyType" sql="SELECT Name->Value As Name FROM Stc_Data.CompanyType"/>
@@ -153,7 +154,8 @@ tr.Teacher->FullName ||', '|| tr.Teacher->Email As Teacher,
 (SELECT COUNT(Students) FROM Stc_Data.SubGroup_Students WHERE SubGroup IN (SELECT SubGroups FROM Stc_Data.Training_SubGroups WHERE Training = tr.ID)) As StudentsCount,
 (SELECT COUNT(SubGroups) FROM Stc_Data.Training_SubGroups WHERE Training = tr.ID) As SubGroupsCount,
 tr.Latitude,
-tr.Longitude
+tr.Longitude,
+tr.Course->Description->Value As CourseDescription
 FROM Stc_Data.Training as tr 
 :WHERECondition
 ORDER BY  tr.Course->Name->Value, tr.DateStart DESC
