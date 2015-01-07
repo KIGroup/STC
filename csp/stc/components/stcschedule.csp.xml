@@ -5,7 +5,7 @@
     <div class="row-fluid">
         <table class="table scheduleTable">
             <tr>
-                <td colspan="5" class="scheduleCourseName" ng-style="course.style"><b ng-bind="course.name"></b></td>
+                <td colspan="5" class="scheduleCourseName" ng-style="course.style"><b ng-bind="course.description"></b></td>
             </tr>
             <tr>
                 <td ng-bind="'Продолжительность' + ': ' + course.days + ' д. (' + course.hours + ' ч.)'" colspan="4"></td>
