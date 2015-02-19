@@ -529,6 +529,10 @@ Method="DELETE" Url="/json/company/:id"</Description>
 		set st = ex.AsStatus()
 	}
 
+	if (st = $$$OK) {
+		do ##class(Stc.Data.Training).BuildCubes()
+	}
+	
 	quit st
 ]]></Implementation>
 </Method>

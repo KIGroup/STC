@@ -145,10 +145,10 @@ controllersModule.controller('MailingJournalCtrl', function($scope, MailingSrvc,
  
     $scope.$watch('grMailTable.selectedItems[0]', function(){
         if ($scope.grMailTable.selectedItems && $scope.grMailTable.selectedItems.length > 0){
-            $scope.allMailTable.tabCaption = "Все писма выбранной группы";
+            $scope.allMailTable.tabCaption = "Все письма выбранной группы";
         }
         else{
-            $scope.allMailTable.tabCaption = "Все писма";
+            $scope.allMailTable.tabCaption = "Все письма";
         }
     }, true);
 
