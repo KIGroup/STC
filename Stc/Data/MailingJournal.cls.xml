@@ -55,6 +55,10 @@
 <Properties>IsSended</Properties>
 </Index>
 
+<Index name="GroupNumberIndex">
+<Properties>GroupNumber</Properties>
+</Index>
+
 <Method name="GetValidGroupNumber">
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Integer</ReturnType>

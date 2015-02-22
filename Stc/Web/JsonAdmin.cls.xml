@@ -2768,7 +2768,7 @@ Method="POST" Url="/json/mailing/journal/parts/grid"</Description>
 		set proxyResult.children.items = ##class(%ListOfObjects).%New()
 	    
       	set rowCount = 0
-      	&sql(DECLARE MJCur CURSOR FOR 
+      	&sql(DECLARE MJCur3 CURSOR FOR 
 		 	 SELECT mj.GroupNumber,
 		 	 		mj.CreatedTS, 
 		 	 		mj.Type, 
@@ -2781,14 +2781,16 @@ Method="POST" Url="/json/mailing/journal/parts/grid"</Description>
 		 	 GROUP BY GroupNumber
 		 	 ORDER BY GroupNumber DESC)	
 		
-		&sql(OPEN MJCur)
+		&sql(OPEN MJCur3)
 		for  
 		{	
-			&sql(FETCH MJCur INTO :grNumber, :createdTS, :type, :subj, :msg, :recCount, :sendCount) 
+			&sql(FETCH MJCur3 INTO :grNumber, :createdTS, :type, :subj, :msg, :recCount, :sendCount) 
 			quit:(SQLCODE '= 0)
 			set rowCount = rowCount + 1
 			
-			if (rowCount >= params.first) && (rowCount <= params.last){
+			if (rowCount > params.last) quit
+			
+			if (rowCount >= params.first){
 				set proxy = ##class(%ZEN.proxyObject).%New()
 				set proxy.id = grNumber
 				set proxy.groupNumber = grNumber
@@ -2802,8 +2804,11 @@ Method="POST" Url="/json/mailing/journal/parts/grid"</Description>
 			}	
 		}
 		
-		&sql(CLOSE MJCur)
+		&sql(CLOSE MJCur3)
 		
+		
+		&sql(SELECT COUNT(DISTINCT GroupNumber) INTO :rowCount FROM Stc_Data.MailingJournal WHERE GroupNumber > 0) 
+			
 		set proxyResult.children.itemsTotal = rowCount
 		do proxyResult.%ToJSON()
     }
