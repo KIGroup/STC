@@ -90,7 +90,20 @@
                       </li>
                     </ul>
                   </li>
-                  <li><a ng-click="menu.login()" href="" ng-bind="menu.loginCaption|localize"></a></li>   
+                  <li ng-show="menu.user" title="{{((menu.admin && !menu.readOnlyMode) ? ('Администратор'|localize) : ('Гость'|localize)) + ': ' + menu.user}}" style="cursor: default;" >
+	                  <a>
+	                  	<i class="icon-cogs" ng-show="menu.admin && !menu.readOnlyMode"></i>
+	                  	<i class="icon-user" ng-show="menu.admin && menu.readOnlyMode"></i>
+	                  	&nbsp;
+	                  	{{menu.user}}
+	                  </a>
+                  </li>
+                  <li>
+                  	<a ng-click="menu.login()" href="" title="{{menu.loginCaption|localize}}">
+                  		<i class="icon-signin" ng-hide="menu.user"></i>
+                  		<i class="icon-signout" ng-show="menu.user"></i>
+                  	</a>
+                  </li>
                  </ul>    
               </div>
 

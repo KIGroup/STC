@@ -10,7 +10,8 @@
 
 controllersModule.controller('MainCtrl', function($scope, $window, $location, $cookies, DALSrvc, $filter, UtilsSrvc){
 
-    $scope.menu = {admin: ($cookies.admin === 'true'),
+    $scope.menu = {user: $cookies.user,
+	    		   admin: ($cookies.admin === 'true'),
     			   readOnlyMode: ($cookies.readOnlyMode === 'true'),
     			   loginCaption: ($cookies.admin === 'true' ? 'Выход' : 'Вход'),
     			   languages: [{id: 'ru-RU', name: 'Русский', flag: 'img/flags/ru.png'}, 
@@ -95,9 +96,11 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
 	            	$scope.menu.readOnlyMode = false;
 	            }
 	            
+	            $scope.menu.user = data.user;
 	            $scope.menu.admin = true;
                 $scope.menu.loginCaption = 'Выход';
                 $scope.menu.brandCaption = 'Система учёта курсов';
+                $cookies['user'] = data.user;
                 $cookies['admin'] = 'true';
                 
                 if ($location.path() == '/createorder'){
@@ -105,7 +108,9 @@ controllersModule.controller('MainCtrl', function($scope, $window, $location, $c
                 }
             },
             function(response){
+                $scope.menu.user = "";
                 $scope.menu.admin = false;
+                $cookies['user'] = '';
                 $cookies['admin'] = 'false';
 	            $cookies['readOnlyMode'] = 'false';
 	            $scope.menu.readOnlyMode = false;

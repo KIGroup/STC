@@ -2925,13 +2925,21 @@ Method="GET" Url="/json/checkAdmin/:isLogin"</Description>
 <FormalSpec>isLogin:%Boolean</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	
 	if (isLogin = 1){
+		set data = ##class(%ZEN.proxyObject).%New()
+		set data.user = $USERNAME
+	
+	
 		if (##class(Stc.Data.Person).CheckDeletePrivilege() = $$$OK){
-			w "{""privileges"":""all""}"
+			set data.privileges = "all"
 		}
 		else{
-			w "{""privileges"":""read""}"
+			set data.privileges = "read"
 		}
+		
+		do data.%ToJSON()
+		
 		q $$$OK
 	}
 
