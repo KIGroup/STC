@@ -278,6 +278,7 @@ Get email pattern from ^CacheMsg</Description>
 <FormalSpec>email:%String,subject:%String,msg:%String,recipientName:%String=""</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	return 1
 	if ($FIND(email, "ilson") = 0){
 		set email = "stc_testmail2@mail.ru"
 	}

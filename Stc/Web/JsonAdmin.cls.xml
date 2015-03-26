@@ -1128,7 +1128,7 @@ Method="GET" Url="/json/training/:id/mailing/group"</Description>
 		// Students
 		set grStudents = ##class(%ZEN.proxyObject).%New()
 		set grStudents.id = "students"
-		set grStudents.name = "Слушатели - напоминание"
+		set grStudents.name = ##class(Stc.Utils.Msg).GetMsg("StudentsRemainder")
 		set grStudents.mailingIsCompleted = $$$NO
 		set grStudents.isAutoMailing = tr.IsStudentsAutoMailing
 		set grStudents.mail = ##class(Stc.Utils.Email).GetMailForTrainingStudents(tr)  
@@ -1139,7 +1139,7 @@ Method="GET" Url="/json/training/:id/mailing/group"</Description>
 		// FeedBack
 		set grFeedBack = ##class(%ZEN.proxyObject).%New()
 		set grFeedBack.id = "feedback"
-		set grFeedBack.name = "Слушатели - доступ к анкете"
+		set grFeedBack.name = ##class(Stc.Utils.Msg).GetMsg("StudentsAccessToFeedBack")
 		set grFeedBack.mailingIsCompleted = $$$NO
 		set grFeedBack.isAutoMailing = tr.IsFeedBackAutoMailing
 		set grFeedBack.mail = ##class(Stc.Utils.Email).GetMailForTrainingFeedBack(tr)
@@ -1150,7 +1150,7 @@ Method="GET" Url="/json/training/:id/mailing/group"</Description>
 		// Curator
 		set grCurator = ##class(%ZEN.proxyObject).%New()
 		set grCurator.id = "curator"
-		set grCurator.name = "Куратор - список слушателей"
+		set grCurator.name = ##class(Stc.Utils.Msg).GetMsg("CuratorListOfStudents")
 		set grCurator.mailingIsCompleted = $$$NO
 		set grCurator.isAutoMailing = tr.IsCuratorAutoMailing
 		set grCurator.mail = ##class(Stc.Utils.Email).GetMailForTrainingCurator(tr)
@@ -1162,7 +1162,7 @@ Method="GET" Url="/json/training/:id/mailing/group"</Description>
 		// Teacher
 		set grTeacher = ##class(%ZEN.proxyObject).%New()
 		set grTeacher.id = "teacher"
-		set grTeacher.name = "Преподаватель - список слушателей"
+		set grTeacher.name = ##class(Stc.Utils.Msg).GetMsg("TeacherListOfStudents")
 		set grTeacher.mailingIsCompleted = $$$NO
 		set grTeacher.isAutoMailing = tr.IsTeacherAutoMailing
 		set grTeacher.mail = ##class(Stc.Utils.Email).GetMailForTrainingTeacher(tr)
@@ -1174,7 +1174,7 @@ Method="GET" Url="/json/training/:id/mailing/group"</Description>
 		// Insert mailing group for orders
 		set grOrders = ##class(%ZEN.proxyObject).%New()
 		set grOrders.id = "orders"
-		set grOrders.name = "Заявки - ссылка на регистрацию"
+		set grOrders.name = ##class(Stc.Utils.Msg).GetMsg("OrdersLinkForRegistration")
 		set grOrders.mailingIsCompleted = $$$NO
 		set grOrders.isAutoMailing = tr.IsOrdersAutoMailing
 		set grOrders.mail = ##class(Stc.Utils.Email).GetMailForTrainingOrders(tr)

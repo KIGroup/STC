@@ -41,10 +41,26 @@ Set localized </Description>
 
 <Method name="Init">
 <Description>
-Write all messages into global</Description>
+Write all messages into global do ##class(Stc.Utils.Msg).Init()</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	set ^CacheMsg("Stc", "ru", "StudentsAccessToFeedBack") = "Слушатели - доступ к анкете"
+	set ^CacheMsg("Stc", "en", "StudentsAccessToFeedBack") = "Students - access to feedback"
+	
+	set ^CacheMsg("Stc", "ru", "StudentsRemainder") = "Слушатели - напоминание"
+	set ^CacheMsg("Stc", "en", "StudentsRemainder") = "Students - remainder"
+	
+	set ^CacheMsg("Stc", "ru", "CuratorListOfStudents") = "Куратор - список слушателей"
+	set ^CacheMsg("Stc", "en", "CuratorListOfStudents") = "Curator - list of students"
+	
+	set ^CacheMsg("Stc", "ru", "TeacherListOfStudents") = "Преподаватель - список слушателей"
+	set ^CacheMsg("Stc", "en", "TeacherListOfStudents") = "Teacher - list of students"
+	
+	set ^CacheMsg("Stc", "ru", "OrdersLinkForRegistration") = "Заявки - ссылка на регистрацию"
+	set ^CacheMsg("Stc", "en", "OrdersLinkForRegistration") = "Orders - link for registration"
+	
+	
 	
 	set ^CacheMsg("Stc", "ru", "Curator") = "Куратор"
 	set ^CacheMsg("Stc", "en", "Curator") = "Curator"

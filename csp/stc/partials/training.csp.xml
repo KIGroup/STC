@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/training.csp" application="/csp/stc/" default="1"><![CDATA[
+<CSP name="stc/partials/training.csp" application="/csp/stc_loc/" default="1"><![CDATA[
 <div class="row-fluid">
 	<div class="span10 offset1">
 	 	<tabset>
@@ -237,7 +237,7 @@
 				/>
 				
 				<div ng-show="newstud.selectedItems.length!=0 && newstud.items.length!=0 && !menu.readOnlyMode">
-					<p ng-hide="newstud.selectedItems[0].company.id"><span class="label label-important" ng-bind="'Внимание!'|localize"></span>&nbsp;&nbsp;<span ng-bind="'Организация слушателя не существует, создайте её или смените'"></span></p>
+					<p ng-hide="newstud.selectedItems[0].company.id"><span class="label label-important" ng-bind="'Внимание!'|localize"></span>&nbsp;&nbsp;<span ng-bind="'Организация слушателя не существует, создайте её или смените'|localize"></span></p>
 					
 					<div ng-hide="newstud.conflict.id">
 						<button type="button" class="btn btn-small btn-success" ng-click="newstud.addIntoTraining('create_add')" ng-bind="'Добавить в обучение'|localize" title="{{'Слушатель будет добавлен в обучение'|localize}}" ng-disabled="!newstud.selectedItems[0].company.id"></button>

@@ -27,7 +27,7 @@ controllersModule.controller('AllMailingGroupsCtrl', function($scope, $location,
         $scope.groupTable.columns = [
                           {name: 'Название', sqlName: 'Name', isSorted: true, isSortable: true, isDown: true, isSearched: true, isSearchable: true},
                           {name: 'Описание', sqlName: 'Description', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false},
-                          {name: 'Участники', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '80px'}}];
+                          {name: 'Участники', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '120px'}}];
         
         $scope.groupTable.properties = [{name:'name'}, 
                                         {name:'description'}, 
