@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/css/custom.css" application="/csp/stc/" default="1"><![CDATA[
+<CSP name="stc/css/custom.css" application="/csp/stc_loc/" default="1"><![CDATA[
 #gcalendar .accordion-inner{
 	padding: 0;
 }
@@ -355,21 +355,6 @@ pre.badge-inverse[href] {
 }
 
 
-.scheduleTable{
-	margin: 0;
-}
-
-.scheduleTable td{
-	padding: 4px 8px 4px 8px;
-}
-
-.scheduleTableTrainingHead{
-	cursor: pointer;
-}
-
-.scheduleTableTrainingHead:hover{
-	color: rgb(175,0,0);
-}
 
 .unselectable{
   -webkit-user-select:none;
@@ -433,6 +418,56 @@ body{
 }
 
 .scheduleCourseName{
-	background-color: rgb(247,247,247);
+	background: none repeat scroll 0% 0% #45A0C2;
+  	color: white;
+  	cursor: pointer;
+}
+
+.scheduleCourseName:hover{
+	background: none repeat scroll 0% 0% #666;
+}
+
+
+.courseCityIcon{
+  color: #0F5F7C;
+}
+
+.courseIcon{
+  margin-top: 4px;
+  margin-right: 5px;
+  color: white;
+  font-size: 14px;
+}
+
+
+.scheduleTable{
+	margin: 0;
+}
+
+.scheduleTable td{
+	padding: 4px 8px 4px 8px;
+}
+
+.scheduleTableTrainingHead{
+	cursor: pointer;
+}
+
+.scheduleTableTrainingHead:hover{
+	color: rgb(5, 63, 84);
+}
+
+.scheduleTable td {
+  border-top: 1px solid #7CB0C7;
+}
+
+.scheduleCourse{
+	margin: 0 0 15px 0; 
+	border-bottom: 1px solid #7CB0C7; 
+	border-right: 1px solid #7CB0C7; 
+	border-left: 1px solid #7CB0C7; 
+	border-radius: 0px; 
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+	font-size: 12px; 
+	color: #000;
 }]]></CSP>
 </Export>
