@@ -1049,13 +1049,13 @@ Method="POST" Url="/json/training/mail/send"</Description>
 					do ##class(Stc.Data.MailingJournal).Create(mItem.Email,  mItem.FullName, data.subject, msg, "ГР: "_mItem.MGroup.Name, grNumber)
 				}
 				else{
-					do ##class(Stc.Data.MailingJournal).Create(data.contacts.GetAt(i).email,"", data.subject, data.message, "Рассылка из обучения", grNumber)
+					do ##class(Stc.Data.MailingJournal).Create(data.contacts.GetAt(i).email,"", data.subject, data.message, ##class(Stc.Utils.Msg).GetMsg("MailingFromTraining"), grNumber)
 				}
 			}
 		}
 		else{
 			for i=1:1:data.contacts.Count(){
-				do ##class(Stc.Data.MailingJournal).Create(data.contacts.GetAt(i).email, $ZCVT(data.contacts.GetAt(i).name, "I", "UTF8"), data.subject, data.message, "Рассылка из обучения", grNumber)
+				do ##class(Stc.Data.MailingJournal).Create(data.contacts.GetAt(i).email, $ZCVT(data.contacts.GetAt(i).name, "I", "UTF8"), data.subject, data.message, ##class(Stc.Utils.Msg).GetMsg("MailingFromTraining"), grNumber)
 			}
 		}
 		
@@ -1510,7 +1510,7 @@ Method="POST" Url="/json/training/oredeNewStudent"</Description>
 		
 		set mail = ##class(Stc.Utils.Email).GetMailForTrainingRegistration(training)
 		
-		do ##class(Stc.Data.MailingJournal).Create(orderEmail, orderFullName, mail.subject, mail.message, "Добавление слушателя", ##class(Stc.Data.MailingJournal).GetValidGroupNumber())
+		do ##class(Stc.Data.MailingJournal).Create(orderEmail, orderFullName, mail.subject, mail.message, ##class(Stc.Utils.Msg).GetMsg("AddNewStudent"), ##class(Stc.Data.MailingJournal).GetValidGroupNumber())
 		
 		set trId = training.%Id()
 			

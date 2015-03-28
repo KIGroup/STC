@@ -45,6 +45,25 @@ Write all messages into global do ##class(Stc.Utils.Msg).Init()</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
+	set ^CacheMsg("Stc", "ru", "MailingFromTraining") = "Рассылка из обучения"
+	set ^CacheMsg("Stc", "en", "MailingFromTraining") = "Mailing from training"
+	
+	set ^CacheMsg("Stc", "ru", "CreateSubscr") = "Оформление подписки"
+	set ^CacheMsg("Stc", "en", "CreateSubscr") = "Create subscription"
+	
+	set ^CacheMsg("Stc", "ru", "AddNewStudent") = "Добавление слушателя"
+	set ^CacheMsg("Stc", "en", "AddNewStudent") = "Add new student"
+	
+	set ^CacheMsg("Stc", "ru", "") = ""
+	set ^CacheMsg("Stc", "en", "") = ""
+	
+	set ^CacheMsg("Stc", "ru", "") = ""
+	set ^CacheMsg("Stc", "en", "") = ""
+	
+	set ^CacheMsg("Stc", "ru", "") = ""
+	set ^CacheMsg("Stc", "en", "") = ""
+	
+	
 	set ^CacheMsg("Stc", "ru", "StudentsAccessToFeedBack") = "Слушатели - доступ к анкете"
 	set ^CacheMsg("Stc", "en", "StudentsAccessToFeedBack") = "Students - access to feedback"
 	

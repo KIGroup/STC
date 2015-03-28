@@ -541,7 +541,7 @@ localizationModule.constant('StcDictionary', {
   getTranslate: function(word){
       
       if (!this.strings[word]){
-      		console.log("'"+word+"' : '',");
+      		//console.log("'"+word+"' : '',");
       }
      
       //console.log('call localize=' + word);
