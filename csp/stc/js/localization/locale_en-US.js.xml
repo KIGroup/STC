@@ -5,6 +5,7 @@
 
 localizationModule.constant('StcDictionary', {
   strings: {
+	'Доступно':'Available',
 	'Письма добавлены в очередь, проверьте журнал рассылок':'Letters added to the queue, check the mailing journal',
     '(обновить)'                                               :'(refresh)',
     '(есть в списке)'                                          : '(is on the list)',
@@ -498,6 +499,26 @@ localizationModule.constant('StcDictionary', {
 '* Формат файла .csv, 1 запись: ФИО;Email;Город;Организация;Должность' : '* .csv File format, 1 record: Full name;Email;City;Organization;Position',
 
 
+'Количество доступных тренингов для регистрации' : 'The number of available training for registration',
+'Стоимость курса' : 'Cost of course',
+'Длительность' : 'Duration',
+'д.' : 'd.',
+'ч.' : 'h.',
+'слушатель' : 'student',
+'Показать дополнительную информацию' : 'Show additional information',
+'Скрыть дополнительную информацию' : 'Hide additional information',
+'Нет доступных тренингов' : 'There are no available trainings',
+'Регистрация' : 'Registration',
+'Записаться на курс' : 'Register for a course',
+'Копировать в мой календарь' : 'Copy to my calendar',
+'Присоединиться' : 'Join',
+'Место проведения' : 'Location',
+'ауд.' : 'room',
+
+
+
+
+
 
 'В содержании письма можно использовать переменные(%Variable), которые впоследствии будут заменены на соответствующие значения. Список доступных переменных для данного шаблона:<br>%DateStart, %DateEnd - дата начала / окончания обучения;<br>%TimeStart, %TimeEnd - время начала / окончание занятий;<br>%Course.Name - название курса;<br>%City.Name, %Region.Name, %Country.Name - город, регион, страна;<br>%Street, %Room - улица и аудитория;<br>%Teacher.FullName - фамилия и имя преподавателя;<br>%Teacher.Email, %Teacher.Phone - email, телефон<br>%Curator.FullName - фамилия и имя куратора;<br>%Curator.Email, %Curator.PhoneSecret, %Curator.PhonePublic - email, личный|публичный телефон;<br>%OtherInfo - дополнительная информация об обучении;<br>%JoinUrl - ссылка на страницу для регистрации;<br>%ListOfStudentsUrl - ссылка на страницу со списком слушателей;<br>%UnsubscribeUrl - ссылка на отмену подписки.<br>' : 
 'Inside the message you can use variables(%Variable). They will be replaced with appropriate values. The list of available variables for this template:<br>%DateStart, %DateEnd - start / end date training;<br>%TimeStart, %TimeEnd - time;<br>%Course.Name - course name;<br>%City.Name, %Region.Name, %Country.Name - city, region|state, country;<br>%Street, %Room - address;<br>%Teacher.FullName - teacher full name;<br>%Teacher.Email, %Teacher.Phone - email, phone<br>%Curator.FullName - curator full name;<br>%Curator.Email, %Curator.PhoneSecret, %Curator.PhonePublic - email, private, public phone;<br>%OtherInfo - other info about training;<br>%JoinUrl - registration link;<br>%ListOfStudentsUrl - list of students link;<br>%UnsubscribeUrl - unsubscribe link.<br>',
@@ -541,7 +562,7 @@ localizationModule.constant('StcDictionary', {
   getTranslate: function(word){
       
       if (!this.strings[word]){
-      		//console.log("'"+word+"' : '',");
+      		console.log("'"+word+"' : '',");
       }
      
       //console.log('call localize=' + word);

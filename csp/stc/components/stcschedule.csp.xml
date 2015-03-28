@@ -6,21 +6,21 @@
         <table class="table scheduleTable">
             <tr class="scheduleCourseName unselectable" ng-click="course.detailsVisible=!course.detailsVisible;">
 				<td style="width: 20px; text-align: center;">
-					<i class="icon icon-plus courseIcon pull-right" ng-hide="course.detailsVisible"></i>
-					<i class="icon icon-minus courseIcon pull-right" ng-show="course.detailsVisible"></i>
+					<i class="fnt-plus courseIcon pull-right" ng-hide="course.detailsVisible"></i>
+					<i class="fnt-minus courseIcon pull-right" ng-show="course.detailsVisible"></i>
                 </td>
                 <td colspan="3" ng-style="course.style" title="{{course.description}}">
 					<b ng-bind="course.name"></b>
 				</td>
-				<td title="{{'Количестов доступных тренингов для регистрации'}}">
-					<span class="pull-right">Доступно: {{course.trainings.length}}</span>
+				<td title="{{'Количестов доступных тренингов для регистрации'|localize}}">
+					<span class="pull-right">{{'Доступно'|localize}}: {{course.trainings.length}}</span>
 				</td>
             </tr>
             <tr ng-show="course.detailsVisible">
                 <td colspan="5">
-					<span ng-bind="'Продолжительность' + ': ' + course.days + ' д. (' + course.hours + ' ч.)'"></span>.
+					<span ng-bind="('Продолжительность'|localize) + ': ' + course.days + ' ' + ('д.'|localize) + ' (' + course.hours + ' ' + ('ч.'|localize) + ')'"></span>.
 					&nbsp;
-					<a ng-href="{{course.programUrl}}" class="cellLink" target="_blank" ng-bind="'Программа курса'" title="Открыть программу курса"></a>.
+					<a ng-href="{{course.programUrl}}" class="cellLink" target="_blank" ng-bind="'Программа курса'|localize" title="{{'Открыть программу курса'|localize}}"></a>.
 				</td>
             </tr>
             <tr ng-show="course.detailsVisible">
@@ -33,14 +33,14 @@
             <table class="table scheduleTable scheduleTableTrainingHead unselectable" ng-click="onClickTraining(tr)">
                 <tr ng-style="tr.headStyle">
                     <td style="width: 20px; text-align: center;">
-                        <i class="icon icon-plus courseCityIcon" ng-hide="tr.detailsVisible"></i>
-                        <i class="icon icon-minus courseCityIcon" ng-show="tr.detailsVisible"></i>
+                        <i class="fnt-plus courseCityIcon" ng-hide="tr.detailsVisible"></i>
+                        <i class="fnt-minus courseCityIcon" ng-show="tr.detailsVisible"></i>
                     </td>
                     <td ng-bind="tr.city.name" style="width: 30%;"></td>
                     <td ng-bind="tr.dates" style="text-align: center;" colspan="2"></td>
                     <td style="width: 115px; text-align: center;">
-                    	<a ng-hide="tr.detailsVisible" href="" class="scheduleDetails" ng-bind="'Регистрация'" title="Показать дополнительную информацию"></a>
-                    	<a ng-show="tr.detailsVisible" href="" class="scheduleDetails" ng-bind="'Закрыть'"  title="Скрыть дополнительную информацию"></a>
+                    	<a ng-hide="tr.detailsVisible" href="" class="scheduleDetails" ng-bind="'Регистрация'|localize" title="{{'Показать дополнительную информацию'|localize}}"></a>
+                    	<a ng-show="tr.detailsVisible" href="" class="scheduleDetails" ng-bind="'Закрыть'|localize"  title="{{'Скрыть дополнительную информацию'|localize}}"></a>
                 	</td> 
                 </tr>
             </table>
@@ -50,32 +50,32 @@
                 <tr>
                     <td ng-bind="' '" style="width: 5%; border-top-style: dashed;"></td>
                     <td style="border-top-style: dashed;">
-                    	<span ng-bind="'Адрес: ' + tr.address"></span>
+                    	<span ng-bind="('Адрес'|localize) + ': ' + tr.address"></span>
                     	(<a href="{{tr.yandexMapUrl}}" class="cellLink" target="_blank">карта</a>)
                     </td> 
                 </tr>
                 <tr>
                     <td ng-bind="' '" style="width: 5%; border-top: none;"></td>
-                    <td ng-bind="'Время: ' + tr.timeStart + ' - ' + tr.timeFinish" style="border-top: none;"></td> 
+                    <td ng-bind="('Время'|localize) + ': ' + tr.timeStart + ' - ' + tr.timeFinish" style="border-top: none;"></td> 
                 </tr>
                 <tr>
                     <td ng-bind="' '" style="width: 5%; border-top: none;"></td>
-                    <td ng-bind="'Преподаватель: ' + tr.teacher.lastName + ' ' + tr.teacher.firstName +  ' ' + tr.teacher.middleName" style="border-top: none;"></td> 
+                    <td ng-bind="('Преподаватель'|localize) + ': ' + tr.teacher.lastName + ' ' + tr.teacher.firstName +  ' ' + tr.teacher.middleName" style="border-top: none;"></td> 
                 </tr>
                 <tr ng-hide="tr.curatorFullName==''">
                     <td ng-bind="' '" style="width: 5%; border-top: none;"></td>
-                    <td ng-bind="'Контактное лицо: ' + tr.curatorInfo" style="border-top: none;"></td> 
+                    <td ng-bind="('Контактное лицо'|localize) + ': ' + tr.curatorInfo" style="border-top: none;"></td> 
                 </tr>
                 <tr ng-hide="tr.otherInfo==''">
                     <td ng-bind="' '" style="width: 5%; border-top: none;"></td>
-                    <td ng-bind="'Примечание: ' + tr.otherInfo" style="border-top: none;"></td> 
+                    <td ng-bind="('Примечание'|localize) + ': ' + tr.otherInfo" style="border-top: none;"></td> 
                 </tr>
                 <tr>
                     <td ng-bind="' '" class="cellLink" style="width: 5%; border-top: none;"></td>
                     <td style="border-top: none;">
-                        <a ng-href="{{tr.urlJoin}}" class="cellLink" target="_blank" ng-bind="'Записаться на курс'"></a>
+                        <a ng-href="{{tr.urlJoin}}" class="cellLink" target="_blank" ng-bind="'Записаться на курс'|localize"></a>
                         &nbsp;&nbsp;&nbsp;
-                        <a ng-href="{{tr.urlAddGoogleCalendarEvent}}" class="cellLink" target="_blank" ng-bind="'Копировать в мой календарь'"></a>
+                        <a ng-href="{{tr.urlAddGoogleCalendarEvent}}" class="cellLink" target="_blank" ng-bind="'Копировать в мой календарь'|localize"></a>
                     </td> 
                 </tr>
             </table>
@@ -84,7 +84,7 @@
     <div class="row-fluid" ng-show="false">
         <table class="table scheduleTable">
             <tr>
-                <td ng-bind="'Нет доступных тренингов'" style="font-style: italic;"></td>
+                <td ng-bind="'Нет доступных тренингов'|localize" style="font-style: italic;"></td>
             </tr>
         </table>
     </div>
