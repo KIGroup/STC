@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/OrderNewStudentCtrl.js" application="/csp/stc/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/OrderNewStudentCtrl.js" application="/csp/stc_loc/" default="1"><![CDATA[
 'use strict';
-//dedddd
+//deddd
 
 /*===========================================================================================
 Создание заявки для одного слушателя
@@ -76,7 +76,7 @@ controllersModule.controller('OrderNewStudentCtrl', function($scope, $timeout, $
 				    div.appendChild(script);
 				};
 				
-				loadScript("http://api-maps.yandex.ru/2.1/?lang=ru_RU&onload=callbackYmap");
+				loadScript("http://api-maps.yandex.ru/2.1/?lang=" + StcAppSetting.lang + "&onload=callbackYmap");
             },
             function(response){
                 $scope.ordForm.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);

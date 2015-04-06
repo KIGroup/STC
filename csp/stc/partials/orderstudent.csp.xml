@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/partials/orderstudent.csp" application="/csp/stc/" default="1"><![CDATA[
+<CSP name="stc/partials/orderstudent.csp" application="/csp/stc_loc/" default="1"><![CDATA[
 
 <script type="text/javascript">
 var callbackYmap = function(){};
@@ -62,9 +62,9 @@ var callbackYmap = function(){};
 			    <accordion-group is-open="true" heading="{{ordForm.trainingCaption}}">
 					<p><span ng-bind="'Курс'|localize"></span>: <span ng-bind="ordForm.training.course.name"></span></p>
 					<p>
-						<a ng-href="{{'http://' + ordForm.training.course.programUrl}}" class="cellLink" target="_blank" ng-bind="'Программа курса »'"></a>
+						<a ng-href="{{'http://' + ordForm.training.course.programUrl}}" class="cellLink" target="_blank" ng-bind="('Программа курса'|localize) + ' »'"></a>
                         &nbsp;&nbsp;&nbsp;
-						<a ng-href="{{ordForm.training.urlAddGoogleCalendarEvent}}" class="cellLink" target="_blank" ng-bind="'Копировать в мой календарь »'"></a></p>
+						<a ng-href="{{ordForm.training.urlAddGoogleCalendarEvent}}" class="cellLink" target="_blank" ng-bind="('Копировать в мой календарь'|localize) + ' »'"></a></p>
 					<br>
 					<p><span ng-bind="'Город'|localize"></span>: <span ng-bind="ordForm.training.city.name + ', ' + ordForm.training.city.parentName + ', ' + ordForm.training.city.greatParentName"></span></p>
 					<p>
