@@ -139,8 +139,7 @@ Working with email</Description>
 <FormalSpec>ord:Stc.Data.Order</FormalSpec>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
-	set mail = ..GetEmailPattern("orderapply")
-	set mail.subject = ..GetMailMessageWithTrainingData(mail.subject, tr)
+    set mail = ..GetEmailPattern("orderapply")
 	set mail.message = $REPLACE(mail.message, "%Course.Name", ord.Course.Name.Value)
 	quit mail
 ]]></Implementation>

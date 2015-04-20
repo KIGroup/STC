@@ -269,11 +269,14 @@
             <p style="text-align: justify;">Unless the desired course not, you can <a class="cellLink" ng-href="{{'http://' + domain + '/stc/index.csp#/createorder'}}" target="_blank">apply</a> for any course of conduct, including the exit in your city. Also available is a <a class="cellLink" ng-href="{{'http://' + domain + '/stc/index.csp#/mailing/subscription'}}" target="_blank">subscription</a> announcements.</p>
         </div>
         
-        <a class="scheduleBtn" ng-href="{{'http://' + domain + '/stc/index.csp#/mailing/subscription'}}" target="_blank" ng-bind="'Анонсы'|localize" title="{{'Оформить подписку на анонсы'|localize}}"></a>
-        <a class="scheduleBtn" ng-href="{{'http://' + domain + '/stc/index.csp#/createorder'}}" target="_blank" ng-bind="'Заявка на курс'|localize" title="{{'Заказать обучение'|localize}}"></a>
-        <div style="border-top: 1px solid #dddddd; margin-top: 10px;">
-            <stcschedule ng-repeat="course in courses" course="course" ng-style="course.style"/>
-        </div>
+        <div style="height: 478px; overflow-x: auto; border: 1px solid #dddddd; border-top: 1px solid #dddddd; margin-top: 10px;">
+            <stcschedule ng-repeat="course in courses" course="course" ng-style="course.style"></stcschedule>
+            
+            <a class="scheduleBtn" ng-href="{{'http://' + domain + '/stc/index.csp#/mailing/subscription'}}" target="_blank" ng-bind="'Подписка на анонсы'|localize" title="{{'Оформить подписку на анонсы'|localize}}"></a>
+            <a class="scheduleBtn" ng-href="{{'http://' + domain + '/stc/index.csp#/createorder'}}" target="_blank" ng-bind="'Заявка на курс'|localize" title="{{'Заказать обучение'|localize}}"></a>
+       </div>
+        
+       
     </div>
   </body>
 </html>
