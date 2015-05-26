@@ -65,6 +65,14 @@ Price of course</Description>
 <Required>1</Required>
 </Property>
 
+<Property name="Payout">
+<Description>
+Payout for teacher services</Description>
+<Type>%Float</Type>
+<InitialExpression>0</InitialExpression>
+<Required>1</Required>
+</Property>
+
 <Property name="Currency">
 <Description>
 Currency</Description>
@@ -84,51 +92,51 @@ do ##class(Stc.Data.Course).RecalcYandexPresets()</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set presets = $LB("islands#redIcon",
-			     "islands#greenIcon",
-				 "islands#blueIcon", 
-			     "islands#orangeIcon", 
-			     "islands#yellowIcon",
-				 "islands#brownIcon",
-				 "islands#oliveIcon",
-				 "islands#violetIcon",
-				 "islands#pinkIcon",
-				 "islands#grayIcon",		
-				 "islands#lightBlueIcon",
-				 "islands#blackIcon")
-		
-	set presetsCount = $LL(presets)
-				 
-	&sql(DECLARE CourseCur CURSOR FOR 
-	 	 SELECT Course, Count(Course) As CourseCount
-		 FROM Stc_Data.Training
-		 GROUP BY Course
-		 ORDER BY CourseCount DESC)	
-	
-	&sql(OPEN CourseCur)
-	for  
-	{	
-		&sql(FETCH CourseCur INTO :courseId, :count) 
-		quit:(SQLCODE '= 0)
-		
-		if (%ROWCOUNT > presetsCount)
-		{
-			set newPreset = $LIST(presets, presetsCount)
-		}
-		else
-		{
-			set newPreset = $LIST(presets, %ROWCOUNT) 
-		}
-		
-		//w !, ":newPreset="_newPreset
-		&sql(UPDATE Stc_Data.Course 
-			 SET YandexPlacemarkPreset = :newPreset 
-			 WHERE ID = :courseId AND (YandexPlacemarkPreset IS NULL OR YandexPlacemarkPreset <> :newPreset))
-	}
-	
-	&sql(CLOSE CourseCur)
-		
-	quit $$$OK
+    set presets = $LB("islands#redIcon",
+                 "islands#greenIcon",
+                 "islands#blueIcon", 
+                 "islands#orangeIcon", 
+                 "islands#yellowIcon",
+                 "islands#brownIcon",
+                 "islands#oliveIcon",
+                 "islands#violetIcon",
+                 "islands#pinkIcon",
+                 "islands#grayIcon",        
+                 "islands#lightBlueIcon",
+                 "islands#blackIcon")
+        
+    set presetsCount = $LL(presets)
+                 
+    &sql(DECLARE CourseCur CURSOR FOR 
+         SELECT Course, Count(Course) As CourseCount
+         FROM Stc_Data.Training
+         GROUP BY Course
+         ORDER BY CourseCount DESC) 
+    
+    &sql(OPEN CourseCur)
+    for  
+    {   
+        &sql(FETCH CourseCur INTO :courseId, :count) 
+        quit:(SQLCODE '= 0)
+        
+        if (%ROWCOUNT > presetsCount)
+        {
+            set newPreset = $LIST(presets, presetsCount)
+        }
+        else
+        {
+            set newPreset = $LIST(presets, %ROWCOUNT) 
+        }
+        
+        //w !, ":newPreset="_newPreset
+        &sql(UPDATE Stc_Data.Course 
+             SET YandexPlacemarkPreset = :newPreset 
+             WHERE ID = :courseId AND (YandexPlacemarkPreset IS NULL OR YandexPlacemarkPreset <> :newPreset))
+    }
+    
+    &sql(CLOSE CourseCur)
+        
+    quit $$$OK
 ]]></Implementation>
 </Method>
 
@@ -138,37 +146,37 @@ do ##class(Stc.Data.Course).UpdateOld()</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set st = $$$OK
-	
-	try{
-		TSTART
-				
-		&sql(DECLARE Course1Cur CURSOR FOR 
-		 	 SELECT ID
-			 FROM Stc_Data.Course)	
-		
-		&sql(OPEN Course1Cur)
-		for  
-		{	
-			&sql(FETCH Course1Cur INTO :id) 
-			quit:(SQLCODE '= 0)
+    set st = $$$OK
+    
+    try{
+        TSTART
+                
+        &sql(DECLARE Course1Cur CURSOR FOR 
+             SELECT ID
+             FROM Stc_Data.Course)  
+        
+        &sql(OPEN Course1Cur)
+        for  
+        {   
+            &sql(FETCH Course1Cur INTO :id) 
+            quit:(SQLCODE '= 0)
 
-			set course = ..%OpenId(id)
-			set course.Description = ##class(Stc.Data.Localization.LText).Create("")
-			do course.Description.SetValues(course.Name.%Id())
-			$$$THROWONERROR(st, course.%Save())
-		}
-		
-		&sql(CLOSE Course1Cur)
-		
-		TCOMMIT
-	}
-	catch(ex){
-		TROLLBACK
-		set st = ex.AsStatus()
-	}
-	
-	quit $$$OK
+            set course = ..%OpenId(id)
+            set course.Description = ##class(Stc.Data.Localization.LText).Create("")
+            do course.Description.SetValues(course.Name.%Id())
+            $$$THROWONERROR(st, course.%Save())
+        }
+        
+        &sql(CLOSE Course1Cur)
+        
+        TCOMMIT
+    }
+    catch(ex){
+        TROLLBACK
+        set st = ex.AsStatus()
+    }
+    
+    quit $$$OK
 ]]></Implementation>
 </Method>
 
@@ -178,22 +186,23 @@ Convert to proxyObject (for JSON)</Description>
 <FormalSpec>shortInfo:%Boolean=0</FormalSpec>
 <ReturnType>%ZEN.proxyObject</ReturnType>
 <Implementation><![CDATA[
-	set proxy = ##class(%ZEN.proxyObject).%New()
-	
-	set proxy.id = ..%Id()
-	set proxy.name = ..Name.Value
-	set proxy.description = ..Description.Value
-	
-	if (shortInfo = 1) quit proxy
-	
-	set proxy.days = ..Days
-	set proxy.hours = ..Hours
-	set proxy.programUrl = ..ProgramUrl
-	set proxy.isInUse = ..IsInUse
-	set proxy.price = ..Price
-	set proxy.currency = ..Currency.ConvertToProxyObject()
-	
-	quit proxy
+    set proxy = ##class(%ZEN.proxyObject).%New()
+    
+    set proxy.id = ..%Id()
+    set proxy.name = ..Name.Value
+    set proxy.description = ..Description.Value
+    
+    if (shortInfo = 1) quit proxy
+    
+    set proxy.days = ..Days
+    set proxy.hours = ..Hours
+    set proxy.programUrl = ..ProgramUrl
+    set proxy.isInUse = ..IsInUse
+    set proxy.price = ..Price
+    set proxy.payout = ..Payout
+    set proxy.currency = ..Currency.ConvertToProxyObject()
+    
+    quit proxy
 ]]></Implementation>
 </Method>
 
@@ -204,28 +213,29 @@ Create or save modified course</Description>
 <FormalSpec><![CDATA[data:%RegisteredObject,&status]]></FormalSpec>
 <ReturnType>Course</ReturnType>
 <Implementation><![CDATA[
-	do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Save", "ID="_data.id_"; Name="_$ZCONVERT(data.name, "I","UTF8"))
-	
-	if (data.id = ""){
-		set course = ..%New()
-		set course.Name = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.name, "I","UTF8"))
-		set course.Description = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.description, "I","UTF8"))
-	}
-	else{
-		set course = ..%OpenId(data.id)
-		set course.Name.Value = $ZCONVERT(data.name, "I","UTF8")
-		set course.Description.Value = $ZCONVERT(data.description, "I","UTF8")
-	}
-	
-	set course.Hours = $ZCONVERT(data.hours, "I","UTF8")
-	set course.Days = $ZCONVERT(data.days, "I","UTF8")
-	set course.ProgramUrl = $REPLACE($REPLACE($ZCONVERT(data.programUrl, "I","UTF8"),"http://",""), "https://","")
-	set course.Price = data.price
-	set course.Currency = ##class(Stc.Data.Currency).%OpenId(data.currency.id)
-	
-	set status = course.%Save()
-	
-	quit course
+    do ##class(Stc.Utils.Log).Create(..%ClassName(1)_".Save", "ID="_data.id_"; Name="_$ZCONVERT(data.name, "I","UTF8"))
+    
+    if (data.id = ""){
+        set course = ..%New()
+        set course.Name = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.name, "I","UTF8"))
+        set course.Description = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.description, "I","UTF8"))
+    }
+    else{
+        set course = ..%OpenId(data.id)
+        set course.Name.Value = $ZCONVERT(data.name, "I","UTF8")
+        set course.Description.Value = $ZCONVERT(data.description, "I","UTF8")
+    }
+    
+    set course.Hours = $ZCONVERT(data.hours, "I","UTF8")
+    set course.Days = $ZCONVERT(data.days, "I","UTF8")
+    set course.ProgramUrl = $REPLACE($REPLACE($ZCONVERT(data.programUrl, "I","UTF8"),"http://",""), "https://","")
+    set course.Price = data.price
+    set course.Payout = data.payout
+    set course.Currency = ##class(Stc.Data.Currency).%OpenId(data.currency.id)
+    
+    set status = course.%Save()
+    
+    quit course
 ]]></Implementation>
 </Method>
 
@@ -267,6 +277,9 @@ Create or save modified course</Description>
 </Value>
 <Value name="10">
 <Value>Description</Value>
+</Value>
+<Value name="11">
+<Value>Payout</Value>
 </Value>
 </Data>
 <Data name="Teachers">

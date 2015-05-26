@@ -213,6 +213,14 @@ Access code to training for teacher</Description>
 <Unique>1</Unique>
 </Index>
 
+<Index name="CourseIdx">
+<Properties>Course</Properties>
+</Index>
+
+<Index name="TeacherIdx">
+<Properties>Teacher</Properties>
+</Index>
+
 <Method name="CheckDeletePrivilege">
 <Description>
 Check delete privilege</Description>
