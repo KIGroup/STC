@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/AllCoursesCtrl.js" application="/csp/stc/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/AllCoursesCtrl.js" application="/csp/stc_loc/" default="1"><![CDATA[
 'use strict';
 //вdddddddddsd
 
@@ -22,14 +22,16 @@ controllersModule.controller('AllCoursesCtrl', function($scope, $location, $filt
                           {name: 'Курс', sqlName: 'Name->Value', isSorted: true, isSortable: true, isDown: true, isSearched: true, isSearchable: true},
                           {name: 'Часы', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '50px'}},
                           {name: 'Дни', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '50px'}},
+                          {name: 'К. сложности', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '100px'}},
                           {name: 'Программа курса', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '100px'}},
                           {name: 'Стоимость', sqlName: 'Price', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '80px'}},
-                          {name: 'Валюта', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '80px'}}];
+                          {name: 'Валюта', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center'}}];
         
         $scope.courseTable.status = UtilsSrvc.getPropertyValue($scope.pageStore, 'courses.status', 1);
         $scope.courseTable.properties = [{name:'name'}, 
                                          {name:'hours', cellStyle: {textAlign: 'center'}}, 
                                          {name:'days', cellStyle: {textAlign: 'center'}}, 
+                                         {name:'difCoef', cellStyle: {textAlign: 'center'}}, 
                                          {name:'programUrlShort', 
                                          calculate: function(item){
                                                         var tail = (item.programUrl && item.programUrl.length > 25) ? '...':'';

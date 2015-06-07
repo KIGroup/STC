@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/directives/stctraining.js" application="/csp/stc/" default="1"><![CDATA[
+<CSP name="stc/js/directives/stctraining.js" application="/csp/stc_loc/" default="1"><![CDATA[
 'use strict';
 //dddddddddd
 
@@ -20,13 +20,13 @@ directivesModule.directive('stctraining', function(){
             btnAdditionName: '=',
             btnAdditionAction: '&'
         },
-        controller: function($scope, RegionSrvc, CourseTeacherSrvc, YandexSrvc, DALSrvc, PersonSrvc, UtilsSrvc){
+        controller: function($scope, $filter, TrainingSrvc, RegionSrvc, CourseTeacherSrvc, YandexSrvc, DALSrvc, PersonSrvc, UtilsSrvc){
             $scope.init = function(){
                 $scope.courses = [];
                 $scope.cities = [];
                 $scope.teachers = [];
                 $scope.yandex = {results:[]};
-			
+            
                 if ($scope.editMode){
                     $scope.btnSubmitName = 'Сохранить';
                     //
@@ -137,9 +137,56 @@ directivesModule.directive('stctraining', function(){
 
                 
             };
+            
+            
+            $scope.openTeacherPayoutDialog = function(){
+                var doAfterLoadPayout = function(data){              
+                    var buttons = [
+                        {
+                            result: '1',
+                            label: $filter('localize')('Подтвердить сумму'),
+                            cssClass: 'btn-small btn-primary',
+                            func : function(){
+                                        $scope.training.payout = data.P;
+                                        $scope.formName.$setDirty();
+                                   }
+                        },
+                        {
+                            result: '0',
+                            label: $filter('localize')('Отмена'),
+                            cssClass: 'btn-small',
+                            func : null
+                        }];
+                    
+                    var msg = 
+                    $filter('localize')(
+                    "<b>Формула расчета:</b><br>"+
+                    "<b>P = Y * x * v * h</b>, где <b>Y = (y1 + y2 + y3) / 3</b><br>" +            
+                    "<b>v</b> - стоимость нормочаса обучения;<br>" +
+                    "<b>x</b> - коэф. сложности курса; <br>" +
+                    "<b>h</b> - продолжительность курса в часах;<br>" +
+                    "<b>y1</b> - количество обучений любых курсов этого преподавателя за последний год до обучения. Изменяется от 0.8 до 1.1 с шагом 0.1.<br>" +
+                    "<b>y2</b> - опыт проведения именно этого курса за всё время. Изменяется от 0.75 до 1.25 c шагом 0.05.<br>" +
+                    "<b>y3</b> - рейтинг преподавателя по отзывам слушателей (средняя оценка по курсу). Коэффициент меняется от 0.9 до 1.1 в пропорции.<br>" +
+                    "<b>Результат:</b><br>");
+                    
+                    msg += 
+                    "P = " + data.P + " = " + data.Y + " * " + data.x + " * " + data.v + " * " + data.h + ".<br>" +
+                    "Y = " + data.Y + " = (" + data.y1 + " + " + data.y2 + " + " + data.y3 + ") / 3 "; 
+                        
+                    UtilsSrvc.openCustomMessageBox($filter('localize')('Сумма выплаты преподавателю') + ': ' + $filter('number')(data.P) + ', ' + data.currency, msg, buttons);
+                };
+                
+                TrainingSrvc.getTeacherPayout($scope.training.id, $scope.training.teacher.id).then(
+                    function(data){
+                        doAfterLoadPayout(data);
+                    },
+                    function(response){
+                    });     
+            };
 
             $scope.init();
-	   	}
+        }
     }
 });
 ]]></CSP>

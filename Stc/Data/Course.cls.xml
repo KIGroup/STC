@@ -65,9 +65,9 @@ Price of course</Description>
 <Required>1</Required>
 </Property>
 
-<Property name="Payout">
+<Property name="HourPayout">
 <Description>
-Payout for teacher services</Description>
+Payout for teacher services (1 hour)</Description>
 <Type>%Float</Type>
 <InitialExpression>0</InitialExpression>
 <Required>1</Required>
@@ -79,6 +79,14 @@ Currency</Description>
 <Type>Currency</Type>
 <Required>1</Required>
 <Parameter name="XMLREFERENCE" value="ID"/>
+</Property>
+
+<Property name="DifficultyCoefficient">
+<Description>
+Difficulty coefficient</Description>
+<Type>%Float</Type>
+<InitialExpression>1</InitialExpression>
+<Required>1</Required>
 </Property>
 
 <Property name="YandexPlacemarkPreset">
@@ -199,7 +207,8 @@ Convert to proxyObject (for JSON)</Description>
     set proxy.programUrl = ..ProgramUrl
     set proxy.isInUse = ..IsInUse
     set proxy.price = ..Price
-    set proxy.payout = ..Payout
+    set proxy.hourPayout = ..HourPayout
+    set proxy.difCoef = ..DifficultyCoefficient
     set proxy.currency = ..Currency.ConvertToProxyObject()
     
     quit proxy
@@ -230,7 +239,8 @@ Create or save modified course</Description>
     set course.Days = $ZCONVERT(data.days, "I","UTF8")
     set course.ProgramUrl = $REPLACE($REPLACE($ZCONVERT(data.programUrl, "I","UTF8"),"http://",""), "https://","")
     set course.Price = data.price
-    set course.Payout = data.payout
+    set course.HourPayout = data.hourPayout
+    set course.DifficultyCoefficient = data.difCoef
     set course.Currency = ##class(Stc.Data.Currency).%OpenId(data.currency.id)
     
     set status = course.%Save()
@@ -280,6 +290,12 @@ Create or save modified course</Description>
 </Value>
 <Value name="11">
 <Value>Payout</Value>
+</Value>
+<Value name="12">
+<Value>HourPayout</Value>
+</Value>
+<Value name="13">
+<Value>DifficultyCoefficient</Value>
 </Value>
 </Data>
 <Data name="Teachers">

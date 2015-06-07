@@ -150,6 +150,15 @@
             </tab>
 
           <tab heading="{{('Статистика преподавателя'|localize)}}" active="teacherStat.active" ng-hide="$parent.teacherStat.data.courses.length==0">
+                <p>
+                    <div class="control-group">
+                        <label ng-bind="'За период'"></label>
+                        <input type="text" style="width: 130px;" datepicker-popup="{{'d MMMM y'|localize}}" onkeydown="return false;" ng-model="teacherStat.data.dateFrom" show-weeks="false"/>
+                        -
+                        <input type="text" style="width: 130px;" datepicker-popup="{{'d MMMM y'|localize}}" onkeydown="return false;" ng-model="teacherStat.data.dateTo" show-weeks="false"/>
+                        <button class="btn" style="margin-bottom: 10px;" ng-click="teacherStat.refreshData()" title="{{'Обновить статистику'|localize}}">&nbsp;<i class="icon-refresh"></i>&nbsp;</button>
+                    </div>
+                </p>
                 <p>{{'Всего проведено обучающих курсов'|localize}}: {{teacherStat.data.totalTrainingsCount}}</p>
                 <p>{{'Общий средний балл по отзывам'|localize}}: <span ng-bind="teacherStat.data.totalRating" ng-hide="teacherStat.data.totalRating==0 || !teacherStat.data.totalRating"></span><span ng-bind="'-'" ng-show="teacherStat.data.totalRating0 || !teacherStat.data.totalRating"></span></p>
                 <stcgrid

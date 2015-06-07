@@ -1220,6 +1220,28 @@ Method="GET" Url="/json/training/:id/mailing/group"</Description>
 ]]></Implementation>
 </Method>
 
+<Method name="GetTrainingTeacherPayout">
+<Description><![CDATA[
+Get teacher payout for training -->
+Method="GET" Url="/json/training/:trainingId/teacher/:teacherId/payout"]]></Description>
+<ClassMethod>1</ClassMethod>
+<FormalSpec>trainingId:%String,teacherId:%String</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    set st = $$$OK
+    
+    try{
+        do ##class(Stc.Data.Training).GetTeacherPayout(trainingId, teacherId, .resultData)
+        do resultData.%ToJSON()     
+    }
+    catch ex {
+        set st = ex.AsStatus()
+    }
+
+    quit st
+]]></Implementation>
+</Method>
+
 <Method name="GetTrainingSubGroupsForGrid">
 <Description>
 
@@ -2141,22 +2163,39 @@ Method="GET" Url="/json/person/:id/certificate"</Description>
 <Method name="GetTeacherStatistics">
 <Description>
 Get statistics data for teacher
-Method="GET" Url="/json/teacher/:id/statistics" Call="Stc.Web.JsonAdmin:GetTeacherStatistics"</Description>
+Method="GET" Url="/json/teacher/:id/statistics/datefrom/:dateFrom/dateto/:dateTo" Call="Stc.Web.JsonAdmin:GetTeacherStatistics"</Description>
 <ClassMethod>1</ClassMethod>
-<FormalSpec>teacherId:%String</FormalSpec>
+<FormalSpec>teacherId:%String,dateFrom:%String,dateTo:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
     set st = $$$OK
     
     try{
+        set dateFromLogical = ##class(%Library.Date).XSDToLogical(dateFrom)
+        set dateToLogical = ##class(%Library.Date).XSDToLogical(dateTo)
+        
+        if (dateFromLogical = ""){
+            &sql(SELECT %NOLOCK MIN(DateStart) INTO :dateFromLogical
+                 FROM Stc_Data.Training)
+                 
+            set dateFrom = $ZD(dateFromLogical, 3) 
+        }
+        
+        if (dateToLogical = ""){
+            set dateToLogical = $H + 1
+            set dateTo = $ZD(dateToLogical, 3)
+        }
+        
         set proxy = ##class(%ZEN.proxyObject).%New()
+        set proxy.dateFrom = dateFrom
+        set proxy.dateTo = dateTo
         set proxy.totalTrainingsCount = 0
         set proxy.totalRating = 0
         set proxy.courses = ##class(%ListOfObjects).%New()
         
         &sql(SELECT %NOLOCK ROUND(AVG(Rating), 2) INTO :proxy.totalRating
              FROM Stc_Data.FeedBack
-             WHERE Training->Teacher = :teacherId)
+             WHERE Training->Teacher = :teacherId AND Training->DateStart >= :dateFromLogical AND Training->DateFinish <= :dateToLogical)
         
         
         &sql(DECLARE TeachStatCur CURSOR FOR 
@@ -2164,9 +2203,11 @@ Method="GET" Url="/json/teacher/:id/statistics" Call="Stc.Web.JsonAdmin:GetTeach
                  trTab.Course, 
                  trTab.Course->Name->Value As CourseName, 
                  COUNT(trTab.Course) As TrainingsCount, 
-                 (SELECT ROUND(AVG(fbTab.Rating), 2) FROM Stc_Data.FeedBack as fbTab WHERE fbTab.Training->Course = trTab.Course AND fbTab.Training->Teacher = trTab.Teacher) As AvgRating
+                 (SELECT ROUND(AVG(fbTab.Rating), 2) 
+                  FROM Stc_Data.FeedBack as fbTab 
+                  WHERE fbTab.Training->Course = trTab.Course AND fbTab.Training->Teacher = trTab.Teacher AND fbTab.Training->DateStart >= :dateFromLogical AND fbTab.Training->DateFinish <= :dateToLogical) As AvgRating
                  FROM Stc_Data.Training as trTab
-                 WHERE trTab.Teacher = :teacherId
+                 WHERE trTab.Teacher = :teacherId AND trTab.DateStart >= :dateFromLogical AND trTab.DateFinish <= :dateToLogical
                  GROUP BY trTab.Course
                  ORDER BY Course->Name->Value) 
             

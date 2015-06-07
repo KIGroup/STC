@@ -43,8 +43,8 @@ servicesModule.factory('PersonSrvc', function(DALSrvc) {
         getFreeCourseTeachers: function(courseId, word){
             return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/person/free/course/' + courseId + '/teacher/' + word, null);
         },
-        getTeacherStatistics: function(teachId){
-            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/teacher/' + teachId + '/statistics', null);
+        getTeacherStatistics: function(teachId, dateFrom, dateTo){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/teacher/' + teachId + '/statistics/datefrom/' + (dateFrom ? dateFrom : '0') + '/dateto/' + (dateTo ? dateTo : '0'), null);
         },
         getTrainings: function(id){
             return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/person/' + id + '/training', null);

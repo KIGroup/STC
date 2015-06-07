@@ -203,6 +203,9 @@ servicesModule.factory('TrainingSrvc', function(DALSrvc, $filter) {
         createQuestion: function(trId, data){
             return DALSrvc.getPromise('save', StcAppSetting.user + '/json/training/' + trId + '/question', data);
         },
+        getTeacherPayout: function(trainingId, teacherId){
+            return DALSrvc.getPromise('get', StcAppSetting.admin + '/json/training/' + trainingId + '/teacher/' + teacherId + '/payout', null);
+        },
         getUrlForCreateGoogleCalendarEvent: function(text, dates, location, details){
                 return 'https://www.google.com/calendar/render?action=TEMPLATE&hl=ru' + 
                                         '&text=' + text +

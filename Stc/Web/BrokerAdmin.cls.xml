@@ -127,6 +127,9 @@ Private request processor for administrator</Description>
     <!-- Send email from tab 'Mailing' on the training page -->
     <Route Method="POST" Url="/json/training/mail/send" Call="Stc.Web.JsonAdmin:SendEmailFromTraining"/>
     
+    <!-- Get teacher payout for training -->
+    <Route Method="GET" Url="/json/training/:trainingId/teacher/:teacherId/payout" Call="Stc.Web.JsonAdmin:GetTrainingTeacherPayout"/>
+    
     <!-- ================================================================================================================================== -->
     <!-- TRAINING SUBGROUP                                                                                                TRAINING SUBGROUP  -->
     <!-- ================================================================================================================================== -->
@@ -263,7 +266,7 @@ Private request processor for administrator</Description>
 
 
     <!-- Get statistics data for teachern -->
-    <Route Method="GET" Url="/json/teacher/:id/statistics" Call="Stc.Web.JsonAdmin:GetTeacherStatistics"/>
+    <Route Method="GET" Url="/json/teacher/:id/statistics/datefrom/:dateFrom/dateto/:dateTo" Call="Stc.Web.JsonAdmin:GetTeacherStatistics"/>
 
     <!-- ================================================================================================================================== -->
     <!-- SETTINGS                                                                                                                  SETTINGS -->

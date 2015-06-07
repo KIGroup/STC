@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/components/stctraining.csp" application="/csp/stc/" default="1"><![CDATA[
+<CSP name="stc/components/stctraining.csp" application="/csp/stc_loc/" default="1"><![CDATA[
 <div class="row-fluid">
     <div class="span6">
         <div class="control-group">
@@ -10,11 +10,27 @@
                 </select>
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label" ng-bind="('Преподаватель'|localize) + '*'"></label>
-            <div class="controls">
-                <select class="span12" ng-model="training.teacher.id" ng-options="teacher.id as teacher.lastName + ' ' + teacher.firstName + ' ' + teacher.middleName + ', ' + teacher.email for teacher in teachers" required>
-                </select>
+        <div class="row-fluid">
+            <div class="span8">
+                <div class="control-group">
+                    <label class="control-label" ng-bind="('Преподаватель'|localize) + '*'"></label>
+                    <div class="controls">
+                        <select class="span12" ng-model="training.teacher.id" ng-options="teacher.id as teacher.lastName + ' ' + teacher.firstName + ', ' + teacher.email for teacher in teachers" required>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="span4">
+                <div class="control-group">
+                    <label class="control-label"  ng-click="openTeacherPayoutDialog();" title="{{'Пересчитать сумму выплаты преподавателю'|localize}}">
+                        {{('Сумма выплаты'|localize) + '*'}}&nbsp;
+                        <i class="icon-refresh" style="font-size: 12px"></i>
+                    </label>
+                    <div class="controls">
+                        <input class="span6" type="text" ng-model="training.payout" required></input>
+                        <input class="span6" type="text" ng-model="training.cost.currency.name" disabled></input>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -25,10 +41,10 @@
                     <div class="controls">
                         <div class="row-fluid">
                             <div class="span6">
-                                <input type="text" class="span12" datepicker-popup="{{'d MMMM y'|localize}}" ng-model="dateStart" show-weeks="false" ng-required="true" />
+                                <input type="text" class="span12" onkeydown="return false;" datepicker-popup="{{'d MMMM y'|localize}}" ng-model="dateStart" show-weeks="false" ng-required="true" />
                             </div>
                             <div class="span6">
-                                <input type="text" class="span12" datepicker-popup="{{'d MMMM y'|localize}}" ng-model="dateFinish" show-weeks="false" ng-required="true" />
+                                <input type="text" class="span12" onkeydown="return false;" datepicker-popup="{{'d MMMM y'|localize}}" ng-model="dateFinish" show-weeks="false" ng-required="true" />
                             </div>
                         </div>
                     </div>
@@ -96,12 +112,12 @@
 
 
         <button class="btn btn-success btn-small" type="submit" ng-show="!$parent.menu.readOnlyMode" ng-bind="btnSubmitName|localize" ng-click="formatDate()" ng-disabled="formName.$pristine"></button>
-   		<button class="btn btn-small btn-primary" type="button" ng-show="btnAdditionVisible && !$parent.menu.readOnlyMode" ng-click="btnAdditionAction()" ng-bind="btnAdditionName|localize"></button>
- 		<div style="display: inline-block;">
- 			<label ng-show="training.id" class="checkbox" style="margin-top: 6px; margin-left: 6px;">
-				<input type="checkbox" ng-model="training.isCertificatesDone" ng-disabled="menu.readOnlyMode">{{'Сертификаты выданы'|localize}}
-			</label> 
-		</div>
+        <button class="btn btn-small btn-primary" type="button" ng-show="btnAdditionVisible && !$parent.menu.readOnlyMode" ng-click="btnAdditionAction()" ng-bind="btnAdditionName|localize"></button>
+        <div style="display: inline-block;">
+            <label ng-show="training.id" class="checkbox" style="margin-top: 6px; margin-left: 6px;">
+                <input type="checkbox" ng-model="training.isCertificatesDone" ng-disabled="menu.readOnlyMode">{{'Сертификаты выданы'|localize}}
+            </label> 
+        </div>
     </div>
     <div class="span6">
         <div class="control-group">
@@ -126,7 +142,7 @@
         </div>
         <div ng-hide="addressSelect"></br></div>
         <button class="btn btn-info btn-small" style="margin-top: 5px;"  type="button" ng-show="addressBtn" ng-click="findAddress()" ng-bind="('Скорректировать адрес'|localize) + '*'"></button>
-        <div ng-hide="addressSelect"></br></div>	
+        <div ng-hide="addressSelect"></br></div>    
         <div class="control-group">
             <label class="control-label" ng-bind="'Примечание'|localize"></label>
             <div class="controls">

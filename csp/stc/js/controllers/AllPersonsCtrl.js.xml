@@ -145,15 +145,8 @@ controllersModule.controller('AllPersonsCtrl', function($scope, $location, $rout
         if (!$scope.personTable.selectedItems || $scope.personTable.selectedItems.length == 0)
           return;
         
-        // Load teacher statisticst if exists
-        $scope.teacherStat.data = {courses: []};
-        PersonSrvc.getTeacherStatistics($scope.personTable.selectedItems[0].id).then(
-            function(data){
-                $scope.teacherStat.data = data; 
-            },
-            function(response){
-                $scope.personTable.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
-            });
+        // Загрузить данные по преподу за всё время
+        $scope.teacherStat.loadData($scope.personTable.selectedItems[0].id, null, null);
             
         $scope.other.loads = 0; 
         $scope.other.loadItems($scope.personTable.selectedItems[0].id, 'companyTable', 'getCompanies');
@@ -265,6 +258,30 @@ controllersModule.controller('AllPersonsCtrl', function($scope, $location, $rout
             });
     };    
 
+    // Обновить данные статистики препода
+    $scope.teacherStat.refreshData = function(){
+        if ($scope.personTable.selectedItems.length == 0)
+            return;
+            
+        var dateFrom = UtilsSrvc.getValidDate($scope.teacherStat.data.dateFrom);
+        var dateTo = UtilsSrvc.getValidDate($scope.teacherStat.data.dateTo);
+        $scope.teacherStat.loadData($scope.personTable.selectedItems[0].id, dateFrom, dateTo);
+    };
+    
+    // Загрузить данные по преподу
+    $scope.teacherStat.loadData = function(teacherId, dateFrom, dateTo){
+        // Load teacher statisticst if exists
+        
+        PersonSrvc.getTeacherStatistics(teacherId, dateFrom, dateTo).then(
+            function(data){
+                $scope.teacherStat.data = data; 
+            },
+            function(response){
+                $scope.teacherStat.data = {courses: []};
+                $scope.personTable.alert = UtilsSrvc.getAlert('Внимание!', response.data, 'error', true);
+            });
+    };
+    
     $scope.personTable.init();
 });
 
