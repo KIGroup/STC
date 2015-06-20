@@ -683,7 +683,7 @@ Get teacher payout for training</Description>
 <ReturnType>%Float</ReturnType>
 <Implementation><![CDATA[
     /* 
-    Формула расчета: p = Y * x * v * h; Y = (y1 + y2 + y3) / 3 <= 1.5
+    Формула расчета: p = Y * x * v * h; Y = 1 + (y1-1) + (y2-1) + (y3-1) <= 1.5
     v - стоимость нормочаса обучения - величина v
     x - Коэф. сложности курса 
     h - Продолжительность курса в часах
@@ -727,7 +727,7 @@ Get teacher payout for training</Description>
                Training->Teacher = :teacherId)
     
     // 2,3,4,5; колы не учитываем
-    if (y3 '= 0){
+    if (+y3 '= 0){
         set y3 = ((y3 - 1) * 0.05) + 0.9
     }
     else{
@@ -735,12 +735,13 @@ Get teacher payout for training</Description>
         set y3 = 1
     }
     
-    // p = Y * x * v; Y = (y1 + y2 + y3) / 3 <= 1.5
-    set Y = $NORMALIZE((y1 + y2 + y3) / 3, 2)
+    set Y = $NORMALIZE(1 + (y1-1) + (y2-1) + (y3-1), 2)
     set P = Y * tr.Course.DifficultyCoefficient * tr.Course.HourPayout * tr.Course.Hours
-   
+    set PRound = $NORMALIZE(((P + 49)/100), 0) * 100 // Округление до сотни в сторону увеличения
+    
     set resultData = ##class(%ZEN.proxyObject).%New()
     set resultData.P = P
+    set resultData.PRound = PRound
     set resultData.Y = Y
     set resultData.y1 = y1
     set resultData.y2 = y2
@@ -750,7 +751,7 @@ Get teacher payout for training</Description>
     set resultData.h = tr.Course.Hours
     set resultData.currency = tr.Course.Currency.Name.Value
    
-    quit P
+    quit PRound
 ]]></Implementation>
 </Method>
 

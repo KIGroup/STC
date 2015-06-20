@@ -147,7 +147,7 @@ directivesModule.directive('stctraining', function(){
                             label: $filter('localize')('Подтвердить сумму'),
                             cssClass: 'btn-small btn-primary',
                             func : function(){
-                                        $scope.training.payout = data.P;
+                                        $scope.training.payout = data.PRound;
                                         $scope.formName.$setDirty();
                                    }
                         },
@@ -161,7 +161,7 @@ directivesModule.directive('stctraining', function(){
                     var msg = 
                     $filter('localize')(
                     "<b>Формула расчета:</b><br>"+
-                    "<b>P = Y * x * v * h</b>, где <b>Y = (y1 + y2 + y3) / 3</b><br>" +            
+                    "<b>P = Y * x * v * h</b>, где <b>Y = 1 + (y1 - 1) + (y2 - 1) + (y3 - 1)</b><br>" +            
                     "<b>v</b> - стоимость нормочаса обучения;<br>" +
                     "<b>x</b> - коэф. сложности курса; <br>" +
                     "<b>h</b> - продолжительность курса в часах;<br>" +
@@ -172,9 +172,9 @@ directivesModule.directive('stctraining', function(){
                     
                     msg += 
                     "P = " + data.P + " = " + data.Y + " * " + data.x + " * " + data.v + " * " + data.h + ".<br>" +
-                    "Y = " + data.Y + " = (" + data.y1 + " + " + data.y2 + " + " + data.y3 + ") / 3 "; 
+                    "Y = " + data.Y + " = 1 + (" + data.y1 + " - 1) + (" + data.y2 + " - 1) + (" + data.y3 + " - 1)"; 
                         
-                    UtilsSrvc.openCustomMessageBox($filter('localize')('Сумма выплаты преподавателю') + ': ' + $filter('number')(data.P) + ', ' + data.currency, msg, buttons);
+                    UtilsSrvc.openCustomMessageBox($filter('localize')('Сумма выплаты преподавателю') + ': ' + $filter('number')(data.PRound) + ', ' + data.currency, msg, buttons);
                 };
                 
                 TrainingSrvc.getTeacherPayout($scope.training.id, $scope.training.teacher.id).then(
