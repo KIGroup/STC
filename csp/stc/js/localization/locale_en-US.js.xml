@@ -5,6 +5,15 @@
 
 localizationModule.constant('StcDictionary', {
   strings: {
+    'Пройденные курсы' : 'Finished trainings',
+    'Сертификаты слушателя' : 'Certificates',
+    'Курсы преподавателя' : 'Teacher courses',
+    'Статистика преподавателя' : 'Statistics of teacher',
+    'Обновить статистику' : 'Refresh statistics',
+    'Всего проведено обучающих курсов' : 'A total of training courses',
+    'Общий средний балл по отзывам' : 'The overall average score for feedbacks',
+    'Проведено обучений' : 'Training courses',
+    'Средний балл по отзывам' : 'Average score for feedbacks',
     'Вы уверены?':'Are you sure?',
     'Отзыв удален.':'Feedback has been removed.',
     'Выберите получателей письма.':'Select mail recipients',
@@ -609,7 +618,7 @@ localizationModule.constant('StcDictionary', {
   getTranslate: function(word){
       
       if (!this.strings[word]){
-            //console.log("'"+word+"' : '',");
+            console.log("'"+word+"' : '',");
       }
      
       //console.log('call localize=' + word);
