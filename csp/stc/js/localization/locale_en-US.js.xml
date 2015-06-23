@@ -5,6 +5,37 @@
 
 localizationModule.constant('StcDictionary', {
   strings: {
+    'Вы уверены?':'Are you sure?',
+    'Отзыв удален.':'Feedback has been removed.',
+    'Выберите получателей письма.':'Select mail recipients',
+    'Событие удалено.':'Event has been removed.',
+    'Слушатель удален из подгруппы.':'Student has been removed from subgroup.',
+    'Удалить слушателя':'Remove student',
+    'Заявка от слушателя удалена.':'Order from student has been removed.',
+    'Сертификаты обновлены.':'Certificates has been updated.',
+    'Сертификат удалён.':'Certificate has been removed.',
+    'Подгруппа удалена.':'Subgroup has been removed.',
+    'Данные договора сохранены.':'Document data has been saved.',
+    'Платеж для подгруппы сохранен.':'Payment has benn saved.',
+    'Ваша заявка принята к рассмотрению. На указанный Вами адрес электронной почты придет письмо-подтверждение.': 'Your order is accepted for consideration. In your e-mail address will receive a letter confirmation.',
+    'Активация подписки завершена.':'Activation of the subscription is completed.',
+    'На указанный адрес было отправлено письмо, для активации подписки перейдите по ссылке в письме.':'At the address was sent a letter to activate your subscription, click on the link in the email.',
+
+    'Формула расчета' : 'Formula for calculating',
+    'где' : 'where',
+    'стоимость нормочаса обучения' : 'cost of standard hours of training',
+    'коэф. сложности курса' : 'degree of difficulty training course',
+    'продолжительность курса в часах' : 'course duration in hours',
+    'количество обучений любых курсов этого преподавателя за последний год до обучения. Изменяется от 0.8 до 1.1 с шагом 0.1.' : 'amount of training courses of the teacher for the last year before the training. Changes from 0.8 to 1.1 in increments of 0.1.',
+    'опыт проведения именно этого курса за всё время. Изменяется от 0.75 до 1.25 c шагом 0.05.' : '',
+    'рейтинг преподавателя по отзывам слушателей (средняя оценка по курсу). Коэффициент меняется от 0.9 до 1.1 в пропорции.' : 'review rating of teacher (average score on the course). The coefficient ranges from 0.9 to 1.1 in proportion.',
+
+    'Пересчитать сумму выплаты преподавателю' : "Calculate teacher's payout",
+    'Сумма выплаты' : 'Payout',
+    'Подтвердить сумму' : 'Confirm payout',
+    'Сумма выплаты преподавателю' : "Teacher's payout",
+    'Фильтр, город' : 'Filter, city',
+    'Фильтр, тип организации' : 'Filter, type of organization',
     'Заявки на регистрацию' :'Orders from students',
     'Экспорт всех заявок в файл *.csv' : 'Export orders to ther file *.csv',
     'Экспорт слушателей' :'Export students',
@@ -578,7 +609,7 @@ localizationModule.constant('StcDictionary', {
   getTranslate: function(word){
       
       if (!this.strings[word]){
-            console.log("'"+word+"' : '',");
+            //console.log("'"+word+"' : '',");
       }
      
       //console.log('call localize=' + word);

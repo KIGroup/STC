@@ -158,23 +158,26 @@ directivesModule.directive('stctraining', function(){
                             func : null
                         }];
                     
+                    var getLocValue = function(key){
+                        return $filter('localize')(key)
+                    };
+                    
                     var msg = 
-                    $filter('localize')(
-                    "<b>Формула расчета:</b><br>"+
-                    "<b>P = Y * x * v * h</b>, где <b>Y = 1 + (y1 - 1) + (y2 - 1) + (y3 - 1)</b><br>" +            
-                    "<b>v</b> - стоимость нормочаса обучения;<br>" +
-                    "<b>x</b> - коэф. сложности курса; <br>" +
-                    "<b>h</b> - продолжительность курса в часах;<br>" +
-                    "<b>y1</b> - количество обучений любых курсов этого преподавателя за последний год до обучения. Изменяется от 0.8 до 1.1 с шагом 0.1.<br>" +
-                    "<b>y2</b> - опыт проведения именно этого курса за всё время. Изменяется от 0.75 до 1.25 c шагом 0.05.<br>" +
-                    "<b>y3</b> - рейтинг преподавателя по отзывам слушателей (средняя оценка по курсу). Коэффициент меняется от 0.9 до 1.1 в пропорции.<br>" +
-                    "<b>Результат:</b><br>");
+                    "<b>" + getLocValue("Формула расчета") +":</b><br>"+
+                    "<b>P = Y * x * v * h</b>, " + getLocValue("где") + " <b>Y = 1 + (y1 - 1) + (y2 - 1) + (y3 - 1)</b><br>" +            
+                    "<b>v</b> - " + getLocValue("стоимость нормочаса обучения") + ";<br>" +
+                    "<b>x</b> - " + getLocValue("коэф. сложности курса") + "; <br>" +
+                    "<b>h</b> - " + getLocValue("продолжительность курса в часах") + ";<br>" +
+                    "<b>y1</b> - " + getLocValue("количество обучений любых курсов этого преподавателя за последний год до обучения. Изменяется от 0.8 до 1.1 с шагом 0.1.") + "<br>" +
+                    "<b>y2</b> - " + getLocValue("опыт проведения именно этого курса за всё время. Изменяется от 0.75 до 1.25 c шагом 0.05.") + "<br>" +
+                    "<b>y3</b> - " + getLocValue("рейтинг преподавателя по отзывам слушателей (средняя оценка по курсу). Коэффициент меняется от 0.9 до 1.1 в пропорции.") + "<br>" +
+                    "<b>" + getLocValue("Результат") + ":</b><br>";
                     
                     msg += 
                     "P = " + data.P + " = " + data.Y + " * " + data.x + " * " + data.v + " * " + data.h + ".<br>" +
                     "Y = " + data.Y + " = 1 + (" + data.y1 + " - 1) + (" + data.y2 + " - 1) + (" + data.y3 + " - 1)"; 
                         
-                    UtilsSrvc.openCustomMessageBox($filter('localize')('Сумма выплаты преподавателю') + ': ' + $filter('number')(data.PRound) + ', ' + data.currency, msg, buttons);
+                    UtilsSrvc.openCustomMessageBox(getLocValue('Сумма выплаты преподавателю') + ': ' + $filter('number')(data.PRound) + ', ' + data.currency, msg, buttons);
                 };
                 
                 TrainingSrvc.getTeacherPayout($scope.training.id, $scope.training.teacher.id).then(
