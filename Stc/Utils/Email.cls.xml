@@ -65,7 +65,7 @@ Working with email</Description>
     set mail = ..GetEmailPattern("teacher")
     set mail.subject = ..GetMailMessageWithTrainingData(mail.subject, tr)
     set mail.message = ..GetMailMessageWithTrainingData(mail.message, tr)
-    set mail.message = $REPLACE(mail.message, "%ListOfStudentsUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_tr.%Id()_"/students/"_tr.AccessCode)
+    set mail.message = $REPLACE(mail.message, "%ListOfAttendeesUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_tr.%Id()_"/students/"_tr.AccessCode)
     quit mail
 ]]></Implementation>
 </Method>
@@ -78,7 +78,7 @@ Working with email</Description>
     set mail = ..GetEmailPattern("curator")
     set mail.subject = ..GetMailMessageWithTrainingData(mail.subject, tr)
     set mail.message = ..GetMailMessageWithTrainingData(mail.message, tr)
-    set mail.message = $REPLACE(mail.message, "%ListOfStudentsUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_tr.%Id()_"/students/"_tr.AccessCode)
+    set mail.message = $REPLACE(mail.message, "%ListOfAttendeesUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_tr.%Id()_"/students/"_tr.AccessCode)
     quit mail
 ]]></Implementation>
 </Method>
@@ -91,7 +91,7 @@ Working with email</Description>
     set mail = ..GetEmailPattern("feedback")
     set mail.subject = ..GetMailMessageWithTrainingData(mail.subject, tr)
     set mail.message = ..GetMailMessageWithTrainingData(mail.message, tr)
-    set mail.message = $REPLACE(mail.message, "%FeedBackUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_tr.%Id()_"/feedback/"_$p(tr.AccessCode,"-",1)_"-"_$p(tr.AccessCode,"-",5)) 
+    set mail.message = $REPLACE(mail.message, "%SurveyUrl", "http://"_##class(Stc.Data.Settings).GetWebAppDomain()_"/stc/index.csp#/training/"_tr.%Id()_"/feedback/"_$p(tr.AccessCode,"-",1)_"-"_$p(tr.AccessCode,"-",5)) 
     quit mail
 ]]></Implementation>
 </Method>
@@ -115,8 +115,8 @@ Working with email</Description>
          FROM Stc_Data.Feedback 
          WHERE Training = :trId AND {fn TIMESTAMPDIFF(SQL_TSI_HOUR, CreatedTS, :nowTime)} <= :timeOut)
 
-    set mail.subject = $REPLACE(mail.subject, "%NumberOfNewestFeedbacks", numberOfNewestFeedBacks)
-    set mail.message = $REPLACE(mail.message, "%NumberOfNewestFeedbacks", numberOfNewestFeedBacks)  
+    set mail.subject = $REPLACE(mail.subject, "%NumberOfNewestSurveys", numberOfNewestFeedBacks)
+    set mail.message = $REPLACE(mail.message, "%NumberOfNewestSurveys", numberOfNewestFeedBacks)  
     
     quit mail
 ]]></Implementation>

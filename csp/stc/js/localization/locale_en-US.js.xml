@@ -5,6 +5,17 @@
 
 localizationModule.constant('StcDictionary', {
   strings: {
+    'ссылка на отмену подписки' : 'link to unsubscribe',
+    'Создание организации из заявки от слушателя' : 'Creating organization from request of the attendee',
+    'Добавить организацию' : 'Add organization',
+    'Создание завершено.' : 'Creating completed.',
+    'Добавление контакта организации' : 'Add a contact organization',
+    'ссылка на страницу со списком слушателей' : 'link to a page with a list of attendees',
+    'ссылка на страницу регистрации' : 'a link to the registration page',
+    'ссылка для активации подписки' : 'link to activate your subscription',
+    'Указать / добавить':'Select / Add',
+    'Сначала создайте организацию.':'You need to create an organization in the first place.',
+    'Слушатель удален из обучения.': 'Attendee has been removed from training.',
     'Создать заявку*':'Request for training',
     'Обучения*':'Scheduled courses',
     'Завершение обучения' : 'Finish training',
@@ -103,6 +114,7 @@ localizationModule.constant('StcDictionary', {
     'Город, Регион, Страна'                                    : 'City, Region, Country',
     'Готово!'                                                  : 'Done!',
     'Добавление слушателя в подгруппу'                         : 'Adding attendee in sub-group', 
+    'Добавление слушателя' : 'Adding attendee',
     'Данные договора сохранены.'                               : 'Contract data has been saved.',
     'Дата договора'                                            : 'Date of contract',
     'Дата начала'                                              : 'Start date',
@@ -241,7 +253,7 @@ localizationModule.constant('StcDictionary', {
     'Преподаватель'                                            : 'Trainer',
     'Преподает курсы'                                          : 'Teaches courses',
     'Преподаватель удален.'                                    : 'Trainer has been removed.',
-    'Примечание'                                               : 'Note',
+    'Примечание'                                               : 'Other info',
     'Принять заявку'                                           : 'Accept request',
     'Программа курса'                                          : 'Course overview',
     'Произошла смена организации в заявке.'                       : 'Organization from request has been changed.',
@@ -579,44 +591,27 @@ localizationModule.constant('StcDictionary', {
 'дней' : 'days',
 'часов' : 'hours',
 'Программа' : 'Course overview',
-
-
-
-
-
-'В содержании письма можно использовать переменные(%Variable), которые впоследствии будут заменены на соответствующие значения. Список доступных переменных для данного шаблона:<br>%DateStart, %DateEnd - дата начала / окончания обучения;<br>%TimeStart, %TimeEnd - время начала / окончание занятий;<br>%Course.Name - название курса;<br>%City.Name, %Region.Name, %Country.Name - город, регион, страна;<br>%Street, %Room - улица и аудитория;<br>%Trainer.FullName - фамилия и имя преподавателя;<br>%Trainer.Email, %Trainer.Phone - email, телефон<br>%Curator.FullName - фамилия и имя куратора;<br>%Curator.Email, %Curator.PhoneSecret, %Curator.PhonePublic - email, личный|публичный телефон;<br>%OtherInfo - дополнительная информация об обучении;<br>%JoinUrl - ссылка на страницу для регистрации;<br>%ListOfAttendeesUrl - ссылка на страницу со списком слушателей;<br>%UnsubscribeUrl - ссылка на отмену подписки.<br>' : 
-'Inside the message you can use variables(%Variable). They will be replaced with appropriate values. The list of available variables for this template:<br>%DateStart, %DateEnd - start / end date training;<br>%TimeStart, %TimeEnd - time;<br>%Course.Name - course name;<br>%City.Name, %Region.Name, %Country.Name - city, region|state, country;<br>%Street, %Room - address;<br>%Trainer.FullName - trainer full name;<br>%Trainer.Email, %Trainer.Phone - email, phone<br>%Curator.FullName - curator full name;<br>%Curator.Email, %Curator.PhoneSecret, %Curator.PhonePublic - email, private, public phone;<br>%OtherInfo - other info about training;<br>%JoinUrl - registration link;<br>%ListOfAttendeesUrl - list of attendees link;<br>%UnsubscribeUrl - unsubscribe link.<br>',
-
-
-'В содержании письма можно использовать переменные(%Variable), которые впоследствии будут заменены на соответствующие значения. Список доступных переменных для данного шаблона:<br>%DateStart, %DateEnd - дата начала / окончания обучения;<br>%TimeStart, %TimeEnd - время начала / окончание занятий;<br>%Course.Name - название курса;<br>%City.Name, %Region.Name, %Country.Name - город, регион, страна;<br>%Street, %Room - улица и аудитория;<br>%Trainer.FullName - фамилия и имя преподавателя;<br>%Trainer.Email, %Trainer.Phone - email, телефон<br>%Curator.FullName - фамилия и имя куратора;<br>%Curator.Email, %Curator.PhoneSecret, %Curator.PhonePublic - email, личный|публичный телефон;<br>%OtherInfo - дополнительная информация об обучении;' : 
-'Inside the message you can use variables(%Variable). They will be replaced with appropriate values. The list of available variables for this template:<br>%DateStart, %DateEnd - start / end date training;<br>%TimeStart, %TimeEnd - time;<br>%Course.Name - course name;<br>%City.Name, %Region.Name, %Country.Name - city, region|state, country;<br>%Street, %Room - address;<br>%Trainer.FullName - trainer full name;<br>%Trainer.Email, %Trainer.Phone - email, phone<br>%Curator.FullName - curator full name;<br>%Curator.Email, %Curator.PhoneSecret, %Curator.PhonePublic - email, private, public phone;<br>%OtherInfo - other info about training;',
-
-'В содержании письма можно использовать переменные(%Variable), которые впоследствии будут заменены на соответствующие значения. Список доступных переменных для данного шаблона:<br>%Course.Name - курс;<br>%SurveyUrl - ссылка на страницу для анкетирования.' : 
-'Inside the message you can use variables(%Variable). They will be replaced with appropriate values. The list of available variables for this template:<br>%Course.Name - course name;<br>%SurveyUrl - survey link.',
-
-
-'В содержании письма можно использовать переменные(%Variable), которые впоследствии будут заменены на соответствующие значения. Список доступных переменных для данного шаблона:<br>%DateStart, %DateEnd - дата начала / окончания обучения;<br>%TimeStart, %TimeEnd - время начала / окончание занятий;<br>%Course.Name - название курса;<br>%City.Name, %Region.Name, %Country.Name - город, регион, страна;<br>%Street, %Room - улица и аудитория;<br>%Trainer.FullName - фамилия и имя преподавателя;<br>%Trainer.Email, %Trainer.Phone - email, телефон<br>%Curator.FullName - фамилия и имя куратора;<br>%Curator.Email, %Curator.PhoneSecret, %Curator.PhonePublic - email, личный|публичный телефон;<br>%OtherInfo - дополнительная информация об обучении;<br>%NumberOfNewestSurveys - количество новых отзывов.<br>%ListOfSurveysUrl - ссылка на страницу с отзывами.' : 
-'Inside the message you can use variables(%Variable). They will be replaced with appropriate values. The list of available variables for this template:<br>%DateStart, %DateEnd - start / end date training;<br>%TimeStart, %TimeEnd - time;<br>%Course.Name - course name;<br>%City.Name, %Region.Name, %Country.Name - city, region|state, country;<br>%Street, %Room - address;<br>%Trainer.FullName - trainer full name;<br>%Trainer.Email, %Trainer.Phone - email, phone<br>%Curator.FullName - curator full name;<br>%Curator.Email, %Curator.PhoneSecret, %Curator.PhonePublic - email, private, public phone;<br>%OtherInfo - other info about training;<br>%NumberOfNewestSurveys - number of newest surveys;<br>%ListOfSurveysUrl - link to page with all surveys.',
-
-
-'В содержании письма можно использовать переменные(%Variable), которые впоследствии будут заменены на соответствующие значения. Список доступных переменных для данного шаблона:<br>%DateStart, %DateEnd - дата начала / окончания обучения;<br>%TimeStart, %TimeEnd - время начала / окончание занятий;<br>%Course.Name - название курса;<br>%City.Name, %Region.Name, %Country.Name - город, регион, страна;<br>%Street, %Room - улица и аудитория;<br>%Trainer.FullName - фамилия и имя преподавателя;<br>%Trainer.Email, %Trainer.Phone - email, телефон<br>%Curator.FullName - фамилия и имя куратора;<br>%Curator.Email, %Curator.PhoneSecret, %Curator.PhonePublic - email, личный|публичный телефон;<br>%OtherInfo - дополнительная информация об обучении;<br>%ListOfAttendeesUrl - ссылка на страницу со списком слушателей.' : 
-'Inside the message you can use variables(%Variable). They will be replaced with appropriate values. The list of available variables for this template:<br>%DateStart, %DateEnd - start / end date training;<br>%TimeStart, %TimeEnd - time;<br>%Course.Name - course name;<br>%City.Name, %Region.Name, %Country.Name - city, region|state, country;<br>%Street, %Room - address;<br>%Trainer.FullName - trainer full name;<br>%Trainer.Email, %Trainer.Phone - email, phone<br>%Curator.FullName - curator full name;<br>%Curator.Email, %Curator.PhoneSecret, %Curator.PhonePublic - email, private, public phone;<br>%OtherInfo - other info about training;<br>%ListOfAttendeesUrl - list of attendees link;',
-
-
-'В содержании письма можно использовать переменные(%Variable), которые впоследствии будут заменены на соответствующие значения. Список доступных переменных для данного шаблона:<br>%DateStart, %DateEnd - дата начала / окончания обучения;<br>%TimeStart, %TimeEnd - время начала / окончание занятий;<br>%Course.Name - название курса;<br>%City.Name, %Region.Name, %Country.Name - город, регион, страна;<br>%Street, %Room - улица и аудитория;<br>%Trainer.FullName - фамилия и имя преподавателя;<br>%Trainer.Email, %Trainer.Phone - email, телефон<br>%Curator.FullName - фамилия и имя куратора;<br>%Curator.Email, %Curator.PhoneSecret, %Curator.PhonePublic - email, личный|публичный телефон;<br>%OtherInfo - дополнительная информация об обучении;<br>%JoinUrl - ссылка на страницу регистрации.' : 
-'Inside the message you can use variables(%Variable). They will be replaced with appropriate values. The list of available variables for this template:<br>%DateStart, %DateEnd - start / end date training;<br>%TimeStart, %TimeEnd - time;<br>%Course.Name - course name;<br>%City.Name, %Region.Name, %Country.Name - city, region|state, country;<br>%Street, %Room - address;<br>%Trainer.FullName - trainer full name;<br>%Trainer.Email, %Trainer.Phone - email, phone<br>%Curator.FullName - curator full name;<br>%Curator.Email, %Curator.PhoneSecret, %Curator.PhonePublic - email, private, public phone;<br>%OtherInfo - other info about training;<br>%JoinUrl - registration link.',
-
-
-'В содержании письма можно использовать переменные(%Variable), которые впоследствии будут заменены на соответствующие значения. Список доступных переменных для данного шаблона:<br>%Course.Name - курс.' : 
-'Inside the message you can use variables(%Variable). They will be replaced with appropriate values. The list of available variables for this template:<br>%Course.Name - course name.',
-
-
-'В содержании письма можно использовать переменные(%Variable), которые впоследствии будут заменены на соответствующие значения. Список доступных переменных для данного шаблона:<br>%ActivationUrl - ссылка для активации подписки.' :
-'Inside the message you can use variables(%Variable). They will be replaced with appropriate values. The list of available variables for this template:<br>%ActivationUrl - activation url.',
-
+'В содержании письма можно использовать переменные(%Variable), которые впоследствии будут заменены на соответствующие значения. Список доступных переменных для данного шаблона:<br>' : 'Inside the message you can use variables(%Variable). They will be replaced with appropriate values. The list of available variables for this template:<br>',
+'дата начала / окончания обучения' : 'start date / finish date of training',
+'время начала / окончание занятий' : 'start time / finish time of training',
+'название курса' : 'course name',
+'город, регион, страна' : 'city, region, county',
+'улица и аудитория' : 'street and room',
+'фамилия и имя преподавателя' : 'trainer fullname',
+'email, телефон' : 'email, phone',
+'фамилия и имя куратора' : 'curator fullname',
+'email, личный | публичный телефон' : 'email, public | private phone',
+'дополнительная информация об обучении' : 'additional information about training',
+'Просмотр' : 'Просмотр',
+'Публичный курс' : 'Public course',
+'ссылка на страницу для анкетирования' : 'link to the survey page',
+'количество новых отзывов' : 'count of newest surveys',
+'ссылка на страницу с отзывами':'link to the surveys page',
 
 '<strong>Перевод строки:</strong> &lt;br&gt;<br><strong>Обязательные параметры:</strong> %1 - ссылка на программу курса, %2 - домен + порт, %3 - идентификатор обучения, %4 - место обучения, %5 - преподаватель, %6 - время, %7 - контактное лицо, %8 - примечание.' : 
 '<strong>New line:</strong> &lt;br&gt;<br><strong>Required parameters:</strong> %1 - course overview url, %2 - domain + port, %3 - training ID, %4 - training location, %5 - trainer, %6 - time, %7 - contact person, %8 - note.'
+
+
 
 
 
@@ -626,10 +621,9 @@ localizationModule.constant('StcDictionary', {
   getTranslate: function(word){
       
       if (!this.strings[word]){
-            //console.log("'"+word+"' : '',");
+            console.log("'"+word+"' : '',");
       }
      
-      //console.log('call localize=' + word);
       return this.strings[word] ? this.strings[word] : word;
   }
 });

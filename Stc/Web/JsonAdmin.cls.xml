@@ -675,7 +675,7 @@ Method="POST" Url="/json/company/contact/new"/>]]></Description>
         
         $$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
         
-        set company = ##class(Stc.Data.Company).%OpenId(data.company.exist.id,,.st)
+        set company = ##class(Stc.Data.Company).%OpenId(data.companyId,,.st)
         $$$THROWONERROR(st, st)
         
         set person = ##class(Stc.Data.Person).EmailIdxOpen(data.email)
@@ -683,9 +683,12 @@ Method="POST" Url="/json/company/contact/new"/>]]></Description>
             set person = ##class(Stc.Data.Person).Save(data, .st)
             $$$THROWONERROR(st, st)    
         }
-        
+       
         set company.Contact = person
-        $$$THROWONERROR(st, company.%Save())
+       
+        set st = company.%Save()
+       
+        $$$THROWONERROR(st, st)
             
         TCOMMIT
     }

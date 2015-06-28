@@ -154,7 +154,7 @@ controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsS
               '%Trainer.FullName - ' + getLocValue('фамилия и имя преподавателя') + ';<br>' +
               '%Trainer.Email, %Trainer.Phone - ' + getLocValue('email, телефон') + ';<br>' +
               '%Curator.FullName - ' + getLocValue('фамилия и имя куратора') + ';<br>' + 
-              '%Curator.Email, %Curator.PhoneSecret, %Curator.PhonePublic - ' + getLocValue('email, личный|публичный телефон') + ';<br>' +
+              '%Curator.Email, %Curator.PhoneSecret, %Curator.PhonePublic - ' + getLocValue('email, личный | публичный телефон') + ';<br>' +
               '%OtherInfo - '  + getLocValue('дополнительная информация об обучении') + ';';
         
         switch(type){
@@ -167,18 +167,18 @@ controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsS
               break;
             }
             case 'feedback':{
-              msg += '%Course.Name - ' + getLocValue('курс') + ';<br>' + 
-                    '%FeedBackUrl - ' + getLocValue('ссылка на страницу для анкетирования') + '.';
+              msg += '%Course.Name - ' + getLocValue('название курса') + ';<br>' + 
+                    '%SurveyUrl - ' + getLocValue('ссылка на страницу для анкетирования') + '.';
               break;
             }
             case 'teacher':{
               msg += trainingVariables + '<br>' +
-                    '%ListOfStudentsUrl - ' + getLocValue('ссылка на страницу со списком слушателей') + '.';
+                    '%ListOfAttendeesUrl - ' + getLocValue('ссылка на страницу со списком слушателей') + '.';
               break;
             }
             case 'curator':{
               msg += trainingVariables + '<br>' +
-                    '%ListOfStudentsUrl - ' + getLocValue('ссылка на страницу со списком слушателей') + '.';
+                    '%ListOfAttendeesUrl - ' + getLocValue('ссылка на страницу со списком слушателей') + '.';
               break;
             }
             case 'orders':{
@@ -187,7 +187,7 @@ controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsS
               break;
             }
             case 'orderapply':{
-              msg += '%Course.Name - ' + getLocValue('курс') + '.';
+              msg += '%Course.Name - ' + getLocValue('название курса') + '.';
               break;
             } 
             case 'confirmsubscription':{
@@ -196,7 +196,7 @@ controllersModule.controller('SettingsCtrl', function($scope, $filter, SettingsS
             }
             case 'listOfFeedbacks':{
               msg += trainingVariables + '<br>' + 
-                     '%NumberOfNewestFeedbacks - ' + getLocValue('количество новых отзывов') + ';<br>' +
+                     '%NumberOfNewestSurveys - ' + getLocValue('количество новых отзывов') + ';<br>' +
                      '%ListOfSurveysUrl - ' + getLocValue('ссылка на страницу с отзывами') + '.';
               break;
             } 

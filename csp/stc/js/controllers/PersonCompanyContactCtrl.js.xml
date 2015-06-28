@@ -63,6 +63,7 @@ controllersModule.controller('PersonCompanyContactCtrl', function($scope, $windo
      // Обновить данные персоны
     $scope.personForm.save = function(){
         if (!$routeParams.id){
+            $scope.personForm.person.companyId = $routeParams.cmpId;
             CompanySrvc.createContact($scope.personForm.person).then(
                 function(data){
                     $scope.personForm.alert = UtilsSrvc.getAlert('Готово!', 'Изменения сохранены.', 'success', true);

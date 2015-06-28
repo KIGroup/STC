@@ -142,6 +142,11 @@ controllersModule.controller('CompanyCtrl', function($scope, $routeParams, $wind
 
 
     $scope.compForm.addContact = function(){
+        if (!$scope.compForm.company.id){
+            UtilsSrvc.openMessageBox("Внимание!", "Сначала создайте организацию.");
+            return;
+        }
+        
         $location.path('/company/' + $scope.compForm.company.id + '/person');
     };
     

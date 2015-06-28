@@ -13,7 +13,8 @@
                         <div class="accordion-inner">
                             <form name="compForm_form" ng-submit="compForm.save()">
                                 <stccompany company="compForm.company" required-all="false" disable-short-name="false"/>
-                                <button class="btn btn-success btn-small" type="submit" ng-bind="'Сохранить'|localize" ></button>
+                                <button ng-show="compForm.company.id" class="btn btn-success btn-small" type="submit" ng-bind="'Сохранить'|localize" ></button>
+                                <button ng-hide="compForm.company.id" class="btn btn-success btn-small" type="submit" ng-bind="'Добавить'|localize" ></button>
                             </form>
                         </div>
                     </div>
