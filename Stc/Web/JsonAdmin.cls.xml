@@ -478,6 +478,8 @@ Method="POST" Url="/json/company</Description>
         set company = ##class(Stc.Data.Company).Save(data, .st)
         if $$$ISERR(st) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("createCompany", "| "_st))     
         
+        do company.ConvertToProxyObject(1).%ToJSON()
+        
         TCOMMIT
     }
     catch ex {
@@ -644,6 +646,46 @@ Method="POST" Url="/json/company/contact/change"</Description>
         
         set st = company.%Save()
         if $$$ISERR(st) $$$ThrowStatus(##class(Stc.Utils.Msg).GetErrorStatus("saveCompany", "| "_st))
+            
+        TCOMMIT
+    }
+    catch ex {
+        TROLLBACK
+        set st = ex.AsStatus()
+    }
+    
+    quit st
+]]></Implementation>
+</Method>
+
+<Method name="CreateCompanyContact">
+<Description><![CDATA[
+Create|replace contact person of organization
+Method="POST" Url="/json/company/contact/new"/>]]></Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    set st  = $$$OK
+    
+    try{
+        TSTART
+        
+        // Check privilege for Person table
+        $$$THROWONERROR(st, ##class(Stc.Data.Person).CheckDeletePrivilege())
+        
+        $$$THROWONERROR(st, ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(%request.Content,,.data, 1))
+        
+        set company = ##class(Stc.Data.Company).%OpenId(data.company.exist.id,,.st)
+        $$$THROWONERROR(st, st)
+        
+        set person = ##class(Stc.Data.Person).EmailIdxOpen(data.email)
+        if $ISOBJECT(person) = $$$NO {
+            set person = ##class(Stc.Data.Person).Save(data, .st)
+            $$$THROWONERROR(st, st)    
+        }
+        
+        set company.Contact = person
+        $$$THROWONERROR(st, company.%Save())
             
         TCOMMIT
     }

@@ -83,10 +83,16 @@
                                 </div>
                             </div>
                             
-                            <div class="control-group">
-                                <div class="controls">
+                            <div class="control-group" >
+                                <div class="controls" style="display: initial;">
                                     <button type="submit" class="btn btn-primary btn-small" ng-bind="courseForm.actionName|localize" ng-disabled="cForm.$pristine"></button>
                                     <button type="button" class="btn btn-small" ng-click="courseForm.cancel()" ng-bind="'Назад'|localize"></button>
+                                
+                                </div>
+                                <div style="display: inline-flex;">
+                                    <label class="checkbox" style="margin-top: 6px; margin-left: 6px; margin-left: 20px;">
+                                        <input type="checkbox" ng-init="courseForm.course.isPublic=true" ng-model="courseForm.course.isPublic" ng-disabled="menu.readOnlyMode">{{'Публичный курс'|localize}}
+                                    </label> 
                                 </div>
                             </div>                          
                         </form>

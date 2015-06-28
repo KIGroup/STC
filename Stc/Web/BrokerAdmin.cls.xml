@@ -88,6 +88,9 @@ Private request processor for administrator</Description>
     <!-- Change contact person of organization -->
     <Route Method="POST" Url="/json/company/contact/change" Call="Stc.Web.JsonAdmin:ChangeCompanyContact"/>
     
+    <!-- Create|replace contact person of organization -->
+    <Route Method="POST" Url="/json/company/contact/new" Call="Stc.Web.JsonAdmin:CreateCompanyContact"/>
+    
     <!-- Get all organizations for table, full info -->
     <Route Method="POST" Url="/json/company/grid" Call="Stc.Web.JsonAdmin:GetCompaniesFullInfoForGrid"/>
     

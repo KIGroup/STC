@@ -53,7 +53,7 @@ directivesModule.directive('stctraining', function(){
             };
 
             $scope.findAddress = function(){
-                var searchStr = $scope.training.city.greatParentName + ', ' + $scope.training.city.parentName + ', ' + $scope.training.city.name + ', ' + $scope.training.notCorrectAddress;
+                var searchStr = $scope.training.city.greatParentName + ', ' + $scope.training.city.parentName + ', ' + $scope.training.city.name + ', ' + $scope.training.street;
                 
                 YandexSrvc.getResult(searchStr).then(
                     function(data){
@@ -76,6 +76,7 @@ directivesModule.directive('stctraining', function(){
 
                     },
                     function(response){
+                        console.log(response);
                     });
             };
 

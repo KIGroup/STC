@@ -565,10 +565,10 @@ Method="GET" Url="/json/schedule"</Description>
     
     &sql(DECLARE ScheduleCourseCur CURSOR FOR 
              SELECT ID, 
-             ISNULL((SELECT MIN(DateStart)FROM Stc_Data.Training WHERE Course = course.ID AND IsCompleted = 0),'11/11/2099') As MinTrainingDate,
-             (SELECT COUNT(ID)FROM Stc_Data.Training WHERE Course = course.ID) As TotalCount
+             ISNULL((SELECT MIN(DateStart)FROM Stc_Data.Training WHERE Course = course.ID AND IsCompleted = 0 AND IsPublic = 1),'11/11/2099') As MinTrainingDate,
+             (SELECT COUNT(ID)FROM Stc_Data.Training WHERE Course = course.ID AND IsPublic = 1) As TotalCount
              FROM Stc_Data.Course as course
-             WHERE IsInUse = 1
+             WHERE course.IsInUse = 1 AND course.IsPublic = 1
              ORDER BY MinTrainingDate, TotalCount DESC) 
         
     &sql(OPEN ScheduleCourseCur)
@@ -584,7 +584,7 @@ Method="GET" Url="/json/schedule"</Description>
         &sql(DECLARE ScheduleTrainingCur CURSOR FOR 
              SELECT ID
              FROM Stc_Data.Training 
-             WHERE Course = :courseId AND IsCompleted = 0
+             WHERE Course = :courseId AND IsCompleted = 0 AND IsPublic = 1
              ORDER BY DateStart)
         
         &sql(OPEN ScheduleTrainingCur)

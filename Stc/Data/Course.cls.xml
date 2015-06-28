@@ -94,6 +94,13 @@ Difficulty coefficient</Description>
 <InitialExpression>"islands#blackIcon"</InitialExpression>
 </Property>
 
+<Property name="IsPublic">
+<Description>
+Is public training or not (shows in calendar)</Description>
+<Type>%Boolean</Type>
+<InitialExpression>1</InitialExpression>
+</Property>
+
 <Method name="RecalcYandexPresets">
 <Description>
 do ##class(Stc.Data.Course).RecalcYandexPresets()</Description>
@@ -199,6 +206,7 @@ Convert to proxyObject (for JSON)</Description>
     set proxy.id = ..%Id()
     set proxy.name = ..Name.Value
     set proxy.description = ..Description.Value
+    set proxy.isPublic = ..IsPublic
     
     if (shortInfo = 1) quit proxy
     
@@ -235,6 +243,7 @@ Create or save modified course</Description>
         set course.Description.Value = $ZCONVERT(data.description, "I","UTF8")
     }
     
+    set course.IsPublic = data.isPublic = $$$YES
     set course.Hours = $ZCONVERT(data.hours, "I","UTF8")
     set course.Days = $ZCONVERT(data.days, "I","UTF8")
     set course.ProgramUrl = $REPLACE($REPLACE($ZCONVERT(data.programUrl, "I","UTF8"),"http://",""), "https://","")
@@ -296,6 +305,9 @@ Create or save modified course</Description>
 </Value>
 <Value name="13">
 <Value>DifficultyCoefficient</Value>
+</Value>
+<Value name="14">
+<Value>IsPublic</Value>
 </Value>
 </Data>
 <Data name="Teachers">

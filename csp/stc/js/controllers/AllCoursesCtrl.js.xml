@@ -8,7 +8,7 @@
 Все курсы + преподаватели курсов
 ===========================================================================================*/
 
-controllersModule.controller('AllCoursesCtrl', function($scope, $location, $filter, CourseTeacherSrvc, PersonSrvc, UtilsSrvc){
+controllersModule.controller('AllCoursesCtrl', function($scope, $location, $window, $filter, CourseTeacherSrvc, PersonSrvc, UtilsSrvc){
     $scope.menu.selectMenu('courses');
 
     if (!$scope.pageStore.courses)
@@ -23,7 +23,7 @@ controllersModule.controller('AllCoursesCtrl', function($scope, $location, $filt
                           {name: 'Часы', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '50px'}},
                           {name: 'Дни', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '50px'}},
                           {name: 'К. сложности', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '100px'}},
-                          {name: 'Программа курса', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '100px'}},
+                          {name: 'Программа курса', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '150px'}},
                           {name: 'Стоимость', sqlName: 'Price', isSorted: false, isSortable: true, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center', width: '80px'}},
                           {name: 'Валюта', sqlName: '', isSorted: false, isSortable: false, isDown: true, isSearched: false, isSearchable: false, captionStyle: {textAlign: 'center'}}];
         
@@ -32,12 +32,20 @@ controllersModule.controller('AllCoursesCtrl', function($scope, $location, $filt
                                          {name:'hours', cellStyle: {textAlign: 'center'}}, 
                                          {name:'days', cellStyle: {textAlign: 'center'}}, 
                                          {name:'difCoef', cellStyle: {textAlign: 'center'}}, 
-                                         {name:'programUrlShort', 
+                                         {name:'programUrlShort', cellSelectable: true, cellStyle: {textAlign: 'center'},
                                          calculate: function(item){
-                                                        var tail = (item.programUrl && item.programUrl.length > 25) ? '...':'';
-                                                        item.programUrlShort = item.programUrl.substring(0,25) + tail;
-                                                    }},
-                                         {name:'price', cellStyle: {textAlign: 'center'}},
+                                                        item.programUrlShort = $filter('localize')('Просмотр');
+                                                    },
+                                         getCssClass: function(item){ 
+                                                    return 'cellLink';
+                                                },  
+                                         onClickCell: function(item){
+                                                    $window.open('http://' + item.programUrl, '_blank');
+                                                }},
+                                         {name:'priceStr', cellStyle: {textAlign: 'center'},
+                                         calculate: function(item){
+                                            item.priceStr = $filter('number')(item.price);
+                                         }},
                                          {name:'currency.name', cellStyle: {textAlign: 'center'}}];
                                                                              
         $scope.courseTable.pageSize = UtilsSrvc.getPropertyValue($scope.pageStore, 'courses.grid.pageSize', 10);
@@ -66,6 +74,13 @@ controllersModule.controller('AllCoursesCtrl', function($scope, $location, $filt
             });
     };
 
+    $scope.courseTable.onSelectCell = function(item, property){
+        console.log(item);
+        if (!item) return;
+
+        property.onClickCell(item);
+    };
+    
     // При смене статуса курса - обновить таблицу и поменять иконки
     $scope.$watch('courseTable.status', function(){
         $scope.courseTable.forciblyUpdate++;

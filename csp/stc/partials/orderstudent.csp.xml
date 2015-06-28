@@ -71,7 +71,7 @@ var callbackYmap = function(){};
                     <br>
                     <p><span ng-bind="'Город'|localize"></span>: <span ng-bind="ordForm.training.city.name + ', ' + ordForm.training.city.parentName + ', ' + ordForm.training.city.greatParentName"></span></p>
                     <p>
-                        <span ng-bind="'Адрес'|localize"></span>: <span ng-bind="ordForm.training.address.title"></span>
+                        <span ng-bind="'Адрес'|localize"></span>: <span ng-bind="ordForm.training.street"></span>
                         <span ng-hide="ordForm.training.room=='-'||ordForm.training.room==''" ng-bind="', ' + ordForm.training.room"></span>
                     </p>
                     <p>

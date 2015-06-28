@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-<CSP name="stc/js/controllers/MailingGroupCtrl.js" application="/csp/stc/" default="1"><![CDATA[
+<CSP name="stc/js/controllers/MailingGroupCtrl.js" application="/csp/stc_loc/" default="1"><![CDATA[
 'use strict';
 //
 
@@ -84,8 +84,8 @@ controllersModule.controller('MailingGroupCtrl', function($scope, $filter, $rout
               '%Course.Name - название курса;<br>' +
               '%City.Name, %Region.Name, %Country.Name - город, регион, страна;<br>' +
               '%Street, %Room - улица и аудитория;<br>' +
-              '%Teacher.FullName - фамилия и имя преподавателя;<br>' +
-              '%Teacher.Email, %Teacher.Phone - email, телефон<br>' +
+              '%Trainer.FullName - фамилия и имя преподавателя;<br>' +
+              '%Trainer.Email, %Trainer.Phone - email, телефон<br>' +
               '%Curator.FullName - фамилия и имя куратора;<br>' + 
               '%Curator.Email, %Curator.PhoneSecret, %Curator.PhonePublic - email, личный|публичный телефон;<br>' +
               '%OtherInfo - дополнительная информация об обучении;<br>' + 

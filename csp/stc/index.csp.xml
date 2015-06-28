@@ -139,6 +139,7 @@
         document.write('<script language="javascript"  src="js/controllers/PersonCtrl.js"><\/script>');
         document.write('<script language="javascript"  src="js/controllers/PersonTeacherCtrl.js"><\/script>');
         document.write('<script language="javascript"  src="js/controllers/PersonStudentCtrl.js"><\/script>');
+        document.write('<script language="javascript"  src="js/controllers/PersonCompanyContactCtrl.js"><\/script>');
         document.write('<script language="javascript"  src="js/controllers/AllPersonsCtrl.js"><\/script>');
         document.write('<script language="javascript"  src="js/controllers/AllCoursesCtrl.js"><\/script>');    
         document.write('<script language="javascript"  src="js/controllers/CourseCtrl.js"><\/script>');

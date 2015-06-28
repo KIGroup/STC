@@ -214,6 +214,18 @@ Payout for teacher</Description>
 <Type>%Float</Type>
 </Property>
 
+<Property name="IsPublic">
+<Description>
+Is public training or not (shows in calendar)</Description>
+<Type>%Boolean</Type>
+<InitialExpression>1</InitialExpression>
+</Property>
+
+<Property name="GeoLocationAddress">
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="500"/>
+</Property>
+
 <Index name="AccessCodeIdx">
 <Properties>AccessCode</Properties>
 <Unique>1</Unique>
@@ -299,6 +311,7 @@ Convert to proxyObject (for JSON)</Description>
     set proxy.dateFinish = $ZDATE(..DateFinish, 3)
     set proxy.isCompleted = ..IsCompleted   
     set proxy.isCertificatesDone = ..IsCertificatesDone
+    set proxy.isPublic = ..IsPublic
     
     set proxy.timeStart = $e(##class(%Library.Time).LogicalToDisplay(..TimeStart), 1, 5)
     set proxy.timeFinish = $e(##class(%Library.Time).LogicalToDisplay(..TimeFinish), 1, 5)
@@ -306,8 +319,10 @@ Convert to proxyObject (for JSON)</Description>
     
     set proxy.otherInfo = ..OtherInfo.Value
     set proxy.room = ..Room
+    set proxy.street = ..Street.Value
+    
     set proxy.address = ##class(%ZEN.proxyObject).%New()
-    set proxy.address.title = ..Street.Value
+    set proxy.address.title = ..GeoLocationAddress
     set proxy.address.point = ..Longitude_" "_..Latitude
     set proxy.isStudentsAutoMailing = ..IsStudentsAutoMailing
     set proxy.isTeacherAutoMailing = ..IsTeacherAutoMailing
@@ -380,22 +395,23 @@ Create or save modified training</Description>
         set tr.CuratorEmail = data.curator.email
         set tr.CuratorPhone = data.curator.phone
         
-        set tr.Street = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.address.title, "I","UTF8"))
+        set tr.Street = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.street, "I","UTF8"))
         set tr.OtherInfo = ##class(Stc.Data.Localization.LText).Create($ZCONVERT(data.otherInfo, "I","UTF8"))
         set tr.AccessCode = $SYSTEM.Util.CreateGUID()
     }
     else{
         set tr = ..%OpenId(data.id)
         set tr.CuratorFullName.Value = $ZCONVERT(data.curator.fullName, "I","UTF8")
-        set tr.Street.Value = $ZCONVERT(data.address.title, "I","UTF8")
+        set tr.Street.Value = $ZCONVERT(data.street, "I","UTF8")
         set tr.OtherInfo.Value = $ZCONVERT(data.otherInfo, "I","UTF8")
     }
     
+    set tr.GeoLocationAddress = data.address.title
     set tr.CuratorEmail = data.curator.email
     set tr.CuratorPhone = data.curator.phone
     set tr.CuratorPhoneSecret = data.curator.phoneSecret
     set tr.IsCertificatesDone = data.isCertificatesDone = $$$YES
-        
+    set tr.IsPublic = data.isPublic = $$$YES    
         
     set tr.DateFinish = $ZDATEH(data.dateFinish, 15)
     set tr.DateStart = $ZDATEH(data.dateStart, 15)
@@ -558,6 +574,7 @@ Add person to training, subgroup is detirmining automatically</Description>
     set proxy.teacher = ..Teacher.ConvertToProxyObject()
     set proxy.teacher.phone = ""
     set proxy.teacher.company = ""
+    set proxy.street = ..Street.Value
     
     set proxy.dateStart = $ZDATE(..DateStart, 3)
     set proxy.dateFinish = $ZDATE(..DateFinish, 3)
@@ -861,6 +878,12 @@ Get teacher payout for training</Description>
 </Value>
 <Value name="31">
 <Value>TeacherPayout</Value>
+</Value>
+<Value name="32">
+<Value>IsPublic</Value>
+</Value>
+<Value name="33">
+<Value>GeoLocationAddress</Value>
 </Value>
 </Data>
 </Storage>

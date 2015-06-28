@@ -96,7 +96,7 @@ Write all messages into global do ##class(Stc.Utils.Msg).Init()</Description>
     "Курс: %Course.Name<br>"_
     "Город: %City.Name, %Region.Name, %Country.Name<br>"_
     "Адрес: %Street, %Room<br>"_
-    "Преподаватель: %Teacher.FullName, %Teacher.Email <br>"_
+    "Преподаватель: %Trainer.FullName, %Trainer.Email <br>"_
     "Контактное лицо: %Curator.FullName, %Curator.Email, %Curator.PhonePublic<br>"_
     "На обучение обязательно возьмите с собой ноутбук с ОС Windows (любой) или виртуальной машиной Windows."
 
@@ -107,7 +107,7 @@ Write all messages into global do ##class(Stc.Utils.Msg).Init()</Description>
     "Course: %Course.Name<br>"_
     "City: %City.Name, %Region.Name, %Country.Name<br>"_
     "Address: %Street, %Room<br>"_
-    "Teacher: %Teacher.FullName, %Teacher.Email <br>"_
+    "Trainer: %Trainer.FullName, %Trainer.Email <br>"_
     "Curator: %Curator.FullName, %Curator.Email, %Curator.PhonePublic<br>"_
     "Training is required to bring a laptop running Windows (any) or virtual machines Windows."
     
@@ -145,7 +145,7 @@ Write all messages into global do ##class(Stc.Utils.Msg).Init()</Description>
     "Курс: %Course.Name<br>"_
     "Город: %City.Name, %Region.Name, %Country.Name<br>"_
     "Адрес: %Street, %Room<br>"_
-    "Преподаватель: %Teacher.FullName, %Teacher.Email, %Teacher.Phone"
+    "Преподаватель: %Trainer.FullName, %Trainer.Email, %Trainer.Phone"
     
     set ^CacheMsg("Stc", "en", "mail_Subject_Training-Curator") = "InterSystems. List of students"
     set ^CacheMsg("Stc", "en", "mail_Message_Training-Curator") = ""_
@@ -155,7 +155,7 @@ Write all messages into global do ##class(Stc.Utils.Msg).Init()</Description>
     "Course: %Course.Name<br>"_
     "City: %City.Name, %Region.Name, %Country.Name<br>"_
     "Address: %Street, %Room<br>"_
-    "Teacher: %Teacher.FullName, %Teacher.Email, %Teacher.Phone"
+    "Trainer: %Trainer.FullName, %Trainer.Email, %Trainer.Phone"
     
 
 
@@ -182,7 +182,7 @@ Write all messages into global do ##class(Stc.Utils.Msg).Init()</Description>
     "Курс: %Course.Name<br>"_
     "Город: %City.Name, %Region.Name, %Country.Name<br>"_
     "Адрес: %Street, %Room<br>"_
-    "Преподаватель: %Teacher.FullName, %Teacher.Email <br>"_
+    "Преподаватель: %Trainer.FullName, %Trainer.Email <br>"_
     "Контактное лицо: %Curator.FullName, %Curator.Email, %Curator.PhonePublic"
     
     set ^CacheMsg("Stc", "en", "mail_Subject_Training-Registration") = "InterSystems. Register for a course"
@@ -192,7 +192,7 @@ Write all messages into global do ##class(Stc.Utils.Msg).Init()</Description>
     "Course: %Course.Name<br>"_
     "City: %City.Name, %Region.Name, %Country.Name<br>"_
     "Address: %Street, %Room<br>"_
-    "Teacher: %Teacher.FullName, %Teacher.Email <br>"_
+    "Trainer: %Trainer.FullName, %Trainer.Email <br>"_
     "Curator: %Curator.FullName, %Curator.Email, %Curator.PhonePublic"
     
     
@@ -205,7 +205,7 @@ Write all messages into global do ##class(Stc.Utils.Msg).Init()</Description>
     "Курс: %Course.Name<br>"_
     "Город: %City.Name, %Region.Name, %Country.Name<br>"_
     "Адрес: %Street, %Room<br>"_
-    "Преподаватель: %Teacher.FullName, %Teacher.Email <br>"_
+    "Преподаватель: %Trainer.FullName, %Trainer.Email <br>"_
     "Контактное лицо: %Curator.FullName, %Curator.Email, %Curator.PhonePublic<br>"_
     "Для регистрации перейдите по <a target='_blank' href='%JoinUrl'>ссылке</a>."
 
@@ -216,7 +216,7 @@ Write all messages into global do ##class(Stc.Utils.Msg).Init()</Description>
     "Course: %Course.Name<br>"_
     "City: %City.Name, %Region.Name, %Country.Name<br>"_
     "Address: %Street, %Room<br>"_
-    "Teacher: %Teacher.FullName, %Teacher.Email <br>"_
+    "Tainer: %Trainer.FullName, %Trainer.Email <br>"_
     "Curator: %Curator.FullName, %Curator.Email, %Curator.PhonePublic<br>"_
     "Go to <a target='_blank' href='%JoinUrl'>link</a> for registration."
     

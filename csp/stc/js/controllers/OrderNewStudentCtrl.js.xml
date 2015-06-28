@@ -34,7 +34,7 @@ controllersModule.controller('OrderNewStudentCtrl', function($scope, $timeout, $
                 $scope.ordForm.training.urlAddGoogleCalendarEvent = TrainingSrvc.getUrlForCreateGoogleCalendarEvent(
                                         data.course.name + '. '+ data.city.name,
                                         data.dateGoogleCalendar,
-                                        data.city.name + ', ' + data.address.title,
+                                        data.city.name + ', ' + data.street,
                                         {
                                             trainingId: data.id,
                                             courseProgramUrl: 'http://' + data.course.programUrl,
@@ -57,7 +57,7 @@ controllersModule.controller('OrderNewStudentCtrl', function($scope, $timeout, $
                         });
 
                     var placemark = new ymaps.Placemark([data.address.lat, data.address.lng], {
-                            balloonContent: data.city.name + '. ' + data.address.title + ', '+ data.room
+                            balloonContent: data.city.name + '. ' + data.street + ', '+ data.room
                         }, {
                             preset: 'islands#nightDotIcon',
                             iconColor: '#0095b6'

@@ -86,6 +86,16 @@ servicesModule.factory('UtilsSrvc', function($dialog, $filter, DALSrvc) {
 
             return DALSrvc.getPromise('save', StcAppSetting.admin + '/json/log/grid', obj);
         },
+        getFullNameForCurLang: function(lastName, firstName, middleName){
+            // У русских - фамилия имя, а у англичан - имя фамилия
+            
+            if (StcAppSetting.lang == 'ru-RU' || StcAppSetting.lang == 'ru'){
+                return lastName + ' ' + firstName + (middleName ? ' ' + middleName : '');
+            }
+            else {
+                return firstName + (middleName ? ' ' + middleName : '') + ' ' + lastName;
+            }
+        },
         getPropertyValue: function (item, propertyStr, defaultValue){
             var value;
             defaultValue = defaultValue ? defaultValue : '';

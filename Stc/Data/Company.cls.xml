@@ -155,8 +155,9 @@ Convert to proxyObject (for JSON)</Description>
 		set proxy.isUnknownCity = $$$YES
 	}
 	
-	
-	set proxy.contact = ..Contact.ConvertToProxyObject()
+	if $ISOBJECT(..Contact){
+	    set proxy.contact = ..Contact.ConvertToProxyObject()
+	}
 	
 	set proxy.employeesNumber = ..Employees.Count()
 	
@@ -199,7 +200,7 @@ Create or save modified organization</Description>
 	
 	
 	
-	if (data.isUnknownCity = $$$NO) && $ISOBJECT(data.city){
+	if (data.isUnknownCity '= $$$YES) && $ISOBJECT(data.city){
 		set company.City = ##class(Region).%OpenId(data.city.id)
 	}
 	else{

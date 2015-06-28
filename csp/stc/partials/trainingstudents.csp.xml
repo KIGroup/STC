@@ -13,7 +13,7 @@
                     </div>
                     <div class="span6">
                         <p><span ng-bind="'Город'|localize"></span>: <span ng-bind="page.training.city.name + ', ' + page.training.city.parentName + ', ' + page.training.city.greatParentName"></span></p>
-                        <p><span ng-bind="'Адрес'|localize"></span>: <span ng-bind="page.training.address.title"></span></p>
+                        <p><span ng-bind="'Адрес'|localize"></span>: <span ng-bind="page.training.street"></span></p>
                         <p><span ng-bind="'Аудитория'|localize"></span>: <span ng-bind="page.training.room"></span></p>
                     </div>
                 </div>
