@@ -71,6 +71,7 @@
                         </p>
                     </div>
                     <div class="span6">
+                        <p ng-show="company.selectedItems[0].isisID"><span class="spnTitle" ng-bind="'ISIS ID'"  title="{{'Integrated Student Information System ID'}}"></span>: <span ng-bind="company.selectedItems[0].isisID"></span></p>
                         <p ng-show="company.selectedItems[0].inn"><span class="spnTitle" ng-bind="'КПП'|localize"  title="{{'Код причины постановки на учёт'|localize}}"                ></span>: <span ng-bind="company.selectedItems[0].kpp"></span></p>
                         <p ng-show="company.selectedItems[0].kpp"><span class="spnTitle" ng-bind="'ИНН'|localize"  title="{{'Идентификационный номер налогоплательщика'|localize}}"     ></span>: <span ng-bind="company.selectedItems[0].inn"></span></p>
                         <p ng-show="company.selectedItems[0].ogrn"><span class="spnTitle" ng-bind="'ОГРН'|localize" title="{{'Основной государственный регистрационный номер'|localize}}"></span>: <span ng-bind="company.selectedItems[0].ogrn"></span></p>

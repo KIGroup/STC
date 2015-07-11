@@ -383,7 +383,7 @@ Create or save modified training</Description>
     "; CuratorPhone="_data.curator.phone_
     "; DateStart="_data.dateStart_
     "; DateFinish="_data.dateFinish_
-    "; Street="_$ZCONVERT(data.address.title, "I","UTF8")_
+    "; Street="_$ZCONVERT(data.street, "I","UTF8")_
     "; Point="_data.address.point_
     "; OtherInfo="_$ZCONVERT(data.otherInfo, "I","UTF8")_
     "; Payout="_data.payout)
@@ -406,9 +406,9 @@ Create or save modified training</Description>
         set tr.OtherInfo.Value = $ZCONVERT(data.otherInfo, "I","UTF8")
     }
     
-    set tr.GeoLocationAddress = data.address.title
+    set tr.GeoLocationAddress = $ZCONVERT(data.address.title, "I","UTF8")
     set tr.CuratorEmail = data.curator.email
-    set tr.CuratorPhone = data.curator.phone
+    set tr.CuratorPhone = $ZCONVERT(data.curator.phone, "I","UTF8")
     set tr.CuratorPhoneSecret = data.curator.phoneSecret
     set tr.IsCertificatesDone = data.isCertificatesDone = $$$YES
     set tr.IsPublic = data.isPublic = $$$YES    

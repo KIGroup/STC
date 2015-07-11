@@ -20,7 +20,7 @@ Working with email</Description>
     set patternMsg = $REPLACE(patternMsg, "%Country.Name", tr.City.ParentRegion.ParentRegion.Name.Value)
     set patternMsg = $REPLACE(patternMsg, "%Street", tr.Street.Value)
     set patternMsg = $REPLACE(patternMsg, "%Room", tr.Room)
-    set patternMsg = $REPLACE(patternMsg, "%Trainer.FullName", tr.Teacher.LastName.Value_" "_tr.Teacher.FirstName.Value_" "_tr.Teacher.MiddleName.Value)
+    set patternMsg = $REPLACE(patternMsg, "%Trainer.FullName", tr.Teacher.FullName)
     set patternMsg = $REPLACE(patternMsg, "%Trainer.Email", tr.Teacher.Email)
     set patternMsg = $REPLACE(patternMsg, "%Trainer.Phone", $SELECT(tr.Teacher.Phone="":"-", tr.Teacher.Phone'="":tr.Teacher.Phone))
     set patternMsg = $REPLACE(patternMsg, "%Curator.FullName", $SELECT(tr.CuratorFullName.Value="":"-", tr.CuratorFullName.Value'="":tr.CuratorFullName.Value))

@@ -5,6 +5,7 @@
 
 localizationModule.constant('StcDictionary', {
   strings: {
+    'Создание организации':'Creation of organization',
     'ссылка на отмену подписки' : 'link to unsubscribe',
     'Создание организации из заявки от слушателя' : 'Creating organization from request of the attendee',
     'Добавить организацию' : 'Add organization',
@@ -69,7 +70,7 @@ localizationModule.constant('StcDictionary', {
     'Экспорт всех заявок в файл *.csv' : 'Export requests to ther file *.csv',
     'Экспорт слушателей' :'Export attendees',
     'Экспорт заявок' :'Export requests',
-    'Задать вопрос организаторам' :'Ask a question organizers',
+    'Задать вопрос организатору' :'Ask the organizer',
     'Ваше имя' :'Your name',
     'Ваш email' :'Your email',
     'Тема сообщения' :'Subject',
@@ -602,7 +603,7 @@ localizationModule.constant('StcDictionary', {
 'фамилия и имя куратора' : 'curator fullname',
 'email, личный | публичный телефон' : 'email, public | private phone',
 'дополнительная информация об обучении' : 'additional information about training',
-'Просмотр' : 'Просмотр',
+'Просмотр' : 'View',
 'Публичный курс' : 'Public course',
 'ссылка на страницу для анкетирования' : 'link to the survey page',
 'количество новых отзывов' : 'count of newest surveys',
@@ -621,7 +622,7 @@ localizationModule.constant('StcDictionary', {
   getTranslate: function(word){
       
       if (!this.strings[word]){
-            console.log("'"+word+"' : '',");
+            //console.log("'"+word+"' : '',");
       }
      
       return this.strings[word] ? this.strings[word] : word;

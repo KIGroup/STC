@@ -253,7 +253,7 @@ Create or save modified course</Description>
     set course.Currency = ##class(Stc.Data.Currency).%OpenId(data.currency.id)
     
     set status = course.%Save()
-    
+    do ##class(Stc.Data.Course).RecalcYandexPresets()
     quit course
 ]]></Implementation>
 </Method>

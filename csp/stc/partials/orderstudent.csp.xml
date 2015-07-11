@@ -66,7 +66,7 @@ var callbackYmap = function(){};
                         &nbsp;&nbsp;&nbsp;
                         <a ng-href="{{ordForm.training.urlAddGoogleCalendarEvent}}" class="cellLink" target="_blank" ng-bind="('Копировать в мой календарь'|localize) + ' »'"></a>
                         &nbsp;&nbsp;&nbsp;
-                        <a href="" class="cellLink" target="_blank" ng-bind="('Задать вопрос организаторам'|localize) + ' »'" ng-click="openQuestionDialog()"></a>
+                        <a href="" class="cellLink" target="_blank" ng-bind="('Задать вопрос организатору'|localize) + ' »'" ng-click="openQuestionDialog()"></a>
                     </p>
                     <br>
                     <p><span ng-bind="'Город'|localize"></span>: <span ng-bind="ordForm.training.city.name + ', ' + ordForm.training.city.parentName + ', ' + ordForm.training.city.greatParentName"></span></p>
@@ -79,13 +79,12 @@ var callbackYmap = function(){};
                         <span ng-bind="', время'|localize"></span>: <span ng-bind="ordForm.training.timeStart + ' - ' + ordForm.training.timeFinish"></span>
                     </p>
                 
-                    <p><span ng-bind="'Преподаватель'|localize"></span>: <span ng-bind="ordForm.training.teacher.lastName + ' ' + ordForm.training.teacher.firstName + ' ' + ordForm.training.teacher.middleName"></span></p>
+                    <p><span ng-bind="'Преподаватель'|localize"></span>: <span ng-bind="getFullNameForCurLang(ordForm.training.teacher.lastName, ordForm.training.teacher.firstName, ordForm.training.teacher.middleName)"></span></p>
                     <!--<p><span class="unselectable" style="color: white;" ng-bind="'Преподаватель:'|localize"></span> <span ng-bind="ordForm.training.teacher.email"></span></p>-->
             
                     <div ng-hide="ordForm.training.curator.fullName==''">
                         <p><span ng-bind="'Контактное лицо'|localize"></span>: 
                             <span ng-bind="ordForm.training.curator.fullName"></span>
-                            <span ng-bind="ordForm.training.curator.email"></span>
                             <span ng-hide="ordForm.training.curator.phone==''" ng-bind="', ' + ordForm.training.curator.phone"></span>
                         </p>
                         <!--

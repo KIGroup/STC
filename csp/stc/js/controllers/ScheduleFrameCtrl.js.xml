@@ -56,9 +56,9 @@ controllersModule.controller('ScheduleFrameCtrl', function($scope, $window, $fil
                             training.curatorInfo += ', ' + training.curator.phone;
                         }
 
-                        if (training.curator.email != ""){
-                            training.curatorInfo += ', ' + training.curator.email;
-                        }
+                        //if (training.curator.email != ""){
+                        //    training.curatorInfo += ', ' + training.curator.email;
+                        //}
     
                         training.urlJoin = 'http://' + host_appName + '/stc/index.csp#/training/' + training.id + '/order';
                         training.urlAddGoogleCalendarEvent = TrainingSrvc.getUrlForCreateGoogleCalendarEvent(

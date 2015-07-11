@@ -18,7 +18,7 @@
             </tr>
             <tr ng-show="course.detailsVisible">
                 <td colspan="5">
-                    <span ng-bind="course.days + ' ' + ('дн.'|localize) + ' (' + course.hours + ' ' + ('ч.'|localize) + ')'" title="{{'Длительность'|localize}}"></span>.
+                    <span ng-bind="course.days + ' ' + ('дн.'|localize)" title="{{'Длительность'|localize}}"></span>
                     &nbsp;
                     <div title="{{('Стоимость курса'|localize) + '. ' + ('Валюта'|localize) + ' - ' + course.currency.name + '.'}}" style="display: inline-flex;">
                         <span ng-show="$parent.selectedLang!='en-US'">{{course.price|number}}</span>
@@ -27,7 +27,7 @@
                         <i ng-show="course.currency.code=='EUR'" class="fnt-euro"></i>
                         <i ng-show="course.currency.code=='GBP'" class="fnt-pound"></i>
                         <span ng-show="$parent.selectedLang=='en-US'">{{course.price}}</span>
-                        <span>/ {{'слушатель'|localize}}.</span>
+                        <span>{{'за слушателя'|localize}}.</span>
                     </div>
                     &nbsp;
                     <a ng-href="{{course.programUrl}}" class="cellLink" target="_blank" ng-bind="'Программа'|localize" title="{{'Открыть программу курса'|localize}}"></a>.

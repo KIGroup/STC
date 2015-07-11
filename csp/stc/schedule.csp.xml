@@ -29,6 +29,13 @@
         StcAppSetting.lang = 'ru-RU';
         //StcAppSetting.lang = 'en-US';
         
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+        
     </script> 
    
     <!-- app.js -->
@@ -146,6 +153,20 @@
     <script language="javascript"> 
         controllersModule.controller('ScheduleFrameCtrl', function($scope, $filter, $window, CommonSrvc){
             $scope.selectedLang = StcAppSetting.lang;
+            
+            //width: 578px; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; color: #000;
+            var width = getParameterByName('width');
+            if (!width)
+                width = 578;
+                
+            $scope.frameStyle = 
+            {
+                width: width + 'px',
+                fontFamily: 'Verdana, Arial, Helvetica, sans-serif',
+                fontSize: '12px',
+                color: '#000'
+            };
+            
             $scope.domain = StcAppSetting.domain;
             
             $scope.courses = [];
@@ -204,7 +225,7 @@
                   
                                 training.dates = CommonSrvc.getTwoDate(training.dateStart, training.dateFinish);
 
-                                training.address = training.address.title;
+                                training.address = training.street;
                                 if (training.room != "" && training.room != "-"){
                                     training.address += ', ' + $filter('localize')('ауд.') + ' ' + training.room;
                                 }
@@ -214,9 +235,9 @@
                                     training.curatorInfo += ', ' + training.curator.phone;
                                 }
 
-                                if (training.curator.email != ""){
-                                    training.curatorInfo += ', ' + training.curator.email;
-                                }
+                                //if (training.curator.email != ""){
+                                  //  training.curatorInfo += ', ' + training.curator.email;
+                                //}
             
                                 training.urlJoin = 'http://' + host_appName + '/stc/index.csp#/training/' + training.id + '/order';
                                 training.urlAddGoogleCalendarEvent = $scope.getUrlForCreateGoogleCalendarEvent(
@@ -257,7 +278,8 @@
     
   </head>
   <body ng-app="mainModule" style="padding: 0;">
-    <div ng-controller="ScheduleFrameCtrl" style="width: 578px; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; color: #000;">
+    <!--<div id="scheduleFrame" ng-controller="ScheduleFrameCtrl" style="width: 578px; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; color: #000;">-->
+      <div id="scheduleFrame" ng-controller="ScheduleFrameCtrl" ng-style="frameStyle">
         <div class="row-fluid" ng-show="selectedLang=='ru-RU'">
             <p><b ng-bind="'Очные курсы обучения: программы курсов и ближайшие обучения.'"></b></p>
             <p style="text-align: justify;">Очный курс может быть проведен как в офисе InterSystems, так и на вашем предприятии при регистрации слушателей от 3 человек. По результатам обучения слушателям выдается международный сертификат InterSystems.</p>
